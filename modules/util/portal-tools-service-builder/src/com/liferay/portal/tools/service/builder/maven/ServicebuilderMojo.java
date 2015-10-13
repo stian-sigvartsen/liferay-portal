@@ -134,10 +134,6 @@ public class ServicebuilderMojo extends AbstractMojo {
 		_serviceBuilderArgs.setReadOnlyPrefixes(readOnlyPrefixes);
 	}
 
-	public void setRemotingFileName(String remotingFileName) {
-		_serviceBuilderArgs.setRemotingFileName(remotingFileName);
-	}
-
 	public void setResourceActionsConfigs(String resourceActionsConfigs) {
 		_serviceBuilderArgs.setResourceActionsConfigs(resourceActionsConfigs);
 	}
@@ -178,6 +174,10 @@ public class ServicebuilderMojo extends AbstractMojo {
 		_serviceBuilderArgs.setTestDirName(testDirName);
 	}
 
+	/**
+	 * @parameter default-value="${project.basedir}
+	 * @readonly
+	 */
 	protected File baseDir;
 
 	private final ServiceBuilderArgs _serviceBuilderArgs;

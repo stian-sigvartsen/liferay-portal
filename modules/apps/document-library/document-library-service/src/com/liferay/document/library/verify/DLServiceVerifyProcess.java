@@ -57,7 +57,9 @@ import com.liferay.portlet.documentlibrary.service.DLFileVersionLocalServiceUtil
 import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.store.DLStoreUtil;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
+import com.liferay.portlet.documentlibrary.util.DLValidatorUtil;
 import com.liferay.portlet.documentlibrary.util.comparator.DLFileVersionVersionComparator;
+import com.liferay.portlet.documentlibrary.webdav.DLWebDAVUtil;
 
 import java.io.InputStream;
 
@@ -268,12 +270,12 @@ public class DLServiceVerifyProcess extends VerifyProcess {
 								dlFileEntry);
 						}
 					}
-					catch (PortalException e) {
+					catch (PortalException pe) {
 						if (_log.isWarnEnabled()) {
 							_log.warn(
 								"Unable to get file entry " +
 									dlFileVersion.getFileEntryId(),
-								e);
+								pe);
 						}
 					}
 				}
@@ -341,21 +343,35 @@ public class DLServiceVerifyProcess extends VerifyProcess {
 
 					String title = dlFileEntry.getTitle();
 
-					if (StringUtil.contains(
-							title, StringPool.DOUBLE_BACK_SLASH)) {
-
-						String newTitle = title.replace(
-							StringPool.BACK_SLASH, StringPool.UNDERLINE);
-
+					if (!DLValidatorUtil.isValidName(title)) {
 						try {
-							dlFileEntry = renameTitle(dlFileEntry, newTitle);
+							dlFileEntry = renameTitle(
+								dlFileEntry, DLValidatorUtil.fixName(title));
 						}
 						catch (Exception e) {
 							if (_log.isWarnEnabled()) {
 								_log.warn(
-									"Unable to rename duplicate title for " +
+									"Unable to rename invalid title for " +
 										"file entry " +
 											dlFileEntry.getFileEntryId(),
+									e);
+							}
+						}
+					}
+
+					if (!DLWebDAVUtil.isRepresentableTitle(
+							dlFileEntry.getTitle())) {
+
+						try {
+							dlFileEntry = renameWithRepresentableTitle(
+								dlFileEntry);
+						}
+						catch (Exception e) {
+							if (_log.isWarnEnabled()) {
+								_log.warn(
+									"Unable to rename file entry " +
+										dlFileEntry.getFileEntryId() +
+											" with a WebDAV title",
 									e);
 							}
 						}
@@ -575,6 +591,22 @@ public class DLServiceVerifyProcess extends VerifyProcess {
 		}
 
 		return renamedDLFileEntry;
+	}
+
+	protected DLFileEntry renameWithRepresentableTitle(DLFileEntry dlFileEntry)
+		throws PortalException {
+
+		String title = dlFileEntry.getTitle();
+
+		for (int i = 0;; i++) {
+			String newTitle = DLWebDAVUtil.getRepresentableTitle(title, i);
+
+			try {
+				return renameTitle(dlFileEntry, newTitle);
+			}
+			catch (DuplicateFileException dfe) {
+			}
+		}
 	}
 
 	@Reference(

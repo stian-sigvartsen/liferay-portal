@@ -27,8 +27,8 @@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
 <%@ page import="com.liferay.asset.categories.admin.web.util.AssetCategoryUtil" %><%@
 page import="com.liferay.portal.kernel.bean.BeanParamUtil" %><%@
+page import="com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker" %><%@
 page import="com.liferay.portal.kernel.dao.search.ResultRow" %><%@
-page import="com.liferay.portal.kernel.dao.search.RowChecker" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
 page import="com.liferay.portal.kernel.language.UnicodeLanguageUtil" %><%@
 page import="com.liferay.portal.kernel.portlet.LiferayWindowState" %><%@
@@ -48,6 +48,7 @@ page import="com.liferay.portlet.PortletURLUtil" %><%@
 page import="com.liferay.portlet.asset.AssetCategoryNameException" %><%@
 page import="com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil" %><%@
 page import="com.liferay.portlet.asset.DuplicateCategoryException" %><%@
+page import="com.liferay.portlet.asset.DuplicateCategoryPropertyException" %><%@
 page import="com.liferay.portlet.asset.DuplicateVocabularyException" %><%@
 page import="com.liferay.portlet.asset.NoSuchCategoryException" %><%@
 page import="com.liferay.portlet.asset.NoSuchVocabularyException" %><%@

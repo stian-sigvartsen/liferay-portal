@@ -49,6 +49,7 @@ import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.test.ServiceTestUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.exportimport.lar.PortletDataHandlerKeys;
@@ -243,7 +244,8 @@ public class JournalExportImportTest extends BasePortletExportImportTestCase {
 			groupId, JournalArticle.class.getName());
 
 		ddmTemplate = DDMTemplateTestUtil.addTemplate(
-			groupId, ddmStructure.getStructureId());
+			groupId, ddmStructure.getStructureId(),
+			PortalUtil.getClassNameId(JournalArticle.class));
 
 		String content = DDMStructureTestUtil.getSampleStructuredContent();
 
@@ -419,20 +421,18 @@ public class JournalExportImportTest extends BasePortletExportImportTestCase {
 			String.valueOf(article.getDisplayDate()) + StringPool.SPACE +
 				importedArticle.getDisplayDate(),
 			DateUtil.equals(
-				article.getDisplayDate(), importedArticle.getDisplayDate(),
-				true));
+				article.getDisplayDate(), importedArticle.getDisplayDate()));
 		Assert.assertTrue(
 			String.valueOf(article.getExpirationDate()) + StringPool.SPACE +
 				importedArticle.getExpirationDate(),
 			DateUtil.equals(
 				article.getExpirationDate(),
-				importedArticle.getExpirationDate(), true));
+				importedArticle.getExpirationDate()));
 		Assert.assertTrue(
 			String.valueOf(article.getReviewDate()) + StringPool.SPACE +
 				importedArticle.getReviewDate(),
 			DateUtil.equals(
-				article.getReviewDate(), importedArticle.getReviewDate(),
-				true));
+				article.getReviewDate(), importedArticle.getReviewDate()));
 		Assert.assertEquals(
 			article.getSmallImage(), importedArticle.getSmallImage());
 		Assert.assertEquals(
@@ -442,8 +442,7 @@ public class JournalExportImportTest extends BasePortletExportImportTestCase {
 			String.valueOf(article.getStatusDate()) + StringPool.SPACE +
 				importedArticle.getStatusDate(),
 			DateUtil.equals(
-				article.getStatusDate(), importedArticle.getStatusDate(),
-				true));
+				article.getStatusDate(), importedArticle.getStatusDate()));
 
 		JournalArticleResource articleResource = article.getArticleResource();
 		JournalArticleResource importedArticleArticleResource =

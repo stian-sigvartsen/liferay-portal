@@ -34,7 +34,7 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.test.ServiceTestUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portlet.exportimport.lar.ManifestSummary;
-import com.liferay.portlet.exportimport.lar.PortletDataHandler;
+import com.liferay.portlet.exportimport.lar.StagedModelType;
 import com.liferay.portlet.messageboards.model.MBCategory;
 import com.liferay.portlet.messageboards.model.MBCategoryConstants;
 import com.liferay.portlet.messageboards.model.MBMessage;
@@ -44,11 +44,8 @@ import com.liferay.portlet.messageboards.service.MBCategoryLocalServiceUtil;
 import com.liferay.portlet.messageboards.service.MBCategoryServiceUtil;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import com.liferay.portlet.messageboards.service.MBThreadFlagLocalServiceUtil;
-import com.liferay.registry.Registry;
-import com.liferay.registry.RegistryUtil;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -150,35 +147,27 @@ public class MBPortletDataHandlerTest extends BasePortletDataHandlerTestCase {
 
 	@Override
 	protected void checkManifestSummary(
-		Map<String, LongWrapper> expectedModelAdditionCounters) {
+		ManifestSummary expectedManifestSummary) {
 
 		String manifestSummaryKey = ManifestSummary.getManifestSummaryKey(
-			MBThread.class.getName(), null);
+			new StagedModelType(MBThread.class.getName()));
 
-		expectedModelAdditionCounters.remove(manifestSummaryKey);
+		Collection<String> manifestSummaryKeys =
+			expectedManifestSummary.getManifestSummaryKeys();
 
-		super.checkManifestSummary(expectedModelAdditionCounters);
-	}
+		manifestSummaryKeys.remove(manifestSummaryKey);
 
-	@Override
-	protected PortletDataHandler createPortletDataHandler() {
-		try {
-			Registry registry = RegistryUtil.getRegistry();
+		Map<String, LongWrapper> modelAdditionCounters =
+			expectedManifestSummary.getModelAdditionCounters();
 
-			Collection<PortletDataHandler> portletDataHandlers =
-				registry.getServices(
-					PortletDataHandler.class,
-					"(javax.portlet.name=" +
-						MBPortletKeys.MESSAGE_BOARDS + ")");
+		modelAdditionCounters.remove(manifestSummaryKey);
 
-			Iterator<PortletDataHandler> iterator =
-				portletDataHandlers.iterator();
+		Map<String, LongWrapper> modelDeletionCounters =
+			expectedManifestSummary.getModelDeletionCounters();
 
-			return iterator.next();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		modelDeletionCounters.remove(manifestSummaryKey);
+
+		super.checkManifestSummary(expectedManifestSummary);
 	}
 
 	@Override

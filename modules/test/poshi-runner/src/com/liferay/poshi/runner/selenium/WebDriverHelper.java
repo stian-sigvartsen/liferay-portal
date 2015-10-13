@@ -72,9 +72,28 @@ public class WebDriverHelper {
 		}
 	}
 
+	public static void assertCssValue(
+			WebDriver webDriver, String locator, String cssAttribute,
+			String cssValue)
+		throws Exception {
+
+		WebElement webElement = getWebElement(webDriver, locator);
+
+		String actualCssValue = webElement.getCssValue(cssAttribute);
+
+		if (!actualCssValue.equals(cssValue)) {
+			throw new Exception(
+				"CSS Value " + actualCssValue + " does not match " + cssValue);
+		}
+	}
+
 	public static void assertJavaScriptErrors(
 			WebDriver webDriver, String ignoreJavaScriptError)
 		throws Exception {
+
+		if (!PropsValues.TEST_ASSERT_JAVASCRIPT_ERRORS) {
+			return;
+		}
 
 		String location = getLocation(webDriver);
 
@@ -102,14 +121,20 @@ public class WebDriverHelper {
 			return;
 		}
 
-		WebElement webElement = getWebElement(webDriver, "//body");
+		List<JavaScriptError> javaScriptErrors = new ArrayList<>();
 
-		WrapsDriver wrapsDriver = (WrapsDriver)webElement;
+		try {
+			WebElement webElement = getWebElement(webDriver, "//body");
 
-		WebDriver wrappedWebDriver = wrapsDriver.getWrappedDriver();
+			WrapsDriver wrapsDriver = (WrapsDriver)webElement;
 
-		List<JavaScriptError> javaScriptErrors = JavaScriptError.readErrors(
-			wrappedWebDriver);
+			WebDriver wrappedWebDriver = wrapsDriver.getWrappedDriver();
+
+			javaScriptErrors.addAll(
+				JavaScriptError.readErrors(wrappedWebDriver));
+		}
+		catch (Exception e) {
+		}
 
 		List<Exception> exceptions = new ArrayList<>();
 
@@ -558,9 +583,7 @@ public class WebDriverHelper {
 			try {
 				webDriver.get(targetURL);
 
-				if (PropsValues.BROWSER_TYPE.equals("*iehta") ||
-					PropsValues.BROWSER_TYPE.equals("*iexplore")) {
-
+				if (PropsValues.BROWSER_TYPE.equals("internetexplorer")) {
 					refresh(webDriver);
 				}
 

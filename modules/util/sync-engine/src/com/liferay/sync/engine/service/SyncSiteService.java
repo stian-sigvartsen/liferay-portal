@@ -58,6 +58,7 @@ public class SyncSiteService {
 
 		if (reset) {
 			syncSite.setRemoteSyncTime(-1);
+			syncSite.setState(SyncSite.STATE_SYNCED);
 			syncSite.setUiEvent(SyncSite.UI_EVENT_NONE);
 		}
 
@@ -279,7 +280,9 @@ public class SyncSiteService {
 			syncSite.getGroupId(), syncSite.getSyncAccountId());
 
 		for (SyncFile syncFile : syncFiles) {
-			SyncFileService.deleteSyncFile(syncFile, false);
+			if (!syncFile.isSystem()) {
+				SyncFileService.deleteSyncFile(syncFile, false);
+			}
 		}
 
 		Path filePath = Paths.get(syncSite.getFilePathName());

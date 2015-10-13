@@ -1,4 +1,6 @@
 <definition>
+	<var name="assetType" value="Document" />
+
 	<command name="addCommentPG">
 		<var name="key_dmDocumentTitle" value="${dmDocumentTitle}" />
 
@@ -38,7 +40,12 @@
 				</then>
 			</elseif>
 			<else>
-				<execute function="UploadCommonFile" locator1="TextInput#FILE" value1="${dmDocumentFile}" />
+				<if>
+					<isset var="dmDocumentFile" />
+					<then>
+						<execute function="UploadCommonFile" locator1="TextInput#FILE" value1="${dmDocumentFile}" />
+					</then>
+				</if>
 			</else>
 		</if>
 
@@ -236,6 +243,18 @@
 
 		<execute function="AssertClick" locator1="Button#SUBMIT_FOR_PUBLICATION" value1="Submit for Publication" />
 		<execute function="AssertTextEquals" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+	</command>
+
+	<command name="addGoogleDoc">
+		<execute function="AssertClick#waitForDMHomeAssertTextEqualsClick" locator1="Toolbar#ADD" value1="Add" />
+
+		<execute function="AssertClick" locator1="MenuItem#GOOGLE_DOCS" value1="Google Docs" />
+
+		<execute macro="GoogleDoc#selectDocument">
+			<var name="googleDocName" value="${googleDocName}" />
+		</execute>
+
+		<execute macro="GoogleDoc#publish" />
 	</command>
 
 	<command name="addMultiplePG">
@@ -551,7 +570,7 @@
 
 	<command name="checkinCP">
 		<if>
-			<equals arg1="${sharepointRepository}" arg2="true" />
+			<equals arg1="${dmRepositoryName}" arg2="true" />
 			<then>
 				<execute function="AssertTextEquals" locator1="DocumentsAndMediaDocument#SUCCESS_MESSAGE_DOCUMENT_VIEW" value1="You now have an indefinite lock on this document. No one else can edit this document until you unlock it. This lock will never expire." />
 			</then>
@@ -644,7 +663,7 @@
 		<execute function="AssertTextEquals" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 
 		<if>
-			<equals arg1="${sharepointRepository}" arg2="true" />
+			<equals arg1="${dmRepositoryName}" arg2="true" />
 			<then>
 				<execute function="AssertTextEquals" locator1="DocumentsAndMediaDocument#SUCCESS_MESSAGE_DOCUMENT_VIEW" value1="You now have an indefinite lock on this document. No one else can edit this document until you unlock it. This lock will never expire." />
 			</then>
@@ -690,6 +709,7 @@
 	</command>
 
 	<command name="deleteCP">
+		<var name="key_assetType" value="${assetType}" />
 		<var name="key_dmDocumentTitle" value="${dmDocumentTitle}" />
 
 		<execute function="Click" locator1="DocumentsAndMedia#ICON_DOCUMENT_ACTIONS" />
@@ -703,12 +723,13 @@
 			</then>
 			<else>
 				<execute function="AssertClick" locator1="MenuItem#MOVE_TO_THE_RECYCLE_BIN" value1="Move to the Recycle Bin" />
-				<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="moved to the Recycle Bin. Undo" />
+				<execute function="AssertTextEquals#assertPartialText" locator1="Message#RECYCLE_BIN_SUCCESS" value1="The ${assetType} ${dmDocumentTitle} moved to the Recycle Bin. Undo" />
 			</else>
 		</if>
 	</command>
 
 	<command name="deletePG">
+		<var name="key_assetType" value="${assetType}" />
 		<var name="key_dmDocumentTitle" value="${dmDocumentTitle}" />
 
 		<execute function="AssertClick" locator1="DocumentsAndMedia#ICON_DOCUMENT_TITLE" value1="${dmDocumentTitle}" />
@@ -719,14 +740,16 @@
 
 		<execute function="AssertClick#assertTextClick" locator1="Button#MOVE_TO_THE_RECYCLE_BIN" value1="Move to the Recycle Bin" />
 
-		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="moved to the Recycle Bin. Undo" />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#RECYCLE_BIN_SUCCESS" value1="The ${assetType} ${dmDocumentTitle} was moved to the Recycle Bin. Undo" />
 	</command>
 
 	<command name="deletePGViaMG">
+		<var name="key_assetType" value="${assetType}" />
 		<var name="key_mgDocumentTitle" value="${mgDocumentTitle}" />
 
 		<execute function="AssertClick" locator1="MediaGallery#ENTRY_TITLE" value1="${mgDocumentTitle}" />
-		<execute function="Click" locator1="MediaGallery#ENTRY_RECYCLE_BIN_ICON" />
+
+		<execute function="AssertClick" locator1="MediaGallery#ENTRY_RECYCLE_BIN_ICON" value1="Move to the Recycle Bin" />
 		<execute function="AssertTextEquals#assertPartialText" locator1="Message#RECYCLE_BIN_SUCCESS" value1="moved to the Recycle Bin. Undo" />
 		<execute function="AssertElementNotPresent" locator1="MediaGallery#ENTRY_TITLE" value1="${mgDocumentTitle}" />
 	</command>
@@ -770,7 +793,7 @@
 			</not>
 			<then>
 				<if>
-					<equals arg1="${sharepointRepository}" arg2="true" />
+					<equals arg1="${dmRepositoryName}" arg2="true" />
 					<then>
 						<execute function="AssertTextEquals" locator1="Message#SUCCESS" value1="You now have an indefinite lock on this document. No one else can edit this document until you unlock it. This lock will never expire." />
 					</then>
@@ -1057,7 +1080,7 @@
 	</command>
 
 	<command name="gotoHomeCP">
-		<execute function="AssertClick#assertTextClickAtAndWait" locator1="DocumentsAndMedia#BREADCRUMB_HOME" value1="Home" />
+		<execute function="AssertClick#assertTextClickAtAndWait" locator1="DocumentsAndMedia#BREADCRUMB_HOME" value1="HOME" />
 	</command>
 
 	<command name="gotoPG">
@@ -1116,7 +1139,7 @@
 	<command name="moveToFolderCP">
 		<var name="key_dmDocumentTitle" value="${dmDocumentTitle}" />
 
-		<execute function="AssertClick" locator1="DocumentsAndMedia#ICON_DOCUMENT_ACTIONS" />
+		<execute function="Click" locator1="DocumentsAndMedia#ICON_DOCUMENT_ACTIONS" />
 		<execute function="AssertElementPresent" locator1="MenuItem#MOVE" />
 		<execute function="AssertClick" locator1="MenuItem#MOVE" value1="Move" />
 
@@ -1129,7 +1152,7 @@
 				<execute function="AssertClick" locator1="Button#CHOOSE_THIS_FOLDER" value1="Choose This Folder" />
 			</then>
 			<else>
-				<execute function="AssertClick" locator1="CHOOSE_BUTTON_GENERIC" value1="Choose" />
+				<execute function="AssertClick" locator1="DocumentsAndMediaSelectFolder#CHOOSE_BUTTON_GENERIC" value1="Choose" />
 			</else>
 		</if>
 
@@ -1193,6 +1216,7 @@
 	</command>
 
 	<command name="moveToRecycleBinCP">
+		<var name="key_assetType" value="${assetType}" />
 		<var name="key_dmDocumentTitle" value="${dmDocumentTitle}" />
 
 		<execute function="AssertElementPresent" locator1="DocumentsAndMedia#ICON_DOCUMENT" />
@@ -1204,7 +1228,7 @@
 		<execute function="AssertElementPresent" locator1="DocumentsAndMedia#TOOLBAR_ACTIONS" />
 		<execute function="AssertClick#waitForDMHomeAssertTextEqualsClick" locator1="DocumentsAndMedia#TOOLBAR_ACTIONS" value1="Actions" />
 		<execute function="AssertClick" locator1="MenuItem#MOVE_TO_THE_RECYCLE_BIN" value1="Move to the Recycle Bin" />
-		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS_RECYCLE_BIN" value1="The ${assetType} ${dmDocumentTitle} was moved to the Recycle Bin. Undo" />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#RECYCLE_BIN_SUCCESS" value1="The ${assetType} ${dmDocumentTitle} was moved to the Recycle Bin. Undo" />
 
 		<if>
 			<condition function="IsElementNotPresent" locator1="DocumentsAndMedia#ICON_DOCUMENT_GENERIC" />
@@ -1440,7 +1464,7 @@
 
 		<execute function="AssertClick" locator1="DocumentsAndMedia#ICON_DOCUMENT_TITLE" value1="${dmDocumentTitle}" />
 
-		<execute function="AssertTextEquals" locator1="DocumentsAndMediaDocument#VERSION_HISTORY_TABLE_VERSION" value1="${dmDocumentVersionNumber}" />
+		<execute function="AssertTextEquals" locator1="DocumentsAndMediaDocument#VERSION_HISTORY_TABLE_VERSION_GENERIC" value1="${dmDocumentVersionNumber}" />
 		<execute function="Click" locator1="DocumentsAndMediaDocument#VERSION_HISTORY_TABLE_DROPDOWN" />
 		<execute function="AssertClick" locator1="MenuItem#REVERT" value1="Revert" />
 		<execute function="AssertTextEquals#assertPartialText" locator1="PGDocumentsandmediaDocument#SUCCESS_MESSAGE" value1="Your request completed successfully." />
@@ -1489,7 +1513,7 @@
 					<execute function="Type" locator1="NavBar#BASIC_SEARCH_FIELD" value1="asdf" />
 					<execute function="AssertClick" locator1="NavBar#BASIC_SEARCH_BUTTON" value1="Search" />
 
-					<execute function="AssertTextEquals" locator1="Message#INFO" value1="There are no media files in this folder." />
+					<execute function="AssertTextEquals" locator1="Message#INFO" value1="No documents were found that matched the keywords: asdf." />
 				</then>
 			</elseif>
 			<elseif>
@@ -1626,7 +1650,7 @@
 		<execute function="AssertElementNotPresent" locator1="Message#SUCCESS" />
 
 		<if>
-			<equals arg1="${sharepointRepository}" arg2="true" />
+			<equals arg1="${dmRepositoryName}" arg2="true" />
 			<then>
 				<execute function="AssertTextNotPresent" value1="You now have an indefinite lock on this document. No one else can edit this document until you unlock it. This lock will never expire." />
 			</then>
@@ -1640,7 +1664,7 @@
 		<execute function="AssertVisible" locator1="DocumentsAndMediaDocument#DOCUMENT_DETAILS_VERSION_LOCKED" />
 
 		<if>
-			<equals arg1="${sharepointRepository}" arg2="true" />
+			<equals arg1="${dmRepositoryName}" arg2="true" />
 			<then>
 				<execute function="AssertTextEquals" locator1="DocumentsAndMediaDocument#SUCCESS_MESSAGE_DOCUMENT_VIEW" value1="You now have an indefinite lock on this document. No one else can edit this document until you unlock it. This lock will never expire." />
 			</then>
@@ -2047,6 +2071,9 @@
 		<execute function="AssertElementPresent" locator1="DocumentsAndMedia#ICON_FOLDER_THUMBNAIL" />
 		<execute function="AssertTextEquals" locator1="DocumentsAndMedia#ICON_FOLDER_THUMBNAIL" value1="${dmFolderName}" />
 		<execute function="Click" locator1="DocumentsAndMedia#ICON_FOLDER_THUMBNAIL" value1="${dmFolderName}" />
+
+		<var method="StringUtil#upperCase('${key_dmFolderName}')" name="dmFolderName" />
+
 		<execute function="AssertTextEquals" locator1="DocumentsAndMedia#BREADCRUMB_LAST" value1="${dmFolderName}" />
 		<execute function="AssertElementPresent" locator1="DocumentsAndMedia#ICON_DOCUMENT" />
 		<execute function="AssertTextEquals" locator1="DocumentsAndMedia#ICON_DOCUMENT_TITLE" value1="${dmDocumentTitle}" />
@@ -2280,7 +2307,7 @@
 
 	<command name="viewStagingDetailsPG">
 		<execute function="Click" locator1="Toolbar#ADD" />
-		<execute function="AssertTextEquals" locator1="MenuItem#FOLDER_DM" value1="Folder" />
+		<execute function="AssertTextEquals" locator1="MenuItem#FOLDER" value1="Folder" />
 		<execute function="AssertTextEquals" locator1="MenuItem#SHORTCUT" value1="Shortcut" />
 		<execute function="AssertTextEquals" locator1="MenuItem#REPOSITORY" value1="Repository" />
 		<execute function="AssertTextEquals" locator1="MenuItem#MULTIPLE_DOCUMENTS" value1="Multiple Documents" />

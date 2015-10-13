@@ -170,7 +170,7 @@
 
 		<execute function="Click#clickAtSidebarClickAtWaitForScript" locator1="Icon#ADD" value1="Add" />
 
-		<execute function="AssertClick" locator1="DockbarAddpanelpage#NAVIGATION_PAGE" value1="Page" />
+		<execute function="AssertClick" locator1="NavPill#PAGE" value1="Page" />
 		<execute function="Type" locator1="TextInput#NAME" value1="${pageName}" />
 		<execute function="AssertClick#pauseAssertTextClickAt" locator1="Button#ADD_PAGE" value1="Add Page" />
 
@@ -214,10 +214,6 @@
 		<execute function="AssertClick" locator1="ProductMenu#PRODUCT_MENU_TABS_SITES_NAVIGATION" value1="Sites" />
 
 		<execute function="Click" locator1="ProductMenu#PRODUCT_MENU_PANEL_SITE_SELECTOR" />
-
-		<var name="key_portletCategoryName" value="${portletCategoryName}" />
-
-		<execute function="AssertClick" locator1="ProductMenu#PRODUCT_MENU_PANEL_ALL_SITES_PANEL_TITLE" value1="${portletCategoryName}" />
 
 		<var name="key_portletName" value="${siteName}" />
 
@@ -329,7 +325,6 @@
 			<isset var="siteScopeName" />
 			<then>
 				<execute macro="Page#changeSiteScope">
-					<var name="portletCategoryName" value="My Sites" />
 					<var name="siteName" value="${siteScopeName}" />
 				</execute>
 			</then>
@@ -387,41 +382,57 @@
 			<var name="virtualHostsURL" value="${virtualHostsURL}" />
 		</execute>
 
+		<execute macro="ProductMenuHelper#openProductMenu" />
+
 		<var name="key_localizedPortletCategoryName" value="${localizedPortletCategoryName}" />
 
-		<execute function="Click" locator1="ControlMenu#ADMIN_LOCALIZED" value1="${localizedAdmin}" />
-		<execute function="Click" locator1="Dockbar#${portletCategoryKey}" value1="${localizedPortletCategoryName}" />
+		<execute function="Click" locator1="ProductMenu#PRODUCT_MENU_TABS_TAB_ICON" value1="${tabName}" />
 
 		<if>
 			<isset var="siteScopeName" />
 			<then>
-				<execute function="Click" locator1="Home#SCOPE_SELECTOR" />
-
-				<var name="key_siteScopeName" value="${siteScopeName}" />
-
-				<execute function="Click" locator1="Home#SCOPE_SELECTOR_MENULIST_ITEM" />
+				<execute macro="Page#changeSiteScope">
+					<var name="siteName" value="${siteScopeName}" />
+				</execute>
 			</then>
 		</if>
 
-		<var name="key_portletCategoryName" value="${localizedPortletCategoryName}" />
+		<var name="tabName" value="${localizedTabName}" />
+
+		<execute function="Click" locator1="ProductMenu#PRODUCT_MENU_TABS_TAB_ICON" value1="${tabName}" />
 
 		<if>
-			<condition function="IsElementPresent" locator1="Home#SITE_ADMINISTRATION_CATEGORY_COLLAPSED" value1="${portletCategoryName}" />
+			<condition function="IsElementNotPresent" locator1="ProductMenu#PRODUCT_MENU_PANEL_MENU_ITEM" value1="${localizedPortletName}" />
 			<then>
-				<execute function="AssertClick#assertPartialTextClickAtCPNavigation" locator1="Home#SITE_ADMINISTRATION_CATEGORY_COLLAPSED" value1="${portletCategoryName}" />
+				<var name="key_portletCategoryName" value="${localizedPortletCategoryName}" />
 
-				<execute function="AssertTextEquals" locator1="Home#SITE_ADMINISTRATION_CATEGORY_EXPANDED" value1="${portletCategoryName}" />
+				<execute function="AssertClick" locator1="ProductMenu#PRODUCT_MENU_PANEL_SITES_PANEL_TITLE" value1="${localizedPortletCategoryName}" />
 			</then>
 		</if>
 
 		<if>
 			<not>
-				<contains string="${portletName}" substring="{portletName}" />
+				<isset var="nonAdminUser" />
 			</not>
 			<then>
-				<var name="key_portletName" value="${portletName}" />
+				<if>
+					<condition function="IsElementPresent" locator1="Home#SITE_ADMINISTRATION_CATEGORY_COLLAPSED" value1="${localizedPortletCategoryName}" />
+					<then>
+						<execute function="AssertClick#assertPartialTextClickAtCPNavigation" locator1="Home#SITE_ADMINISTRATION_CATEGORY_COLLAPSED" value1="${localizedPortletCategoryName}" />
+						<execute function="AssertTextEquals#assertPartialText" locator1="Home#SITE_ADMINISTRATION_CATEGORY_EXPANDED" value1="${localizedPortletCategoryName}" />
+					</then>
+				</if>
 
-				<execute function="AssertClick#assertPartialTextClickAtCPNavigation" locator1="Home#SITE_ADMINISTRATION_NAVIGATION" value1="${portletName}" />
+				<if>
+					<not>
+						<contains string="${localizedPortletName}" substring="{localizedPortletName}" />
+					</not>
+					<then>
+						<var name="key_portletName" value="${localizedPortletName}" />
+
+						<execute function="AssertClick" locator1="ProductMenu#PRODUCT_MENU_PANEL_MENU_ITEM" value1="${localizedPortletName}" />
+					</then>
+				</if>
 			</then>
 		</if>
 	</command>
@@ -453,10 +464,12 @@
 			<var name="localizedAdmin" value="${localizedAdmin}" />
 			<var name="localizedPortletCategoryName" value="${localizedPortletCategoryName}" />
 			<var name="localizedPortletName" value="${localizedPortletName}" />
+			<var name="localizedTabName" value="${localizedTabName}" />
 			<var name="portletCategoryKey" value="ADMIN_SITE_ADMINISTRATION_CONFIGURATION_LOCALIZED" />
 			<var name="portletCategoryName" value="${portletCategoryName}" />
 			<var name="portletName" value="${portletName}" />
 			<var name="siteScopeName" value="${siteScopeName}" />
+			<var name="tabName" value="${tabName}" />
 		</execute>
 	</command>
 
@@ -510,7 +523,7 @@
 			<if>
 				<equals arg1="${portletName}" arg2="${sitesPortletName}" />
 				<then>
-					<var name="portletCategoryName" value="Administration" />
+					<var name="portletCategoryName" value="Sites" />
 				</then>
 			</if>
 		</for>
@@ -533,35 +546,27 @@
 			</if>
 		</for>
 
+		<if>
+			<not>
+				<isset var="portletCategoryName" />
+			</not>
+			<then>
+				<var name="portletCategoryName" value="Apps" />
+			</then>
+		</if>
+
 		<var name="key_portletCategoryName" value="${portletCategoryName}" />
 
 		<if>
-			<equals arg1="${portletCategoryName}" arg2="Administration" />
+			<condition function="IsElementNotPresent" locator1="ProductMenu#PRODUCT_MENU_OPENED" />
 			<then>
-				<if>
-					<condition function="IsElementNotPresent" locator1="ProductMenu#PRODUCT_MENU_OPENED" />
-					<then>
-						<execute function="Click" locator1="ProductMenu#TOGGLE" />
-					</then>
-				</if>
-
-				<execute function="Click" locator1="ProductMenu#PRODUCT_MENU_PANEL_SITE_SELECTOR" />
-
-				<execute function="AssertClick" locator1="ProductMenu#PRODUCT_MENU_PANEL_ALL_SITES_PANEL_TITLE" value1="Administration" />
+				<execute function="Click" locator1="ProductMenu#TOGGLE" />
 			</then>
-			<else>
-				<if>
-					<condition function="IsElementNotPresent" locator1="ProductMenu#PRODUCT_MENU_OPENED" />
-					<then>
-						<execute function="Click" locator1="ProductMenu#TOGGLE" />
-					</then>
-				</if>
-
-				<execute function="AssertClick" locator1="ProductMenu#PRODUCT_MENU_TABS_CONTROL_PANEL_NAVIGATION" value1="Control Panel" />
-
-				<execute function="AssertClick" locator1="ProductMenu#PRODUCT_MENU_PANEL_CONTROL_PANEL_PANEL_TITLE" value1="${portletCategoryName}" />
-			</else>
 		</if>
+
+		<execute function="AssertClick" locator1="ProductMenu#PRODUCT_MENU_TABS_CONTROL_PANEL_NAVIGATION" value1="Control Panel" />
+
+		<execute function="AssertClick" locator1="ProductMenu#PRODUCT_MENU_PANEL_CONTROL_PANEL_PANEL_TITLE" value1="${portletCategoryName}" />
 
 		<if>
 			<isset var="portletName" />
@@ -674,6 +679,12 @@
 		<execute function="AssertClick" locator1="ControlMenu#USER_MY_PROFILE" value1="My Profile" />
 	</command>
 
+	<command name="gotoPagePanelPortlet">
+		<var name="key_portletName" value="${portletName}" />
+
+		<execute function="AssertClick" locator1="Panel#MENU_ITEM" value1="${portletName}" />
+	</command>
+
 	<command name="gotoPagesCP">
 		<description message="Navigate to Site Administration > Pages > ${portletName}." />
 
@@ -757,7 +768,7 @@
 		</if>
 	</command>
 
-	<command name="gotoPublishingtools">
+	<command name="gotoPublishingTools">
 		<description message="Navigate to Site Administration > Publishing tools > ${portletName}." />
 
 		<execute macro="Page#gotoCmdCP">
@@ -765,7 +776,7 @@
 			<var name="nodePort" value="${nodePort}" />
 			<var name="pageAccess" value="${pageAccess}" />
 			<var name="pageStaging" value="${pageStaging}" />
-			<var name="portletCategoryName" value="Publishing tools" />
+			<var name="portletCategoryName" value="Publishing Tools" />
 			<var name="portletName" value="${portletName}" />
 			<var name="siteName" value="${siteName}" />
 			<var name="siteNameURL" value="${siteNameURL}" />
@@ -1183,11 +1194,6 @@
 		<execute function="AssertTextEquals#assertPartialText" locator1="Home#PORTAL_LOCALIZATION_MESSAGE_INFO" value1="${pageLocalizationMessage}" />
 		<execute function="AssertTextEquals" locator1="Home#PORTAL_LOCALIZATION_CONFIRMATION_MESSAGE" value1="Display the page in English (United States)." />
 		<execute function="AssertTextEquals" locator1="Home#PORTAL_LOCALIZATION_PREFERRED_MESSAGE" value1="${pageLocalizationPreferredLanguage}" />
-
-		<execute function="Click" locator1="ProductMenu#PRODUCT_MENU_PANEL_SITE_SELECTOR" />
-
-		<execute function="AssertTextEquals" locator1="ControlMenu#ADMIN" value1="${adminTranslation}" />
-		<execute function="AssertTextEquals" locator1="ControlMenu#MY_SITES" value1="${mySitesTranslation}" />
 	</command>
 
 	<command name="viewURLLocale">

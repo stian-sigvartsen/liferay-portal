@@ -20,7 +20,7 @@ feature or API will be dropped in an upcoming version.
 replaces an old API, in spite of the old API being kept in Liferay Portal for
 backwards compatibility.
 
-*This document has been reviewed through commit `c68e01c`.*
+*This document has been reviewed through commit `11689fd`.*
 
 ## Breaking Changes Contribution Guidelines
 
@@ -2287,5 +2287,131 @@ To stay consistent with other taglibs provided by Liferay, the AUI `.tld` file
 was modified to start with the prefix `liferay-`. Due to this change, the XML
 files used to automatically generate the AUI taglib were modified, changing the
 AUI URI declaration.
+
+---------------------------------------
+
+### Removed Support for runtime-portlet Tag in Body of Web Content Articles
+- **Date:** 2015-Sep-17
+- **JIRA Ticket:** LPS-58736
+
+#### What changed?
+
+The tag `runtime-portlet` is no longer replaced by a portlet if it is found in
+the body of a web content article.
+
+#### Who is affected?
+
+This affects any web content in the database (`JournalArticle` table) that uses
+this tag.
+
+#### How should I update my code?
+
+Embedding another portlet is only supported from a template. You should embed
+the portlet by passing its name in a call to `theme.runtime`.
+
+**Example**
+
+In Velocity:
+
+    $theme.runtime("145")
+
+In FreeMarker:
+
+    ${theme.runtime("145")
+
+#### Why was this change made?
+
+This change improves the performance of web content articles while enforcing a
+single way to embed portlets into the page for better testing.
+
+---------------------------------------
+
+### Removed the liferay-ui:control-panel-site-selector Tag
+- **Date:** 2015-Sep-23
+- **JIRA Ticket:** LPS-58210
+
+#### What changed?
+
+The tag `liferay-ui:control-panel-site-selector` has been deleted.
+
+#### Who is affected?
+
+This affects developers who use this tag in their code.
+
+#### How should I update my code?
+
+You should consider using the tag `liferay-ui:my-sites`, or create your own
+markup using the `GroupService` API.
+
+#### Why was this change made?
+
+This tag is no longer used and will no longer be maintained properly.
+
+---------------------------------------
+
+### Removed Methods Related to Control Panel in PortalUtil
+- **Date:** 2015-Sep-23
+- **JIRA Ticket:** LPS-58210
+
+#### What changed?
+
+The following methods have been deleted:
+
+- `getControlPanelCategoriesMap`
+- `getControlPanelCategory`
+- `getControlPanelPortlets`
+- `getFirstMyAccountPortlet`
+- `getFirstSiteAdministrationPortlet`
+- `getSiteAdministrationCategoriesMap`
+- `getSiteAdministrationURL`
+- `isCompanyControlPanelVisible`
+
+#### Who is affected?
+
+This affects developers that use any of the methods listed above.
+
+#### How should I update my code?
+
+In order to work with applications displayed in the Product Menu, developers
+should call the `PanelCategoryRegistry` and `PanelAppRegistry` classes located
+in the `application-list-api` module. These classes allow developers to interact
+with categories and applications in the Control Panel.
+
+#### Why was this change made?
+
+These methods are no longer used and they will not work properly since they
+cannot call the `application-list-api` from the portal context.
+
+---------------------------------------
+
+### Removed ThemeDisplay Methods Related to Control Panel and Site Administration
+- **Date:** 2015-Sep-23
+- **JIRA Ticket:** LPS-58210
+
+#### What changed?
+
+The following methods have been deleted:
+
+- `getControlPanelCategory`
+- `getURLSiteAdministration`
+
+#### Who is affected?
+
+This affects developers that use either of the methods listed above.
+
+#### How should I update my code?
+
+Site Administration is not a site per se; some applications are displayed in
+that context. To create a link to an application that is displayed in Site
+Administration, developers should use the method
+`PortalUtil.getControlPanelURL`. In order to obtain the first application
+displayed in a section of the Product Menu, developers should use the
+`application-list-api` module to call the `PanelCategoryRegistry` and
+`PanelAppRegistry` classes.
+
+#### Why was this change made?
+
+These methods are no longer used and they will not work properly since they
+cannot call the `application-list-api` from the portal context.
 
 ---------------------------------------

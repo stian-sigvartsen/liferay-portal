@@ -15,7 +15,9 @@
 package com.liferay.sync.engine.util;
 
 import com.liferay.sync.engine.documentlibrary.util.FileEventUtil;
+import com.liferay.sync.engine.model.SyncAccount;
 import com.liferay.sync.engine.model.SyncFile;
+import com.liferay.sync.engine.service.SyncAccountService;
 import com.liferay.sync.engine.service.SyncFileService;
 
 import java.io.IOException;
@@ -36,6 +38,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -124,6 +127,23 @@ public class FileUtil {
 			};
 
 			FileLockRetryUtil.registerPathCallable(pathCallable);
+		}
+	}
+
+	public static boolean exists(Path filePath) {
+		try {
+			Path realFilePath = filePath.toRealPath();
+
+			String realFilePathString = realFilePath.toString();
+
+			if (!realFilePathString.equals(filePath.toString())) {
+				return false;
+			}
+
+			return Files.exists(filePath);
+		}
+		catch (Exception e) {
+			return false;
 		}
 	}
 
@@ -340,6 +360,19 @@ public class FileUtil {
 		return fileName;
 	}
 
+	public static Path getTempFilePath(SyncFile syncFile) {
+		SyncAccount syncAccount = SyncAccountService.fetchSyncAccount(
+			syncFile.getSyncAccountId());
+
+		if (syncAccount == null) {
+			return null;
+		}
+
+		return getFilePath(
+			syncAccount.getFilePathName(), ".data",
+			String.valueOf(syncFile.getSyncFileId()));
+	}
+
 	public static boolean isHidden(Path filePath) {
 		if (!Files.exists(filePath)) {
 			return false;
@@ -396,6 +429,19 @@ public class FileUtil {
 		}
 
 		try {
+			if (MSOfficeFileUtil.isLegacyExcelFile(filePath)) {
+				Date lastSavedDate = MSOfficeFileUtil.getLastSavedDate(
+					filePath);
+
+				if ((lastSavedDate != null) && (lastSavedDate.getTime() ==
+						GetterUtil.getLong(
+							syncFile.getLocalExtraSettingsValue(
+								"lastSavedDate")))) {
+
+					return false;
+				}
+			}
+
 			if (syncFile.getSize() > 0) {
 				long lastModifiedTime = getLastModifiedTime(filePath);
 
@@ -511,9 +557,9 @@ public class FileUtil {
 				sourceFilePath, targetFilePath, StandardCopyOption.ATOMIC_MOVE,
 				StandardCopyOption.REPLACE_EXISTING);
 		}
-		catch (Exception e) {
+		catch (IOException ioe) {
 			if (!retry) {
-				throw e;
+				throw ioe;
 			}
 
 			PathCallable pathCallable = new PathCallable(sourceFilePath) {

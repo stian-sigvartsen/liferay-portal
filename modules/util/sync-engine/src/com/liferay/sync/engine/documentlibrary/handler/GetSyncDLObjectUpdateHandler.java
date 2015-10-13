@@ -166,6 +166,23 @@ public class GetSyncDLObjectUpdateHandler extends BaseSyncDLObjectHandler {
 	}
 
 	@Override
+	public void processFinally() {
+		_scheduledFuture.cancel(false);
+
+		SyncEngineUtil.fireSyncEngineStateChanged(
+			getSyncAccountId(), SyncEngineUtil.SYNC_ENGINE_STATE_PROCESSED);
+
+		SyncSite syncSite = (SyncSite)getParameterValue("syncSite");
+
+		syncSite = SyncSiteService.fetchSyncSite(
+			syncSite.getGroupId(), syncSite.getSyncAccountId());
+
+		syncSite.setState(SyncSite.STATE_SYNCED);
+
+		SyncSiteService.update(syncSite);
+	}
+
+	@Override
 	public void processResponse(String response) throws Exception {
 		if (_syncDLObjectUpdate == null) {
 			if (response.startsWith("\"")) {
@@ -201,7 +218,16 @@ public class GetSyncDLObjectUpdateHandler extends BaseSyncDLObjectHandler {
 
 			syncSite.setRemoteSyncTime(_syncDLObjectUpdate.getLastAccessTime());
 
+			if (_syncDLObjectUpdate.getResultsTotal() <= syncFiles.size()) {
+				syncSite.setState(SyncSite.STATE_SYNCED);
+			}
+
 			SyncSiteService.update(syncSite);
+
+			if (_syncDLObjectUpdate.getResultsTotal() > syncFiles.size()) {
+				FileEventUtil.getUpdates(
+					syncSite.getGroupId(), getSyncAccountId(), syncSite);
+			}
 		}
 	}
 
@@ -265,12 +291,7 @@ public class GetSyncDLObjectUpdateHandler extends BaseSyncDLObjectHandler {
 				targetSyncFile.getFilePathName());
 		}
 
-		SyncAccount syncAccount = SyncAccountService.fetchSyncAccount(
-			sourceSyncFile.getSyncAccountId());
-
-		Path tempFilePath = FileUtil.getFilePath(
-			syncAccount.getFilePathName(), ".data",
-			String.valueOf(targetSyncFile.getSyncFileId()));
+		Path tempFilePath = FileUtil.getTempFilePath(targetSyncFile);
 
 		Files.copy(
 			Paths.get(sourceSyncFile.getFilePathName()), tempFilePath,
@@ -469,14 +490,6 @@ public class GetSyncDLObjectUpdateHandler extends BaseSyncDLObjectHandler {
 		}
 	}
 
-	@Override
-	protected void processFinally() {
-		_scheduledFuture.cancel(false);
-
-		SyncEngineUtil.fireSyncEngineStateChanged(
-			getSyncAccountId(), SyncEngineUtil.SYNC_ENGINE_STATE_PROCESSED);
-	}
-
 	protected void processSyncFile(SyncFile targetSyncFile) {
 		SyncFile parentSyncFile = SyncFileService.fetchSyncFile(
 			targetSyncFile.getRepositoryId(), getSyncAccountId(),
@@ -570,20 +583,18 @@ public class GetSyncDLObjectUpdateHandler extends BaseSyncDLObjectHandler {
 
 			processDependentSyncFiles(targetSyncFile);
 		}
+		catch (FileSystemException fse) {
+			String message = fse.getMessage();
+
+			if (message.contains("File name too long")) {
+				targetSyncFile.setState(SyncFile.STATE_ERROR);
+				targetSyncFile.setUiEvent(SyncFile.UI_EVENT_FILE_NAME_TOO_LONG);
+
+				SyncFileService.update(targetSyncFile);
+			}
+		}
 		catch (Exception e) {
 			_logger.error(e.getMessage(), e);
-
-			if (e instanceof FileSystemException) {
-				String message = e.getMessage();
-
-				if (message.contains("File name too long")) {
-					targetSyncFile.setState(SyncFile.STATE_ERROR);
-					targetSyncFile.setUiEvent(
-						SyncFile.UI_EVENT_FILE_NAME_TOO_LONG);
-
-					SyncFileService.update(targetSyncFile);
-				}
-			}
 		}
 	}
 

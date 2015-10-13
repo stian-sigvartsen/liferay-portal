@@ -16,7 +16,7 @@ AUI.add(
 			},
 
 			visible: {
-				value: true
+				valueFn: '_valueVisible'
 			}
 		};
 
@@ -28,7 +28,6 @@ AUI.add(
 
 				instance._eventHandlers.push(
 					evaluator.after('evaluationEnded', A.bind('_afterVisibilityEvaluationEnded', instance)),
-					evaluator.after('evaluationStarted', A.bind('_afterVisibilityEvaluationStarted', instance)),
 					instance.after('valueChanged', instance._afterValueChanged),
 					instance.after('visibleChange', instance._afterVisibleChange)
 				);
@@ -41,23 +40,13 @@ AUI.add(
 
 				var visibility = Util.getFieldByKey(result, instanceId, 'instanceId');
 
-				instance.set('visible', visibility && visibility.visible === true);
+				if (visibility !== undefined) {
+					instance.set('visible', visibility.visible);
+				}
 			},
 
-			_afterValueChanged: function() {
+			processVisibilityEvaluation: function(result) {
 				var instance = this;
-
-				var evaluator = instance.get('evaluator');
-
-				evaluator.evaluate();
-			},
-
-			_afterVisibilityEvaluationEnded: function(event) {
-				var instance = this;
-
-				var result = event.result;
-
-				instance.hideFeedback();
 
 				if (result && Lang.isObject(result)) {
 					instance.getRoot().eachField(
@@ -68,16 +57,34 @@ AUI.add(
 				}
 			},
 
-			_afterVisibilityEvaluationStarted: function() {
+			_afterValueChanged: function() {
 				var instance = this;
 
+				var evaluator = instance.get('evaluator');
+
 				instance.showLoadingFeedback();
+
+				evaluator.evaluate();
+			},
+
+			_afterVisibilityEvaluationEnded: function(event) {
+				var instance = this;
+
+				instance.hideFeedback();
+
+				instance.processVisibilityEvaluation(event.result);
 			},
 
 			_afterVisibleChange: function() {
 				var instance = this;
 
 				instance.render();
+			},
+
+			_valueVisible: function() {
+				var instance = this;
+
+				return instance.get('visibilityExpression') !== 'false';
 			}
 		};
 

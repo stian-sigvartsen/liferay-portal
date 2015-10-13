@@ -16,6 +16,7 @@ package com.liferay.portlet.asset.bundle.assetrendererfactoryregistryutil;
 
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Tuple;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portlet.asset.model.AssetEntry;
@@ -133,6 +134,11 @@ public class TestAssetRendererFactory
 	}
 
 	@Override
+	public String getSubtypeTitle(Locale locale) {
+		return StringPool.BLANK;
+	}
+
+	@Override
 	public String getType() {
 		return TestAssetRendererFactory.class.getName();
 	}
@@ -220,6 +226,11 @@ public class TestAssetRendererFactory
 
 	@Override
 	public boolean isListable(long classPK) {
+		return false;
+	}
+
+	@Override
+	public boolean isSearchable() {
 		return false;
 	}
 

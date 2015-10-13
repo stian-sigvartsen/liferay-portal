@@ -323,7 +323,7 @@ AUI.add(
 						'/calendar.calendarbooking/delete-calendar-booking-instance': {
 							allFollowing: allFollowing,
 							calendarBookingId: schedulerEvent.get('calendarBookingId'),
-							startTime: CalendarUtil.toUTC(schedulerEvent.get('startDate')).getTime()
+							instanceIndex: schedulerEvent.get('instanceIndex')
 						}
 					},
 					{
@@ -1455,7 +1455,12 @@ AUI.add(
 						A.each(
 							Liferay.CalendarUtil.availableCalendars,
 							function(item, index) {
-								item.reset(calendarEvents[index]);
+								item.reset(
+									calendarEvents[index],
+									{
+										skipSyncUI: true
+									}
+								);
 							}
 						);
 

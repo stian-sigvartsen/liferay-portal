@@ -38,7 +38,6 @@ import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.test.LayoutTestUtil;
-import com.liferay.portlet.exportimport.lar.PortletDataHandler;
 
 import java.util.List;
 import java.util.Map;
@@ -119,23 +118,21 @@ public class JournalPortletDataHandlerTest
 
 		DDMTemplateTestUtil.addTemplate(
 			stagingGroup.getGroupId(),
-			PortalUtil.getClassNameId(DDMStructure.class), -1L);
+			PortalUtil.getClassNameId(DDMStructure.class),
+			PortalUtil.getClassNameId(JournalArticle.class));
 
 		DDMTemplate ddmTemplate = DDMTemplateTestUtil.addTemplate(
-			stagingGroup.getGroupId(), ddmStructure.getStructureId());
+			stagingGroup.getGroupId(), ddmStructure.getStructureId(),
+			PortalUtil.getClassNameId(JournalArticle.class));
 
 		DDMTemplate rendererDDMTemplate = DDMTemplateTestUtil.addTemplate(
-			stagingGroup.getGroupId(), ddmStructure.getStructureId());
+			stagingGroup.getGroupId(), ddmStructure.getStructureId(),
+			PortalUtil.getClassNameId(JournalArticle.class));
 
 		JournalTestUtil.addFeed(
 			stagingGroup.getGroupId(), layout.getPlid(),
 			RandomTestUtil.randomString(), ddmStructure.getStructureKey(),
 			ddmTemplate.getTemplateKey(), rendererDDMTemplate.getTemplateKey());
-	}
-
-	@Override
-	protected PortletDataHandler createPortletDataHandler() {
-		return new JournalPortletDataHandler();
 	}
 
 	@Override

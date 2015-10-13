@@ -1,14 +1,21 @@
 <?xml version="1.0"?>
 
-<project name="build-common"
+<project
+	name="build-common"
 	xmlns:antelope="antlib:ise.antelope.tasks"
 	xmlns:artifact="antlib:org.apache.maven.artifact.ant"
+	xmlns:if="ant:if"
 	xmlns:ivy="antlib:org.apache.ivy.ant"
 	xmlns:sonar="antlib:org.sonar.ant"
+	xmlns:unless="ant:unless"
 >
 	<dirname file="${ant.file.build-common}" property="project.dir.native" />
 
 	<pathconvert property="project.dir" targetos="unix">
+		<path location="${project.dir.native}" />
+	</pathconvert>
+
+	<pathconvert dirsep="/" property="project.dir.unix">
 		<path location="${project.dir.native}" />
 	</pathconvert>
 
@@ -79,6 +86,8 @@
 	<typedef classpathref="lib.classpath" resource="org/apache/maven/artifact/ant/antlib.xml" uri="antlib:org.apache.maven.artifact.ant" />
 	<taskdef classpathref="lib.classpath" resource="tasks.properties" />
 
+	<taskdef classname="com.liferay.ant.beanshell.BeanShellTask" classpathref="lib.classpath" name="beanshell" />
+
 	<taskdef classname="com.liferay.ant.bnd.BaselineJarTask" classpathref="lib.classpath" name="baseline-jar" />
 	<taskdef classname="com.liferay.ant.bnd.ReleaseToRepoTask" classpathref="lib.classpath" name="release-to-repo" />
 
@@ -120,6 +129,16 @@
 	<propertycopy from="app.server.${app.server.type}.log.dir" name="app.server.log.dir" />
 	<propertycopy from="app.server.${app.server.type}.temp.dir" name="app.server.temp.dir" />
 	<propertycopy from="app.server.${app.server.type}.work.dir" name="app.server.work.dir" />
+
+	<if>
+		<or>
+			<equals arg1="${app.server.type}" arg2="glassfish" />
+			<equals arg1="${app.server.type}" arg2="websphere" />
+		</or>
+		<then>
+			<propertycopy from="app.server.${app.server.type}.portal.war.name" name="app.server.portal.war.name" />
+		</then>
+	</if>
 
 	<propertyselector
 		casesensitive="false"
@@ -445,15 +464,6 @@ Please set the environment variable ANT_OPTS to the recommended value of
 		</then>
 	</if>
 
-	<if>
-		<not>
-			<equals arg1="${junit.debug}" arg2="true" />
-		</not>
-		<then>
-			<var name="junit.debug.jpda" value="" />
-		</then>
-	</if>
-
 	<property name="whip.agent" value="-javaagent:${project.dir}/${junit.whip.jar}=${junit.whip.includes};${junit.whip.excludes}" />
 
 	<macrodef name="app-server-properties-reset">
@@ -677,7 +687,7 @@ Please set the environment variable ANT_OPTS to the recommended value of
 					<equals arg1="${app.server.type}" arg2="glassfish" />
 				</and>
 				<then>
-					<war destfile="${app.server.glassfish.portal.war.dir}" update="true">
+					<war destfile="${app.server.glassfish.portal.war.name}" update="true">
 						<classes dir="${project.dir}/portal-impl/src" includes="portal-*.properties,system-*.properties" />
 					</war>
 				</then>
@@ -942,11 +952,11 @@ Please set the environment variable ANT_OPTS to the recommended value of
 			<junit dir="${project.dir}" fork="on" forkmode="@{forkmode}" haltonfailure="${junit.halt.on.failure}" jvm="${junit.jvm}" outputtoformatters="false" printsummary="on" showoutput="true">
 				<sysproperty key="junit.aspectj.dump" file="woven-classes" />
 				<sysproperty key="junit.code.coverage" value="${junit.code.coverage}" />
-				<sysproperty key="junit.debug" value="${junit.debug}" />
+				<sysproperty if:true="${jvm.debug}" key="jvm.debug" value="true" />
 				<sysproperty key="whip.agent" value="${whip.agent}" />
 				<sysproperty key="whip.datafile" file="test-coverage/@{test.type}/whip.dat" />
 				<sysproperty key="whip.instrument.dump" value="${whip.instrument.dump}" />
-				<jvmarg line="${junit.debug.jpda}" />
+				<jvmarg if:true="${jvm.debug}" line="${jpda.settings}" />
 				<jvmarg line="${junit.java.gc}" />
 				<jvmarg line="${whip.agent}" />
 				<jvmarg value="-Xss2m" />
@@ -1469,6 +1479,9 @@ rerun your task.
 				liferay.home=${liferay.home}
 				microsoft.translator.client.id=${microsoft.translator.client.id}
 				microsoft.translator.client.secret=${microsoft.translator.client.secret}
+				nodejs.npm.email=${nodejs.npm.email}
+				nodejs.npm.password=${nodejs.npm.password}
+				nodejs.npm.user=${nodejs.npm.user}
 				sass.compiler.class.name=${sass.compiler.class.name}
 				upgrade.table.dir=${upgrade.table.dir}
 			</echo>
@@ -1600,8 +1613,6 @@ rerun your task.
 				auto.deploy.dir=${liferay.home}/osgi/apps
 				clean.delete.ivy.md5=true
 				clean.delete.lib=true
-				ivy.home=${ivy.home}
-				ivy.log.level=${ivy.log.level}
 				junit.java.integration.gc=${junit.java.integration.gc}
 				junit.java.unit.gc=${junit.java.unit.gc}
 				junit.java.unit.gc.logging=${junit.java.unit.gc.logging}

@@ -279,13 +279,14 @@ public class AppLocalServiceWrapper implements AppLocalService,
 	}
 
 	@Override
-	public java.util.Map<java.lang.String, java.lang.String> getBundledApps() {
-		return _appLocalService.getBundledApps();
+	public java.util.List<com.liferay.marketplace.model.App> getInstalledApps() {
+		return _appLocalService.getInstalledApps();
 	}
 
 	@Override
-	public java.util.List<com.liferay.marketplace.model.App> getInstalledApps() {
-		return _appLocalService.getInstalledApps();
+	public java.util.List<com.liferay.marketplace.model.App> getInstalledApps(
+		java.lang.String category) {
+		return _appLocalService.getInstalledApps(category);
 	}
 
 	@Override
@@ -293,6 +294,11 @@ public class AppLocalServiceWrapper implements AppLocalService,
 		java.io.Serializable primaryKeyObj)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _appLocalService.getPersistedModel(primaryKeyObj);
+	}
+
+	@Override
+	public java.util.Map<java.lang.String, java.lang.String> getPrepackagedApps() {
+		return _appLocalService.getPrepackagedApps();
 	}
 
 	@Override
@@ -337,19 +343,19 @@ public class AppLocalServiceWrapper implements AppLocalService,
 
 	@Override
 	public com.liferay.marketplace.model.App updateApp(long userId,
+		java.io.File file)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _appLocalService.updateApp(userId, file);
+	}
+
+	@Override
+	public com.liferay.marketplace.model.App updateApp(long userId,
 		long remoteAppId, java.lang.String title, java.lang.String description,
 		java.lang.String category, java.lang.String iconURL,
 		java.lang.String version, java.io.File file)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _appLocalService.updateApp(userId, remoteAppId, title,
 			description, category, iconURL, version, file);
-	}
-
-	@Override
-	public com.liferay.marketplace.model.App updateApp(long userId,
-		long remoteAppId, java.lang.String version, java.io.File file)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		return _appLocalService.updateApp(userId, remoteAppId, version, file);
 	}
 
 	/**

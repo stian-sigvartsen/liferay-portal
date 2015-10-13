@@ -100,6 +100,8 @@ public interface AssetRendererFactory<T> {
 
 	public String getPortletId();
 
+	public String getSubtypeTitle(Locale locale);
+
 	public String getType();
 
 	public String getTypeName(Locale locale);
@@ -157,6 +159,8 @@ public interface AssetRendererFactory<T> {
 	public boolean isLinkable();
 
 	public boolean isListable(long classPK);
+
+	public boolean isSearchable();
 
 	public boolean isSelectable();
 

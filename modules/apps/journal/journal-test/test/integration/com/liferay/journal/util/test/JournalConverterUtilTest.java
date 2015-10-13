@@ -111,7 +111,8 @@ public class JournalConverterUtilTest {
 	public void setUp() throws Exception {
 		_group = GroupTestUtil.addGroup();
 
-		_ddmStructureTestHelper = new DDMStructureTestHelper(_group);
+		_ddmStructureTestHelper = new DDMStructureTestHelper(
+			PortalUtil.getClassNameId(JournalArticle.class), _group);
 
 		long classNameId = PortalUtil.getClassNameId(JournalArticle.class);
 
@@ -723,10 +724,10 @@ public class JournalConverterUtilTest {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
 		if (includeGroupId) {
-			jsonObject.put("groupId", String.valueOf(layout.getGroupId()));
+			jsonObject.put("groupId", layout.getGroupId());
 		}
 
-		jsonObject.put("layoutId", String.valueOf(layout.getLayoutId()));
+		jsonObject.put("layoutId", layout.getLayoutId());
 		jsonObject.put("privateLayout", layout.isPrivateLayout());
 
 		return jsonObject.toString();

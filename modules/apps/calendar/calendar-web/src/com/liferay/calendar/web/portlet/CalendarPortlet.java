@@ -69,6 +69,7 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
@@ -105,6 +106,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -746,6 +748,23 @@ public class CalendarPortlet extends MVCPortlet {
 					actionRequest, weekday.getValue());
 
 				if (checked) {
+					java.util.Calendar startTimeJCalendar = getJCalendar(
+						actionRequest, "startTime");
+
+					java.util.Calendar weekdayJCalendar =
+						JCalendarUtil.getJCalendar(
+							startTimeJCalendar.getTimeInMillis(),
+							getTimeZone(actionRequest));
+
+					weekdayJCalendar.set(
+						java.util.Calendar.DAY_OF_WEEK,
+						weekday.getCalendarWeekday());
+
+					weekdayJCalendar = JCalendarUtil.getJCalendar(
+						weekdayJCalendar, calendarTimeZone);
+
+					weekday = Weekday.getWeekday(weekdayJCalendar);
+
 					positionalWeekdays.add(new PositionalWeekday(weekday, 0));
 				}
 			}
@@ -916,11 +935,15 @@ public class CalendarPortlet extends MVCPortlet {
 			resourceRequest, "statuses");
 
 		List<CalendarBooking> calendarBookings =
-			CalendarBookingServiceUtil.search(
+			Collections.<CalendarBooking>emptyList();
+
+		if (!ArrayUtil.isEmpty(calendarIds)) {
+			calendarBookings = CalendarBookingServiceUtil.search(
 				themeDisplay.getCompanyId(), new long[0], calendarIds,
 				new long[0], -1, null, startTimeJCalendar.getTimeInMillis(),
 				endTimeJCalendar.getTimeInMillis(), true, statuses,
 				QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+		}
 
 		JSONArray jsonArray = CalendarUtil.toCalendarBookingsJSONArray(
 			themeDisplay, calendarBookings, getTimeZone(resourceRequest));

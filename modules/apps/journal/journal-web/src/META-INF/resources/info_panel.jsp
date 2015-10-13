@@ -17,8 +17,7 @@
 <%@ include file="/init.jsp" %>
 
 <%
-JournalFolder folder = (JournalFolder)request.getAttribute("view.jsp-folder");
-long folderId = GetterUtil.getLong((String)request.getAttribute("view.jsp-folderId"));
+JournalFolder folder = journalDisplayContext.getFolder();
 %>
 
 <div class="sidebar-header">
@@ -40,11 +39,8 @@ long folderId = GetterUtil.getLong((String)request.getAttribute("view.jsp-folder
 </div>
 
 <aui:nav-bar>
-	<aui:nav>
-		<aui:nav-item
-			label="details"
-			selected="<%= true %>"
-		/>
+	<aui:nav cssClass="navbar-nav">
+		<aui:nav-item cssClass="active" label="details" selected="<%= true %>" />
 	</aui:nav>
 </aui:nav-bar>
 
@@ -52,7 +48,7 @@ long folderId = GetterUtil.getLong((String)request.getAttribute("view.jsp-folder
 	<h5><liferay-ui:message key="num-of-items" /></h5>
 
 	<p>
-		<%= JournalFolderServiceUtil.getFoldersAndArticlesCount(scopeGroupId, folderId, WorkflowConstants.STATUS_ANY) %>
+		<%= JournalFolderServiceUtil.getFoldersAndArticlesCount(scopeGroupId, journalDisplayContext.getFolderId(), journalDisplayContext.getStatus()) %>
 	</p>
 
 	<c:if test="<%= folder != null %>">

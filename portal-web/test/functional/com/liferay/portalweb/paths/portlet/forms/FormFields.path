@@ -13,6 +13,16 @@
 	<td></td>
 	<td></td>
 </tr>
+<tr>
+	<td>ADVANCED_FIELD_SETTINGS_TOGGLE</td>
+	<td>//a[@class='settings-toggler']</td>
+	<td></td>
+</tr>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
 <!--CHECKBOX-->
 <tr>
 	<td>CHECKBOX</td>
@@ -85,6 +95,22 @@
 <tr>
 	<td>TEXT_LABEL</td>
 	<td>//input[@type='text' and contains(@id,'${key_fieldName}')]/../label[contains(@class,'control-label')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+<!--SELECT-->
+<tr>
+	<td>SELECT_OPTION</td>
+	<td>//div[contains(@data-fieldname,'${key_fieldName}')]//select</td>
+	<td></td>
+</tr>
+<tr>
+	<td>SELECT_LABEL</td>
+	<td>//div[contains(@data-fieldname,'${key_fieldName}')]//label</td>
 	<td></td>
 </tr>
 <tr>

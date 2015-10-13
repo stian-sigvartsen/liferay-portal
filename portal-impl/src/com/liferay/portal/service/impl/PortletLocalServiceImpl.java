@@ -31,10 +31,9 @@ import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletLayoutListener;
 import com.liferay.portal.kernel.portlet.PortletProvider;
 import com.liferay.portal.kernel.portlet.PortletProviderUtil;
-import com.liferay.portal.kernel.scheduler.SchedulerEntry;
 import com.liferay.portal.kernel.scheduler.SchedulerEntryImpl;
 import com.liferay.portal.kernel.scheduler.TimeUnit;
-import com.liferay.portal.kernel.scheduler.TriggerType;
+import com.liferay.portal.kernel.scheduler.TriggerFactoryUtil;
 import com.liferay.portal.kernel.servlet.ServletContextUtil;
 import com.liferay.portal.kernel.spring.aop.Skip;
 import com.liferay.portal.kernel.transaction.Transactional;
@@ -76,7 +75,6 @@ import com.liferay.portal.service.base.PortletLocalServiceBaseImpl;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.servlet.ComboServlet;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portal.util.PortletCategoryKeys;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebAppPool;
@@ -772,8 +770,10 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 					PortalMyAccountApplicationType.MyAccount.CLASS_NAME,
 					PortletProvider.Action.VIEW);
 
-				if (!portletModel.getPortletId().equals(PortletKeys.ADMIN) &&
-					!portletModel.getPortletId().equals(portletId) &&
+				if (!Validator.equals(
+						portletModel.getPortletId(),
+						PortletKeys.SERVER_ADMIN) &&
+					!Validator.equals(portletModel.getPortletId(), portletId) &&
 					!portletModel.isInclude()) {
 
 					portletPoolsItr.remove();
@@ -1310,17 +1310,18 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 		for (Element schedulerEntryElement :
 				portletElement.elements("scheduler-entry")) {
 
-			SchedulerEntry schedulerEntry = new SchedulerEntryImpl();
+			SchedulerEntryImpl schedulerEntryImpl = new SchedulerEntryImpl();
 
-			schedulerEntry.setDescription(
-				GetterUtil.getString(
-					schedulerEntryElement.elementText(
-						"scheduler-description")));
-			schedulerEntry.setEventListenerClass(
-				GetterUtil.getString(
-					schedulerEntryElement.elementText(
-						"scheduler-event-listener-class"),
-					schedulerEntry.getEventListenerClass()));
+			String description = GetterUtil.getString(
+				schedulerEntryElement.elementText("scheduler-description"));
+
+			schedulerEntryImpl.setDescription(description);
+
+			String eventListenerClass = GetterUtil.getString(
+				schedulerEntryElement.elementText(
+					"scheduler-event-listener-class"));
+
+			schedulerEntryImpl.setEventListenerClass(eventListenerClass);
 
 			Element triggerElement = schedulerEntryElement.element("trigger");
 
@@ -1328,49 +1329,54 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 			Element simpleElement = triggerElement.element("simple");
 
 			if (cronElement != null) {
-				schedulerEntry.setTriggerType(TriggerType.CRON);
-
 				Element propertyKeyElement = cronElement.element(
 					"property-key");
 
+				String cronException = null;
+
 				if (propertyKeyElement != null) {
-					schedulerEntry.setTriggerValue(
-						_getTriggerValue(
-							portletModel, propertyKeyElement.getTextTrim()));
+					cronException = _getTriggerValue(
+						portletModel, propertyKeyElement.getTextTrim());
 				}
 				else {
-					schedulerEntry.setTriggerValue(
-						cronElement.elementText("cron-trigger-value"));
+					cronException = cronElement.elementText(
+						"cron-trigger-value");
 				}
+
+				schedulerEntryImpl.setTrigger(
+					TriggerFactoryUtil.createTrigger(
+						eventListenerClass, eventListenerClass, cronException));
 			}
 			else if (simpleElement != null) {
-				schedulerEntry.setTriggerType(TriggerType.SIMPLE);
-
 				Element propertyKeyElement = simpleElement.element(
 					"property-key");
 
+				String intervalString = null;
+
 				if (propertyKeyElement != null) {
-					schedulerEntry.setTriggerValue(
-						_getTriggerValue(
-							portletModel, propertyKeyElement.getTextTrim()));
+					intervalString = _getTriggerValue(
+						portletModel, propertyKeyElement.getTextTrim());
 				}
 				else {
 					Element simpleTriggerValueElement = simpleElement.element(
 						"simple-trigger-value");
 
-					schedulerEntry.setTriggerValue(
-						simpleTriggerValueElement.getTextTrim());
+					intervalString = simpleTriggerValueElement.getTextTrim();
 				}
 
-				String timeUnit = GetterUtil.getString(
-					simpleElement.elementText("time-unit"),
-					TimeUnit.SECOND.getValue());
+				String timeUnitString = StringUtil.toUpperCase(
+					GetterUtil.getString(
+						simpleElement.elementText("time-unit"),
+						TimeUnit.SECOND.getValue()));
 
-				schedulerEntry.setTimeUnit(
-					TimeUnit.valueOf(StringUtil.toUpperCase(timeUnit)));
+				schedulerEntryImpl.setTrigger(
+					TriggerFactoryUtil.createTrigger(
+						eventListenerClass, eventListenerClass,
+						GetterUtil.getIntegerStrict(intervalString),
+						TimeUnit.valueOf(timeUnitString)));
 			}
 
-			portletModel.addSchedulerEntry(schedulerEntry);
+			portletModel.addSchedulerEntry(schedulerEntryImpl);
 		}
 
 		portletModel.setPortletURLClass(
@@ -1477,31 +1483,6 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 			GetterUtil.getString(
 				portletElement.elementText("xml-rpc-method-class"),
 				portletModel.getXmlRpcMethodClass()));
-
-		String controlPanelEntryCategory = GetterUtil.getString(
-			portletElement.elementText("control-panel-entry-category"),
-			portletModel.getControlPanelEntryCategory());
-
-		if (Validator.equals(controlPanelEntryCategory, "content")) {
-			controlPanelEntryCategory =
-				PortletCategoryKeys.SITE_ADMINISTRATION_CONTENT;
-		}
-		else if (Validator.equals(controlPanelEntryCategory, "marketplace")) {
-			controlPanelEntryCategory = PortletCategoryKeys.APPS;
-		}
-		else if (Validator.equals(controlPanelEntryCategory, "portal")) {
-			controlPanelEntryCategory = PortletCategoryKeys.USERS;
-		}
-		else if (Validator.equals(controlPanelEntryCategory, "server")) {
-			controlPanelEntryCategory = PortletCategoryKeys.APPS;
-		}
-
-		portletModel.setControlPanelEntryCategory(controlPanelEntryCategory);
-
-		portletModel.setControlPanelEntryWeight(
-			GetterUtil.getDouble(
-				portletElement.elementText("control-panel-entry-weight"),
-				portletModel.getControlPanelEntryWeight()));
 		portletModel.setControlPanelEntryClass(
 			GetterUtil.getString(
 				portletElement.elementText("control-panel-entry-class"),

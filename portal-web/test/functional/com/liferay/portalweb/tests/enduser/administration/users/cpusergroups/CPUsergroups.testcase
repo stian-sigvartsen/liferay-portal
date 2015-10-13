@@ -1,5 +1,5 @@
 <definition component-name="portal-user-management-and-portal-configuration">
-	<property name="testray.main.component.name" value="Administration" />
+	<property name="testray.main.component.name" value="User Groups" />
 
 	<set-up>
 		<execute macro="User#firstLoginPG" />
@@ -123,7 +123,7 @@
 		</execute>
 
 		<execute macro="UserGroup#viewCP">
-			<var name="userGroupName" value="${userGroupName}" />
+			<var name="userGroupName" value="UG UserGroup Name" />
 		</execute>
 	</command>
 
@@ -341,7 +341,7 @@
 		</execute>
 	</command>
 
-	<command known-issues="LPS-56919" name="SearchCurrentMembersAssignedToUserGroup" priority="4">
+	<command name="SearchCurrentMembersAssignedToUserGroup" priority="4">
 		<execute macro="Page#gotoCP">
 			<var name="portletName" value="User Groups" />
 		</execute>
@@ -388,18 +388,16 @@
 	</command>
 
 	<command name="SearchUserGroup" priority="4">
-		<var name="userGroupName" value="UG UserGroup Name" />
-
 		<execute macro="Page#gotoCP">
 			<var name="portletName" value="User Groups" />
 		</execute>
 
 		<execute macro="UserGroup#addCP">
-			<var name="userGroupName" value="${userGroupName}" />
+			<var name="userGroupName" value="UG UserGroup Name" />
 		</execute>
 
 		<execute macro="UserGroup#searchCP">
-			<var name="userGroupName" value="${userGroupName}" />
+			<var name="userGroupName" value="UG UserGroup Name" />
 		</execute>
 	</command>
 

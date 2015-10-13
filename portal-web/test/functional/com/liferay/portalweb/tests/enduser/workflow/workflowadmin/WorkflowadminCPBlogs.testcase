@@ -10,7 +10,7 @@
 			<var name="portletName" value="Workflow Configuration" />
 		</execute>
 
-		<execute macro="Workflow#configureSiteWorkflow">
+		<execute macro="Workflow#configureWorkflow">
 			<var name="workflowDefinition" value="Single Approver (Version 1)" />
 			<var name="workflowResourceKey" value="RESOURCE_TABLE_BLOGS_ENTRY_SELECT" />
 		</execute>
@@ -44,7 +44,7 @@
 			<var name="portletName" value="Workflow Configuration" />
 		</execute>
 
-		<execute macro="Workflow#configureSiteWorkflow">
+		<execute macro="Workflow#configureWorkflow">
 			<var name="workflowDefinition" value="Join Xor (Version 1)" />
 			<var name="workflowResourceKey" value="RESOURCE_TABLE_BLOGS_ENTRY_SELECT" />
 		</execute>
@@ -75,7 +75,7 @@
 		<execute macro="Workflow#assignToMeTaskByActions">
 			<var name="workflowAssetTitle" value="Blogs Entry 1" />
 			<var name="workflowAssetType" value="${workflowAssetType}" />
-			<var name="workflowTask" value="task1" />
+			<var name="workflowTask" value="task2" />
 		</execute>
 
 		<execute macro="Page#gotoContentCP">
@@ -95,7 +95,7 @@
 			<var name="workflowAssetTitle" value="Blogs Entry 1" />
 			<var name="workflowAssetType" value="${workflowAssetType}" />
 			<var name="workflowDefinitionTitle" value="Join Xor" />
-			<var name="workflowTask" value="task1" />
+			<var name="workflowTask" value="task2" />
 		</execute>
 
 		<execute macro="Page#gotoContentCP">
@@ -207,7 +207,7 @@
 		<execute macro="Workflow#assignToMeTaskByActions">
 			<var name="workflowAssetTitle" value="Blogs Entry 3" />
 			<var name="workflowAssetType" value="${workflowAssetType}" />
-			<var name="workflowTask" value="task1" />
+			<var name="workflowTask" value="task2" />
 		</execute>
 
 		<execute macro="Page#gotoMyAccount">
@@ -218,7 +218,7 @@
 			<var name="workflowAssetTitle" value="Blogs Entry 3" />
 			<var name="workflowAssetType" value="${workflowAssetType}" />
 			<var name="workflowDefinitionTitle" value="Join Xor" />
-			<var name="workflowTask" value="task1" />
+			<var name="workflowTask" value="task2" />
 		</execute>
 
 		<execute macro="Page#gotoMyAccount">
@@ -228,7 +228,7 @@
 		<execute macro="Workflow#assignToMeTaskByActions">
 			<var name="workflowAssetTitle" value="Blogs Entry 3" />
 			<var name="workflowAssetType" value="${workflowAssetType}" />
-			<var name="workflowTask" value="task2" />
+			<var name="workflowTask" value="task1" />
 		</execute>
 
 		<execute macro="Page#gotoMyAccount">
@@ -239,7 +239,7 @@
 			<var name="workflowAssetTitle" value="Blogs Entry 3" />
 			<var name="workflowAssetType" value="${workflowAssetType}" />
 			<var name="workflowDefinitionTitle" value="Join Xor" />
-			<var name="workflowTask" value="task2" />
+			<var name="workflowTask" value="task1" />
 		</execute>
 
 		<execute macro="Page#gotoContentCP">
@@ -260,7 +260,7 @@
 		</execute>
 	</command>
 
-	<command name="ApproveBlogsEntryCP" priority="4">
+	<command name="ApproveBlogsEntryCP" priority="5">
 		<var name="entryContent" value="Blogs Entry Content" />
 		<var name="entryTitle" value="Blogs Entry Title" />
 
@@ -318,6 +318,10 @@
 
 		<execute macro="BlogsEntry#viewEntryTable">
 			<var name="entryTitle" value="${entryTitle}" />
+		</execute>
+
+		<execute macro="Portlet#changeDisplayStyle">
+			<var name="displayStyle" value="Icon" />
 		</execute>
 
 		<execute macro="BlogsNavigator#gotoEntryCP">

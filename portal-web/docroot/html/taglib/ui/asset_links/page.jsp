@@ -28,7 +28,11 @@ if (assetEntryId > 0) {
 
 <c:if test="<%= (assetLinks != null) && !assetLinks.isEmpty() %>">
 	<div class="taglib-asset-links">
-		<h2 class="asset-links-title icon-link"><liferay-ui:message key="related-assets" />:</h2>
+		<h2 class="asset-links-title">
+			<aui:icon image="link" />
+
+			<liferay-ui:message key="related-assets" />:
+		</h2>
 
 		<ul class="asset-links-list">
 
@@ -114,5 +118,5 @@ if (assetEntryId > 0) {
 </c:if>
 
 <%!
-private static Log _log = LogFactoryUtil.getLog("portal-web.docroot.html.taglib.ui.asset_links.page_jsp");
+private static Log _log = LogFactoryUtil.getLog("portal_web.docroot.html.taglib.ui.asset_links.page_jsp");
 %>

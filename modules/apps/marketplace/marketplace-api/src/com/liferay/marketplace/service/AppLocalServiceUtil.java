@@ -268,18 +268,23 @@ public class AppLocalServiceUtil {
 		return getService().getBeanIdentifier();
 	}
 
-	public static java.util.Map<java.lang.String, java.lang.String> getBundledApps() {
-		return getService().getBundledApps();
-	}
-
 	public static java.util.List<com.liferay.marketplace.model.App> getInstalledApps() {
 		return getService().getInstalledApps();
+	}
+
+	public static java.util.List<com.liferay.marketplace.model.App> getInstalledApps(
+		java.lang.String category) {
+		return getService().getInstalledApps(category);
 	}
 
 	public static com.liferay.portal.model.PersistedModel getPersistedModel(
 		java.io.Serializable primaryKeyObj)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getPersistedModel(primaryKeyObj);
+	}
+
+	public static java.util.Map<java.lang.String, java.lang.String> getPrepackagedApps() {
+		return getService().getPrepackagedApps();
 	}
 
 	public static void installApp(long remoteAppId)
@@ -319,6 +324,12 @@ public class AppLocalServiceUtil {
 	}
 
 	public static com.liferay.marketplace.model.App updateApp(long userId,
+		java.io.File file)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().updateApp(userId, file);
+	}
+
+	public static com.liferay.marketplace.model.App updateApp(long userId,
 		long remoteAppId, java.lang.String title, java.lang.String description,
 		java.lang.String category, java.lang.String iconURL,
 		java.lang.String version, java.io.File file)
@@ -326,12 +337,6 @@ public class AppLocalServiceUtil {
 		return getService()
 				   .updateApp(userId, remoteAppId, title, description,
 			category, iconURL, version, file);
-	}
-
-	public static com.liferay.marketplace.model.App updateApp(long userId,
-		long remoteAppId, java.lang.String version, java.io.File file)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		return getService().updateApp(userId, remoteAppId, version, file);
 	}
 
 	public static AppLocalService getService() {

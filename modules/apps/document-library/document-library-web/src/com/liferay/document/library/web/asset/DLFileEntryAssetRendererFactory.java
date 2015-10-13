@@ -16,6 +16,7 @@ package com.liferay.document.library.web.asset;
 
 import com.liferay.document.library.web.constants.DLPortletKeys;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
@@ -58,10 +59,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {
-		"javax.portlet.name=" + DLPortletKeys.DOCUMENT_LIBRARY,
-		"search.asset.type=com.liferay.portlet.documentlibrary.model.DLFileEntry"
-	},
+	property = {"javax.portlet.name=" + DLPortletKeys.DOCUMENT_LIBRARY},
 	service = AssetRendererFactory.class
 )
 public class DLFileEntryAssetRendererFactory
@@ -72,6 +70,7 @@ public class DLFileEntryAssetRendererFactory
 	public DLFileEntryAssetRendererFactory() {
 		setLinkable(true);
 		setPortletId(DLPortletKeys.DOCUMENT_LIBRARY);
+		setSearchable(true);
 		setSupportsClassTypes(true);
 	}
 
@@ -115,6 +114,11 @@ public class DLFileEntryAssetRendererFactory
 	@Override
 	public String getIconCssClass() {
 		return "icon-file-alt";
+	}
+
+	@Override
+	public String getSubtypeTitle(Locale locale) {
+		return LanguageUtil.get(locale, "type");
 	}
 
 	@Override

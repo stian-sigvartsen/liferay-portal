@@ -32,6 +32,7 @@ import com.liferay.dynamic.data.mapping.model.DDMStructureVersion;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.model.DDMTemplateConstants;
 import com.liferay.dynamic.data.mapping.service.base.DDMStructureLocalServiceBaseImpl;
+import com.liferay.dynamic.data.mapping.service.permission.DDMStructurePermission;
 import com.liferay.dynamic.data.mapping.storage.StorageType;
 import com.liferay.dynamic.data.mapping.util.DDMUtil;
 import com.liferay.dynamic.data.mapping.util.DDMXMLUtil;
@@ -169,7 +170,7 @@ public class DDMStructureLocalServiceImpl
 			user, structure, DDMStructureConstants.VERSION_DEFAULT,
 			serviceContext);
 
-		// Structure Layout
+		// Structure layout
 
 		ddmStructureLayoutLocalService.addStructureLayout(
 			userId, groupId, structureVersion.getStructureVersionId(),
@@ -373,11 +374,14 @@ public class DDMStructureLocalServiceImpl
 			boolean addGuestPermissions)
 		throws PortalException {
 
+		String resourceName =
+			DDMStructurePermission.getStructureModelResourceName(
+				structure.getClassNameId());
+
 		resourceLocalService.addResources(
 			structure.getCompanyId(), structure.getGroupId(),
-			structure.getUserId(), DDMStructure.class.getName(),
-			structure.getStructureId(), false, addGroupPermissions,
-			addGuestPermissions);
+			structure.getUserId(), resourceName, structure.getStructureId(),
+			false, addGroupPermissions, addGuestPermissions);
 	}
 
 	/**
@@ -392,10 +396,14 @@ public class DDMStructureLocalServiceImpl
 			DDMStructure structure, ModelPermissions modelPermissions)
 		throws PortalException {
 
+		String resourceName =
+			DDMStructurePermission.getStructureModelResourceName(
+				structure.getClassNameId());
+
 		resourceLocalService.addModelResources(
 			structure.getCompanyId(), structure.getGroupId(),
-			structure.getUserId(), DDMStructure.class.getName(),
-			structure.getStructureId(), modelPermissions);
+			structure.getUserId(), resourceName, structure.getStructureId(),
+			modelPermissions);
 	}
 
 	/**
@@ -461,14 +469,6 @@ public class DDMStructureLocalServiceImpl
 	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
 	public void deleteStructure(DDMStructure structure) throws PortalException {
 		if (!GroupThreadLocal.isDeleteInProcess()) {
-			if (ddmStructureLinkPersistence.countByStructureId(
-					structure.getStructureId()) > 0) {
-
-				throw new RequiredStructureException.
-					MustNotDeleteStructureReferencedByStructureLinks(
-						structure.getStructureId());
-			}
-
 			if (ddmStructurePersistence.countByParentStructureId(
 					structure.getStructureId()) > 0) {
 
@@ -494,7 +494,12 @@ public class DDMStructureLocalServiceImpl
 
 		ddmStructurePersistence.remove(structure);
 
-		// Structure Versions
+		// Structure links
+
+		ddmStructureLinkPersistence.removeByStructureId(
+			structure.getStructureId());
+
+		// Structure versions
 
 		List<DDMStructureVersion> structureVersions =
 			ddmStructureVersionLocalService.getStructureVersions(
@@ -1515,7 +1520,7 @@ public class DDMStructureLocalServiceImpl
 		DDMStructureVersion structureVersion = addStructureVersion(
 			user, structure, version, serviceContext);
 
-		// Structure Layout
+		// Structure layout
 
 		ddmStructureLayoutLocalService.addStructureLayout(
 			structureVersion.getUserId(), structureVersion.getGroupId(),

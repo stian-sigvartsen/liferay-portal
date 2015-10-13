@@ -15,6 +15,7 @@
 package com.liferay.portlet.asset.model;
 
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.util.Tuple;
@@ -184,6 +185,11 @@ public abstract class BaseAssetRendererFactory<T>
 	}
 
 	@Override
+	public String getSubtypeTitle(Locale locale) {
+		return LanguageUtil.get(locale, "subtype");
+	}
+
+	@Override
 	public String getTypeName(Locale locale) {
 		return ResourceActionsUtil.getModelResource(locale, getClassName());
 	}
@@ -300,6 +306,11 @@ public abstract class BaseAssetRendererFactory<T>
 	}
 
 	@Override
+	public boolean isSearchable() {
+		return _searchable;
+	}
+
+	@Override
 	public boolean isSelectable() {
 		return _selectable;
 	}
@@ -337,6 +348,10 @@ public abstract class BaseAssetRendererFactory<T>
 		_linkable = linkable;
 	}
 
+	protected void setSearchable(boolean searchable) {
+		_searchable = searchable;
+	}
+
 	protected void setSelectable(boolean selectable) {
 		_selectable = selectable;
 	}
@@ -357,6 +372,7 @@ public abstract class BaseAssetRendererFactory<T>
 	private String _className;
 	private boolean _linkable;
 	private String _portletId;
+	private boolean _searchable;
 	private boolean _selectable = true;
 	private boolean _supportsClassTypes;
 

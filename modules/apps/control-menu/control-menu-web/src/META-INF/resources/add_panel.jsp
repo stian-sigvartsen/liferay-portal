@@ -47,10 +47,16 @@
 
 					LayoutTypeController layoutTypeController = layoutTypePortlet.getLayoutTypeController();
 
-					boolean hasAddContentAndApplicationsPermission = !stateMaximized && layout.isTypePortlet() && !layout.isLayoutPrototypeLinkActive() && !layoutTypeController.isFullPageDisplayable() && (hasLayoutUpdatePermission || (layoutTypePortlet.isCustomizable() && layoutTypePortlet.isCustomizedView() && hasLayoutCustomizePermission));
+					boolean hasAddApplicationsPermission = !stateMaximized && layout.isTypePortlet() && !layout.isLayoutPrototypeLinkActive() && !layoutTypeController.isFullPageDisplayable() && (hasLayoutUpdatePermission || (layoutTypePortlet.isCustomizable() && layoutTypePortlet.isCustomizedView() && hasLayoutCustomizePermission));
 
-					if (hasAddContentAndApplicationsPermission) {
-						tabs1Names = ArrayUtil.append(tabs1Names, "content,applications");
+					boolean hasAddContentPermission = hasAddApplicationsPermission && !group.isLayoutPrototype();
+
+					if (hasAddContentPermission) {
+						tabs1Names = ArrayUtil.append(tabs1Names, "content");
+					}
+
+					if (hasAddApplicationsPermission) {
+						tabs1Names = ArrayUtil.append(tabs1Names, "applications");
 					}
 
 					if (hasLayoutAddPermission) {
@@ -72,11 +78,13 @@
 						type="pills"
 						value="<%= selectedTab %>"
 					>
-						<c:if test="<%= hasAddContentAndApplicationsPermission %>">
+						<c:if test="<%= hasAddContentPermission %>">
 							<liferay-ui:section>
 								<liferay-util:include page="/add_content.jsp" servletContext="<%= application %>" />
 							</liferay-ui:section>
+						</c:if>
 
+						<c:if test="<%= hasAddApplicationsPermission %>">
 							<liferay-ui:section>
 								<liferay-util:include page="/add_application.jsp" servletContext="<%= application %>" />
 							</liferay-ui:section>
@@ -99,9 +107,8 @@
 								newPageURL.setParameter("treeId", "layoutsTree");
 								newPageURL.setParameter("viewLayout", Boolean.TRUE.toString());
 
-								String newPageURLString = HttpUtil.setParameter(newPageURL.toString(), "controlPanelCategory", "current_site");
+								String newPageURLString = HttpUtil.setParameter(newPageURL.toString(), "doAsGroupId", String.valueOf(groupDisplayContextHelper.getLiveGroupId()));
 
-								newPageURLString = HttpUtil.setParameter(newPageURLString, "doAsGroupId", String.valueOf(groupDisplayContextHelper.getLiveGroupId()));
 								newPageURLString = HttpUtil.setParameter(newPageURLString, "refererPlid", String.valueOf(selPlid));
 								%>
 

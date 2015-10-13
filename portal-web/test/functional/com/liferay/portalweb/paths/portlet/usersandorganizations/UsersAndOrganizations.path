@@ -40,7 +40,7 @@
 </tr>
 <tr>
 	<td>ADVANCED_SEARCH_ICON</td>
-	<td>//a[@id='toggle_id_users_admin_organization_searchtoggleAdvanced']</td>
+	<td>//a[contains(@id,'searchtoggleAdvanced')]</td>
 	<td></td>
 </tr>
 <tr>

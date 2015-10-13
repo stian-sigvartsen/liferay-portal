@@ -1,7 +1,15 @@
 <definition>
-	<command name="gotoAdd">
-		<execute function="AssertClick" locator1="FormsAdmin#TOOLBAR_ADD" value1="Add" />
+	<var name="formName" value="Created Form Name" />
 
-		<execute function="AssertClick" locator1="FormsAdmin#ADD_MENULIST_NEW_FORM" value1="New Form" />
+	<command name="gotoAdd">
+		<execute function="Click" locator1="Button#PLUS" />
+	</command>
+
+	<command name="gotoViewEntries">
+		<var name="key_formName" value="${formName}" />
+
+		<execute function="Click" locator1="FormsAdmin#FORMS_TABLE_ELLIPSIS" />
+
+		<execute function="AssertClick" locator1="MenuItem#VIEW_ENTRIES" value1="View Entries" />
 	</command>
 </definition>

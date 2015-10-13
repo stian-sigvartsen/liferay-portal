@@ -202,7 +202,7 @@
 </tr>
 <tr>
 	<td>STAGING_MENU_SUBMIT_FOR_PUBLICATION</td>
-	<td>//a[contains(@id,'submitLink')]/span[contains(.,'Submit for Publication')]</td>
+	<td>//a[contains(@id,'submitLink') and contains(.,'Submit for Publication')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -243,7 +243,7 @@
 <!--STAGING_MENULIST-->
 <tr>
 	<td>STAGING_MENULIST_PUBLISH_TO_LIVE_NOW</td>
-	<td>//a[contains(.,'Publish to Live')]</td>
+	<td>//button[contains(.,'Publish to Live')]</td>
 	<td></td>
 </tr>
 </tbody>

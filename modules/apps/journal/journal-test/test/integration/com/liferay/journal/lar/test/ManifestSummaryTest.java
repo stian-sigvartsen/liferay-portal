@@ -20,6 +20,7 @@ import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalFolder;
 import com.liferay.portal.kernel.test.rule.Sync;
+import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.LongWrapper;
 import com.liferay.portal.kernel.util.Time;
@@ -32,21 +33,116 @@ import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.exportimport.lar.ExportImportHelperUtil;
 import com.liferay.portlet.exportimport.lar.ManifestSummary;
 import com.liferay.portlet.exportimport.lar.PortletDataContext;
+import com.liferay.portlet.exportimport.lar.StagedModelType;
+
+import java.text.DateFormat;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
  * @author Zsolt Berentey
+ * @author Daniel Kocsis
  */
 @RunWith(Arquillian.class)
 @Sync
 public class ManifestSummaryTest
 	extends JournalArticleStagedModelDataHandlerTest {
+
+	@Test
+	public void testGetModelCounts() throws Exception {
+		ManifestSummary manifestSummary = new ManifestSummary();
+
+		manifestSummary.addModelAdditionCount(
+			new StagedModelType(DDMStructure.class), 0);
+		manifestSummary.addModelAdditionCount(
+			new StagedModelType(JournalArticle.class), 1);
+		manifestSummary.addModelAdditionCount(
+			new StagedModelType(JournalArticle.class, DDMStructure.class), 1);
+		manifestSummary.addModelAdditionCount(
+			new StagedModelType(JournalArticle.class, DDMTemplate.class), 1);
+
+		// Exact matches
+
+		StagedModelType stagedModelType = new StagedModelType(
+			JournalArticle.class);
+
+		Assert.assertEquals(
+			1, manifestSummary.getModelAdditionCount(stagedModelType));
+
+		stagedModelType = new StagedModelType(
+			JournalArticle.class, DDMStructure.class);
+
+		Assert.assertEquals(
+			1, manifestSummary.getModelAdditionCount(stagedModelType));
+
+		stagedModelType = new StagedModelType(DDMStructure.class);
+
+		Assert.assertEquals(
+			0, manifestSummary.getModelAdditionCount(stagedModelType));
+
+		stagedModelType = new StagedModelType(DDMTemplate.class);
+
+		Assert.assertEquals(
+			-1, manifestSummary.getModelAdditionCount(stagedModelType));
+
+		stagedModelType = new StagedModelType(
+			JournalArticle.class, JournalArticle.class);
+
+		Assert.assertEquals(
+			-1, manifestSummary.getModelAdditionCount(stagedModelType));
+
+		// All
+
+		stagedModelType = new StagedModelType(
+			JournalArticle.class.getName(),
+			StagedModelType.REFERRER_CLASS_NAME_ALL);
+
+		Assert.assertEquals(
+			3, manifestSummary.getModelAdditionCount(stagedModelType));
+
+		stagedModelType = new StagedModelType(
+			DDMStructure.class.getName(),
+			StagedModelType.REFERRER_CLASS_NAME_ALL);
+
+		Assert.assertEquals(
+			0, manifestSummary.getModelAdditionCount(stagedModelType));
+
+		stagedModelType = new StagedModelType(
+			DDMTemplate.class.getName(),
+			StagedModelType.REFERRER_CLASS_NAME_ALL);
+
+		Assert.assertEquals(
+			-1, manifestSummary.getModelAdditionCount(stagedModelType));
+
+		// Any
+
+		stagedModelType = new StagedModelType(
+			JournalArticle.class.getName(),
+			StagedModelType.REFERRER_CLASS_NAME_ANY);
+
+		Assert.assertEquals(
+			2, manifestSummary.getModelAdditionCount(stagedModelType));
+
+		stagedModelType = new StagedModelType(
+			DDMStructure.class.getName(),
+			StagedModelType.REFERRER_CLASS_NAME_ANY);
+
+		Assert.assertEquals(
+			-1, manifestSummary.getModelAdditionCount(stagedModelType));
+
+		stagedModelType = new StagedModelType(
+			DDMTemplate.class.getName(),
+			StagedModelType.REFERRER_CLASS_NAME_ANY);
+
+		Assert.assertEquals(
+			-1, manifestSummary.getModelAdditionCount(stagedModelType));
+	}
 
 	@Override
 	protected void addComments(StagedModel stagedModel) throws Exception {
@@ -79,15 +175,19 @@ public class ManifestSummaryTest
 		Assert.assertEquals(
 			1,
 			manifestSummary.getModelAdditionCount(
-				DDMStructure.class, JournalArticle.class));
+				new StagedModelType(DDMStructure.class, JournalArticle.class)));
 		Assert.assertEquals(
 			1,
 			manifestSummary.getModelAdditionCount(
-				DDMTemplate.class, DDMStructure.class));
+				new StagedModelType(DDMTemplate.class, DDMStructure.class)));
 		Assert.assertEquals(
-			1, manifestSummary.getModelAdditionCount(JournalArticle.class));
+			1,
+			manifestSummary.getModelAdditionCount(
+				new StagedModelType(JournalArticle.class)));
 		Assert.assertEquals(
-			1, manifestSummary.getModelAdditionCount(JournalFolder.class));
+			1,
+			manifestSummary.getModelAdditionCount(
+				new StagedModelType(JournalFolder.class)));
 
 		Document document = SAXReaderUtil.createDocument();
 
@@ -95,9 +195,14 @@ public class ManifestSummaryTest
 
 		Element headerElement = rootElement.addElement("header");
 
-		_exportDate = new Date();
+		DateFormat dateFormat = DateFormatFactoryUtil.getSimpleDateFormat(
+			Time.RFC822_FORMAT);
 
-		headerElement.addAttribute("export-date", Time.getRFC822(_exportDate));
+		String rfc822DateString = Time.getRFC822();
+
+		_exportDate = dateFormat.parse(rfc822DateString);
+
+		headerElement.addAttribute("export-date", rfc822DateString);
 
 		ExportImportHelperUtil.writeManifestSummary(document, manifestSummary);
 
@@ -121,18 +226,21 @@ public class ManifestSummaryTest
 		Assert.assertEquals(
 			1,
 			manifestSummary.getModelAdditionCount(
-				DDMStructure.class, JournalArticle.class));
+				new StagedModelType(DDMStructure.class, JournalArticle.class)));
 		Assert.assertEquals(
 			1,
 			manifestSummary.getModelAdditionCount(
-				DDMTemplate.class, DDMStructure.class));
+				new StagedModelType(DDMTemplate.class, DDMStructure.class)));
 		Assert.assertEquals(
-			1, manifestSummary.getModelAdditionCount(JournalArticle.class));
+			1,
+			manifestSummary.getModelAdditionCount(
+				new StagedModelType(JournalArticle.class)));
 		Assert.assertEquals(
-			1, manifestSummary.getModelAdditionCount(JournalFolder.class));
+			1,
+			manifestSummary.getModelAdditionCount(
+				new StagedModelType(JournalFolder.class)));
 		Assert.assertTrue(
-			DateUtil.equals(
-				_exportDate, manifestSummary.getExportDate(), true));
+			DateUtil.equals(_exportDate, manifestSummary.getExportDate()));
 	}
 
 	private Date _exportDate;

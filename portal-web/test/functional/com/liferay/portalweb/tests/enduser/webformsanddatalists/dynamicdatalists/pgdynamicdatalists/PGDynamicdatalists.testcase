@@ -249,52 +249,6 @@
 		<execute function="AssertElementPresent" locator1="DDLSpreadsheet#SPREADSHEET_CONTAINER" />
 	</command>
 
-	<command name="DeleteList" priority="4">
-		<var name="ddlDataDefinitionName" value="Data Definition Name" />
-		<var name="ddlListName" value="List Name" />
-		<var name="field" value="Text" />
-		<var name="fieldFieldLabel" value="Text" />
-		<var name="fieldName" value="Text" />
-
-		<execute macro="Page#gotoContentCP">
-			<var name="portletName" value="Dynamic Data Lists" />
-		</execute>
-
-		<execute macro="DDLDataDefinition#addCP">
-			<var name="ddlDataDefinitionName" value="${ddlDataDefinitionName}" />
-		</execute>
-
-		<execute macro="DynamicDataMapping#addField">
-			<var name="field" value="${field}" />
-			<var name="fieldFieldLabel" value="${fieldFieldLabel}" />
-			<var name="fieldName" value="${fieldName}" />
-		</execute>
-
-		<execute macro="DDLDataDefinition#saveCP" />
-
-		<execute macro="Page#gotoContentCP">
-			<var name="portletName" value="Dynamic Data Lists" />
-		</execute>
-
-		<execute macro="DDLList#addCP">
-			<var name="ddlListName" value="${ddlListName}" />
-		</execute>
-
-		<execute macro="DDLDataDefinition#selectCP">
-			<var name="ddlDataDefinitionName" value="${ddlDataDefinitionName}" />
-		</execute>
-
-		<execute macro="DDLList#saveCP" />
-
-		<execute macro="Page#gotoPG">
-			<var name="pageName" value="${pageName}" />
-		</execute>
-
-		<execute macro="DDLList#deleteViaDDLDisplayPG">
-			<var name="ddlListName" value="${ddlListName}" />
-		</execute>
-	</command>
-
 	<command name="DeleteListRecord" priority="4">
 		<var name="ddlDataDefinitionName" value="Data Definition Name" />
 		<var name="ddlListName" value="List Name" />
@@ -886,6 +840,8 @@
 
 		<execute macro="DDLList#saveViaDDLDisplayPG" />
 
+		<var name="key_ddlDataDefinitionName" value="Add ${ddlDataDefinition1Name}" />
+
 		<execute function="AssertTextEquals" locator1="DDL#TOOLBAR_ADD" value1="Add ${ddlDataDefinition1Name}" />
 
 		<execute macro="DDLList#addViaDDLDisplayPG">
@@ -906,7 +862,7 @@
 		<execute function="AssertChecked" locator1="DDLConfiguration#TEMPLATES_EDITABLE_CHECKBOX" />
 	</command>
 
-	<command name="ViewBooleanFieldPredefinedValue" priority="4">
+	<command name="ViewBooleanFieldPredefinedValue" priority="3">
 		<var name="ddlDataDefinitionName" value="Boolean Predefined Value Data Definition Name" />
 		<var name="ddlListName" value="List Name" />
 		<var name="ddlRecordFieldData" value="No" />
@@ -1009,7 +965,7 @@
 		</execute>
 	</command>
 
-	<command name="ViewDateFieldPredefinedValue" priority="4">
+	<command name="ViewDateFieldPredefinedValue" priority="3">
 		<var name="ddlDataDefinitionName" value="Date Predefined Value Data Definition Name" />
 		<var name="ddlListName" value="List Name" />
 		<var name="ddlRecordFieldData" value="05/13/2017" />
@@ -1120,7 +1076,7 @@
 		</execute>
 	</command>
 
-	<command name="ViewDecimalFieldPredefinedValue" priority="4">
+	<command name="ViewDecimalFieldPredefinedValue" priority="3">
 		<var name="ddlDataDefinitionName" value="Decimal Predefined Value Data Definition Name" />
 		<var name="ddlListName" value="List Name" />
 		<var name="ddlRecordFieldData" value="11.18" />
@@ -1311,7 +1267,7 @@
 		</execute>
 	</command>
 
-	<command name="ViewIntegerFieldPredefinedValue" priority="4">
+	<command name="ViewIntegerFieldPredefinedValue" priority="3">
 		<var name="ddlDataDefinitionName" value="Integer Predefined Value Data Definition Name" />
 		<var name="ddlListName" value="List Name" />
 		<var name="ddlRecordFieldData" value="4421" />
@@ -1475,7 +1431,7 @@
 		<execute function="AssertTextEquals" locator1="DDLRecord#FIELD_1" value1="Text ${ddlRecordFieldData}" />
 	</command>
 
-	<command known-issues="LPS-51615" name="ViewListRecordWithUploadedFreeMarkerDisplayTemplate" priority="4">
+	<command name="ViewListRecordWithUploadedFreeMarkerDisplayTemplate" priority="4">
 		<property name="custom.properties" value="freemarker.engine.restricted.variables=${line.separator}velocity.engine.restricted.variables=" />
 
 		<var name="ddlDataDefinitionName" value="Data Definition" />
@@ -1586,7 +1542,7 @@
 		</execute>
 	</command>
 
-	<command known-issues="LPS-51615" name="ViewListRecordWithUploadedVelocityDisplayTemplate" priority="4">
+	<command name="ViewListRecordWithUploadedVelocityDisplayTemplate" priority="3">
 		<property name="custom.properties" value="freemarker.engine.restricted.variables=${line.separator}velocity.engine.restricted.variables=" />
 
 		<var name="ddlDataDefinitionName" value="Data Definition" />
@@ -1692,7 +1648,7 @@
 		<execute function="AssertTextEquals" locator1="xPath=(//div[@class='ddl-record'])[2]" value1="Name2" />
 	</command>
 
-	<command known-issues="LPS-51615" name="ViewListRecordWithVelocityDisplayTemplate" priority="4">
+	<command name="ViewListRecordWithVelocityDisplayTemplate" priority="4">
 		<property name="custom.properties" value="freemarker.engine.restricted.variables=${line.separator}velocity.engine.restricted.variables=" />
 
 		<var name="ddlDataDefinitionDescription" value="Data Definition Description" />
@@ -1701,19 +1657,15 @@
 		<var name="ddlDisplayTemplateName" value="Data Definition Velocity Display Template Name" />
 		<var name="ddlDisplayTemplateScript">
 			<![CDATA[
-				#set ($ddlRecordLocalService = $serviceLocator.findService("com.liferay.portlet.dynamicdatalists.service.DDLRecordLocalService"))${line.separator}${line.separator}
-
-				#set ($records = $ddlRecordLocalService.getRecords($reserved_record_set_id))${line.separator}${line.separator}
+				#set ($records = $ddlDisplayTemplateHelper.getRecords($reserved_record_set_id))${line.separator}${line.separator}
 
 				#if (!$records.isEmpty())${line.separator}
-					#foreach ($cur_record in $records)${line.separator}${line.separator}
+					#foreach ($cur_record in $records)${line.separator}
 
-	   				 $cur_record.getFieldValue("Name", $locale)${line.separator}${line.separator}
-
-					<br/> <br/>${line.separator}${line.separator}
+						<div class="ddl-record">$ddlDisplayTemplateHelper.renderRecordFieldValue($cur_record.getDDMFormFieldValues("Name").get(0), $locale)</div>${line.separator}
 
 					#end${line.separator}
-				#end
+				#end${line.separator}
 			]]>
 		</var>
 		<var name="ddlListDescription" value="List Description" />
@@ -1820,7 +1772,7 @@
 		<execute function="AssertTextPresent" locator1="//div[@class='portlet-body']/form" value1="Name2" />
 	</command>
 
-	<command name="ViewNumberFieldPredefinedValue" priority="4">
+	<command name="ViewNumberFieldPredefinedValue" priority="3">
 		<var name="ddlDataDefinitionName" value="Number Predefined Value Data Definition Name" />
 		<var name="ddlListName" value="List Name" />
 		<var name="ddlRecordFieldData" value="5553" />
@@ -1925,13 +1877,13 @@
 		</execute>
 	</command>
 
-	<command name="ViewTextBoxFieldPredefinedValue" priority="4">
+	<command name="ViewTextBoxFieldPredefinedValue" priority="3">
 		<var name="ddlDataDefinitionName" value="Text Box Predefined Value Data Definition Name" />
 		<var name="ddlListName" value="List Name" />
 		<var name="ddlRecordFieldData" value="Test 2" />
 		<var name="field" value="Text Box" />
 		<var name="fieldFieldLabel" value="Text Box" />
-		<var name="fieldName" value="Text_Box" />
+		<var name="fieldName" value="TextBox" />
 		<var name="fieldPredefinedValue" value="Test 1" />
 
 		<execute macro="Page#gotoContentCP">

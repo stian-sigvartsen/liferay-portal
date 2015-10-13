@@ -240,15 +240,19 @@ public interface AppLocalService extends BaseLocalService,
 	public java.lang.String getBeanIdentifier();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public java.util.Map<java.lang.String, java.lang.String> getBundledApps();
+	public java.util.List<com.liferay.marketplace.model.App> getInstalledApps();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public java.util.List<com.liferay.marketplace.model.App> getInstalledApps();
+	public java.util.List<com.liferay.marketplace.model.App> getInstalledApps(
+		java.lang.String category);
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public com.liferay.portal.model.PersistedModel getPersistedModel(
 		java.io.Serializable primaryKeyObj) throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.Map<java.lang.String, java.lang.String> getPrepackagedApps();
 
 	public void installApp(long remoteAppId) throws PortalException;
 
@@ -275,11 +279,10 @@ public interface AppLocalService extends BaseLocalService,
 		com.liferay.marketplace.model.App app);
 
 	public com.liferay.marketplace.model.App updateApp(long userId,
+		java.io.File file) throws PortalException;
+
+	public com.liferay.marketplace.model.App updateApp(long userId,
 		long remoteAppId, java.lang.String title, java.lang.String description,
 		java.lang.String category, java.lang.String iconURL,
 		java.lang.String version, java.io.File file) throws PortalException;
-
-	public com.liferay.marketplace.model.App updateApp(long userId,
-		long remoteAppId, java.lang.String version, java.io.File file)
-		throws PortalException;
 }

@@ -43,6 +43,7 @@ import com.liferay.portlet.documentlibrary.service.persistence.DLFolderUtil;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -59,8 +60,9 @@ import java.util.Set;
  * @generated
  */
 public class DLFolderPersistenceTest {
+	@ClassRule
 	@Rule
-	public final AggregateTestRule aggregateTestRule = new AggregateTestRule(new LiferayIntegrationTestRule(),
+	public static final AggregateTestRule aggregateTestRule = new AggregateTestRule(new LiferayIntegrationTestRule(),
 			PersistenceTestRule.INSTANCE,
 			new TransactionalTestRule(Propagation.REQUIRED));
 
@@ -340,6 +342,19 @@ public class DLFolderPersistenceTest {
 
 		_persistence.countByG_M_P_H(0L, RandomTestUtil.randomBoolean(), 0L,
 			RandomTestUtil.randomBoolean());
+	}
+
+	@Test
+	public void testCountByG_M_T_H() throws Exception {
+		_persistence.countByG_M_T_H(RandomTestUtil.nextLong(),
+			RandomTestUtil.randomBoolean(), StringPool.BLANK,
+			RandomTestUtil.randomBoolean());
+
+		_persistence.countByG_M_T_H(0L, RandomTestUtil.randomBoolean(),
+			StringPool.NULL, RandomTestUtil.randomBoolean());
+
+		_persistence.countByG_M_T_H(0L, RandomTestUtil.randomBoolean(),
+			(String)null, RandomTestUtil.randomBoolean());
 	}
 
 	@Test
