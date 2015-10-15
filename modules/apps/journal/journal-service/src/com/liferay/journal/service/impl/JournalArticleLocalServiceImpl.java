@@ -6064,28 +6064,19 @@ public class JournalArticleLocalServiceImpl
 	protected String buildArticleURL(
 		String articleURL, long groupId, long folderId, String articleId) {
 
-		StringBundler sb = new StringBundler(13);
-
-		sb.append(articleURL);
-		sb.append(StringPool.AMPERSAND);
-
 		String portletId = PortletProviderUtil.getPortletId(
 			JournalArticle.class.getName(), PortletProvider.Action.EDIT);
 
-		sb.append(PortalUtil.getPortletNamespace(portletId));
+		String namespace = PortalUtil.getPortletNamespace(portletId);
 
-		sb.append("groupId=");
-		sb.append(groupId);
-		sb.append(StringPool.AMPERSAND);
-		sb.append(PortalUtil.getPortletNamespace(portletId));
-		sb.append("folderId=");
-		sb.append(folderId);
-		sb.append(StringPool.AMPERSAND);
-		sb.append(PortalUtil.getPortletNamespace(portletId));
-		sb.append("articleId=");
-		sb.append(articleId);
+		articleURL = HttpUtil.addParameter(
+			articleURL, namespace + "groupId", groupId);
+		articleURL = HttpUtil.addParameter(
+			articleURL, namespace + "folderId", folderId);
+		articleURL = HttpUtil.addParameter(
+			articleURL, namespace + "articleId", articleId);
 
-		return sb.toString();
+		return articleURL;
 	}
 
 	protected SearchContext buildSearchContext(
@@ -6286,8 +6277,6 @@ public class JournalArticleLocalServiceImpl
 
 				latestArticles.add(article);
 
-				String articleURL = StringPool.BLANK;
-
 				long ownerId = article.getGroupId();
 				int ownerType = PortletKeys.PREFS_OWNER_TYPE_GROUP;
 				long plid = PortletKeys.PREFS_PLID_SHARED;
@@ -6299,6 +6288,13 @@ public class JournalArticleLocalServiceImpl
 					portletPreferencesLocalService.getPreferences(
 						article.getCompanyId(), ownerId, ownerType, plid,
 						portletId);
+
+				String articleURL = PortalUtil.getControlPanelFullURL(
+					article.getGroupId(), portletId, null);
+
+				articleURL = buildArticleURL(
+					articleURL, article.getGroupId(), article.getFolderId(),
+					article.getArticleId());
 
 				sendEmail(
 					article, articleURL, preferences, "review",
@@ -7655,18 +7651,26 @@ public class JournalArticleLocalServiceImpl
 		Locale articleDefaultLocale = LocaleUtil.fromLanguageId(
 			LocalizationUtil.getDefaultLanguageId(content));
 
-		if (!LanguageUtil.isAvailableLocale(groupId, articleDefaultLocale)) {
-			LocaleException le = new LocaleException(
-				LocaleException.TYPE_CONTENT,
-				"The locale " + articleDefaultLocale +
-					" is not available in site with groupId" + groupId);
+		if (!ExportImportThreadLocal.isImportInProcess()) {
+			if (!LanguageUtil.isAvailableLocale(
+					groupId, articleDefaultLocale)) {
 
-			le.setSourceAvailableLocales(
-				Collections.singleton(articleDefaultLocale));
-			le.setTargetAvailableLocales(
-				LanguageUtil.getAvailableLocales(groupId));
+				LocaleException le = new LocaleException(
+					LocaleException.TYPE_CONTENT,
+					"The locale " + articleDefaultLocale +
+						" is not available in site with groupId" + groupId);
 
-			throw le;
+				le.setSourceAvailableLocales(
+					Collections.singleton(articleDefaultLocale));
+				le.setTargetAvailableLocales(
+					LanguageUtil.getAvailableLocales(groupId));
+
+				throw le;
+			}
+
+			if ((expirationDate != null) && expirationDate.before(new Date())) {
+				throw new ArticleExpirationDateException();
+			}
 		}
 
 		if ((classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT) &&
@@ -7699,12 +7703,6 @@ public class JournalArticleLocalServiceImpl
 		}
 		else if (classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT) {
 			throw new NoSuchTemplateException();
-		}
-
-		if ((expirationDate != null) && expirationDate.before(new Date()) &&
-			!ExportImportThreadLocal.isImportInProcess()) {
-
-			throw new ArticleExpirationDateException();
 		}
 
 		String[] imageExtensions = PrefsPropsUtil.getStringArray(
