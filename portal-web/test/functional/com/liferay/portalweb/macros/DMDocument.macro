@@ -312,6 +312,7 @@
 		</if>
 
 		<execute function="UploadCommonFile" locator1="TextInput#FILE" value1="${dmDocumentFile}" />
+
 		<execute function="Type" locator1="DocumentsAndMediaEditDocument#TITLE_FIELD" value1="${dmDocumentTitle}" />
 
 		<if>
@@ -2272,7 +2273,7 @@
 			<equals arg1="${documentAdded}" arg2="true" />
 			<then>
 				<execute function="AssertTextEquals" locator1="DocumentsAndMedia#ICON_DOCUMENT_TITLE" value1="${dmDocumentTitle}" />
-				<execute function="AssertClick" locator1="DocumentsAndMedia#LIVE_BUTTON" value1="Live" />
+				<execute function="AssertClick" locator1="Staging#LIVE_BUTTON" value1="Live" />
 
 				<execute function="AssertTextNotPresent" locator1="DocumentsAndMedia#ICON_DOCUMENT_TITLE" value1="${dmDocumentTitle}" />
 				<execute function="AssertTextEquals" locator1="Message#INFO" value1="There are no documents or media files in this folder." />
@@ -2282,7 +2283,7 @@
 				<then>
 					<execute function="AssertTextEquals" locator1="Message#INFO" value1="There are no documents or media files in this folder." />
 
-					<execute function="AssertClick" locator1="DocumentsAndMedia#LIVE_BUTTON" value1="Live" />
+					<execute function="AssertClick" locator1="Staging#LIVE_BUTTON" value1="Live" />
 					<execute function="AssertTextEquals" locator1="Message#INFO" value1="There are no documents or media files in this folder." />
 				</then>
 			</elseif>

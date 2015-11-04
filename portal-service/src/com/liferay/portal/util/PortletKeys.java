@@ -44,7 +44,8 @@ public class PortletKeys {
 	public static final String EXPORT_IMPORT =
 		"com_liferay_exportimport_web_portlet_ExportImportPortlet";
 
-	public static final String FAST_LOGIN = "164";
+	public static final String FAST_LOGIN =
+		"com_liferay_login_web_portlet_FastLoginPortlet";
 
 	public static final String FLAGS = "142";
 
@@ -62,7 +63,8 @@ public class PortletKeys {
 
 	public static final String LIFERAY_PORTAL = "LIFERAY_PORTAL";
 
-	public static final String LOGIN = "58";
+	public static final String LOGIN =
+		"com_liferay_login_web_portlet_LoginPortlet";
 
 	public static final String MAIL = "1_WAR_mailportlet";
 
@@ -99,6 +101,9 @@ public class PortletKeys {
 		"com_liferay_plugins_admin_web_portlet_PluginsAdminPortlet";
 
 	public static final String PORTAL = "90";
+
+	public static final String PORTAL_SETTINGS =
+		"com_liferay_portal_settings_web_portlet_PortalSettingsPortlet";
 
 	public static final String PORTLET_DISPLAY_TEMPLATE =
 		"com_liferay_dynamic_data_mapping_web_portlet_" +

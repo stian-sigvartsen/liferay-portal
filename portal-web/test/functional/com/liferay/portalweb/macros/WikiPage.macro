@@ -751,7 +751,7 @@
 		<if>
 			<isset var="customFieldTextEdit" />
 			<then>
-				<execute function="Type" locator1="Wiki#CUSTOM_FIELD_TEXT_FIELD" value1="${customFieldTextEdit}" />
+				<execute function="Type" locator1="TextInput#CUSTOM_FIELD" value1="${customFieldTextEdit}" />
 			</then>
 		</if>
 
@@ -1180,6 +1180,7 @@
 			<var name="wikiNodeName" value="Main" />
 		</execute>
 
+		<var name="key_assetType" value="Wiki Page" />
 		<var name="key_wikiPageTitle" value="FrontPage" />
 
 		<while>
@@ -1455,7 +1456,9 @@
 		<if>
 			<isset var="customFieldText" />
 			<then>
-				<execute function="AssertTextEquals" locator1="TextInput#CUSTOM_FIELD" value1="${customFieldText}" />
+				<var name="key_customFieldContent" value="${customFieldText}" />
+
+				<execute function="AssertTextEquals" locator1="Wiki#CUSTOM_FIELD_CONTENT" value1="${customFieldText}" />
 			</then>
 		</if>
 	</command>
@@ -1675,6 +1678,8 @@
 
 	<command name="viewTagViaAddPG">
 		<var method="StringUtil#lowerCase('${tagName}')" name="tagName" />
+
+		<var name="key_tagName" value="${tagName}" />
 
 		<execute function="AssertElementPresent" locator1="AssetCategorization#TAG" value1="${tagName}" />
 	</command>
