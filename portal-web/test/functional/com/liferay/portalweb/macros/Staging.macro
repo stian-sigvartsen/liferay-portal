@@ -206,6 +206,8 @@
 	</command>
 
 	<command name="configurePublishToLive">
+		<execute function="AssertClick#assertPartialTextClickAt" locator1="StagingPublishtolivenow#SWITCH_TO_ADVANCED" value1="Switch to Advanced Publication" />
+
 		<if>
 			<equals arg1="${deleteMissingPages}" arg2="true" />
 			<then>
@@ -478,10 +480,10 @@
 		<if>
 			<and>
 				<condition function="IsElementPresent" locator1="SitePages#NAVIGATION_PUBLIC_PAGES" />
-				<condition function="IsElementPresent" locator1="SitePages#STAGING_BUTTON" />
+				<condition function="IsElementPresent" locator1="Staging#STAGING_BUTTON" />
 			</and>
 			<then>
-				<execute function="AssertClick" locator1="SitePages#STAGING_BUTTON" value1="Staging" />
+				<execute function="AssertClick" locator1="Staging#STAGING_BUTTON" value1="Staging" />
 			</then>
 		</if>
 
@@ -677,6 +679,7 @@
 		<execute function="Click" locator1="Staging#STAGING_MENULIST_PUBLISH_TO_LIVE_NOW" />
 
 		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
+		<execute function="Click" locator1="StagingPublishToLive#SWITCH_TO_ADVANCED_PUBLICATION" />
 		<execute function="AssertClick" locator1="StagingPublishToLive#PAGES_CHANGE_LINK" value1="Change" />
 		<execute function="Click" locator1="PagesConfiguration#PAGES_ALL_PUBLIC_PAGES_CHECKBOX" />
 		<execute function="AssertClick" locator1="Button#OK" value1="OK" />

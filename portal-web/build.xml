@@ -41,6 +41,7 @@
 		<pathelement location="${project.dir}/lib/portal/jfreechart.jar" />
 		<pathelement location="${project.dir}/lib/portal/jstl-api.jar" />
 		<pathelement location="${project.dir}/lib/portal/jstl-impl.jar" />
+		<pathelement location="${project.dir}/lib/portal/liferay-icu4j.jar" />
 		<pathelement location="${project.dir}/lib/portal/log4j.jar" />
 		<pathelement location="${project.dir}/lib/portal/openid4java.jar" />
 		<pathelement location="${project.dir}/lib/portal/rome.jar" />
@@ -77,9 +78,13 @@
 
 		<mkdir dir="${sass.tmp.dir}" />
 
+		<path id="css.builder.classpath">
+			<fileset dir="${portal.tools.dir}/css-builder" includes="*.jar" />
+		</path>
+
 		<java
 			classname="com.liferay.css.builder.CSSBuilder"
-			classpathref="portal.tools.classpath"
+			classpathref="css.builder.classpath"
 			fork="true"
 			newenvironment="true"
 			outputproperty="build-css.output"
