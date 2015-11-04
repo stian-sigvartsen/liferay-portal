@@ -1,4 +1,5 @@
 package com.liferay.portal.security.sso.facebook.connect.portal.settings.web.portlet.resource.bundle;
+
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -12,7 +13,6 @@ package com.liferay.portal.security.sso.facebook.connect.portal.settings.web.por
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-
 
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.settings.web.constants.PortalSettingsPortletKeys;
