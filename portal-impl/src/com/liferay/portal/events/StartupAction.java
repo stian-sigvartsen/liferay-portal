@@ -21,7 +21,8 @@ import com.liferay.portal.kernel.backgroundtask.BackgroundTaskManagerUtil;
 import com.liferay.portal.kernel.cluster.ClusterExecutor;
 import com.liferay.portal.kernel.cluster.ClusterMasterExecutor;
 import com.liferay.portal.kernel.dao.db.DB;
-import com.liferay.portal.kernel.dao.db.DBFactoryUtil;
+import com.liferay.portal.kernel.dao.db.DBManagerUtil;
+import com.liferay.portal.kernel.dao.db.DBType;
 import com.liferay.portal.kernel.events.ActionException;
 import com.liferay.portal.kernel.events.SimpleAction;
 import com.liferay.portal.kernel.executor.PortalExecutorManager;
@@ -49,10 +50,10 @@ import com.liferay.portal.kernel.util.ReleaseInfo;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.plugin.PluginPackageIndexer;
 import com.liferay.portal.tools.DBUpgrader;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.messageboards.util.MBMessageIndexer;
 import com.liferay.registry.Filter;
 import com.liferay.registry.Registry;
@@ -112,11 +113,11 @@ public class StartupAction extends SimpleAction {
 		ServiceDependencyManager portalResiliencyServiceDependencyManager =
 			new ServiceDependencyManager();
 
-		portalResiliencyServiceDependencyManager.registerDependencies(
-			MessageBus.class, PortalExecutorManager.class);
-
 		portalResiliencyServiceDependencyManager.addServiceDependencyListener(
 			new PortalResiliencyServiceDependencyLister());
+
+		portalResiliencyServiceDependencyManager.registerDependencies(
+			MessageBus.class, PortalExecutorManager.class);
 
 		// Shutdown hook
 
@@ -133,9 +134,6 @@ public class StartupAction extends SimpleAction {
 		ServiceDependencyManager indexerRegistryServiceDependencyManager =
 			new ServiceDependencyManager();
 
-		indexerRegistryServiceDependencyManager.registerDependencies(
-			IndexerRegistry.class);
-
 		indexerRegistryServiceDependencyManager.addServiceDependencyListener(
 			new ServiceDependencyListener() {
 
@@ -151,20 +149,21 @@ public class StartupAction extends SimpleAction {
 
 			});
 
+		indexerRegistryServiceDependencyManager.registerDependencies(
+			IndexerRegistry.class);
+
 		// MySQL version
 
-		DB db = DBFactoryUtil.getDB();
+		DB db = DBManagerUtil.getDB();
 
-		String dbType = db.getType();
-
-		if (dbType.equals(DB.TYPE_MYSQL) &&
+		if ((db.getDBType() == DBType.MYSQL) &&
 			GetterUtil.getFloat(db.getVersionString()) < 5.6F) {
 
-			if (_log.isWarnEnabled()) {
-				_log.warn(
-					"Please upgrade to at least MySQL 5.6.4. The portal will " +
-						"soon drop support for older versions of MySQL.");
-			}
+			_log.error(
+				"Please upgrade to at least MySQL 5.6.4. The portal no " +
+					"longer supports older versions of MySQL.");
+
+			System.exit(1);
 		}
 
 		// Upgrade
@@ -236,10 +235,6 @@ public class StartupAction extends SimpleAction {
 
 						if (!clusterMasterExecutor.isEnabled()) {
 							BackgroundTaskManagerUtil.cleanUpBackgroundTasks();
-						}
-						else {
-							clusterMasterExecutor.
-								notifyMasterTokenTransitionListeners();
 						}
 					}
 

@@ -162,6 +162,15 @@ public class BlogsEntryLocalServiceUtil {
 		getService().addEntryResources(entryId, modelPermissions);
 	}
 
+	public static long addOriginalImageFileEntry(long userId, long groupId,
+		long entryId,
+		com.liferay.portal.kernel.servlet.taglib.ui.ImageSelector imageSelector)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addOriginalImageFileEntry(userId, groupId, entryId,
+			imageSelector);
+	}
+
 	public static void checkEntries()
 		throws com.liferay.portal.kernel.exception.PortalException {
 		getService().checkEntries();
@@ -329,15 +338,6 @@ public class BlogsEntryLocalServiceUtil {
 
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {
 		return getService().getActionableDynamicQuery();
-	}
-
-	/**
-	* Returns the Spring bean ID for this bean.
-	*
-	* @return the Spring bean ID for this bean
-	*/
-	public static java.lang.String getBeanIdentifier() {
-		return getService().getBeanIdentifier();
 	}
 
 	/**
@@ -663,8 +663,21 @@ public class BlogsEntryLocalServiceUtil {
 			start, end);
 	}
 
+	public static com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery getIndexableActionableDynamicQuery() {
+		return getService().getIndexableActionableDynamicQuery();
+	}
+
 	public static java.util.List<com.liferay.portlet.blogs.model.BlogsEntry> getNoAssetEntries() {
 		return getService().getNoAssetEntries();
+	}
+
+	/**
+	* Returns the OSGi service identifier.
+	*
+	* @return the OSGi service identifier
+	*/
+	public static java.lang.String getOSGiServiceIdentifier() {
+		return getService().getOSGiServiceIdentifier();
 	}
 
 	public static java.util.List<com.liferay.portlet.blogs.model.BlogsEntry> getOrganizationEntries(
@@ -740,9 +753,6 @@ public class BlogsEntryLocalServiceUtil {
 	* @param userId the primary key of the user moving the blogs entry
 	* @param entry the blogs entry to be moved
 	* @return the moved blogs entry
-	* @throws PortalException if a user with the primary key could not be found
-	or if the blogs entry owner's social activity counter could not
-	be updated
 	*/
 	public static com.liferay.portlet.blogs.model.BlogsEntry moveEntryToTrash(
 		long userId, com.liferay.portlet.blogs.model.BlogsEntry entry)
@@ -756,9 +766,6 @@ public class BlogsEntryLocalServiceUtil {
 	* @param userId the primary key of the user moving the blogs entry
 	* @param entryId the primary key of the blogs entry to be moved
 	* @return the moved blogs entry
-	* @throws PortalException if a user or blogs entry with the primary key
-	could not be found or if the blogs entry owner's social activity
-	counter could not be updated
 	*/
 	public static com.liferay.portlet.blogs.model.BlogsEntry moveEntryToTrash(
 		long userId, long entryId)
@@ -773,23 +780,11 @@ public class BlogsEntryLocalServiceUtil {
 	* @param userId the primary key of the user restoring the blogs entry
 	* @param entryId the primary key of the blogs entry to be restored
 	* @return the restored blogs entry from the recycle bin
-	* @throws PortalException if a user or blogs entry with the primary key
-	could not be found or if the blogs entry owner's social activity
-	counter could not be updated
 	*/
 	public static com.liferay.portlet.blogs.model.BlogsEntry restoreEntryFromTrash(
 		long userId, long entryId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().restoreEntryFromTrash(userId, entryId);
-	}
-
-	/**
-	* Sets the Spring bean ID for this bean.
-	*
-	* @param beanIdentifier the Spring bean ID for this bean
-	*/
-	public static void setBeanIdentifier(java.lang.String beanIdentifier) {
-		getService().setBeanIdentifier(beanIdentifier);
 	}
 
 	public static void subscribe(long userId, long groupId)

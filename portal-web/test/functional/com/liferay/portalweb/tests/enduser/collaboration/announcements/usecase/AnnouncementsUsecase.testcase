@@ -5,6 +5,15 @@
 	<var name="portletName" value="Announcements" />
 
 	<set-up>
+		<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
+
+		<if>
+			<equals arg1="${testPortalInstance}" arg2="true" />
+			<then>
+				<execute macro="SignIn#signInPortalInstanceSetUp" />
+			</then>
+		</if>
+
 		<execute macro="User#firstLoginPG" />
 
 		<execute macro="Page#addPG">
@@ -17,13 +26,23 @@
 	</set-up>
 
 	<tear-down>
-		<execute macro="AnnouncementsEntry#tearDownPG" />
+		<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
 
-		<execute macro="Page#tearDownPG" />
+		<if>
+			<equals arg1="${testPortalInstance}" arg2="true" />
+			<then>
+				<execute macro="PortalInstances#tearDownCP" />
+			</then>
+			<else>
+				<execute macro="AnnouncementsEntry#tearDownPG" />
 
-		<execute macro="User#tearDownCP" />
+				<execute macro="Page#tearDownPG" />
 
-		<execute macro="Site#tearDownCP" />
+				<execute macro="User#tearDownCP" />
+
+				<execute macro="Site#tearDownCP" />
+			</else>
+		</if>
 	</tear-down>
 
 	<command name="ViewAnnouncementsEntryWithDistributedScope" priority="4">
@@ -65,9 +84,9 @@
 		</execute>
 
 		<execute macro="SitePage#addCP">
+			<var name="page" value="Public Pages" />
 			<var name="siteName" value="Site Name" />
 			<var name="sitePageName" value="Site Page Name" />
-			<var name="sitePagePrivacy" value="Public" />
 		</execute>
 
 		<execute macro="Page#gotoPG">
@@ -309,8 +328,8 @@
 
 		<var name="key_entryTitle" value="${entryTitle}" />
 
-		<execute function="AssertTextNotPresent" locator1="Announcements#ENTRY_TITLE" value1="${entryTitle} 1" />
-		<execute function="AssertTextNotPresent" locator1="Announcements#ENTRY_TITLE" value1="${entryTitle} 2" />
+		<execute function="AssertTextNotPresent" locator1="Announcements#CARD_VIEW_ENTRY_TITLE" value1="${entryTitle} 1" />
+		<execute function="AssertTextNotPresent" locator1="Announcements#CARD_VIEW_ENTRY_TITLE" value1="${entryTitle} 2" />
 		<execute function="AssertClick" locator1="Pagination#NEXT_LINK" value1="Next" />
 
 		<execute macro="AnnouncementsEntry#viewViaEntriesPG">
@@ -329,11 +348,11 @@
 
 		<var name="key_entryTitle" value="${entryTitle}" />
 
-		<execute function="AssertTextNotPresent" locator1="Announcements#ENTRY_TITLE" value1="${entryTitle} 3" />
-		<execute function="AssertTextNotPresent" locator1="Announcements#ENTRY_TITLE" value1="${entryTitle} 4" />
-		<execute function="AssertTextNotPresent" locator1="Announcements#ENTRY_TITLE" value1="${entryTitle} 5" />
-		<execute function="AssertTextNotPresent" locator1="Announcements#ENTRY_TITLE" value1="${entryTitle} 6" />
-		<execute function="AssertTextNotPresent" locator1="Announcements#ENTRY_TITLE" value1="${entryTitle} 7" />
+		<execute function="AssertTextNotPresent" locator1="Announcements#CARD_VIEW_ENTRY_TITLE" value1="${entryTitle} 3" />
+		<execute function="AssertTextNotPresent" locator1="Announcements#CARD_VIEW_ENTRY_TITLE" value1="${entryTitle} 4" />
+		<execute function="AssertTextNotPresent" locator1="Announcements#CARD_VIEW_ENTRY_TITLE" value1="${entryTitle} 5" />
+		<execute function="AssertTextNotPresent" locator1="Announcements#CARD_VIEW_ENTRY_TITLE" value1="${entryTitle} 6" />
+		<execute function="AssertTextNotPresent" locator1="Announcements#CARD_VIEW_ENTRY_TITLE" value1="${entryTitle} 7" />
 		<execute function="AssertClick" locator1="Pagination#PREVIOUS_LINK" value1="Previous" />
 
 		<execute macro="AnnouncementsEntry#viewViaEntriesPG">
@@ -373,8 +392,8 @@
 
 		<var name="key_entryTitle" value="${entryTitle}" />
 
-		<execute function="AssertTextNotPresent" locator1="Announcements#ENTRY_TITLE" value1="${entryTitle} 1" />
-		<execute function="AssertTextNotPresent" locator1="Announcements#ENTRY_TITLE" value1="${entryTitle} 2" />
+		<execute function="AssertTextNotPresent" locator1="Announcements#CARD_VIEW_ENTRY_TITLE" value1="${entryTitle} 1" />
+		<execute function="AssertTextNotPresent" locator1="Announcements#CARD_VIEW_ENTRY_TITLE" value1="${entryTitle} 2" />
 
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="${pageName}" />

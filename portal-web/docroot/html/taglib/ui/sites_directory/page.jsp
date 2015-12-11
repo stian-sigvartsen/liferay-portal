@@ -106,18 +106,6 @@
 										modelVar="childGroup"
 									>
 										<liferay-ui:search-container-column-text>
-
-											<%
-											LayoutSet layoutSet = null;
-
-											if (childGroup.hasPublicLayouts()) {
-												layoutSet = childGroup.getPublicLayoutSet();
-											}
-											else {
-												layoutSet = childGroup.getPrivateLayoutSet();
-											}
-											%>
-
 											<liferay-ui:app-view-entry
 												assetCategoryClassName="<%= Group.class.getName() %>"
 												assetCategoryClassPK="<%= childGroup.getGroupId() %>"
@@ -126,8 +114,8 @@
 												description="<%= HtmlUtil.escape(childGroup.getDescription(locale)) %>"
 												displayStyle="<%= displayStyle %>"
 												showCheckbox="<%= false %>"
-												thumbnailSrc='<%= themeDisplay.getPathImage() + "/layout_set_logo?img_id=" + layoutSet.getLogoId() + "&t=" + WebServerServletTokenUtil.getToken(layoutSet.getLogoId()) %>'
-												title="<%= HtmlUtil.escape(childGroup.getDescriptiveName(locale)) %>"
+												thumbnailSrc="<%= childGroup.getLogoURL(themeDisplay, true) %>"
+												title="<%= childGroup.getDescriptiveName(locale) %>"
 												url="<%= (childGroup.getGroupId() != scopeGroupId) ? childGroup.getDisplayURL(themeDisplay) : null %>"
 											/>
 										</liferay-ui:search-container-column-text>

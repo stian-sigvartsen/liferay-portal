@@ -15,7 +15,7 @@
 
 	<command name="configureSetupFormFieldsPG">
 		<execute macro="Portlet#gotoPortletOptions">
-			<var name="portletNameBorderless" value="${portletNameBorderless}" />
+			<var name="portletName" value="${portletName}" />
 			<var name="portletOption" value="Configuration" />
 		</execute>
 
@@ -97,6 +97,12 @@
 				<execute function="Check" locator1="WebFormConfiguration#SETUP_FORM_FIELDS_OPTIONAL_CHECKBOX" />
 			</then>
 		</if>
+	</command>
+
+	<command name="editParagraphField">
+		<var name="key_wfNewFieldName" value="${wfNewFieldName}" />
+
+		<execute function="Type" locator1="WebFormConfiguration#SETUP_FORM_FIELDS_PARAGRAPH_FIELD" value1="${wfParagraphFieldText}" />
 	</command>
 
 	<command name="saveConfiguration">

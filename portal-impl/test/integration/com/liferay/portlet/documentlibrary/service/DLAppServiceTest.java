@@ -60,7 +60,7 @@ import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.test.PrefsPropsTemporarySwapper;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.DuplicateFileException;
+import com.liferay.portlet.documentlibrary.DuplicateFileEntryException;
 import com.liferay.portlet.documentlibrary.FileExtensionException;
 import com.liferay.portlet.documentlibrary.FileNameException;
 import com.liferay.portlet.documentlibrary.FileSizeException;
@@ -151,7 +151,7 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 				PropsValues.DL_FILE_ENTRY_COMMENTS_ENABLED, hasDiscussion);
 		}
 
-		@Test(expected = DuplicateFileException.class)
+		@Test(expected = DuplicateFileEntryException.class)
 		public void shouldFailIfDuplicateNameAndExtensionInFolder1()
 			throws Exception {
 
@@ -163,7 +163,7 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 				_FILE_NAME, null);
 		}
 
-		@Test(expected = DuplicateFileException.class)
+		@Test(expected = DuplicateFileEntryException.class)
 		public void shouldFailIfDuplicateNameAndExtensionInFolder2()
 			throws Exception {
 
@@ -175,7 +175,7 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 				_STRIPPED_FILE_NAME, null);
 		}
 
-		@Test(expected = DuplicateFileException.class)
+		@Test(expected = DuplicateFileEntryException.class)
 		public void shouldFailIfDuplicateNameAndExtensionInFolder3()
 			throws Exception {
 
@@ -187,7 +187,7 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 				_STRIPPED_FILE_NAME, _FILE_NAME, null);
 		}
 
-		@Test(expected = DuplicateFileException.class)
+		@Test(expected = DuplicateFileEntryException.class)
 		public void shouldFailIfDuplicateNameInFolder() throws Exception {
 			addFileEntry(group.getGroupId(), parentFolder.getFolderId());
 			addFileEntry(group.getGroupId(), parentFolder.getFolderId());
@@ -795,7 +795,7 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 				RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 				serviceContext);
 
-			DLAppServiceUtil.moveFolderToTrash(folder.getFolderId());
+			DLTrashServiceUtil.moveFolderToTrash(folder.getFolderId());
 
 			DLAppServiceUtil.deleteFolder(folder.getFolderId());
 
@@ -838,9 +838,9 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 				RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 				serviceContext);
 
-			DLAppServiceUtil.moveFolderToTrash(subfolder.getFolderId());
+			DLTrashServiceUtil.moveFolderToTrash(subfolder.getFolderId());
 
-			DLAppServiceUtil.moveFolderToTrash(folder.getFolderId());
+			DLTrashServiceUtil.moveFolderToTrash(folder.getFolderId());
 
 			DLAppServiceUtil.deleteFolder(folder.getFolderId());
 
@@ -879,7 +879,7 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 				RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 				serviceContext);
 
-			DLAppServiceUtil.moveFolderToTrash(folder.getFolderId());
+			DLTrashServiceUtil.moveFolderToTrash(folder.getFolderId());
 
 			folder = DLAppServiceUtil.getFolder(folder.getFolderId());
 
@@ -908,9 +908,9 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 				RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 				serviceContext);
 
-			DLAppServiceUtil.moveFolderToTrash(subfolder.getFolderId());
+			DLTrashServiceUtil.moveFolderToTrash(subfolder.getFolderId());
 
-			DLAppServiceUtil.moveFolderToTrash(folder.getFolderId());
+			DLTrashServiceUtil.moveFolderToTrash(folder.getFolderId());
 
 			folder = DLAppServiceUtil.getFolder(folder.getFolderId());
 
@@ -953,6 +953,24 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 			Assert.assertEquals(1, moveCounter.get());
 		}
 
+		@Test
+		public void shouldHaveSameFileExtension() throws Exception {
+			FileEntry fileEntry = addFileEntry(
+				group.getGroupId(), parentFolder.getFolderId(), _FILE_NAME,
+				_STRIPPED_FILE_NAME, null);
+
+			ServiceContext serviceContext =
+				ServiceContextTestUtil.getServiceContext(
+					targetGroup.getGroupId());
+
+			FileEntry copiedFileEntry = DLAppServiceUtil.moveFileEntry(
+				fileEntry.getFileEntryId(),
+				DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, serviceContext);
+
+			Assert.assertEquals(
+				fileEntry.getExtension(), copiedFileEntry.getExtension());
+		}
+
 	}
 
 	@Sync
@@ -982,7 +1000,8 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 
 			Assert.assertTrue(_fileEntry.isCheckedOut());
 
-			DLAppServiceUtil.moveFileEntryToTrash(_fileEntry.getFileEntryId());
+			DLTrashServiceUtil.moveFileEntryToTrash(
+				_fileEntry.getFileEntryId());
 
 			_fileEntry = DLAppServiceUtil.getFileEntry(
 				_fileEntry.getFileEntryId());
@@ -1003,7 +1022,8 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 					DLFileEntryConstants.getClassName(),
 					fileVersion.getFileVersionId()));
 
-			DLAppServiceUtil.moveFileEntryToTrash(_fileEntry.getFileEntryId());
+			DLTrashServiceUtil.moveFileEntryToTrash(
+				_fileEntry.getFileEntryId());
 
 			Assert.assertNull(
 				AssetEntryLocalServiceUtil.fetchEntry(
