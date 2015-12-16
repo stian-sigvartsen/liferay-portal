@@ -90,15 +90,17 @@ public class FacebookConnectImpl implements FacebookConnect {
 					}
 
 					return content.substring(x + 13, y);
+				} else {
+					throw new SystemException("Unable to extract a Facebook access token from: " + content);
 				}
+			} else {
+				throw new SystemException("Received no content from Facebook when requesting an access token");
 			}
 		}
 		catch (Exception e) {
 			throw new SystemException(
 				"Unable to retrieve Facebook access token", e);
 		}
-
-		return null;
 	}
 
 	@Override
