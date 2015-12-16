@@ -8,7 +8,4 @@ Import-Package:\
 Include-Resource:\
 	classes,\
 	META-INF/resources=src/main/resources/META-INF/resources
-Import-Package:\
-	com.liferay.login.web.constants,\
-	*
 Web-ContextPath: /portal-security-sso-facebook-connect

@@ -19,7 +19,6 @@
 <%@ taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
-<%@ page import="com.liferay.login.web.constants.LoginPortletKeys" %><%@
-page import="com.liferay.portal.kernel.portlet.LiferayWindowState" %><%@
+<%@ page import="com.liferay.portal.kernel.portlet.LiferayWindowState" %><%@
 page import="com.liferay.portal.kernel.util.HttpUtil" %><%@
 page import="com.liferay.portal.security.sso.facebook.connect.constants.FacebookConnectWebKeys" %>

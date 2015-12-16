@@ -62,9 +62,6 @@ public class FacebookConnectImpl implements FacebookConnect {
 		String facebookConnectRedirectURL =
 			facebookConnectConfiguration.oauthRedirectURL();
 
-		url = HttpUtil.addParameter(
-			url, "redirect_uri", facebookConnectRedirectURL);
-
 		facebookConnectRedirectURL = HttpUtil.addParameter(
 			facebookConnectRedirectURL, "postAuthRedirect", redirect);
 

@@ -16,11 +16,11 @@
 
 <%@ include file="/html/portlet/login/navigation/init.jsp" %>
 
-<liferay-portlet:renderURL portletName="<%= LoginPortletKeys.LOGIN %>" varImpl="loginRedirectURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+<liferay-portlet:renderURL varImpl="loginRedirectURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 	<portlet:param name="mvcRenderCommandName" value="/login/login_redirect" />
 </liferay-portlet:renderURL>
 
-<liferay-portlet:resourceURL id="/login/facebook_connect_oauth" portletName="<%= LoginPortletKeys.LOGIN %>" varImpl="preAuthRedirect" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+<liferay-portlet:resourceURL id="/login/facebook_connect_oauth" varImpl="preAuthRedirect" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 	<portlet:param name="redirect" value="${loginRedirectURL}" />
 	<portlet:param name="state" value="<%= (String)request.getAttribute(FacebookConnectWebKeys.FACEBOOK_CSRF_TOKEN) %>" />
 </liferay-portlet:resourceURL>
