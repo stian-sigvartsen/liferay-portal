@@ -17,3 +17,4 @@
 <%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
 <liferay-ui:error key="facebookEmailMissing" message="unable-to-retrieve-your-email-address-from-facebook" />
+<liferay-ui:error key="verifiedAccountRequired" message="verified-account-required" />

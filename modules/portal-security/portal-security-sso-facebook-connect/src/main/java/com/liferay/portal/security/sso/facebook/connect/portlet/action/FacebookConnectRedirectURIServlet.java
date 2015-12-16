@@ -201,7 +201,7 @@ public class FacebookConnectRedirectURIServlet extends HttpServlet {
 
 		JSONObject jsonObject = _facebookConnect.getGraphResources(
 			companyId, "/me", token,
-			"id,email,first_name,last_name,gender");
+			"id,email,first_name,last_name,gender,verified");
 
 		if ((jsonObject == null) ||
 			(jsonObject.getJSONObject("error") != null)) {
@@ -212,6 +212,7 @@ public class FacebookConnectRedirectURIServlet extends HttpServlet {
 		if (_facebookConnect.isVerifiedAccountRequired(companyId) &&
 			!jsonObject.getBoolean("verified")) {
 
+			errors.add("verifiedAccountRequired");
 			return null;
 		}
 
