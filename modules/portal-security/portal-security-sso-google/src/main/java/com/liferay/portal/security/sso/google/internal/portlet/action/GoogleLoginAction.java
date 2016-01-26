@@ -19,13 +19,11 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
-import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.oauth2.Oauth2;
 import com.google.api.services.oauth2.model.Userinfoplus;
 
-import com.liferay.portal.kernel.deploy.DeployManagerUtil;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.struts.BaseStrutsAction;
@@ -34,7 +32,6 @@ import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -43,6 +40,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Contact;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroupRole;
+import com.liferay.portal.security.sso.google.GoogleAuthorization;
 import com.liferay.portal.security.sso.google.constants.GoogleWebKeys;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalService;
@@ -70,6 +68,7 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Sergio González
  * @author Federico Budassi
+ * @author Stian Sigvartsen
  */
 @Component(
 	immediate = true, property = {"path=/portal/google_login"},
@@ -85,11 +84,18 @@ public class GoogleLoginAction extends BaseStrutsAction {
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
+		if (!_googleAuthorization.isEnabled(themeDisplay.getCompanyId())) {
+			throw new PrincipalException.MustBeEnabled(
+				themeDisplay.getCompanyId(),
+				GoogleAuthorization.class.getName());
+		}
+
 		String cmd = ParamUtil.getString(request, Constants.CMD);
 
 		if (cmd.equals("login")) {
 			GoogleAuthorizationCodeFlow googleAuthorizationCodeFlow =
-				getGoogleAuthorizationCodeFlow(themeDisplay.getCompanyId());
+				getGoogleLoginAuthorizationCodeFlow(
+					themeDisplay.getCompanyId());
 
 			GoogleAuthorizationCodeRequestUrl
 				googleAuthorizationCodeRequestUrl =
@@ -195,7 +201,7 @@ public class GoogleLoginAction extends BaseStrutsAction {
 		throws Exception {
 
 		GoogleAuthorizationCodeFlow googleAuthorizationCodeFlow =
-			getGoogleAuthorizationCodeFlow(companyId);
+			getGoogleLoginAuthorizationCodeFlow(companyId);
 
 		GoogleAuthorizationCodeTokenRequest
 			googleAuthorizationCodeTokenRequest =
@@ -210,40 +216,13 @@ public class GoogleLoginAction extends BaseStrutsAction {
 			googleTokenResponse, null);
 	}
 
-	protected GoogleAuthorizationCodeFlow getGoogleAuthorizationCodeFlow(
+	protected GoogleAuthorizationCodeFlow getGoogleLoginAuthorizationCodeFlow(
 			long companyId)
 		throws Exception {
 
-		HttpTransport httpTransport = new NetHttpTransport();
-		JacksonFactory jsonFactory = new JacksonFactory();
-		String googleClientId = PrefsPropsUtil.getString(
-			companyId, "google-client-id");
-		String googleClientSecret = PrefsPropsUtil.getString(
-			companyId, "google-client-secret");
-
-		List<String> scopes = null;
-
-		if (DeployManagerUtil.isDeployed(_GOOGLE_DRIVE_CONTEXT)) {
-			scopes = _SCOPES_DRIVE;
-		}
-		else {
-			scopes = _SCOPES_LOGIN;
-		}
-
-		GoogleAuthorizationCodeFlow.Builder builder =
-			new GoogleAuthorizationCodeFlow.Builder(
-				httpTransport, jsonFactory, googleClientId, googleClientSecret,
-				scopes);
-
-		String accessType = "online";
-
-		if (DeployManagerUtil.isDeployed(_GOOGLE_DRIVE_CONTEXT)) {
-			accessType = "offline";
-		}
-
-		builder.setAccessType(accessType);
-
-		return builder.build();
+		List<String> scopes = _SCOPES_LOGIN;
+		return _googleAuthorization.getGoogleAuthorizationCodeFlow(
+			companyId, scopes);
 	}
 
 	protected String getRedirectURI(HttpServletRequest request) {
@@ -395,6 +374,13 @@ public class GoogleLoginAction extends BaseStrutsAction {
 	}
 
 	@Reference(unbind = "-")
+	protected void setGoogleAuthorization(
+		GoogleAuthorization googleAuthorization) {
+
+		_googleAuthorization = googleAuthorization;
+	}
+
+	@Reference(unbind = "-")
 	protected void setUserLocalService(UserLocalService userLocalService) {
 		_userLocalService = userLocalService;
 	}
@@ -467,6 +453,7 @@ public class GoogleLoginAction extends BaseStrutsAction {
 	private static final List<String> _SCOPES_LOGIN = Arrays.asList(
 		"email", "profile");
 
+	private GoogleAuthorization _googleAuthorization;
 	private UserLocalService _userLocalService;
 
 }
