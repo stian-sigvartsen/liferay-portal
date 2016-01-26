@@ -442,13 +442,8 @@ public class GoogleLoginAction extends BaseStrutsAction {
 			userGroupRoles, userGroupIds, serviceContext);
 	}
 
-	private static final String _GOOGLE_DRIVE_CONTEXT = "google-drive-hook";
-
 	private static final String _REDIRECT_URI =
 		"/portal/google_login?cmd=token";
-
-	private static final List<String> _SCOPES_DRIVE = Arrays.asList(
-		"https://www.googleapis.com/auth/drive", "email", "profile");
 
 	private static final List<String> _SCOPES_LOGIN = Arrays.asList(
 		"email", "profile");
