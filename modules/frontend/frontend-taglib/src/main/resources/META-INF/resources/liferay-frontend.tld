@@ -456,6 +456,11 @@
 		</attribute>
 	</tag>
 	<tag>
+		<name>info-bar</name>
+		<tag-class>com.liferay.frontend.taglib.servlet.taglib.InfoBarTag</tag-class>
+		<body-content>JSP</body-content>
+	</tag>
+	<tag>
 		<name>management-bar</name>
 		<tag-class>com.liferay.frontend.taglib.servlet.taglib.ManagementBarTag</tag-class>
 		<body-content>JSP</body-content>
@@ -642,6 +647,56 @@
 		<attribute>
 			<name>portletURL</name>
 			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>management-bar-sidenav-toggler-button</name>
+		<tag-class>com.liferay.frontend.taglib.servlet.taglib.ManagementBarSidenavTogglerButtonTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>cssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>data</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>disabled</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>href</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>icon</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>iconCssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>label</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>sidenavId</name>
+			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>

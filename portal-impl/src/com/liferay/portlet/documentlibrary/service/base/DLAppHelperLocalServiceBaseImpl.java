@@ -16,6 +16,8 @@ package com.liferay.portlet.documentlibrary.service.base;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.expando.kernel.service.persistence.ExpandoValuePersistence;
+
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
@@ -58,11 +60,11 @@ import com.liferay.portlet.documentlibrary.service.persistence.DLFileVersionPers
 import com.liferay.portlet.documentlibrary.service.persistence.DLFolderFinder;
 import com.liferay.portlet.documentlibrary.service.persistence.DLFolderPersistence;
 import com.liferay.portlet.documentlibrary.service.persistence.DLSyncEventPersistence;
-import com.liferay.portlet.expando.service.persistence.ExpandoValuePersistence;
-import com.liferay.portlet.ratings.service.persistence.RatingsEntryFinder;
-import com.liferay.portlet.ratings.service.persistence.RatingsEntryPersistence;
-import com.liferay.portlet.ratings.service.persistence.RatingsStatsFinder;
-import com.liferay.portlet.ratings.service.persistence.RatingsStatsPersistence;
+
+import com.liferay.ratings.kernel.service.persistence.RatingsEntryFinder;
+import com.liferay.ratings.kernel.service.persistence.RatingsEntryPersistence;
+import com.liferay.ratings.kernel.service.persistence.RatingsStatsFinder;
+import com.liferay.ratings.kernel.service.persistence.RatingsStatsPersistence;
 
 import com.liferay.trash.kernel.service.persistence.TrashEntryPersistence;
 import com.liferay.trash.kernel.service.persistence.TrashVersionPersistence;
@@ -115,7 +117,7 @@ public abstract class DLAppHelperLocalServiceBaseImpl
 	 *
 	 * @return the counter local service
 	 */
-	public com.liferay.counter.service.CounterLocalService getCounterLocalService() {
+	public com.liferay.counter.kernel.service.CounterLocalService getCounterLocalService() {
 		return counterLocalService;
 	}
 
@@ -125,7 +127,7 @@ public abstract class DLAppHelperLocalServiceBaseImpl
 	 * @param counterLocalService the counter local service
 	 */
 	public void setCounterLocalService(
-		com.liferay.counter.service.CounterLocalService counterLocalService) {
+		com.liferay.counter.kernel.service.CounterLocalService counterLocalService) {
 		this.counterLocalService = counterLocalService;
 	}
 
@@ -752,7 +754,7 @@ public abstract class DLAppHelperLocalServiceBaseImpl
 	 *
 	 * @return the expando value local service
 	 */
-	public com.liferay.portlet.expando.service.ExpandoValueLocalService getExpandoValueLocalService() {
+	public com.liferay.expando.kernel.service.ExpandoValueLocalService getExpandoValueLocalService() {
 		return expandoValueLocalService;
 	}
 
@@ -762,7 +764,7 @@ public abstract class DLAppHelperLocalServiceBaseImpl
 	 * @param expandoValueLocalService the expando value local service
 	 */
 	public void setExpandoValueLocalService(
-		com.liferay.portlet.expando.service.ExpandoValueLocalService expandoValueLocalService) {
+		com.liferay.expando.kernel.service.ExpandoValueLocalService expandoValueLocalService) {
 		this.expandoValueLocalService = expandoValueLocalService;
 	}
 
@@ -790,7 +792,7 @@ public abstract class DLAppHelperLocalServiceBaseImpl
 	 *
 	 * @return the ratings entry local service
 	 */
-	public com.liferay.portlet.ratings.service.RatingsEntryLocalService getRatingsEntryLocalService() {
+	public com.liferay.ratings.kernel.service.RatingsEntryLocalService getRatingsEntryLocalService() {
 		return ratingsEntryLocalService;
 	}
 
@@ -800,7 +802,7 @@ public abstract class DLAppHelperLocalServiceBaseImpl
 	 * @param ratingsEntryLocalService the ratings entry local service
 	 */
 	public void setRatingsEntryLocalService(
-		com.liferay.portlet.ratings.service.RatingsEntryLocalService ratingsEntryLocalService) {
+		com.liferay.ratings.kernel.service.RatingsEntryLocalService ratingsEntryLocalService) {
 		this.ratingsEntryLocalService = ratingsEntryLocalService;
 	}
 
@@ -846,7 +848,7 @@ public abstract class DLAppHelperLocalServiceBaseImpl
 	 *
 	 * @return the ratings stats local service
 	 */
-	public com.liferay.portlet.ratings.service.RatingsStatsLocalService getRatingsStatsLocalService() {
+	public com.liferay.ratings.kernel.service.RatingsStatsLocalService getRatingsStatsLocalService() {
 		return ratingsStatsLocalService;
 	}
 
@@ -856,7 +858,7 @@ public abstract class DLAppHelperLocalServiceBaseImpl
 	 * @param ratingsStatsLocalService the ratings stats local service
 	 */
 	public void setRatingsStatsLocalService(
-		com.liferay.portlet.ratings.service.RatingsStatsLocalService ratingsStatsLocalService) {
+		com.liferay.ratings.kernel.service.RatingsStatsLocalService ratingsStatsLocalService) {
 		this.ratingsStatsLocalService = ratingsStatsLocalService;
 	}
 
@@ -1353,8 +1355,8 @@ public abstract class DLAppHelperLocalServiceBaseImpl
 
 	@BeanReference(type = com.liferay.portlet.documentlibrary.service.DLAppHelperLocalService.class)
 	protected DLAppHelperLocalService dlAppHelperLocalService;
-	@BeanReference(type = com.liferay.counter.service.CounterLocalService.class)
-	protected com.liferay.counter.service.CounterLocalService counterLocalService;
+	@BeanReference(type = com.liferay.counter.kernel.service.CounterLocalService.class)
+	protected com.liferay.counter.kernel.service.CounterLocalService counterLocalService;
 	@BeanReference(type = com.liferay.portal.service.ClassNameLocalService.class)
 	protected com.liferay.portal.service.ClassNameLocalService classNameLocalService;
 	@BeanReference(type = ClassNamePersistence.class)
@@ -1421,18 +1423,18 @@ public abstract class DLAppHelperLocalServiceBaseImpl
 	protected AssetTagFinder assetTagFinder;
 	@BeanReference(type = com.liferay.portlet.documentlibrary.service.DLAppLocalService.class)
 	protected com.liferay.portlet.documentlibrary.service.DLAppLocalService dlAppLocalService;
-	@BeanReference(type = com.liferay.portlet.expando.service.ExpandoValueLocalService.class)
-	protected com.liferay.portlet.expando.service.ExpandoValueLocalService expandoValueLocalService;
+	@BeanReference(type = com.liferay.expando.kernel.service.ExpandoValueLocalService.class)
+	protected com.liferay.expando.kernel.service.ExpandoValueLocalService expandoValueLocalService;
 	@BeanReference(type = ExpandoValuePersistence.class)
 	protected ExpandoValuePersistence expandoValuePersistence;
-	@BeanReference(type = com.liferay.portlet.ratings.service.RatingsEntryLocalService.class)
-	protected com.liferay.portlet.ratings.service.RatingsEntryLocalService ratingsEntryLocalService;
+	@BeanReference(type = com.liferay.ratings.kernel.service.RatingsEntryLocalService.class)
+	protected com.liferay.ratings.kernel.service.RatingsEntryLocalService ratingsEntryLocalService;
 	@BeanReference(type = RatingsEntryPersistence.class)
 	protected RatingsEntryPersistence ratingsEntryPersistence;
 	@BeanReference(type = RatingsEntryFinder.class)
 	protected RatingsEntryFinder ratingsEntryFinder;
-	@BeanReference(type = com.liferay.portlet.ratings.service.RatingsStatsLocalService.class)
-	protected com.liferay.portlet.ratings.service.RatingsStatsLocalService ratingsStatsLocalService;
+	@BeanReference(type = com.liferay.ratings.kernel.service.RatingsStatsLocalService.class)
+	protected com.liferay.ratings.kernel.service.RatingsStatsLocalService ratingsStatsLocalService;
 	@BeanReference(type = RatingsStatsPersistence.class)
 	protected RatingsStatsPersistence ratingsStatsPersistence;
 	@BeanReference(type = RatingsStatsFinder.class)

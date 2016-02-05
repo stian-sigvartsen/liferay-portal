@@ -14,6 +14,8 @@
 
 package com.liferay.journal.service.base;
 
+import com.liferay.expando.kernel.service.persistence.ExpandoRowPersistence;
+
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.service.JournalArticleService;
 import com.liferay.journal.service.persistence.JournalArticleFinder;
@@ -49,8 +51,8 @@ import com.liferay.portlet.asset.service.persistence.AssetCategoryPersistence;
 import com.liferay.portlet.asset.service.persistence.AssetEntryPersistence;
 import com.liferay.portlet.asset.service.persistence.AssetLinkPersistence;
 import com.liferay.portlet.asset.service.persistence.AssetTagPersistence;
-import com.liferay.portlet.expando.service.persistence.ExpandoRowPersistence;
-import com.liferay.portlet.ratings.service.persistence.RatingsStatsPersistence;
+
+import com.liferay.ratings.kernel.service.persistence.RatingsStatsPersistence;
 
 import com.liferay.trash.kernel.service.persistence.TrashEntryPersistence;
 import com.liferay.trash.kernel.service.persistence.TrashVersionPersistence;
@@ -158,7 +160,7 @@ public abstract class JournalArticleServiceBaseImpl extends BaseServiceImpl
 	 *
 	 * @return the counter local service
 	 */
-	public com.liferay.counter.service.CounterLocalService getCounterLocalService() {
+	public com.liferay.counter.kernel.service.CounterLocalService getCounterLocalService() {
 		return counterLocalService;
 	}
 
@@ -168,7 +170,7 @@ public abstract class JournalArticleServiceBaseImpl extends BaseServiceImpl
 	 * @param counterLocalService the counter local service
 	 */
 	public void setCounterLocalService(
-		com.liferay.counter.service.CounterLocalService counterLocalService) {
+		com.liferay.counter.kernel.service.CounterLocalService counterLocalService) {
 		this.counterLocalService = counterLocalService;
 	}
 
@@ -177,7 +179,7 @@ public abstract class JournalArticleServiceBaseImpl extends BaseServiceImpl
 	 *
 	 * @return the mail remote service
 	 */
-	public com.liferay.mail.service.MailService getMailService() {
+	public com.liferay.mail.kernel.service.MailService getMailService() {
 		return mailService;
 	}
 
@@ -186,7 +188,8 @@ public abstract class JournalArticleServiceBaseImpl extends BaseServiceImpl
 	 *
 	 * @param mailService the mail remote service
 	 */
-	public void setMailService(com.liferay.mail.service.MailService mailService) {
+	public void setMailService(
+		com.liferay.mail.kernel.service.MailService mailService) {
 		this.mailService = mailService;
 	}
 
@@ -950,7 +953,7 @@ public abstract class JournalArticleServiceBaseImpl extends BaseServiceImpl
 	 *
 	 * @return the expando row local service
 	 */
-	public com.liferay.portlet.expando.service.ExpandoRowLocalService getExpandoRowLocalService() {
+	public com.liferay.expando.kernel.service.ExpandoRowLocalService getExpandoRowLocalService() {
 		return expandoRowLocalService;
 	}
 
@@ -960,7 +963,7 @@ public abstract class JournalArticleServiceBaseImpl extends BaseServiceImpl
 	 * @param expandoRowLocalService the expando row local service
 	 */
 	public void setExpandoRowLocalService(
-		com.liferay.portlet.expando.service.ExpandoRowLocalService expandoRowLocalService) {
+		com.liferay.expando.kernel.service.ExpandoRowLocalService expandoRowLocalService) {
 		this.expandoRowLocalService = expandoRowLocalService;
 	}
 
@@ -988,7 +991,7 @@ public abstract class JournalArticleServiceBaseImpl extends BaseServiceImpl
 	 *
 	 * @return the ratings stats local service
 	 */
-	public com.liferay.portlet.ratings.service.RatingsStatsLocalService getRatingsStatsLocalService() {
+	public com.liferay.ratings.kernel.service.RatingsStatsLocalService getRatingsStatsLocalService() {
 		return ratingsStatsLocalService;
 	}
 
@@ -998,7 +1001,7 @@ public abstract class JournalArticleServiceBaseImpl extends BaseServiceImpl
 	 * @param ratingsStatsLocalService the ratings stats local service
 	 */
 	public void setRatingsStatsLocalService(
-		com.liferay.portlet.ratings.service.RatingsStatsLocalService ratingsStatsLocalService) {
+		com.liferay.ratings.kernel.service.RatingsStatsLocalService ratingsStatsLocalService) {
 		this.ratingsStatsLocalService = ratingsStatsLocalService;
 	}
 
@@ -1361,10 +1364,10 @@ public abstract class JournalArticleServiceBaseImpl extends BaseServiceImpl
 	protected JournalArticlePersistence journalArticlePersistence;
 	@BeanReference(type = JournalArticleFinder.class)
 	protected JournalArticleFinder journalArticleFinder;
-	@ServiceReference(type = com.liferay.counter.service.CounterLocalService.class)
-	protected com.liferay.counter.service.CounterLocalService counterLocalService;
-	@ServiceReference(type = com.liferay.mail.service.MailService.class)
-	protected com.liferay.mail.service.MailService mailService;
+	@ServiceReference(type = com.liferay.counter.kernel.service.CounterLocalService.class)
+	protected com.liferay.counter.kernel.service.CounterLocalService counterLocalService;
+	@ServiceReference(type = com.liferay.mail.kernel.service.MailService.class)
+	protected com.liferay.mail.kernel.service.MailService mailService;
 	@ServiceReference(type = com.liferay.portal.service.ClassNameLocalService.class)
 	protected com.liferay.portal.service.ClassNameLocalService classNameLocalService;
 	@ServiceReference(type = com.liferay.portal.service.ClassNameService.class)
@@ -1445,12 +1448,12 @@ public abstract class JournalArticleServiceBaseImpl extends BaseServiceImpl
 	protected com.liferay.portlet.documentlibrary.service.DLAppLocalService dlAppLocalService;
 	@ServiceReference(type = com.liferay.portlet.documentlibrary.service.DLAppService.class)
 	protected com.liferay.portlet.documentlibrary.service.DLAppService dlAppService;
-	@ServiceReference(type = com.liferay.portlet.expando.service.ExpandoRowLocalService.class)
-	protected com.liferay.portlet.expando.service.ExpandoRowLocalService expandoRowLocalService;
+	@ServiceReference(type = com.liferay.expando.kernel.service.ExpandoRowLocalService.class)
+	protected com.liferay.expando.kernel.service.ExpandoRowLocalService expandoRowLocalService;
 	@ServiceReference(type = ExpandoRowPersistence.class)
 	protected ExpandoRowPersistence expandoRowPersistence;
-	@ServiceReference(type = com.liferay.portlet.ratings.service.RatingsStatsLocalService.class)
-	protected com.liferay.portlet.ratings.service.RatingsStatsLocalService ratingsStatsLocalService;
+	@ServiceReference(type = com.liferay.ratings.kernel.service.RatingsStatsLocalService.class)
+	protected com.liferay.ratings.kernel.service.RatingsStatsLocalService ratingsStatsLocalService;
 	@ServiceReference(type = RatingsStatsPersistence.class)
 	protected RatingsStatsPersistence ratingsStatsPersistence;
 	@ServiceReference(type = com.liferay.trash.kernel.service.TrashEntryLocalService.class)

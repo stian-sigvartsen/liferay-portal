@@ -24,6 +24,8 @@ import com.liferay.calendar.service.persistence.CalendarPersistence;
 import com.liferay.calendar.service.persistence.CalendarResourceFinder;
 import com.liferay.calendar.service.persistence.CalendarResourcePersistence;
 
+import com.liferay.message.boards.kernel.service.persistence.MBMessagePersistence;
+
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
@@ -42,8 +44,8 @@ import com.liferay.portal.util.PortalUtil;
 
 import com.liferay.portlet.asset.service.persistence.AssetEntryPersistence;
 import com.liferay.portlet.asset.service.persistence.AssetLinkPersistence;
-import com.liferay.portlet.messageboards.service.persistence.MBMessagePersistence;
-import com.liferay.portlet.ratings.service.persistence.RatingsStatsPersistence;
+
+import com.liferay.ratings.kernel.service.persistence.RatingsStatsPersistence;
 
 import com.liferay.social.kernel.service.persistence.SocialActivityCounterPersistence;
 import com.liferay.social.kernel.service.persistence.SocialActivityPersistence;
@@ -360,7 +362,7 @@ public abstract class CalendarBookingServiceBaseImpl extends BaseServiceImpl
 	 *
 	 * @return the counter local service
 	 */
-	public com.liferay.counter.service.CounterLocalService getCounterLocalService() {
+	public com.liferay.counter.kernel.service.CounterLocalService getCounterLocalService() {
 		return counterLocalService;
 	}
 
@@ -370,7 +372,7 @@ public abstract class CalendarBookingServiceBaseImpl extends BaseServiceImpl
 	 * @param counterLocalService the counter local service
 	 */
 	public void setCounterLocalService(
-		com.liferay.counter.service.CounterLocalService counterLocalService) {
+		com.liferay.counter.kernel.service.CounterLocalService counterLocalService) {
 		this.counterLocalService = counterLocalService;
 	}
 
@@ -379,7 +381,7 @@ public abstract class CalendarBookingServiceBaseImpl extends BaseServiceImpl
 	 *
 	 * @return the mail remote service
 	 */
-	public com.liferay.mail.service.MailService getMailService() {
+	public com.liferay.mail.kernel.service.MailService getMailService() {
 		return mailService;
 	}
 
@@ -388,7 +390,8 @@ public abstract class CalendarBookingServiceBaseImpl extends BaseServiceImpl
 	 *
 	 * @param mailService the mail remote service
 	 */
-	public void setMailService(com.liferay.mail.service.MailService mailService) {
+	public void setMailService(
+		com.liferay.mail.kernel.service.MailService mailService) {
 		this.mailService = mailService;
 	}
 
@@ -756,7 +759,7 @@ public abstract class CalendarBookingServiceBaseImpl extends BaseServiceImpl
 	 *
 	 * @return the message-boards message local service
 	 */
-	public com.liferay.portlet.messageboards.service.MBMessageLocalService getMBMessageLocalService() {
+	public com.liferay.message.boards.kernel.service.MBMessageLocalService getMBMessageLocalService() {
 		return mbMessageLocalService;
 	}
 
@@ -766,7 +769,7 @@ public abstract class CalendarBookingServiceBaseImpl extends BaseServiceImpl
 	 * @param mbMessageLocalService the message-boards message local service
 	 */
 	public void setMBMessageLocalService(
-		com.liferay.portlet.messageboards.service.MBMessageLocalService mbMessageLocalService) {
+		com.liferay.message.boards.kernel.service.MBMessageLocalService mbMessageLocalService) {
 		this.mbMessageLocalService = mbMessageLocalService;
 	}
 
@@ -775,7 +778,7 @@ public abstract class CalendarBookingServiceBaseImpl extends BaseServiceImpl
 	 *
 	 * @return the message-boards message remote service
 	 */
-	public com.liferay.portlet.messageboards.service.MBMessageService getMBMessageService() {
+	public com.liferay.message.boards.kernel.service.MBMessageService getMBMessageService() {
 		return mbMessageService;
 	}
 
@@ -785,7 +788,7 @@ public abstract class CalendarBookingServiceBaseImpl extends BaseServiceImpl
 	 * @param mbMessageService the message-boards message remote service
 	 */
 	public void setMBMessageService(
-		com.liferay.portlet.messageboards.service.MBMessageService mbMessageService) {
+		com.liferay.message.boards.kernel.service.MBMessageService mbMessageService) {
 		this.mbMessageService = mbMessageService;
 	}
 
@@ -813,7 +816,7 @@ public abstract class CalendarBookingServiceBaseImpl extends BaseServiceImpl
 	 *
 	 * @return the ratings stats local service
 	 */
-	public com.liferay.portlet.ratings.service.RatingsStatsLocalService getRatingsStatsLocalService() {
+	public com.liferay.ratings.kernel.service.RatingsStatsLocalService getRatingsStatsLocalService() {
 		return ratingsStatsLocalService;
 	}
 
@@ -823,7 +826,7 @@ public abstract class CalendarBookingServiceBaseImpl extends BaseServiceImpl
 	 * @param ratingsStatsLocalService the ratings stats local service
 	 */
 	public void setRatingsStatsLocalService(
-		com.liferay.portlet.ratings.service.RatingsStatsLocalService ratingsStatsLocalService) {
+		com.liferay.ratings.kernel.service.RatingsStatsLocalService ratingsStatsLocalService) {
 		this.ratingsStatsLocalService = ratingsStatsLocalService;
 	}
 
@@ -1076,10 +1079,10 @@ public abstract class CalendarBookingServiceBaseImpl extends BaseServiceImpl
 	protected CalendarResourcePersistence calendarResourcePersistence;
 	@BeanReference(type = CalendarResourceFinder.class)
 	protected CalendarResourceFinder calendarResourceFinder;
-	@ServiceReference(type = com.liferay.counter.service.CounterLocalService.class)
-	protected com.liferay.counter.service.CounterLocalService counterLocalService;
-	@ServiceReference(type = com.liferay.mail.service.MailService.class)
-	protected com.liferay.mail.service.MailService mailService;
+	@ServiceReference(type = com.liferay.counter.kernel.service.CounterLocalService.class)
+	protected com.liferay.counter.kernel.service.CounterLocalService counterLocalService;
+	@ServiceReference(type = com.liferay.mail.kernel.service.MailService.class)
+	protected com.liferay.mail.kernel.service.MailService mailService;
 	@ServiceReference(type = com.liferay.portal.service.ClassNameLocalService.class)
 	protected com.liferay.portal.service.ClassNameLocalService classNameLocalService;
 	@ServiceReference(type = com.liferay.portal.service.ClassNameService.class)
@@ -1118,14 +1121,14 @@ public abstract class CalendarBookingServiceBaseImpl extends BaseServiceImpl
 	protected com.liferay.portlet.asset.service.AssetLinkLocalService assetLinkLocalService;
 	@ServiceReference(type = AssetLinkPersistence.class)
 	protected AssetLinkPersistence assetLinkPersistence;
-	@ServiceReference(type = com.liferay.portlet.messageboards.service.MBMessageLocalService.class)
-	protected com.liferay.portlet.messageboards.service.MBMessageLocalService mbMessageLocalService;
-	@ServiceReference(type = com.liferay.portlet.messageboards.service.MBMessageService.class)
-	protected com.liferay.portlet.messageboards.service.MBMessageService mbMessageService;
+	@ServiceReference(type = com.liferay.message.boards.kernel.service.MBMessageLocalService.class)
+	protected com.liferay.message.boards.kernel.service.MBMessageLocalService mbMessageLocalService;
+	@ServiceReference(type = com.liferay.message.boards.kernel.service.MBMessageService.class)
+	protected com.liferay.message.boards.kernel.service.MBMessageService mbMessageService;
 	@ServiceReference(type = MBMessagePersistence.class)
 	protected MBMessagePersistence mbMessagePersistence;
-	@ServiceReference(type = com.liferay.portlet.ratings.service.RatingsStatsLocalService.class)
-	protected com.liferay.portlet.ratings.service.RatingsStatsLocalService ratingsStatsLocalService;
+	@ServiceReference(type = com.liferay.ratings.kernel.service.RatingsStatsLocalService.class)
+	protected com.liferay.ratings.kernel.service.RatingsStatsLocalService ratingsStatsLocalService;
 	@ServiceReference(type = RatingsStatsPersistence.class)
 	protected RatingsStatsPersistence ratingsStatsPersistence;
 	@ServiceReference(type = com.liferay.social.kernel.service.SocialActivityLocalService.class)

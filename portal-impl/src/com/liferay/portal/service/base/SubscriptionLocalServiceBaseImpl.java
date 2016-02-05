@@ -16,6 +16,9 @@ package com.liferay.portal.service.base;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.message.boards.kernel.service.persistence.MBThreadFinder;
+import com.liferay.message.boards.kernel.service.persistence.MBThreadPersistence;
+
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
@@ -46,8 +49,6 @@ import com.liferay.portal.util.PortalUtil;
 
 import com.liferay.portlet.asset.service.persistence.AssetEntryFinder;
 import com.liferay.portlet.asset.service.persistence.AssetEntryPersistence;
-import com.liferay.portlet.messageboards.service.persistence.MBThreadFinder;
-import com.liferay.portlet.messageboards.service.persistence.MBThreadPersistence;
 
 import java.io.Serializable;
 
@@ -363,7 +364,7 @@ public abstract class SubscriptionLocalServiceBaseImpl
 	 *
 	 * @return the counter local service
 	 */
-	public com.liferay.counter.service.CounterLocalService getCounterLocalService() {
+	public com.liferay.counter.kernel.service.CounterLocalService getCounterLocalService() {
 		return counterLocalService;
 	}
 
@@ -373,7 +374,7 @@ public abstract class SubscriptionLocalServiceBaseImpl
 	 * @param counterLocalService the counter local service
 	 */
 	public void setCounterLocalService(
-		com.liferay.counter.service.CounterLocalService counterLocalService) {
+		com.liferay.counter.kernel.service.CounterLocalService counterLocalService) {
 		this.counterLocalService = counterLocalService;
 	}
 
@@ -476,7 +477,7 @@ public abstract class SubscriptionLocalServiceBaseImpl
 	 *
 	 * @return the message boards thread local service
 	 */
-	public com.liferay.portlet.messageboards.service.MBThreadLocalService getMBThreadLocalService() {
+	public com.liferay.message.boards.kernel.service.MBThreadLocalService getMBThreadLocalService() {
 		return mbThreadLocalService;
 	}
 
@@ -486,7 +487,7 @@ public abstract class SubscriptionLocalServiceBaseImpl
 	 * @param mbThreadLocalService the message boards thread local service
 	 */
 	public void setMBThreadLocalService(
-		com.liferay.portlet.messageboards.service.MBThreadLocalService mbThreadLocalService) {
+		com.liferay.message.boards.kernel.service.MBThreadLocalService mbThreadLocalService) {
 		this.mbThreadLocalService = mbThreadLocalService;
 	}
 
@@ -637,8 +638,8 @@ public abstract class SubscriptionLocalServiceBaseImpl
 	protected SubscriptionLocalService subscriptionLocalService;
 	@BeanReference(type = SubscriptionPersistence.class)
 	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = com.liferay.counter.service.CounterLocalService.class)
-	protected com.liferay.counter.service.CounterLocalService counterLocalService;
+	@BeanReference(type = com.liferay.counter.kernel.service.CounterLocalService.class)
+	protected com.liferay.counter.kernel.service.CounterLocalService counterLocalService;
 	@BeanReference(type = com.liferay.portal.service.ClassNameLocalService.class)
 	protected com.liferay.portal.service.ClassNameLocalService classNameLocalService;
 	@BeanReference(type = ClassNamePersistence.class)
@@ -649,8 +650,8 @@ public abstract class SubscriptionLocalServiceBaseImpl
 	protected AssetEntryPersistence assetEntryPersistence;
 	@BeanReference(type = AssetEntryFinder.class)
 	protected AssetEntryFinder assetEntryFinder;
-	@BeanReference(type = com.liferay.portlet.messageboards.service.MBThreadLocalService.class)
-	protected com.liferay.portlet.messageboards.service.MBThreadLocalService mbThreadLocalService;
+	@BeanReference(type = com.liferay.message.boards.kernel.service.MBThreadLocalService.class)
+	protected com.liferay.message.boards.kernel.service.MBThreadLocalService mbThreadLocalService;
 	@BeanReference(type = MBThreadPersistence.class)
 	protected MBThreadPersistence mbThreadPersistence;
 	@BeanReference(type = MBThreadFinder.class)

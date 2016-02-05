@@ -16,6 +16,16 @@ package com.liferay.portlet.messageboards.service.base;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.exportimport.kernel.lar.ExportImportHelperUtil;
+import com.liferay.exportimport.kernel.lar.ManifestSummary;
+import com.liferay.exportimport.kernel.lar.PortletDataContext;
+import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.exportimport.kernel.lar.StagedModelType;
+
+import com.liferay.message.boards.kernel.model.MBThreadFlag;
+import com.liferay.message.boards.kernel.service.MBThreadFlagLocalService;
+import com.liferay.message.boards.kernel.service.persistence.MBThreadFlagPersistence;
+
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
@@ -41,15 +51,6 @@ import com.liferay.portal.service.persistence.UserFinder;
 import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.util.PortalUtil;
 
-import com.liferay.portlet.exportimport.lar.ExportImportHelperUtil;
-import com.liferay.portlet.exportimport.lar.ManifestSummary;
-import com.liferay.portlet.exportimport.lar.PortletDataContext;
-import com.liferay.portlet.exportimport.lar.StagedModelDataHandlerUtil;
-import com.liferay.portlet.exportimport.lar.StagedModelType;
-import com.liferay.portlet.messageboards.model.MBThreadFlag;
-import com.liferay.portlet.messageboards.service.MBThreadFlagLocalService;
-import com.liferay.portlet.messageboards.service.persistence.MBThreadFlagPersistence;
-
 import java.io.Serializable;
 
 import java.util.List;
@@ -65,7 +66,7 @@ import javax.sql.DataSource;
  *
  * @author Brian Wing Shun Chan
  * @see com.liferay.portlet.messageboards.service.impl.MBThreadFlagLocalServiceImpl
- * @see com.liferay.portlet.messageboards.service.MBThreadFlagLocalServiceUtil
+ * @see com.liferay.message.boards.kernel.service.MBThreadFlagLocalServiceUtil
  * @generated
  */
 @ProviderType
@@ -75,7 +76,7 @@ public abstract class MBThreadFlagLocalServiceBaseImpl
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never modify or reference this class directly. Always use {@link com.liferay.portlet.messageboards.service.MBThreadFlagLocalServiceUtil} to access the message boards thread flag local service.
+	 * Never modify or reference this class directly. Always use {@link com.liferay.message.boards.kernel.service.MBThreadFlagLocalServiceUtil} to access the message boards thread flag local service.
 	 */
 
 	/**
@@ -247,7 +248,7 @@ public abstract class MBThreadFlagLocalServiceBaseImpl
 	public ActionableDynamicQuery getActionableDynamicQuery() {
 		ActionableDynamicQuery actionableDynamicQuery = new DefaultActionableDynamicQuery();
 
-		actionableDynamicQuery.setBaseLocalService(com.liferay.portlet.messageboards.service.MBThreadFlagLocalServiceUtil.getService());
+		actionableDynamicQuery.setBaseLocalService(com.liferay.message.boards.kernel.service.MBThreadFlagLocalServiceUtil.getService());
 		actionableDynamicQuery.setClassLoader(getClassLoader());
 		actionableDynamicQuery.setModelClass(MBThreadFlag.class);
 
@@ -260,7 +261,7 @@ public abstract class MBThreadFlagLocalServiceBaseImpl
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery() {
 		IndexableActionableDynamicQuery indexableActionableDynamicQuery = new IndexableActionableDynamicQuery();
 
-		indexableActionableDynamicQuery.setBaseLocalService(com.liferay.portlet.messageboards.service.MBThreadFlagLocalServiceUtil.getService());
+		indexableActionableDynamicQuery.setBaseLocalService(com.liferay.message.boards.kernel.service.MBThreadFlagLocalServiceUtil.getService());
 		indexableActionableDynamicQuery.setClassLoader(getClassLoader());
 		indexableActionableDynamicQuery.setModelClass(MBThreadFlag.class);
 
@@ -272,7 +273,7 @@ public abstract class MBThreadFlagLocalServiceBaseImpl
 
 	protected void initActionableDynamicQuery(
 		ActionableDynamicQuery actionableDynamicQuery) {
-		actionableDynamicQuery.setBaseLocalService(com.liferay.portlet.messageboards.service.MBThreadFlagLocalServiceUtil.getService());
+		actionableDynamicQuery.setBaseLocalService(com.liferay.message.boards.kernel.service.MBThreadFlagLocalServiceUtil.getService());
 		actionableDynamicQuery.setClassLoader(getClassLoader());
 		actionableDynamicQuery.setModelClass(MBThreadFlag.class);
 
@@ -473,7 +474,7 @@ public abstract class MBThreadFlagLocalServiceBaseImpl
 	 *
 	 * @return the counter local service
 	 */
-	public com.liferay.counter.service.CounterLocalService getCounterLocalService() {
+	public com.liferay.counter.kernel.service.CounterLocalService getCounterLocalService() {
 		return counterLocalService;
 	}
 
@@ -483,7 +484,7 @@ public abstract class MBThreadFlagLocalServiceBaseImpl
 	 * @param counterLocalService the counter local service
 	 */
 	public void setCounterLocalService(
-		com.liferay.counter.service.CounterLocalService counterLocalService) {
+		com.liferay.counter.kernel.service.CounterLocalService counterLocalService) {
 		this.counterLocalService = counterLocalService;
 	}
 
@@ -543,13 +544,13 @@ public abstract class MBThreadFlagLocalServiceBaseImpl
 	}
 
 	public void afterPropertiesSet() {
-		persistedModelLocalServiceRegistry.register("com.liferay.portlet.messageboards.model.MBThreadFlag",
+		persistedModelLocalServiceRegistry.register("com.liferay.message.boards.kernel.model.MBThreadFlag",
 			mbThreadFlagLocalService);
 	}
 
 	public void destroy() {
 		persistedModelLocalServiceRegistry.unregister(
-			"com.liferay.portlet.messageboards.model.MBThreadFlag");
+			"com.liferay.message.boards.kernel.model.MBThreadFlag");
 	}
 
 	/**
@@ -594,12 +595,12 @@ public abstract class MBThreadFlagLocalServiceBaseImpl
 		}
 	}
 
-	@BeanReference(type = com.liferay.portlet.messageboards.service.MBThreadFlagLocalService.class)
+	@BeanReference(type = com.liferay.message.boards.kernel.service.MBThreadFlagLocalService.class)
 	protected MBThreadFlagLocalService mbThreadFlagLocalService;
 	@BeanReference(type = MBThreadFlagPersistence.class)
 	protected MBThreadFlagPersistence mbThreadFlagPersistence;
-	@BeanReference(type = com.liferay.counter.service.CounterLocalService.class)
-	protected com.liferay.counter.service.CounterLocalService counterLocalService;
+	@BeanReference(type = com.liferay.counter.kernel.service.CounterLocalService.class)
+	protected com.liferay.counter.kernel.service.CounterLocalService counterLocalService;
 	@BeanReference(type = com.liferay.portal.service.UserLocalService.class)
 	protected com.liferay.portal.service.UserLocalService userLocalService;
 	@BeanReference(type = UserPersistence.class)
