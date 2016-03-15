@@ -57,7 +57,7 @@ public interface FlagsGroupServiceConfiguration {
 	)
 	public String emailSubject();
 
-	@Meta.AD(deflt = "flase", required = false)
+	@Meta.AD(deflt = "false", required = false)
 	public boolean guestUsersEnabled();
 
 	@Meta.AD(
