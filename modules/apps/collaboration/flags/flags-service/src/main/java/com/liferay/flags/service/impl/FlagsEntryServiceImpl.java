@@ -14,6 +14,7 @@
 
 package com.liferay.flags.service.impl;
 
+import com.liferay.flags.configuration.FlagsGroupServiceConfiguration;
 import com.liferay.flags.messaging.FlagsRequest;
 import com.liferay.flags.service.base.FlagsEntryServiceBaseImpl;
 import com.liferay.portal.kernel.exception.EmailAddressException;
@@ -23,6 +24,8 @@ import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.model.Ticket;
 import com.liferay.portal.kernel.model.TicketConstants;
+import com.liferay.portal.kernel.module.configuration.ConfigurationException;
+import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.TicketLocalService;
 import com.liferay.portal.kernel.util.Validator;
@@ -81,9 +84,18 @@ public class FlagsEntryServiceImpl extends FlagsEntryServiceBaseImpl {
 		}
 	}
 
-	private long getFlagRateLimit(long companyId) {
-		return 60000;
+	private long getFlagRateLimit(long companyId)
+		throws ConfigurationException {
+
+		FlagsGroupServiceConfiguration flagsGroupServiceConfiguration =
+			_configurationProvider.getCompanyConfiguration(
+				FlagsGroupServiceConfiguration.class, companyId);
+
+		return flagsGroupServiceConfiguration.entityFlaggingRateLimit();
 	}
+
+	@ServiceReference(type = ConfigurationProvider.class)
+	private transient ConfigurationProvider _configurationProvider;
 
 	@ServiceReference(type = TicketLocalService.class)
 	private transient TicketLocalService _ticketLocalService;
