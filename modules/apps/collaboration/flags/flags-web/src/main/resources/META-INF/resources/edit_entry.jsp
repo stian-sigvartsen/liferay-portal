@@ -33,6 +33,10 @@ long reportedUserId = ParamUtil.getLong(request, "reportedUserId");
 </style>
 
 <div class="portlet-flags" id="<portlet:namespace />flagsPopup">
+
+	<div class="inline-alert-container lfr-alert-container"></div>
+	<liferay-ui:error exception="<%= RateLimitExceededException.class %>" message="rate-limit-exceeded" />
+
 	<aui:form method="post" name="flagsForm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "flag();" %>'>
 		<p>
 			<liferay-ui:message arguments='<%= themeDisplay.getPathMain() + "/portal/terms_of_use" %>' key="you-are-about-to-report-a-violation-of-our-x-terms-of-use.-all-reports-are-strictly-confidential" translateArguments="<%= false %>" />
@@ -70,14 +74,6 @@ long reportedUserId = ParamUtil.getLong(request, "reportedUserId");
 			<aui:button cssClass="btn-lg" name="flagsSubmit" type="submit" />
 		</aui:button-row>
 	</aui:form>
-</div>
-
-<div class="hide" id="<portlet:namespace />confirmation">
-	<p><strong><liferay-ui:message key="thank-you-for-your-report" /></strong></p>
-
-	<p>
-		<liferay-ui:message arguments="<%= HtmlUtil.escape(company.getName()) %>" key="although-we-cannot-disclose-our-final-decision,-we-do-review-every-report-and-appreciate-your-effort-to-make-sure-x-is-a-safe-environment-for-everyone" translateArguments="<%= false %>" />
-	</p>
 </div>
 
 <div class="hide" id="<portlet:namespace />error">
@@ -129,10 +125,8 @@ long reportedUserId = ParamUtil.getLong(request, "reportedUserId");
 			}
 		);
 
-		var confirmationMessageNode = A.one('#<portlet:namespace />confirmation');
 		var errorMessageNode = A.one('#<portlet:namespace />error');
 
-		var confirmationMessage = (confirmationMessageNode && confirmationMessageNode.html()) || '';
 		var errorMessage = (errorMessageNode && errorMessageNode.html()) || '';
 
 		A.io.request(
@@ -144,7 +138,8 @@ long reportedUserId = ParamUtil.getLong(request, "reportedUserId");
 						setDialogContent(errorMessage);
 					},
 					success: function() {
-						setDialogContent(confirmationMessage);
+						var data = this.get('responseData');
+						setDialogContent(data);
 					}
 				}
 			}
