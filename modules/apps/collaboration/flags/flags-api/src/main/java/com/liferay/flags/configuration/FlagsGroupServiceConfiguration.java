@@ -30,6 +30,9 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 )
 public interface FlagsGroupServiceConfiguration {
 
+	@Meta.AD(deflt = "60000", required = false)
+	public long entityFlaggingRateLimit();
+
 	@Meta.AD(
 		deflt = "com/liferay/flags/dependencies/email_flag_body.tmpl",
 		required = false
@@ -57,7 +60,7 @@ public interface FlagsGroupServiceConfiguration {
 	)
 	public String emailSubject();
 
-	@Meta.AD(deflt = "flase", required = false)
+	@Meta.AD(deflt = "false", required = false)
 	public boolean guestUsersEnabled();
 
 	@Meta.AD(
