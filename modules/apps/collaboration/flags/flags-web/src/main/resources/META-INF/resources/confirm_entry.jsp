@@ -1,3 +1,4 @@
+<%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -11,21 +12,23 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+--%>
 
-package com.liferay.portal.kernel.model;
+<%@ include file="/init.jsp" %>
 
-/**
- * @author Mika Koivisto
- * @author Brian Wing Shun Chan
- */
-public class TicketConstants {
+<style type="text/css">
+	.portlet-flags .form fieldset {
+		border-width: 0;
+		padding: 0;
+		width: 100%;
+	}
+</style>
 
-	public static final int TYPE_EMAIL_ADDRESS = 1;
+<div class="portlet-flags" id="<portlet:namespace />flagsPopup">
 
-	public static final int TYPE_FLAG = 4;
+	<p><strong><liferay-ui:message key="thank-you-for-your-report" /></strong></p>
 
-	public static final int TYPE_IMPERSONATE = 2;
-
-	public static final int TYPE_PASSWORD = 3;
-
-}
+	<p>
+		<liferay-ui:message arguments="<%= HtmlUtil.escape(company.getName()) %>" key="although-we-cannot-disclose-our-final-decision,-we-do-review-every-report-and-appreciate-your-effort-to-make-sure-x-is-a-safe-environment-for-everyone" translateArguments="<%= false %>" />
+	</p>
+</div>

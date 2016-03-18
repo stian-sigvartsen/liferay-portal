@@ -14,6 +14,7 @@
 
 package com.liferay.flags.configuration;
 
+import aQute.bnd.annotation.ProviderType;
 import aQute.bnd.annotation.metatype.Meta;
 
 import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
@@ -28,7 +29,11 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 	id = "com.liferay.flags.configuration.FlagsConfiguration",
 	localization = "content/Language", name = "flags.service.configuration.name"
 )
+@ProviderType
 public interface FlagsGroupServiceConfiguration {
+
+	@Meta.AD(deflt = "60000", required = false)
+	public long entityFlaggingRateLimit();
 
 	@Meta.AD(
 		deflt = "com/liferay/flags/dependencies/email_flag_body.tmpl",
@@ -57,7 +62,7 @@ public interface FlagsGroupServiceConfiguration {
 	)
 	public String emailSubject();
 
-	@Meta.AD(deflt = "flase", required = false)
+	@Meta.AD(deflt = "false", required = false)
 	public boolean guestUsersEnabled();
 
 	@Meta.AD(

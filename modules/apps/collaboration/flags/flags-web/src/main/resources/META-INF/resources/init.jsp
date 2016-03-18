@@ -25,6 +25,7 @@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
 <%@ page import="com.liferay.flags.configuration.FlagsGroupServiceConfiguration" %><%@
 page import="com.liferay.flags.web.constants.FlagsPortletKeys" %><%@
+page import="com.liferay.portal.kernel.exception.RateLimitExceededException" %><%@
 page import="com.liferay.portal.kernel.language.UnicodeLanguageUtil" %><%@
 page import="com.liferay.portal.kernel.model.Group" %><%@
 page import="com.liferay.portal.kernel.model.Layout" %><%@
