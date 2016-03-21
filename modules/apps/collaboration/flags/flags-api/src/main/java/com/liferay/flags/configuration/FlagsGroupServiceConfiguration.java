@@ -14,6 +14,7 @@
 
 package com.liferay.flags.configuration;
 
+import aQute.bnd.annotation.ProviderType;
 import aQute.bnd.annotation.metatype.Meta;
 
 import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
@@ -28,6 +29,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 	id = "com.liferay.flags.configuration.FlagsConfiguration",
 	localization = "content/Language", name = "flags.service.configuration.name"
 )
+@ProviderType
 public interface FlagsGroupServiceConfiguration {
 
 	@Meta.AD(deflt = "60000", required = false)
