@@ -39,6 +39,7 @@ import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserGroupRoleLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.StringPool;
@@ -240,17 +241,25 @@ public class FlagsRequestMessageListener extends BaseMessageListener {
 		subscriptionSender.setBody(body);
 		subscriptionSender.setCompanyId(company.getCompanyId());
 		subscriptionSender.setContextAttributes(
-			"[$CONTENT_ID$]", contentId, "[$CONTENT_TYPE$]", contentType,
-			"[$DATE$]", now.toString(), "[$REASON$]", reason,
+			"[$CONTENT_ID$]", contentId, "[$DATE$]", now.toString(),
 			"[$REPORTED_USER_ADDRESS$]", reportedEmailAddress,
 			"[$REPORTED_USER_NAME$]", reportedUserName, "[$REPORTED_USER_URL$]",
-			reportedUserURL, "[$REPORTER_USER_ADDRESS$]", reporterEmailAddress,
-			"[$REPORTER_USER_NAME$]", reporterUserName, "[$SITE_NAME$]",
-			groupName);
+			reportedUserURL, "[$REPORTER_USER_NAME$]", reporterUserName,
+			"[$SITE_NAME$]", groupName);
+
 		subscriptionSender.setContextAttribute(
-			"[$CONTENT_TITLE$]", contentTitle, false);
+			"[$CONTENT_TYPE$]", contentType, true);
 		subscriptionSender.setContextAttribute(
-			"[$CONTENT_URL$]", contentURL, false);
+			"[$REASON$]", HtmlUtil.escape(reason), true);
+		subscriptionSender.setContextAttribute(
+			"[$REASON$]", HtmlUtil.escape(reason), true);
+		subscriptionSender.setContextAttribute(
+			"[$REPORTER_USER_ADDRESS$]", reporterEmailAddress, true);
+
+		subscriptionSender.setContextAttribute(
+			"[$CONTENT_TITLE$]", contentTitle, true);
+		subscriptionSender.setContextAttribute(
+			"[$CONTENT_URL$]", contentURL, true);
 		subscriptionSender.setCreatorUserId(reporterUserId);
 		subscriptionSender.setFrom(fromAddress, fromName);
 		subscriptionSender.setHtmlFormat(true);
