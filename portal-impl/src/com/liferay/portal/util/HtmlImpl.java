@@ -137,13 +137,13 @@ public class HtmlImpl implements Html {
 				replacement = "&#187;";
 			}
 			else if (c == '\u2013') {
-				replacement = "&#x2013;";
+				replacement = "&#8211;";
 			}
 			else if (c == '\u2014') {
-				replacement = "&#x2014;";
+				replacement = "&#8212;";
 			}
 			else if (c == '\u2028') {
-				replacement = "&#x2028;";
+				replacement = "&#8232;";
 			}
 			else if (!_isValidXmlCharacter(c) ||
 					 _isUnicodeCompatibilityCharacter(c)) {
@@ -272,8 +272,8 @@ public class HtmlImpl implements Html {
 	}
 
 	/**
-	 * Escapes the attribute value so that it is safe to use as an attribute
-	 * value.
+	 * Escapes the attribute value so that it is safe to use within a quoted
+	 * attribute.
 	 *
 	 * @param  attribute the attribute to escape
 	 * @return the escaped attribute value, or <code>null</code> if the
