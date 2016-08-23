@@ -38,49 +38,12 @@ import java.util.Set;
  */
 public class UpgradePermissions extends UpgradeProcess {
 
-	protected void addResourceAction(String actionId, long bitwiseValue) {
-		PreparedStatement ps = null;
-
-		try {
-			long resourceActionId = increment(ResourceAction.class.getName());
-
-			StringBundler sb = new StringBundler(4);
-
-			sb.append("insert into ResourceAction (mvccVersion, ");
-			sb.append("resourceActionId, name, actionId, bitwiseValue) ");
-			sb.append("values (?, ?, ?, ?, ?)");
-
-			String sql = sb.toString();
-
-			ps = connection.prepareStatement(sql);
-
-			ps.setLong(1, 0);
-			ps.setLong(2, resourceActionId);
-			ps.setString(3, "com.liferay.announcements");
-			ps.setString(4, actionId);
-			ps.setLong(5, bitwiseValue);
-
-			ps.executeUpdate();
-		}
-		catch (Exception e) {
-			if (_log.isWarnEnabled()) {
-				_log.warn("Unable to add resource action", e);
-			}
-		}
-		finally {
-			DataAccess.cleanUp(ps);
-		}
-	}
-
-	protected void addResourceActions() {
+	protected void addAnnouncementsAdminResourceActions() {
 		addResourceAction(ActionKeys.PERMISSIONS, _PERMISSIONS_VALUE);
-
-		addResourceAction(
-			ActionKeys.VIEW,
-			_VIEW_ANNOUNCEMENTS_ADMINISTRATION_VALUE);
+		addResourceAction(ActionKeys.VIEW, _VIEW_VALUE);
 	}
 
-	protected void addViewAnnouncementsAdministrationResourcePermission(
+	protected void addAnnouncementsAdminViewResourcePermission(
 			long companyId, int scope, String primKey, long primKeyId,
 			long roleId)
 		throws Exception {
@@ -99,8 +62,11 @@ public class UpgradePermissions extends UpgradeProcess {
 			long resourcePermissionId = increment(
 				ResourcePermission.class.getName());
 
-			long actionBitwiseValue = _VIEW_ANNOUNCEMENTS_ADMINISTRATION_VALUE;
-			String name = "com.liferay.announcements";
+			long actionBitwiseValue = _VIEW_VALUE;
+
+			String name =
+				"com_liferay_announcements_web_portlet_" +
+					"AnnouncementsAdminPortlet";
 			long ownerId = 0;
 
 			StringBundler sb = new StringBundler(4);
@@ -138,6 +104,43 @@ public class UpgradePermissions extends UpgradeProcess {
 		}
 	}
 
+	protected void addResourceAction(String actionId, long bitwiseValue) {
+		PreparedStatement ps = null;
+
+		try {
+			long resourceActionId = increment(ResourceAction.class.getName());
+
+			StringBundler sb = new StringBundler(4);
+
+			sb.append("insert into ResourceAction (mvccVersion, ");
+			sb.append("resourceActionId, name, actionId, bitwiseValue) ");
+			sb.append("values (?, ?, ?, ?, ?)");
+
+			String sql = sb.toString();
+
+			ps = connection.prepareStatement(sql);
+
+			ps.setLong(1, 0);
+			ps.setLong(2, resourceActionId);
+			ps.setString(
+				3,
+				"com_liferay_announcements_web_portlet_" +
+					"AnnouncementsAdminPortlet");
+			ps.setString(4, actionId);
+			ps.setLong(5, bitwiseValue);
+
+			ps.executeUpdate();
+		}
+		catch (Exception e) {
+			if (_log.isWarnEnabled()) {
+				_log.warn("Unable to add resource action", e);
+			}
+		}
+		finally {
+			DataAccess.cleanUp(ps);
+		}
+	}
+
 	protected void deleteResourceAction(long resourceActionId)
 		throws SQLException {
 
@@ -151,7 +154,7 @@ public class UpgradePermissions extends UpgradeProcess {
 
 	@Override
 	protected void doUpgrade() throws Exception {
-		addResourceActions();
+		addAnnouncementsAdminResourceActions();
 
 		upgradeAlertsResourcePermission();
 		upgradeAnnouncementsResourcePermission();
@@ -263,7 +266,7 @@ public class UpgradePermissions extends UpgradeProcess {
 						}
 					}
 
-					addViewAnnouncementsAdministrationResourcePermission(
+					addAnnouncementsAdminViewResourcePermission(
 						companyId, scope, primKey, primKeyId, roleId);
 				}
 			}
@@ -290,9 +293,9 @@ public class UpgradePermissions extends UpgradeProcess {
 
 	private static final long _PERMISSIONS_VALUE;
 
-	private static final boolean _VIEW_ACTION_SUPPORTED = false;
+	private static final boolean _VIEW_ACTION_SUPPORTED = true;
 
-	private static final long _VIEW_ANNOUNCEMENTS_ADMINISTRATION_VALUE;
+	private static final long _VIEW_VALUE = 1;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		UpgradePermissions.class);
@@ -306,10 +309,6 @@ public class UpgradePermissions extends UpgradeProcess {
 		long nextBitwiseValue = viewActionReservedBitwiseValue << 1;
 
 		_PERMISSIONS_VALUE = nextBitwiseValue;
-
-		nextBitwiseValue = nextBitwiseValue << 1;
-
-		_VIEW_ANNOUNCEMENTS_ADMINISTRATION_VALUE = nextBitwiseValue;
 	}
 
 	private final Set<String> _resourcePermissions = new HashSet<>();
