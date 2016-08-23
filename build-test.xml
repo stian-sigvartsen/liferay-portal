@@ -3572,6 +3572,33 @@ org.apache.catalina.startup.ClassLoaderFactory.level=INFO]]>
 					<if>
 						<isset property="wait.for.app.server.log.timed.out.message" />
 						<then>
+							<execute>
+								jps > jps_output
+							</execute>
+
+							<var name="jps.output" unset="true" />
+
+							<loadfile property="jps.output" srcfile="jps_output" />
+
+							<if>
+								<contains string="${jps.output}" substring="Bootstrap" />
+								<then>
+									<propertyregex
+										input="${jps.output}"
+										override="true"
+										property="bootstrap.pid"
+										regexp="(|[\S\s]*\n)([0-9]+) Bootstrap[\S\s]*"
+										replace="\2"
+									/>
+
+									<execute>
+										jstack ${bootstrap.pid}
+									</execute>
+								</then>
+							</if>
+
+							<delete file="jps_output" />
+
 							<fail message="${wait.for.app.server.log.timed.out.message}" />
 						</then>
 					</if>
@@ -8378,6 +8405,15 @@ jdbc.default.password=${database.mysql.password}</echo>
 			</then>
 		</if>
 
+		<get-testcase-property property.name="apacheds.enabled" />
+
+		<if>
+			<equals arg1="${apacheds.enabled}" arg2="true" />
+			<then>
+				<ant antfile="build-test-apacheds.xml" target="start-apacheds" />
+			</then>
+		</if>
+
 		<get-testcase-property property.name="remote.elasticsearch.enabled" />
 
 		<if>
@@ -8563,6 +8599,15 @@ jdbc.default.password=${database.mysql.password}</echo>
 				</antelope:repeat>
 
 				<var name="app.server.bundle.index" unset="true" />
+			</then>
+		</if>
+
+		<get-testcase-property property.name="apacheds.enabled" />
+
+		<if>
+			<equals arg1="${apacheds.enabled}" arg2="true" />
+			<then>
+				<ant antfile="build-test-apacheds.xml" target="stop-apacheds" />
 			</then>
 		</if>
 
