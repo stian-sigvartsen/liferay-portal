@@ -1,6 +1,29 @@
+buildscript {
+	dependencies {
+		classpath group: "com.liferay", name: "secure-source-formatter", version: "0.0.1-SNAPSHOT"
+	}
+
+	repositories {
+		mavenLocal()
+
+		maven {
+			url "https://cdn.lfrs.sl/repository.liferay.com/nexus/content/groups/public"
+		}
+	}
+}
+
+apply plugin: "com.liferay.secure-source-formatter.plugin"
+
 buildService {
 	apiDir = "../blogs-api/src/main/java"
 	testDir = "../blogs-test/src/testIntegration/java"
+}
+
+secureSourceFormatter {
+	reportsDir = file("$project.buildDir/reports")
+	reportFilename = "SSFReport.txt"
+	javaSrcDir = file("${property('secure.source.formatter.javaSrcDir')}")
+	liferayRepoBaseDir = file("${property('secure.source.formatter.liferayRepoDir')}")
 }
 
 dependencies {
