@@ -28,7 +28,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import com.liferay.portal.security.service.access.quota.persistence.SAQImpressionPersistence;
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -164,7 +163,7 @@ public class MemoryBasedSAQImpressionPersistence
 			Set<AggregateSAQImpression> metricImpressions =
 				currentBucket.getImpressions(entry.getKey(), entry.getValue());
 
-			if (metricImpressions.size() == 0) {
+			if (metricImpressions.isEmpty()) {
 				return null;
 			}
 			else if (intersectSet == null) {

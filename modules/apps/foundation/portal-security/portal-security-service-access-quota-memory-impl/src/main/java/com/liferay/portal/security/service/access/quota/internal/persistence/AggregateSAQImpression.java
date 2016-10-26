@@ -71,6 +71,11 @@ public class AggregateSAQImpression implements SAQImpression, Serializable {
 	public int getWeight() {
 		return _weight;
 	}
+	
+	@Override
+	public int hashCode() {
+		return _key.hashCode();
+	}
 
 	public void incrementWeight() {
 		_weight++;
