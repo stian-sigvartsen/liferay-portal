@@ -258,19 +258,19 @@ public interface TicketModel extends AttachedModel, BaseModel<Ticket>, MVCCModel
 	public Object clone();
 
 	@Override
-	public int compareTo(Ticket ticket);
+	public int compareTo(com.liferay.portal.kernel.model.Ticket ticket);
 
 	@Override
 	public int hashCode();
 
 	@Override
-	public CacheModel<Ticket> toCacheModel();
+	public CacheModel<com.liferay.portal.kernel.model.Ticket> toCacheModel();
 
 	@Override
-	public Ticket toEscapedModel();
+	public com.liferay.portal.kernel.model.Ticket toEscapedModel();
 
 	@Override
-	public Ticket toUnescapedModel();
+	public com.liferay.portal.kernel.model.Ticket toUnescapedModel();
 
 	@Override
 	public String toString();

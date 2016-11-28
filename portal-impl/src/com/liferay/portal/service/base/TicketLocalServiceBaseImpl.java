@@ -221,7 +221,7 @@ public abstract class TicketLocalServiceBaseImpl extends BaseLocalServiceImpl
 	public ActionableDynamicQuery getActionableDynamicQuery() {
 		ActionableDynamicQuery actionableDynamicQuery = new DefaultActionableDynamicQuery();
 
-		actionableDynamicQuery.setBaseLocalService(ticketLocalService);
+		actionableDynamicQuery.setBaseLocalService(com.liferay.portal.kernel.service.TicketLocalServiceUtil.getService());
 		actionableDynamicQuery.setClassLoader(getClassLoader());
 		actionableDynamicQuery.setModelClass(Ticket.class);
 
@@ -234,7 +234,7 @@ public abstract class TicketLocalServiceBaseImpl extends BaseLocalServiceImpl
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery() {
 		IndexableActionableDynamicQuery indexableActionableDynamicQuery = new IndexableActionableDynamicQuery();
 
-		indexableActionableDynamicQuery.setBaseLocalService(ticketLocalService);
+		indexableActionableDynamicQuery.setBaseLocalService(com.liferay.portal.kernel.service.TicketLocalServiceUtil.getService());
 		indexableActionableDynamicQuery.setClassLoader(getClassLoader());
 		indexableActionableDynamicQuery.setModelClass(Ticket.class);
 
@@ -245,7 +245,7 @@ public abstract class TicketLocalServiceBaseImpl extends BaseLocalServiceImpl
 
 	protected void initActionableDynamicQuery(
 		ActionableDynamicQuery actionableDynamicQuery) {
-		actionableDynamicQuery.setBaseLocalService(ticketLocalService);
+		actionableDynamicQuery.setBaseLocalService(com.liferay.portal.kernel.service.TicketLocalServiceUtil.getService());
 		actionableDynamicQuery.setClassLoader(getClassLoader());
 		actionableDynamicQuery.setModelClass(Ticket.class);
 
@@ -450,7 +450,7 @@ public abstract class TicketLocalServiceBaseImpl extends BaseLocalServiceImpl
 		}
 	}
 
-	@BeanReference(type = TicketLocalService.class)
+	@BeanReference(type = com.liferay.portal.kernel.service.TicketLocalService.class)
 	protected TicketLocalService ticketLocalService;
 	@BeanReference(type = TicketPersistence.class)
 	protected TicketPersistence ticketPersistence;
