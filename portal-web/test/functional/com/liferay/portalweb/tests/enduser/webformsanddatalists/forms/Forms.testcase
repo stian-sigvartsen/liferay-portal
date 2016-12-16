@@ -159,6 +159,10 @@
 
 		<execute macro="Form#save" />
 
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Forms" />
+		</execute>
+
 		<execute macro="FormsAdmin#viewForm" />
 
 		<execute macro="FormsAdmin#viewNoDuplicateForms" />
@@ -410,6 +414,7 @@
 
 	<command name="ConfigureAutosave" priority="3">
 		<description message="This is a use case for LPS-68418." />
+		<property name="test.name.skip.portal.instance" value="Forms#ConfigureAutosave" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -426,7 +431,7 @@
 		</execute>
 
 		<execute macro="FormFields#viewTextLabel">
-			<var name="fieldLabel" value="Autosave interval" />
+			<var name="fieldLabel" value="Autosave Interval" />
 			<var name="fieldName" value="autosaveInterval" />
 		</execute>
 
@@ -586,6 +591,96 @@
 		</execute>
 	</command>
 
+	<command name="ConfigureRequireRule" priority="5">
+		<property name="portal.acceptance" value="pending" />
+
+		<var method="TestPropsUtil#get('portal.url')" name="portalURL" />
+
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Forms" />
+		</execute>
+
+		<execute macro="FormsAdminNavigator#gotoAddForm" />
+
+		<execute macro="Form#editName" />
+
+		<execute macro="Form#gotoAddField">
+			<var name="fieldType" value="Text Field" />
+		</execute>
+
+		<execute macro="Form#editFieldLabel">
+			<var name="fieldValue" value="Text Field" />
+		</execute>
+
+		<execute macro="Form#closeSidebar" />
+
+		<execute macro="Form#gotoAddField">
+			<var name="fieldType" value="Date" />
+		</execute>
+
+		<execute macro="Form#editFieldLabel">
+			<var name="fieldValue" value="Date Field" />
+		</execute>
+
+		<execute macro="Form#closeSidebar" />
+
+		<execute macro="FormsAdminNavigator#gotoRules" />
+
+		<execute macro="FormRules#addRule" />
+
+		<execute macro="FormRules#configureConditionOptions">
+			<var name="conditionField" value="Text Field" />=
+			<var name="conditionFieldValue" value="test" />
+			<var name="conditionOperator" value="Is equal to" />
+			<var name="conditionRowNumber" value="1" />
+			<var name="conditionValueType" value="Value" />
+		</execute>
+
+		<execute macro="FormRules#configureActionOptions">
+			<var name="action" value="Require" />
+			<var name="actionRowNumber" value="1" />
+			<var name="actionTarget" value="Date Field" />
+		</execute>
+
+		<execute macro="FormRules#save" />
+
+		<execute macro="FormsAdminNavigator#gotoFormBuilder" />
+
+		<execute macro="Form#save" />
+
+		<execute macro="Page#add">
+			<var name="pageName" value="Form Page" />
+		</execute>
+
+		<execute macro="Portlet#addPG">
+			<var name="pageName" value="Form Page" />
+			<var name="portletName" value="Form" />
+		</execute>
+
+		<execute macro="FormPortletNavigator#gotoSelectForm" />
+
+		<execute macro="FormPortletConfiguration#selectForm" />
+
+		<execute macro="PortletEntry#save" />
+
+		<execute macro="Navigator#gotoPage">
+			<var name="pageName" value="Form Page" />
+		</execute>
+
+		<execute macro="FormFields#viewRequiredAsteriskNotPresent" />
+
+		<execute macro="FormFields#editText">
+			<var name="fieldName" value="TextField" />
+			<var name="fieldValue" value="test" />
+		</execute>
+
+		<execute macro="FormFields#viewRequiredAsterisk" />
+
+		<execute macro="FormPortlet#submitWithValidationError" />
+	</command>
+
 	<command name="ConfigureShowRuleUsingAndCondition" priority="5">
 		<property name="portal.acceptance" value="pending" />
 		<property name="test.name.skip.portal.instance" value="Forms#ConfigureShowRuleUsingAndCondition" />
@@ -736,6 +831,10 @@
 
 		<execute macro="Form#save" />
 
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Forms" />
+		</execute>
+
 		<execute macro="FormsAdmin#viewForm">
 			<var name="formDescription" value="" />
 			<var name="formName" value="Untitled Form" />
@@ -844,6 +943,10 @@
 		</execute>
 
 		<execute macro="Form#save" />
+
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Forms" />
+		</execute>
 
 		<execute macro="Portlet#changeDisplayStyle">
 			<var name="displayStyle" value="Descriptive" />
@@ -1148,6 +1251,7 @@
 
 	<command name="EditAllFormFieldsTypesUsedBySystemSettings" priority="4">
 		<description message="This is a use case for LPS-50757." />
+		<property name="test.name.skip.portal.instance" value="Forms#EditAllFormFieldsTypesUsedBySystemSettings" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -1321,19 +1425,33 @@
 
 		<execute macro="SystemSettings#exitEditConfiguration" />
 
+		<execute macro="SystemSettings#gotoCategory">
+			<var name="category" value="Foundation" />
+		</execute>
+
 		<execute macro="SystemSettings#editConfiguration">
 			<var name="configurationName" value="JavaScript Loader" />
 		</execute>
 
-		<execute macro="FormFields#viewTextMultilineField">
-			<var name="fieldLabel" value="Global JSVariable" />
-			<var name="fieldName" value="globalJSVariable" />
+		<execute macro="FormFields#viewCheckboxLabel">
+			<var name="fieldLabel" value="Apply versioning" />
+			<var name="fieldName" value="applyVersioning" />
 		</execute>
 
-		<execute macro="FormFields#editTextMultiline">
-			<var name="fieldName" value="globalJSVariable" />
-			<var name="fieldValue" value="LIFERAY" />
+		<execute macro="FormFields#viewCheckboxLabel">
+			<var name="fieldLabel" value="Expose global" />
+			<var name="fieldName" value="exposeGlobal" />
 		</execute>
+
+		<for list="applyVersioning,exposeGlobal" param="fieldName">
+			<execute macro="FormFields#viewCheckboxChecked">
+				<var name="fieldName" value="${fieldName}" />
+			</execute>
+
+			<execute macro="FormFields#disableCheckbox">
+				<var name="fieldName" value="${fieldName}" />
+			</execute>
+		</for>
 
 		<execute macro="SystemSettings#saveConfiguration" />
 
@@ -1341,21 +1459,23 @@
 			<var name="configurationName" value="JavaScript Loader" />
 		</execute>
 
-		<execute macro="FormFields#viewTextMultilineValue">
-			<var name="fieldName" value="globalJSVariable" />
-			<var name="fieldValue" value="LIFERAY" />
-		</execute>
+		<for list="applyVersioning,exposeGlobal" param="fieldName">
+			<execute macro="FormFields#viewCheckboxNotChecked">
+				<var name="fieldName" value="${fieldName}" />
+			</execute>
+		</for>
 
 		<execute macro="SystemSettings#exitEditConfiguration" />
 
 		<execute macro="SystemSettings#resetConfiguration">
-			<var name="category" value="Other" />
+			<var name="category" value="Foundation" />
 			<var name="configurationName" value="JavaScript Loader" />
 		</execute>
 	</command>
 
 	<command name="EditFormsConfigurationViaSystemSettings" priority="3">
 		<description message="This is a use case for LPS-59749" />
+		<property name="test.name.skip.portal.instance" value="Forms#EditFormsConfigurationViaSystemSettings" />
 
 		<execute macro="ProductMenu#gotoSitesContent">
 			<var name="portlet" value="Forms" />
@@ -1438,10 +1558,6 @@
 
 		<execute macro="Form#save" />
 
-		<execute macro="FormsAdminNavigator#gotoEditFormByName">
-			<var name="formName" value="Text" />
-		</execute>
-
 		<execute macro="Form#viewFormName">
 			<var name="formName" value="Text" />
 		</execute>
@@ -1471,10 +1587,6 @@
 		<execute macro="Form#closeSidebar" />
 
 		<execute macro="Form#save" />
-
-		<execute macro="FormsAdminNavigator#gotoEditFormByName">
-			<var name="formName" value="Checkbox" />
-		</execute>
 
 		<execute macro="Form#viewFormName">
 			<var name="formName" value="Checkbox" />
@@ -1628,7 +1740,7 @@
 			<var name="fieldType" value="Multiple Selection" />
 		</execute>
 
-		<for list="1,2,3" param="number">
+		<for list="1,2,3,4" param="number">
 			<execute macro="FormFields#editOptionsRow">
 				<var name="optionName" value="Checkbox${number}" />
 				<var name="optionValue" value="Checkbox ${number}" />
@@ -1661,23 +1773,33 @@
 			<var name="rowNumber" value="3" />
 		</execute>
 
+		<execute macro="FormFields#viewOptionsRowFieldValue">
+			<var name="fieldValue" value="Checkbox 4" />
+			<var name="rowNumber" value="4" />
+		</execute>
+
 		<execute macro="FormFields#deleteOptionsRow">
 			<var name="rowNumber" value="2" />
 		</execute>
 
 		<execute macro="FormFields#moveOptionsRow">
-			<var name="rowNumberEnd" value="1" />
-			<var name="rowNumberStart" value="2" />
-		</execute>
-
-		<execute macro="FormFields#viewOptionsRowFieldValue">
-			<var name="fieldValue" value="Checkbox 2" />
-			<var name="rowNumber" value="1" />
+			<var name="rowNumberEnd" value="2" />
+			<var name="rowNumberStart" value="3" />
 		</execute>
 
 		<execute macro="FormFields#viewOptionsRowFieldValue">
 			<var name="fieldValue" value="Checkbox 3" />
+			<var name="rowNumber" value="1" />
+		</execute>
+
+		<execute macro="FormFields#viewOptionsRowFieldValue">
+			<var name="fieldValue" value="Checkbox 4" />
 			<var name="rowNumber" value="2" />
+		</execute>
+
+		<execute macro="FormFields#viewOptionsRowFieldValue">
+			<var name="fieldValue" value="Checkbox 2" />
+			<var name="rowNumber" value="3" />
 		</execute>
 	</command>
 
@@ -2066,8 +2188,6 @@
 		<execute macro="Form#configureRequireCaptcha" />
 
 		<execute macro="Form#save" />
-
-		<execute macro="FormsAdminNavigator#gotoEdit" />
 
 		<execute macro="FormsAdminNavigator#gotoPublish" />
 
@@ -3886,7 +4006,7 @@
 	</command>
 
 	<command name="SubmitFormWithThreePages" priority="5">
-		<property name="portal.acceptance" value="true" />
+		<property name="portal.acceptance" value="quarantine" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -4100,6 +4220,8 @@
 			<var name="fieldName" value="One" />
 		</execute>
 
+		<execute macro="Form#closeSidebar" />
+
 		<execute macro="Form#gotoAddField">
 			<var name="fieldType" value="Text Field" />
 		</execute>
@@ -4112,6 +4234,98 @@
 			<var name="fieldName" value="label" />
 			<var name="fieldValue" value="" />
 		</execute>
+	</command>
+
+	<command name="ViewCannotSaveFormWithEmptyFieldOptions" priority="3">
+		<description message="This is a use case for LPS-68364." />
+
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Forms" />
+		</execute>
+
+		<execute macro="FormsAdminNavigator#gotoAddForm" />
+
+		<execute macro="Form#editName">
+			<var name="formName" value="Select Field Form" />
+		</execute>
+
+		<execute macro="Form#gotoAddField">
+			<var name="fieldType" value="Select from List" />
+		</execute>
+
+		<execute macro="Form#editFieldLabel">
+			<var name="fieldValue" value="Select" />
+		</execute>
+
+		<execute macro="Form#closeSidebar" />
+
+		<execute macro="Form#clickSaveButton" />
+
+		<execute macro="Alert#closeMessageSpecific">
+			<var name="messageSpecific" value="Your request failed to complete." />
+		</execute>
+
+		<execute macro="Alert#closeMessageSpecific">
+			<var name="messageSpecific" value="At least one option should be set for field Select." />
+		</execute>
+
+		<execute macro="FormsAdminNavigator#gotoEditField">
+			<var name="fieldName" value="Select" />
+		</execute>
+
+		<execute macro="FormFields#editOptionsRow">
+			<var name="optionName" value="Select1" />
+			<var name="optionValue" value="Select 1" />
+		</execute>
+
+		<execute macro="Form#closeSidebar" />
+
+		<execute macro="Form#save" />
+
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Forms" />
+		</execute>
+
+		<execute macro="FormsAdminNavigator#gotoAddForm" />
+
+		<execute macro="Form#editName">
+			<var name="formName" value="Radio Field Form" />
+		</execute>
+
+		<execute macro="Form#gotoAddField">
+			<var name="fieldType" value="Single Selection" />
+		</execute>
+
+		<execute macro="Form#editFieldLabel">
+			<var name="fieldValue" value="Radio" />
+		</execute>
+
+		<execute macro="Form#closeSidebar" />
+
+		<execute macro="Form#clickSaveButton" />
+
+		<execute macro="Alert#closeMessageSpecific">
+			<var name="messageSpecific" value="Your request failed to complete." />
+		</execute>
+
+		<execute macro="Alert#closeMessageSpecific">
+			<var name="messageSpecific" value="At least one option should be set for field Radio." />
+		</execute>
+
+		<execute macro="FormsAdminNavigator#gotoEditField">
+			<var name="fieldName" value="Radio" />
+		</execute>
+
+		<execute macro="FormFields#editOptionsRow">
+			<var name="optionName" value="Radio1" />
+			<var name="optionValue" value="Radio 1" />
+		</execute>
+
+		<execute macro="Form#closeSidebar" />
+
+		<execute macro="Form#save" />
 	</command>
 
 	<command name="ViewDefaultFieldNamesWithPunctuationCharacters" priority="4">

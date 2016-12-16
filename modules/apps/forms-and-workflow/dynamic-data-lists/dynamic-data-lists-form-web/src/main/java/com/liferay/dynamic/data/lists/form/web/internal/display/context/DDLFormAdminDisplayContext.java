@@ -235,6 +235,22 @@ public class DDLFormAdminDisplayContext {
 		return _DISPLAY_VIEWS;
 	}
 
+	public String getFormURL() throws PortalException {
+		StringBundler sb = new StringBundler(4);
+
+		ThemeDisplay themeDisplay =
+			_ddlFormAdminRequestHelper.getThemeDisplay();
+
+		Group group = themeDisplay.getSiteGroup();
+
+		sb.append(themeDisplay.getPortalURL());
+		sb.append(group.getPathFriendlyURL(false, themeDisplay));
+
+		sb.append("/forms/shared/-/form/");
+
+		return sb.toString();
+	}
+
 	public String getOrderByCol() {
 		return ParamUtil.getString(
 			_renderRequest, "orderByCol", "modified-date");
@@ -259,7 +275,7 @@ public class DDLFormAdminDisplayContext {
 		String publishedFormURL = getPublishedFormURL();
 
 		if (Validator.isNull(publishedFormURL)) {
-			return publishedFormURL;
+			return StringPool.BLANK;
 		}
 
 		return publishedFormURL.concat("/preview");
@@ -270,20 +286,9 @@ public class DDLFormAdminDisplayContext {
 			return StringPool.BLANK;
 		}
 
-		StringBundler sb = new StringBundler(4);
+		String formURL = getFormURL();
 
-		ThemeDisplay themeDisplay =
-			_ddlFormAdminRequestHelper.getThemeDisplay();
-
-		Group group = themeDisplay.getSiteGroup();
-
-		sb.append(themeDisplay.getPortalURL());
-		sb.append(group.getPathFriendlyURL(false, themeDisplay));
-
-		sb.append("/forms/shared/-/form/");
-		sb.append(_recordSet.getRecordSetId());
-
-		return sb.toString();
+		return formURL.concat(String.valueOf(_recordSet.getRecordSetId()));
 	}
 
 	public DDLRecordSet getRecordSet() throws PortalException {
@@ -357,6 +362,9 @@ public class DDLFormAdminDisplayContext {
 
 		DDMForm ddmForm = new DDMForm();
 
+		ddmForm.addAvailableLocale(getSiteDefaultLocale());
+		ddmForm.setDefaultLocale(getSiteDefaultLocale());
+
 		if (ddmStructure != null) {
 			ddmForm = ddmStructure.getDDMForm();
 		}
@@ -427,6 +435,10 @@ public class DDLFormAdminDisplayContext {
 			_ddlFormAdminRequestHelper.getPermissionChecker(),
 			_ddlFormAdminRequestHelper.getScopeGroupId(),
 			DDLActionKeys.ADD_RECORD_SET);
+	}
+
+	public boolean isShowCopyRecordSetButton() {
+		return isShowAddRecordSetButton();
 	}
 
 	public boolean isShowDeleteRecordSetIcon(DDLRecordSet recordSet) {
@@ -591,6 +603,13 @@ public class DDLFormAdminDisplayContext {
 		ServletContext servletContext = servletConfig.getServletContext();
 
 		return servletContext.getContextPath();
+	}
+
+	protected Locale getSiteDefaultLocale() {
+		ThemeDisplay themeDisplay =
+			_ddlFormAdminRequestHelper.getThemeDisplay();
+
+		return themeDisplay.getSiteDefaultLocale();
 	}
 
 	protected int getTotal() throws PortalException {

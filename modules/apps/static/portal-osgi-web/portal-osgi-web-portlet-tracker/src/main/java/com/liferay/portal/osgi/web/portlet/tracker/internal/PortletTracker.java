@@ -17,6 +17,7 @@ package com.liferay.portal.osgi.web.portlet.tracker.internal;
 import com.liferay.osgi.util.ServiceTrackerFactory;
 import com.liferay.osgi.util.StringPlus;
 import com.liferay.portal.kernel.application.type.ApplicationType;
+import com.liferay.portal.kernel.bean.BeanPropertiesUtil;
 import com.liferay.portal.kernel.configuration.Configuration;
 import com.liferay.portal.kernel.configuration.ConfigurationFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -43,6 +44,7 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.SetUtil;
@@ -116,12 +118,13 @@ public class PortletTracker
 		if (Validator.isNull(portletName)) {
 			Class<?> clazz = portlet.getClass();
 
-			portletName = StringUtil.replace(
-				clazz.getName(), new char[] {'.', '$'}, new char[] {'_', '_'});
+			portletName = clazz.getName();
 		}
 
-		String portletId = StringUtil.replace(
-			portletName, new char[] {'.', '$'}, new char[] {'_', '_'});
+		String portletId = PortalUtil.getJsSafePortletId(portletName);
+
+		portletId = StringUtil.replace(
+			portletId, new char[] {'$'}, new char[] {'_'});
 
 		if (portletId.length() >
 				PortletInstance.PORTLET_INSTANCE_KEY_MAX_LENGTH) {
@@ -168,7 +171,10 @@ public class PortletTracker
 
 		removedService(serviceReference, portletModel);
 
-		addingService(serviceReference);
+		com.liferay.portal.kernel.model.Portlet newPortletModel = addingService(
+			serviceReference);
+
+		BeanPropertiesUtil.copyProperties(newPortletModel, portletModel);
 	}
 
 	@Override
@@ -458,10 +464,6 @@ public class PortletTracker
 			GetterUtil.getString(
 				get(serviceReference, "css-class-wrapper"),
 				portletModel.getCssClassWrapper()));
-		portletModel.setFacebookIntegration(
-			GetterUtil.getString(
-				get(serviceReference, "facebook-integration"),
-				portletModel.getFacebookIntegration()));
 		portletModel.setFooterPortalCss(
 			StringPlus.asList(get(serviceReference, "footer-portal-css")));
 		portletModel.setFooterPortalJavaScript(

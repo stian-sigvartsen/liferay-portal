@@ -146,6 +146,11 @@ public class LayoutSetLocalServiceImpl extends LayoutSetLocalServiceBaseImpl {
 	}
 
 	@Override
+	public LayoutSet fetchLayoutSet(long groupId, boolean privateLayout) {
+		return layoutSetPersistence.fetchByG_P(groupId, privateLayout);
+	}
+
+	@Override
 	public LayoutSet fetchLayoutSet(String virtualHostname) {
 		virtualHostname = StringUtil.toLowerCase(virtualHostname.trim());
 
@@ -158,6 +163,13 @@ public class LayoutSetLocalServiceImpl extends LayoutSetLocalServiceBaseImpl {
 
 		return layoutSetPersistence.fetchByPrimaryKey(
 			virtualHost.getLayoutSetId());
+	}
+
+	@Override
+	public LayoutSet fetchLayoutSetByLogoId(boolean privateLayout, long logoId)
+		throws PortalException {
+
+		return layoutSetPersistence.fetchByP_L(privateLayout, logoId);
 	}
 
 	@Override

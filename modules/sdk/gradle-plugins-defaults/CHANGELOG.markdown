@@ -641,20 +641,133 @@ publishing.
 ### Changed
 - [LPS-68298]: Update the [Liferay Gradle Plugins] dependency to version 3.0.36.
 
+## 2.0.0 - 2016-11-17
+
+### Changed
+- [LPS-66762]: Apply [Liferay Gradle Plugins Baseline].
+- [LPS-67573]: Make most methods private in order to reduce API surface.
+- [LPS-69223]: Update the [Liferay Gradle Plugins] dependency to version 3.0.37.
+
+### Removed
+- [LPS-66762]: The `BaselineTask` class is no longer available. Use the class in
+[Liferay Gradle Plugins Baseline] instead.
+- [LPS-67573]: Remove all deprecated methods.
+
+## 2.0.1 - 2016-11-21
+
+### Added
+- [LPS-69288]: Set the `app.description` project property to override the
+project description if the `com.liferay.app.defaults.plugin` is applied.
+- [LPS-69288]: Set the `app.title` project property to override the title used
+in the `appJavadoc` task.
+- [LPS-69288]: Set the `app.version` project property to override the project
+version if the `com.liferay.app.defaults.plugin` is applied.
+
+### Changed
+- [LPS-69271]: Update the [Liferay Gradle Plugins] dependency to version 3.0.38.
+
+## 2.0.2 - 2016-11-22
+
+### Changed
+- [LPS-66853]: Update the [Liferay Gradle Plugins] dependency to version 3.0.39.
+
+## 2.0.3 - 2016-11-23
+
+### Changed
+- [LPS-66853]: Update the [Liferay Gradle Plugins] dependency to version 3.0.40.
+
+## 2.0.4 - 2016-11-24
+
+### Changed
+- [LPS-69271]: Update the [Liferay Gradle Plugins] dependency to version 3.0.41.
+
+## 2.0.5 - 2016-11-28
+
+### Changed
+- [LPS-67352]: Update the [Liferay Gradle Plugins] dependency to version 3.0.42.
+
+## 2.0.6 - 2016-11-29
+
+### Added
+- [LPS-68813]: Add task `findSecurityBugs` to check for security problems.
+
+### Changed
+- [LPS-69445]: Update the [Liferay Gradle Plugins] dependency to version 3.0.43.
+
+## 2.0.7 - 2016-11-30 [YANKED]
+
+### Changed
+- [LPS-69470]: Update the [Liferay Gradle Plugins Baseline] dependency to
+version 1.1.0.
+
+## 2.0.8 - 2016-12-01
+
+### Changed
+- [LPS-69488]: Update the [Liferay Gradle Plugins] dependency to version 3.0.44.
+
+### Removed
+- [LPS-69488]: Remove the default Node.js version configuration, as it has been
+moved to [Liferay Gradle Plugins].
+
+## 2.0.9 - 2016-12-01
+
+### Changed
+- [LPS-69492]: Update the [Liferay Gradle Plugins] dependency to version 3.0.45.
+
+## 2.1.0 - 2016-12-03
+
+### Added
+- [LPS-68289]: Add module agent support for aspect in the `test` and
+`testIntegration` tasks.
+
+### Changed
+- [LPS-69518]: Update the [Liferay Gradle Plugins] dependency to version 3.0.46.
+
+## 2.1.1 - 2016-12-05
+
+### Changed
+- [LPS-69501]: Update the [Liferay Gradle Plugins] dependency to version 3.0.47.
+
+## 2.2.0 - 2016-12-08
+
+### Added
+- [LPS-63943]: Add the ability to create additional *prep next* commits via
+`PrintArtifactPublishCommands` tasks.
+
+### Changed
+- [LPS-63943]: Commit themes' `.digest` files in a separate *prep next* commit.
+- [LPS-69618]: Update the [Liferay Gradle Plugins] dependency to version 3.0.48.
+
+## 2.2.1 - 2016-12-08
+
+### Changed
+- [LPS-69501]: Update the [Liferay Gradle Plugins] dependency to version 3.0.49.
+
+## 2.2.2 - 2016-12-12
+
+### Changed
+- [LPS-69501]: Use the [Liferay Source Formatter] JAR files deployed locally in
+the `tools/sdk/dependencies/com.liferay.source.formatter/lib` directory, if
+found.
+
 [Liferay CDN]: https://cdn.lfrs.sl/repository.liferay.com/nexus/content/groups/public
-[Liferay Gradle Plugins]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins
 [Liferay Gradle Plugins App Javadoc Builder]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-app-javadoc-builder
+[Liferay Gradle Plugins Baseline]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-baseline
 [Liferay Gradle Plugins Node]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-node
+[Liferay Gradle Plugins]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins
+[Liferay Source Formatter]: https://github.com/liferay/liferay-portal/tree/master/modules/util/source-formatter
 [LPS-52675]: https://issues.liferay.com/browse/LPS-52675
 [LPS-58672]: https://issues.liferay.com/browse/LPS-58672
 [LPS-61099]: https://issues.liferay.com/browse/LPS-61099
 [LPS-66396]: https://issues.liferay.com/browse/LPS-66396
 [LPS-66396]: https://issues.liferay.com/browse/LPS-66396
+[LPS-66762]: https://issues.liferay.com/browse/LPS-66762
 [LPS-66853]: https://issues.liferay.com/browse/LPS-66853
 [LPS-66906]: https://issues.liferay.com/browse/LPS-66906
 [LPS-67023]: https://issues.liferay.com/browse/LPS-67023
 [LPS-67352]: https://issues.liferay.com/browse/LPS-67352
 [LPS-67434]: https://issues.liferay.com/browse/LPS-67434
+[LPS-67573]: https://issues.liferay.com/browse/LPS-67573
 [LPS-67658]: https://issues.liferay.com/browse/LPS-67658
 [LPS-67694]: https://issues.liferay.com/browse/LPS-67694
 [LPS-67766]: https://issues.liferay.com/browse/LPS-67766
@@ -666,6 +779,7 @@ publishing.
 [LPS-68014]: https://issues.liferay.com/browse/LPS-68014
 [LPS-68131]: https://issues.liferay.com/browse/LPS-68131
 [LPS-68230]: https://issues.liferay.com/browse/LPS-68230
+[LPS-68289]: https://issues.liferay.com/browse/LPS-68289
 [LPS-68293]: https://issues.liferay.com/browse/LPS-68293
 [LPS-68297]: https://issues.liferay.com/browse/LPS-68297
 [LPS-68298]: https://issues.liferay.com/browse/LPS-68298
@@ -687,6 +801,7 @@ publishing.
 [LPS-68666]: https://issues.liferay.com/browse/LPS-68666
 [LPS-68772]: https://issues.liferay.com/browse/LPS-68772
 [LPS-68779]: https://issues.liferay.com/browse/LPS-68779
+[LPS-68813]: https://issues.liferay.com/browse/LPS-68813
 [LPS-68817]: https://issues.liferay.com/browse/LPS-68817
 [LPS-68838]: https://issues.liferay.com/browse/LPS-68838
 [LPS-68839]: https://issues.liferay.com/browse/LPS-68839
@@ -695,6 +810,16 @@ publishing.
 [LPS-68980]: https://issues.liferay.com/browse/LPS-68980
 [LPS-69013]: https://issues.liferay.com/browse/LPS-69013
 [LPS-69026]: https://issues.liferay.com/browse/LPS-69026
+[LPS-69223]: https://issues.liferay.com/browse/LPS-69223
+[LPS-69271]: https://issues.liferay.com/browse/LPS-69271
+[LPS-69288]: https://issues.liferay.com/browse/LPS-69288
+[LPS-69445]: https://issues.liferay.com/browse/LPS-69445
+[LPS-69470]: https://issues.liferay.com/browse/LPS-69470
+[LPS-69488]: https://issues.liferay.com/browse/LPS-69488
+[LPS-69492]: https://issues.liferay.com/browse/LPS-69492
+[LPS-69501]: https://issues.liferay.com/browse/LPS-69501
+[LPS-69518]: https://issues.liferay.com/browse/LPS-69518
+[LPS-69618]: https://issues.liferay.com/browse/LPS-69618
 [LRDOCS-2594]: https://issues.liferay.com/browse/LRDOCS-2594
 [LRDOCS-2841]: https://issues.liferay.com/browse/LRDOCS-2841
 [LRDOCS-2981]: https://issues.liferay.com/browse/LRDOCS-2981

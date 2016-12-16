@@ -111,6 +111,10 @@ public interface KBFolderLocalService extends BaseLocalService,
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public KBFolder fetchFirstChildKBFolder(long groupId, long kbFolderId,
+		OrderByComparator<KBFolder> obc) throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public KBFolder fetchKBFolder(java.lang.String uuid, long groupId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -167,9 +171,20 @@ public interface KBFolderLocalService extends BaseLocalService,
 	@Indexable(type = IndexableType.REINDEX)
 	public KBFolder updateKBFolder(KBFolder kbFolder);
 
+	/**
+	* @deprecated As of 1.1.0, replaced by {@link
+	#updateKBFolder(long, long, long, String, String,
+	ServiceContext)}
+	*/
+	@java.lang.Deprecated
 	public KBFolder updateKBFolder(long parentResourceClassNameId,
 		long parentResourcePrimKey, long kbFolderId, java.lang.String name,
 		java.lang.String description) throws PortalException;
+
+	public KBFolder updateKBFolder(long parentResourceClassNameId,
+		long parentResourcePrimKey, long kbFolderId, java.lang.String name,
+		java.lang.String description, ServiceContext serviceContext)
+		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();

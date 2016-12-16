@@ -65,8 +65,8 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(entries)) {
 			</div>
 		</div>
 
-		<aui:nav-bar>
-			<aui:nav cssClass="navbar-nav">
+		<aui:nav-bar cssClass="navbar-no-collapse" markupView="lexicon">
+			<aui:nav collapsible="<%= false %>" cssClass="navbar-nav">
 				<aui:nav-item label="details" selected="<%= true %>" />
 			</aui:nav>
 		</aui:nav-bar>
@@ -120,8 +120,8 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(entries)) {
 			</div>
 		</div>
 
-		<aui:nav-bar>
-			<aui:nav cssClass="navbar-nav">
+		<aui:nav-bar cssClass="navbar-no-collapse" markupView="lexicon">
+			<aui:nav collapsible="<%= false %>" cssClass="navbar-nav">
 				<aui:nav-item label="details" selected="<%= true %>" />
 			</aui:nav>
 		</aui:nav-bar>
@@ -173,14 +173,14 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(entries)) {
 				classPK="<%= entry.getEntryId() %>"
 			/>
 
-			<liferay-ui:custom-attributes-available className="<%= BookmarksEntry.class.getName() %>">
-				<liferay-ui:custom-attribute-list
+			<liferay-expando:custom-attributes-available className="<%= BookmarksEntry.class.getName() %>">
+				<liferay-expando:custom-attribute-list
 					className="<%= BookmarksEntry.class.getName() %>"
 					classPK="<%= entry.getEntryId() %>"
 					editable="<%= false %>"
 					label="<%= true %>"
 				/>
-			</liferay-ui:custom-attributes-available>
+			</liferay-expando:custom-attributes-available>
 
 			<c:if test="<%= bookmarksGroupServiceOverriddenConfiguration.enableRelatedAssets() %>">
 
@@ -201,8 +201,8 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(entries)) {
 			<h4><liferay-ui:message arguments="<%= folders.size() + entries.size() %>" key="x-items-are-selected" /></h4>
 		</div>
 
-		<aui:nav-bar>
-			<aui:nav cssClass="navbar-nav">
+		<aui:nav-bar cssClass="navbar-no-collapse" markupView="lexicon">
+			<aui:nav collapsible="<%= false %>" cssClass="navbar-nav">
 				<aui:nav-item label="details" selected="<%= true %>" />
 			</aui:nav>
 		</aui:nav-bar>

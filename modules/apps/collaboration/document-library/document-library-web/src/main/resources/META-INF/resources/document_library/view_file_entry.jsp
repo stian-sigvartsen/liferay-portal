@@ -163,7 +163,7 @@ if (portletTitleBasedNavigation) {
 			<h4><%= fileVersion.getTitle() %></h4>
 		</div>
 
-		<liferay-ui:tabs names="<%= tabsNames %>" refresh="<%= false %>" type="dropdown">
+		<liferay-ui:tabs cssClass="navbar-no-collapse" names="<%= tabsNames %>" refresh="<%= false %>" type="dropdown">
 			<liferay-ui:section>
 				<div class="sidebar-body">
 					<dl>
@@ -320,16 +320,16 @@ if (portletTitleBasedNavigation) {
 
 						</c:if>
 
-						<liferay-ui:custom-attributes-available className="<%= DLFileEntryConstants.getClassName() %>" classPK="<%= fileVersionId %>" editable="<%= false %>">
+						<liferay-expando:custom-attributes-available className="<%= DLFileEntryConstants.getClassName() %>" classPK="<%= fileVersionId %>" editable="<%= false %>">
 							<liferay-ui:panel collapsible="<%= true %>" cssClass="lfr-custom-fields" id="documentLibraryCustomFieldsPanel" markupView="lexicon" persistState="<%= true %>" title="custom-fields">
-								<liferay-ui:custom-attribute-list
+								<liferay-expando:custom-attribute-list
 									className="<%= DLFileEntryConstants.getClassName() %>"
 									classPK="<%= fileVersionId %>"
 									editable="<%= false %>"
 									label="<%= true %>"
 								/>
 							</liferay-ui:panel>
-						</liferay-ui:custom-attributes-available>
+						</liferay-expando:custom-attributes-available>
 
 						<%
 						try {

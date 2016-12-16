@@ -304,14 +304,14 @@ if (portletTitleBasedNavigation) {
 
 						<%@ include file="/wiki/view_page_content.jspf" %>
 
-						<liferay-ui:custom-attributes-available className="<%= WikiPage.class.getName() %>">
-							<liferay-ui:custom-attribute-list
+						<liferay-expando:custom-attributes-available className="<%= WikiPage.class.getName() %>">
+							<liferay-expando:custom-attribute-list
 								className="<%= WikiPage.class.getName() %>"
 								classPK="<%= (wikiPage != null) ? wikiPage.getPrimaryKey() : 0 %>"
 								editable="<%= false %>"
 								label="<%= true %>"
 							/>
-						</liferay-ui:custom-attributes-available>
+						</liferay-expando:custom-attributes-available>
 
 						<c:if test="<%= (wikiPage != null) && Validator.isNotNull(formattedContent) && (followRedirect || (redirectPage == null)) %>">
 							<div class="page-actions">
@@ -498,7 +498,18 @@ if (portletTitleBasedNavigation) {
 								<aui:a href="<%= rowURL.toString() %>"><%= childPage.getTitle() %></aui:a>
 							</h3>
 
-							<p class="text-default"><%= StringUtil.shorten(HtmlUtil.extractText(childPage.getContent()), 200) %></p>
+							<%
+							String childPageFormattedContent = null;
+
+							try {
+								childPageFormattedContent = wikiEngineRenderer.getFormattedContent(renderRequest, renderResponse, childPage, viewPageURL, editPageURL, childPage.getTitle(), false);
+							}
+							catch (Exception e) {
+								childPageFormattedContent = childPage.getContent();
+							}
+							%>
+
+							<p class="text-default"><%= StringUtil.shorten(HtmlUtil.extractText(childPageFormattedContent), 200) %></p>
 						</li>
 
 					<%

@@ -3,7 +3,7 @@
 ;
 [subrepo]
 	cmdver = liferay
-	commit = 20a3b780ebab43e62a88910cba97357b2a08925e
+	commit = 0772b6bd8b582cab33981ef550cc53980b89e75b
 	mode = push
-	parent = 6afbc69363bf0efa274a5ac8edf64c2fb02917d1
+	parent = 07150860119d6fb342fbece92eae5672d6719c45
 	remote = git@github.com:liferay/com-liferay-osgi.git

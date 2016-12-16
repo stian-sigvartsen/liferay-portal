@@ -64,6 +64,7 @@ import org.osgi.service.component.annotations.Reference;
 public class TextDDMFormFieldTemplateContextContributor
 	implements DDMFormFieldTemplateContextContributor {
 
+	@Override
 	public Map<String, Object> getParameters(
 		DDMFormField ddmFormField,
 		DDMFormFieldRenderingContext ddmFormFieldRenderingContext) {
@@ -90,8 +91,8 @@ public class TextDDMFormFieldTemplateContextContributor
 		List<Object> options = getOptions(
 			ddmFormField, ddmFormFieldRenderingContext);
 
-		parameters.put("options", options);
 		parameters.put("autocomplete", !options.isEmpty());
+		parameters.put("options", options);
 
 		return parameters;
 	}
