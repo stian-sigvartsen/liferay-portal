@@ -15,6 +15,36 @@
 		<execute macro="Button#clickSave" />
 	</command>
 
+	<command name="configureAudienceTargetingAnalytics">
+		<execute macro="Panel#expandPanel">
+			<var name="panelHeading" value="Audience Targeting Analytics" />
+		</execute>
+
+		<if>
+			<isset var="enableAnalyticsList" />
+			<then>
+				<for list="${enableAnalyticsList}" param="enableAnalytics">
+					<execute function="Check#checkToggleSwitch" locator1="ToggleSwitch#ANY_TOGGLE_SWITCH">
+						<var name="key_toggleSwitchLabel" value="${enableAnalytics}" />
+					</execute>
+				</for>
+			</then>
+		</if>
+
+		<if>
+			<isset var="disableAnalyticsList" />
+			<then>
+				<for list="${disableAnalyticsList}" param="disableAnalytics">
+					<execute function="Uncheck#uncheckToggleSwitch" locator1="ToggleSwitch#ANY_TOGGLE_SWITCH">
+						<var name="key_toggleSwitchLabel" value="${disableAnalytics}" />
+					</execute>
+				</for>
+			</then>
+		</if>
+
+		<execute macro="PortletEntry#save" />
+	</command>
+
 	<command name="configureContentSharingAcrossSitesCP">
 		<execute macro="Panel#expandPanel">
 			<var name="panelHeading" value="Content Sharing" />
@@ -110,8 +140,8 @@
 	</command>
 
 	<command name="configureCurrentLanguagesCP">
-		<execute macro="Navigator#gotoTab">
-			<var name="tab" value="Miscellaneous" />
+		<execute macro="Navigator#gotoNavTab">
+			<var name="navTab" value="Miscellaneous" />
 		</execute>
 
 		<if>
@@ -171,8 +201,8 @@
 	</command>
 
 	<command name="configureTimeZone">
-		<execute macro="Navigator#gotoTab">
-			<var name="tab" value="Miscellaneous" />
+		<execute macro="Navigator#gotoNavTab">
+			<var name="navTab" value="Miscellaneous" />
 		</execute>
 
 		<execute function="Select" locator1="Select#TIME_ZONE" value1="${timeZone}" />
@@ -552,6 +582,16 @@
 		<execute function="Click" locator1="Button#CLOSE_MODAL" />
 	</command>
 
+	<command name="testOpenSSOConnection">
+		<execute function="AssertClick" locator1="PortalSettingsAuthentication#AUTHENTICATION_OPEN_SSO_TEST_OPEN_SSO_CONFIGURATION_BUTTON" value1="Test OpenSSO Configuration" />
+
+		<execute function="AssertTextEquals" locator1="Modal#BODY" value1="Liferay has successfully connected to the OpenSSO server." />
+
+		<var name="key_modalTitle" value="OpenSSO" />
+
+		<execute function="Click" locator1="Button#CLOSE_MODAL" />
+	</command>
+
 	<command name="viewAuthenticationCASCP">
 		<execute macro="Panel#expandPanel">
 			<var name="panelHeading" value="Authentication" />
@@ -715,16 +755,16 @@
 	</command>
 
 	<command name="viewCurrentDefaultPortalLanguageCP">
-		<execute macro="Navigator#gotoTab">
-			<var name="tab" value="Miscellaneous" />
+		<execute macro="Navigator#gotoNavTab">
+			<var name="navTab" value="Miscellaneous" />
 		</execute>
 
 		<execute function="AssertSelectedLabel" locator1="PortalSettingsDisplaySettings#DEFAULT_LANGUAGE_SELECT" value1="${defaultPortalLanguage}" />
 	</command>
 
 	<command name="viewDefaultLanguageCP">
-		<execute macro="Navigator#gotoTab">
-			<var name="tab" value="Miscellaneous" />
+		<execute macro="Navigator#gotoNavTab">
+			<var name="navTab" value="Miscellaneous" />
 		</execute>
 
 		<execute function="AssertSelectedLabel" locator1="PortalSettingsDisplaySettings#DEFAULT_LANGUAGE_SELECT" value1="${defaultPortalLanguage}" />

@@ -1,5 +1,6 @@
 <definition component-name="portal-wcm">
 	<property name="portal.release" value="true" />
+	<property name="portal.upstream" value="true" />
 	<property name="testray.main.component.name" value="Web Content Administration" />
 
 	<set-up>
@@ -1334,7 +1335,7 @@
 		</execute>
 
 		<execute macro="WebContent#expireCP">
-			<var name="webContentTitle" value="WC WebContent Title Edit" />
+			<var name="webContentTitleList" value="WC WebContent Title Edit" />
 		</execute>
 
 		<execute macro="WebContentNavigator#gotoEditCP">
@@ -1380,7 +1381,7 @@
 		</execute>
 
 		<execute macro="WebContent#expireCP">
-			<var name="webContentTitle" value="WC WebContent Title" />
+			<var name="webContentTitleList" value="WC WebContent Title" />
 		</execute>
 
 		<execute macro="WebContentNavigator#gotoEditCP">
@@ -1773,7 +1774,7 @@
 		</execute>
 
 		<execute macro="WebContent#expireCP">
-			<var name="webContentTitle" value="WC WebContent Title" />
+			<var name="webContentTitleList" value="WC WebContent Title" />
 		</execute>
 
 		<execute macro="WebContentNavigator#gotoEditCP">
@@ -1911,6 +1912,10 @@
 
 		<execute macro="Role#addCP">
 			<var name="roleTitle" value="Web Content Administrator Role" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoControlPanelUsers">
+			<var name="portlet" value="Roles" />
 		</execute>
 
 		<execute macro="Role#definePermissionsCP">

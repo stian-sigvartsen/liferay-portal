@@ -54,6 +54,9 @@ AUI.add(
 						value: null
 					},
 
+					eventsPerPage: {
+					},
+
 					filterCalendarBookings: {
 						validator: isFunction
 					},
@@ -62,6 +65,9 @@ AUI.add(
 						valueFn: function() {
 							return A.Node.create(TPL_ICON_ADD_EVENT_NODE);
 						}
+					},
+
+					maxDaysDisplayed: {
 					},
 
 					portletNamespace: {
@@ -396,7 +402,7 @@ AUI.add(
 											instance.load();
 										}
 									},
-									destroyOnHide: false,
+									destroyOnHide: true,
 									modal: true
 								},
 								title: Liferay.Language.get('new-calendar-booking'),
@@ -437,8 +443,19 @@ AUI.add(
 								}
 							);
 						}
-						else if (schedulerEvent.isMasterBooking() && confirm(Liferay.Language.get('deleting-this-event-will-cancel-the-meeting-with-your-guests-would-you-like-to-delete'))) {
-							remoteServices.deleteEvent(schedulerEvent, success);
+						else if (schedulerEvent.isMasterBooking()) {
+							var confirmationMessage;
+
+							if (schedulerEvent.get('hasChildCalendarBookings')) {
+								confirmationMessage = Liferay.Language.get('deleting-this-event-will-cancel-the-meeting-with-your-guests-would-you-like-to-delete');
+							}
+							else {
+								confirmationMessage = Liferay.Language.get('would-you-like-to-delete-this-event');
+							}
+
+							if (confirm(confirmationMessage)) {
+								remoteServices.deleteEvent(schedulerEvent, success);
+							}
 						}
 
 						event.preventDefault();

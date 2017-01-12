@@ -15,12 +15,11 @@
 package com.liferay.blogs.internal.exportimport.data.handler;
 
 import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.blogs.internal.exportimport.content.processor.BlogsEntryDocumentLibraryExportImportContentProcessor;
+import com.liferay.blogs.internal.exportimport.content.processor.BlogsEntryExportImportContentProcessor;
 import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.blogs.service.BlogsEntryLocalService;
 import com.liferay.document.library.kernel.exception.NoSuchFileException;
 import com.liferay.document.library.kernel.model.DLFileEntry;
-import com.liferay.exportimport.content.processor.ExportImportContentProcessorController;
 import com.liferay.exportimport.data.handler.base.BaseStagedModelDataHandler;
 import com.liferay.exportimport.kernel.lar.ExportImportPathUtil;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
@@ -47,7 +46,7 @@ import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
@@ -185,7 +184,7 @@ public class BlogsEntryStagedModelDataHandler
 		_exportFriendlyURLs(portletDataContext, entry);
 
 		String content =
-			_exportImportContentProcessorController.
+			_blogsEntryExportImportContentProcessor.
 				replaceExportContentReferences(
 					portletDataContext, entry, entry.getContent(),
 					portletDataContext.getBooleanParameter(
@@ -228,7 +227,7 @@ public class BlogsEntryStagedModelDataHandler
 			portletDataContext.getImportDataStagedModelElement(entry);
 
 		String content =
-			_exportImportContentProcessorController.
+			_blogsEntryExportImportContentProcessor.
 				replaceImportContentReferences(
 					portletDataContext, entry, entry.getContent());
 
@@ -475,13 +474,13 @@ public class BlogsEntryStagedModelDataHandler
 		}
 	}
 
-	/**
-	 * @deprecated As of 1.1.0
-	 */
-	@Deprecated
+	@Reference(unbind = "-")
 	protected void setBlogsEntryExportImportContentProcessor(
-		BlogsEntryDocumentLibraryExportImportContentProcessor
+		BlogsEntryExportImportContentProcessor
 			blogsEntryExportImportContentProcessor) {
+
+		_blogsEntryExportImportContentProcessor =
+			blogsEntryExportImportContentProcessor;
 	}
 
 	@Reference(unbind = "-")
@@ -507,7 +506,7 @@ public class BlogsEntryStagedModelDataHandler
 			PortletDataContext portletDataContext, BlogsEntry blogsEntry)
 		throws PortletDataException {
 
-		long classNameId = PortalUtil.getClassNameId(BlogsEntry.class);
+		long classNameId = _portal.getClassNameId(BlogsEntry.class);
 
 		List<FriendlyURL> friendlyURLs =
 			_friendlyURLLocalService.getFriendlyURLs(
@@ -606,13 +605,13 @@ public class BlogsEntryStagedModelDataHandler
 	private static final Log _log = LogFactoryUtil.getLog(
 		BlogsEntryStagedModelDataHandler.class);
 
+	private BlogsEntryExportImportContentProcessor
+		_blogsEntryExportImportContentProcessor;
 	private BlogsEntryLocalService _blogsEntryLocalService;
-
-	@Reference
-	private ExportImportContentProcessorController
-		_exportImportContentProcessorController;
-
 	private FriendlyURLLocalService _friendlyURLLocalService;
 	private ImageLocalService _imageLocalService;
+
+	@Reference
+	private Portal _portal;
 
 }

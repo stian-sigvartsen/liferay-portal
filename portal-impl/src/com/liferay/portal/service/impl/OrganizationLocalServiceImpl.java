@@ -59,6 +59,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.SetUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -616,17 +617,19 @@ public class OrganizationLocalServiceImpl
 	}
 
 	/**
-	 * Returns all the organizations and users belonging to the parent organization.
+	 * Returns all the organizations and users belonging to the parent
+	 * organization.
 	 *
 	 * @param  companyId the primary key of the organization and user's company
-	 * @param  parentOrganizationId the primary key of the organization and user's
-	 *         parent organization
+	 * @param  parentOrganizationId the primary key of the organization and
+	 *         user's parent organization
 	 * @param  status the user's workflow status
-	 * @param  start the lower bound of the range of organizations and users to return
-	 * @param  end the upper bound of the range of organizations and users to return
-	 *         (not inclusive)
-	 * @param  obc the comparator to order the organizations and users (optionally
-	 *         <code>null</code>)
+	 * @param  start the lower bound of the range of organizations and users to
+	 *         return
+	 * @param  end the upper bound of the range of organizations and users to
+	 *         return (not inclusive)
+	 * @param  obc the comparator to order the organizations and users
+	 *         (optionally <code>null</code>)
 	 * @return the organizations and users belonging to the parent organization
 	 */
 	@Override
@@ -647,10 +650,11 @@ public class OrganizationLocalServiceImpl
 	 * organization.
 	 *
 	 * @param  companyId the primary key of the organization and user's company
-	 * @param  parentOrganizationId the primary key of the organization and user's
-	 *         parent organization
+	 * @param  parentOrganizationId the primary key of the organization and
+	 *         user's parent organization
 	 * @param  status the user's workflow status
-	 * @return the number of organizations and users belonging to the parent organization
+	 * @return the number of organizations and users belonging to the parent
+	 *         organization
 	 */
 	@Override
 	public int getOrganizationsAndUsersCount(
@@ -1597,16 +1601,18 @@ public class OrganizationLocalServiceImpl
 	 * them and belong to the parent organization.
 	 *
 	 * @param  companyId the primary key of the organization and user's company
-	 * @param  parentOrganizationId the primary key of the organization and user's
-	 *         parent organization
+	 * @param  parentOrganizationId the primary key of the organization and
+	 *         user's parent organization
 	 * @param  keywords the keywords (space separated), which may occur in the
-	 *         organization's name, type, or location fields or user's first name,
-	 *         middle name, last name, screen name, email address, or address fields
+	 *         organization's name, type, or location fields or user's first
+	 *         name, middle name, last name, screen name, email address, or
+	 *         address fields
 	 * @param  status user's workflow status
 	 * @param  params the finder parameters (optionally <code>null</code>).
-	 * @param  start the lower bound of the range of organizations and users to return
-	 * @param  end the upper bound of the range of organizations and users to return
-	 *         (not inclusive)
+	 * @param  start the lower bound of the range of organizations and users to
+	 *         return
+	 * @param  end the upper bound of the range of organizations and users to
+	 *         return (not inclusive)
 	 * @return the matching organizations and users
 	 */
 	@Override
@@ -1626,15 +1632,16 @@ public class OrganizationLocalServiceImpl
 	}
 
 	/**
-	 * Returns the number of organizations and users that match the keywords specified
-	 * for them and belong to the parent organization.
+	 * Returns the number of organizations and users that match the keywords
+	 * specified for them and belong to the parent organization.
 	 *
 	 * @param  companyId the primary key of the organization and user's company
-	 * @param  parentOrganizationId the primary key of the organization and user's
-	 *         parent organization
+	 * @param  parentOrganizationId the primary key of the organization and
+	 *         user's parent organization
 	 * @param  keywords the keywords (space separated), which may occur in the
-	 *         organization's name, type, or location fields or user's first name,
-	 *         middle name, last name, screen name, email address, or address fields
+	 *         organization's name, type, or location fields or user's first
+	 *         name, middle name, last name, screen name, email address, or
+	 *         address fields
 	 * @param  status user's workflow status
 	 * @param  params the finder parameters (optionally <code>null</code>).
 	 * @return the number of matching organizations and users
@@ -2113,11 +2120,16 @@ public class OrganizationLocalServiceImpl
 	protected long[] getReindexOrganizationIds(Organization organization)
 		throws PortalException {
 
+		StringBundler sb = new StringBundler(3);
+
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(organization.getOrganizationId());
+		sb.append(StringPool.FORWARD_SLASH);
+
 		List<Organization> organizations = organizationPersistence.findByC_T(
 			organization.getCompanyId(),
-			CustomSQLUtil.keywords(organization.getTreePath())[0],
-			QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-			new OrganizationNameComparator(true));
+			CustomSQLUtil.keywords(sb.toString())[0], QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, new OrganizationNameComparator(true));
 
 		long[] organizationIds = new long[organizations.size()];
 

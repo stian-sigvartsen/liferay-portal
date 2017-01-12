@@ -19,21 +19,18 @@ import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.blogs.web.constants.BlogsPortletKeys;
 import com.liferay.friendly.url.model.FriendlyURL;
 import com.liferay.friendly.url.service.FriendlyURLLocalService;
-import com.liferay.portal.kernel.portlet.LiferayPortletURL;
-import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderConstants;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.PropsValues;
 
 import javax.portlet.PortletException;
-import javax.portlet.PortletRequest;
+import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -81,29 +78,22 @@ public class ViewEntryMVCRenderCommand implements MVCRenderCommand {
 			String urlTitle = ParamUtil.getString(renderRequest, "urlTitle");
 
 			if (!urlTitle.equals(mainFriendlyURL.getUrlTitle())) {
-				HttpServletRequest request = PortalUtil.getHttpServletRequest(
-					renderRequest);
+				PortletURL portletURL = renderResponse.createRenderURL();
 
-				ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
-					WebKeys.THEME_DISPLAY);
-
-				LiferayPortletURL liferayPortletURL =
-					PortletURLFactoryUtil.create(
-						renderRequest, PortalUtil.getPortletId(renderRequest),
-						themeDisplay.getPlid(), PortletRequest.RENDER_PHASE);
-
-				liferayPortletURL.setParameter(
+				portletURL.setParameter(
+					"mvcRenderCommandName", "/blogs/view_entry");
+				portletURL.setParameter(
 					"urlTitle", mainFriendlyURL.getUrlTitle());
 
-				HttpServletResponse response =
-					PortalUtil.getHttpServletResponse(renderResponse);
+				HttpServletResponse response = _portal.getHttpServletResponse(
+					renderResponse);
 
-				response.sendRedirect(liferayPortletURL.toString());
+				response.sendRedirect(portletURL.toString());
 
 				return MVCRenderConstants.MVC_PATH_VALUE_SKIP_DISPATCH;
 			}
 
-			HttpServletRequest request = PortalUtil.getHttpServletRequest(
+			HttpServletRequest request = _portal.getHttpServletRequest(
 				renderRequest);
 
 			request.setAttribute(WebKeys.BLOGS_ENTRY, entry);
@@ -111,11 +101,11 @@ public class ViewEntryMVCRenderCommand implements MVCRenderCommand {
 			if (PropsValues.BLOGS_PINGBACK_ENABLED) {
 				if ((entry != null) && entry.isAllowPingbacks()) {
 					HttpServletResponse response =
-						PortalUtil.getHttpServletResponse(renderResponse);
+						_portal.getHttpServletResponse(renderResponse);
 
 					response.addHeader(
 						"X-Pingback",
-						PortalUtil.getPortalURL(renderRequest) +
+						_portal.getPortalURL(renderRequest) +
 							"/xmlrpc/pingback");
 				}
 			}
@@ -144,5 +134,8 @@ public class ViewEntryMVCRenderCommand implements MVCRenderCommand {
 	}
 
 	private FriendlyURLLocalService _friendlyURLLocalService;
+
+	@Reference
+	private Portal _portal;
 
 }

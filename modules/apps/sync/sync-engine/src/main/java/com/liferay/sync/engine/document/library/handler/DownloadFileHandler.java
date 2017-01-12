@@ -269,6 +269,8 @@ public class DownloadFileHandler extends BaseHandler {
 		}
 		catch (FileSystemException fse) {
 			if (fse instanceof AccessDeniedException) {
+				_logger.error(fse.getMessage(), fse);
+
 				syncFile.setState(SyncFile.STATE_ERROR);
 				syncFile.setUiEvent(SyncFile.UI_EVENT_ACCESS_DENIED_LOCAL);
 
@@ -336,8 +338,7 @@ public class DownloadFileHandler extends BaseHandler {
 		try {
 			HttpEntity httpEntity = httpResponse.getEntity();
 
-			inputStream = new CountingInputStream(
-				httpEntity.getContent()) {
+			inputStream = new CountingInputStream(httpEntity.getContent()) {
 
 				@Override
 				protected synchronized void afterRead(int n) {

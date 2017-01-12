@@ -46,7 +46,7 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 	protected void checkDirectoryAndBundleName(
 		String fileName, String absolutePath, String content) {
 
-		if (!portalSource || !isModulesFile(absolutePath) ||
+		if ((!portalSource && !subrepository) || !isModulesFile(absolutePath) ||
 			!fileName.endsWith("/bnd.bnd") ||
 			absolutePath.contains("/testIntegration/") ||
 			absolutePath.contains("/third-party/")) {
@@ -144,6 +144,27 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 		}
 	}
 
+	protected void checkMissingSchemaVersion(
+		String fileName, String absolutePath, String content) {
+
+		if (content.contains("Liferay-Require-SchemaVersion:") ||
+			!content.contains("Liferay-Service: true")) {
+
+			return;
+		}
+
+		int pos = absolutePath.lastIndexOf(CharPool.SLASH);
+
+		File serviceXMLfile = new File(
+			absolutePath.substring(0, pos + 1) + "service.xml");
+
+		if (serviceXMLfile.exists()) {
+			processMessage(
+				fileName,
+				"Missing 'Liferay-Require-SchemaVersion', see LPS-69385");
+		}
+	}
+
 	protected void checkWildcardImports(
 		String fileName, String absolutePath, String content, Pattern pattern) {
 
@@ -218,6 +239,8 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 
 		checkWildcardImports(fileName, absolutePath, content, _exportsPattern);
 
+		checkMissingSchemaVersion(fileName, absolutePath, content);
+
 		ImportsFormatter importsFormatter = new BNDImportsFormatter();
 
 		content = importsFormatter.format(content, _exportsPattern);
@@ -227,7 +250,7 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 
 		content = formatBundleClassPath(content);
 
-		if (portalSource && isModulesFile(absolutePath) &&
+		if ((portalSource || subrepository) && isModulesFile(absolutePath) &&
 			!fileName.endsWith("test-bnd.bnd")) {
 
 			content = formatIncludeResource(content);
@@ -305,6 +328,15 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 		}
 
 		String includeResources = matcher.group();
+
+		matcher = _includeResourceJarPattern.matcher(includeResources);
+
+		if (matcher.find()) {
+			String replacement = StringUtil.replace(
+				includeResources, matcher.group(), "-[0-9]*.jar");
+
+			return StringUtil.replace(content, includeResources, replacement);
+		}
 
 		for (String includeResourceDir : _INCLUDE_RESOURCE_DIRS_BLACKLIST) {
 			Pattern includeResourceDirPattern = Pattern.compile(
@@ -489,6 +521,8 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 	private final Pattern _importsPattern = Pattern.compile(
 		"\nImport-Package:(\\\\\n| )(.*?\n|\\Z)[^\t]",
 		Pattern.DOTALL | Pattern.MULTILINE);
+	private final Pattern _includeResourceJarPattern = Pattern.compile(
+		"-[0-9\\.]+\\.jar");
 	private final Pattern _includeResourcePattern = Pattern.compile(
 		"^(-includeresource|Include-Resource):[\\s\\S]*?([^\\\\]\n|\\Z)",
 		Pattern.MULTILINE);
@@ -545,10 +579,23 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 				return includeResource1.compareToIgnoreCase(includeResource2);
 			}
 
+			String importString1 = includeResource1.substring(pos1 + 6);
+			String importString2 = includeResource2.substring(pos2 + 6);
+
+			if (importString1.endsWith(".class")) {
+				importString1 = importString1.substring(
+					0, importString1.length() - 6);
+			}
+
+			if (importString2.endsWith(".class")) {
+				importString2 = importString2.substring(
+					0, importString2.length() - 6);
+			}
+
 			ImportPackage importPackage1 = new ImportPackage(
-				includeResource1.substring(pos1 + 6), false, includeResource1);
+				importString1, false, includeResource1);
 			ImportPackage importPackage2 = new ImportPackage(
-				includeResource2.substring(pos2 + 6), false, includeResource2);
+				importString2, false, includeResource2);
 
 			return importPackage1.compareTo(importPackage2);
 		}

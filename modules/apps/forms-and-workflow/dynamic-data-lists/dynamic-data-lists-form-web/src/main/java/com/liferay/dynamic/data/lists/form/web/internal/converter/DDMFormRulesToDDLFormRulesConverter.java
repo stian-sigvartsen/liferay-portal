@@ -139,9 +139,17 @@ public class DDMFormRulesToDDLFormRulesConverter {
 			List<Expression> parameters =
 				functionCallExpression.getParameterExpressions();
 
-			String target = doVisit(parameters.get(0));
+			if (Objects.equals(action, "jump-to-page")) {
+				String source = doVisit(parameters.get(0));
+				String target = doVisit(parameters.get(1));
 
-			return new DDLFormRuleAction(action, target);
+				return new DDLFormRuleAction(action, source, target);
+			}
+			else {
+				String target = doVisit(parameters.get(0));
+
+				return new DDLFormRuleAction(action, null, target);
+			}
 		}
 
 		@Override
@@ -157,10 +165,11 @@ public class DDMFormRulesToDDLFormRulesConverter {
 			new HashMap<>();
 
 		static {
-			_functionToActionMap.put("setVisible", "show");
+			_functionToActionMap.put("jumpPage", "jump-to-page");
 			_functionToActionMap.put("setEnabled", "enable");
-			_functionToActionMap.put("setRequired", "require");
 			_functionToActionMap.put("setInvalid", "invalidate");
+			_functionToActionMap.put("setRequired", "require");
+			_functionToActionMap.put("setVisible", "show");
 		}
 
 	}
@@ -287,10 +296,10 @@ public class DDMFormRulesToDDLFormRulesConverter {
 		private static final Map<String, String> _operatorMap = new HashMap<>();
 
 		static {
-			_operatorMap.put(">", "greater-than");
-			_operatorMap.put(">=", "greater-than-equals");
 			_operatorMap.put("<", "less-than");
 			_operatorMap.put("<=", "less-than-equals");
+			_operatorMap.put(">", "greater-than");
+			_operatorMap.put(">=", "greater-than-equals");
 
 			_functionNameOperatorMap.put("contains", "contains");
 			_functionNameOperatorMap.put("equals", "equals-to");

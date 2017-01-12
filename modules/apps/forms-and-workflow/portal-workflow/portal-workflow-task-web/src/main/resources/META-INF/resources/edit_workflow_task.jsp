@@ -135,6 +135,7 @@ renderResponse.setTitle(headerTitle);
 
 										<portlet:param name="type" value="<%= assetRendererFactory.getType() %>" />
 										<portlet:param name="showEditURL" value="<%= String.valueOf(workflowTaskDisplayContext.isShowEditURL(workflowTask)) %>" />
+										<portlet:param name="workflowTaskId" value="<%= String.valueOf(workflowTask.getWorkflowTaskId()) %>" />
 									</portlet:renderURL>
 
 									<liferay-frontend:management-bar-button
@@ -185,7 +186,7 @@ renderResponse.setTitle(headerTitle);
 					</liferay-ui:panel>
 
 					<liferay-ui:panel extended="<%= true %>" markupView="lexicon" title="comments">
-						<liferay-ui:discussion
+						<liferay-comment:discussion
 							assetEntryVisible="<%= false %>"
 							className="<%= assetRenderer.getClassName() %>"
 							classPK="<%= assetRenderer.getClassPK() %>"

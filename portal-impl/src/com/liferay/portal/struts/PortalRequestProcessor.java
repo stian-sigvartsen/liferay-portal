@@ -261,7 +261,7 @@ public class PortalRequestProcessor extends TilesRequestProcessor {
 			WindowState.MAXIMIZED, PortletMode.VIEW, portletPreferences);
 
 		RenderResponseImpl renderResponseImpl = RenderResponseFactory.create(
-			renderRequestImpl, response, portletId, portlet.getCompanyId());
+			renderRequestImpl, response);
 
 		renderRequestImpl.defineObjects(portletConfig, renderResponseImpl);
 
@@ -749,7 +749,7 @@ public class PortalRequestProcessor extends TilesRequestProcessor {
 					PasswordPolicy passwordPolicy = user.getPasswordPolicy();
 
 					if ((passwordPolicy == null) ||
-						passwordPolicy.isChangeRequired()) {
+						passwordPolicy.isChangeable()) {
 
 						return _PATH_PORTAL_UPDATE_PASSWORD;
 					}

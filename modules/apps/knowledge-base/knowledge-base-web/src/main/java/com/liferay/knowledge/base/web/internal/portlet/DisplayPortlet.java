@@ -45,7 +45,7 @@ import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -101,69 +101,6 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class DisplayPortlet extends BaseKBPortlet {
 
-	@Override
-	public void render(
-			RenderRequest renderRequest, RenderResponse renderResponse)
-		throws IOException, PortletException {
-
-		try {
-			renderRequest.setAttribute(
-				KBWebKeys.DL_MIME_TYPE_DISPLAY_CONTEXT,
-				dlMimeTypeDisplayContext);
-
-			KBArticleSelection kbArticleSelection = getKBArticle(renderRequest);
-
-			renderRequest.setAttribute(
-				KBWebKeys.KNOWLEDGE_BASE_EXACT_MATCH,
-				kbArticleSelection.isExactMatch());
-
-			KBArticle kbArticle = kbArticleSelection.getKBArticle();
-
-			if ((kbArticle != null) &&
-				(kbArticle.getStatus() != WorkflowConstants.STATUS_APPROVED)) {
-
-				kbArticle = _kbArticleLocalService.fetchLatestKBArticle(
-					kbArticle.getResourcePrimKey(),
-					WorkflowConstants.STATUS_APPROVED);
-			}
-
-			renderRequest.setAttribute(
-				KBWebKeys.KNOWLEDGE_BASE_KB_ARTICLE, kbArticle);
-
-			renderRequest.setAttribute(
-				KBWebKeys.KNOWLEDGE_BASE_SEARCH_KEYWORDS,
-				kbArticleSelection.getKeywords());
-
-			renderRequest.setAttribute(
-				KBWebKeys.KNOWLEDGE_BASE_STATUS,
-				WorkflowConstants.STATUS_APPROVED);
-
-			if (!kbArticleSelection.isExactMatch()) {
-				HttpServletResponse response =
-					PortalUtil.getHttpServletResponse(renderResponse);
-
-				response.setStatus(404);
-			}
-		}
-		catch (Exception e) {
-			if (e instanceof NoSuchArticleException ||
-				e instanceof PrincipalException) {
-
-				SessionErrors.add(renderRequest, e.getClass());
-
-				SessionMessages.add(
-					renderRequest,
-					PortalUtil.getPortletId(renderRequest) +
-						SessionMessages.KEY_SUFFIX_HIDE_DEFAULT_ERROR_MESSAGE);
-			}
-			else {
-				throw new PortletException(e);
-			}
-		}
-
-		super.render(renderRequest, renderResponse);
-	}
-
 	public void updateRootKBFolderId(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws IOException, PortalException {
@@ -178,7 +115,7 @@ public class DisplayPortlet extends BaseKBPortlet {
 
 		PortalPreferences portalPreferences =
 			PortletPreferencesFactoryUtil.getPortalPreferences(
-				PortalUtil.getLiferayPortletRequest(actionRequest));
+				_portal.getLiferayPortletRequest(actionRequest));
 
 		PortletPreferences portletPreferences = actionRequest.getPreferences();
 
@@ -266,7 +203,7 @@ public class DisplayPortlet extends BaseKBPortlet {
 			WebKeys.THEME_DISPLAY);
 
 		LiferayPortletURL liferayPortletURL = PortletURLFactoryUtil.create(
-			actionRequest, PortalUtil.getPortletId(actionRequest),
+			actionRequest, _portal.getPortletId(actionRequest),
 			themeDisplay.getPlid(), PortletRequest.RENDER_PHASE);
 
 		if (parentResourcePrimKey != kbFolderId) {
@@ -295,6 +232,72 @@ public class DisplayPortlet extends BaseKBPortlet {
 		}
 		else {
 			super.doDispatch(renderRequest, renderResponse);
+		}
+	}
+
+	@Override
+	protected void doRender(
+			RenderRequest renderRequest, RenderResponse renderResponse)
+		throws IOException, PortletException {
+
+		try {
+			renderRequest.setAttribute(
+				KBWebKeys.DL_MIME_TYPE_DISPLAY_CONTEXT,
+				dlMimeTypeDisplayContext);
+
+			KBArticleSelection kbArticleSelection = getKBArticle(renderRequest);
+
+			renderRequest.setAttribute(
+				KBWebKeys.KNOWLEDGE_BASE_EXACT_MATCH,
+				kbArticleSelection.isExactMatch());
+
+			KBArticle kbArticle = kbArticleSelection.getKBArticle();
+
+			if ((kbArticle != null) &&
+				(kbArticle.getStatus() != WorkflowConstants.STATUS_APPROVED)) {
+
+				kbArticle = _kbArticleLocalService.fetchLatestKBArticle(
+					kbArticle.getResourcePrimKey(),
+					WorkflowConstants.STATUS_APPROVED);
+			}
+
+			renderRequest.setAttribute(
+				KBWebKeys.KNOWLEDGE_BASE_KB_ARTICLE, kbArticle);
+
+			renderRequest.setAttribute(
+				KBWebKeys.KNOWLEDGE_BASE_SEARCH_KEYWORDS,
+				kbArticleSelection.getKeywords());
+
+			renderRequest.setAttribute(
+				KBWebKeys.KNOWLEDGE_BASE_STATUS,
+				WorkflowConstants.STATUS_APPROVED);
+
+			String mvcPath = ParamUtil.getString(renderRequest, "mvcPath");
+
+			if ((mvcPath.equals("") ||
+				 mvcPath.equals("/display/view_article.jsp")) &&
+				!kbArticleSelection.isExactMatch()) {
+
+				HttpServletResponse response = _portal.getHttpServletResponse(
+					renderResponse);
+
+				response.setStatus(404);
+			}
+		}
+		catch (Exception e) {
+			if (e instanceof NoSuchArticleException ||
+				e instanceof PrincipalException) {
+
+				SessionErrors.add(renderRequest, e.getClass());
+
+				SessionMessages.add(
+					renderRequest,
+					_portal.getPortletId(renderRequest) +
+						SessionMessages.KEY_SUFFIX_HIDE_DEFAULT_ERROR_MESSAGE);
+			}
+			else {
+				throw new PortletException(e);
+			}
 		}
 	}
 
@@ -379,7 +382,7 @@ public class DisplayPortlet extends BaseKBPortlet {
 				renderRequest, "kbFolderUrlTitle");
 
 			return kbArticleSelector.findByUrlTitle(
-				PortalUtil.getScopeGroupId(renderRequest),
+				_portal.getScopeGroupId(renderRequest),
 				preferredKBFolderURLTitle, parentResourcePrimKey,
 				kbFolderUrlTitle, urlTitle);
 		}
@@ -389,8 +392,8 @@ public class DisplayPortlet extends BaseKBPortlet {
 			KBArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY);
 
 		return kbArticleSelector.findByResourcePrimKey(
-			PortalUtil.getScopeGroupId(renderRequest),
-			preferredKBFolderURLTitle, parentResourcePrimKey, resourcePrimKey);
+			_portal.getScopeGroupId(renderRequest), preferredKBFolderURLTitle,
+			parentResourcePrimKey, resourcePrimKey);
 	}
 
 	protected String getPreferredKBFolderUrlTitle(
@@ -438,5 +441,8 @@ public class DisplayPortlet extends BaseKBPortlet {
 	private ClassNameLocalService _classNameLocalService;
 	private KBArticleLocalService _kbArticleLocalService;
 	private KBArticleSelectorFactory _kbArticleSelectorFactory;
+
+	@Reference
+	private Portal _portal;
 
 }

@@ -479,6 +479,26 @@ public class StringUtil {
 	}
 
 	/**
+	 * Returns <code>true</code> if the strings are equal.
+	 *
+	 * @param  s1 the first string to compare
+	 * @param  s2 the second string to compare
+	 * @return <code>true</code> if the strings are equal;
+	 *         <code>false</code> otherwise
+	 */
+	public static boolean equals(String s1, String s2) {
+		if (s1 == s2) {
+			return true;
+		}
+
+		if ((s1 == null) || (s2 == null)) {
+			return false;
+		}
+
+		return s1.equals(s2);
+	}
+
+	/**
 	 * Returns <code>true</code> if the strings are equal, ignoring new line
 	 * characters.
 	 *
@@ -1764,7 +1784,23 @@ public class StringUtil {
 			return null;
 		}
 
-		return merge(col.toArray(new Object[col.size()]), delimiter);
+		if (col.isEmpty()) {
+			return StringPool.BLANK;
+		}
+
+		StringBundler sb = new StringBundler(2 * col.size());
+
+		for (Object object : col) {
+			String objectString = String.valueOf(object);
+
+			sb.append(objectString.trim());
+
+			sb.append(delimiter);
+		}
+
+		sb.setIndex(sb.index() - 1);
+
+		return sb.toString();
 	}
 
 	/**
@@ -2179,6 +2215,15 @@ public class StringUtil {
 		}
 
 		return new String(chars);
+	}
+
+	public static String read(Class<?> clazz, String name) {
+		try (InputStream inputStream = clazz.getResourceAsStream(name)) {
+			return read(inputStream);
+		}
+		catch (IOException ioe) {
+			return ReflectionUtil.throwException(ioe);
+		}
 	}
 
 	public static String read(ClassLoader classLoader, String name)

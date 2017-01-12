@@ -69,19 +69,11 @@
 		<if>
 			<isset var="source" />
 			<then>
-				<execute function="Click" locator1="CKEditor#TOOLBAR_SOURCE_BUTTON" />
-				<execute function="Type" locator1="CKEditor#BODY_FIELD_SOURCE_ON" value1="${threadBody}" />
-				<execute function="Click" locator1="CKEditor#TOOLBAR_SOURCE_BUTTON" />
+				<execute function="Click" locator1="AlloyEditor#CONTENT_FIELD" />
 
-				<if>
-					<isset var="fontSize" />
-					<then>
-						<var name="key_fontSize" value="${fontSize}" />
+				<execute function="Click" locator1="Button#EDITOR_SWITCH" />
 
-						<execute function="AssertClick" locator1="CKEditor#TOOLBAR_SIZE_BUTTON" value1="Size" />
-						<execute function="AssertTextEquals" locator1="CKEditor#TOOLBAR_SIZE_BUTTON_DROPDOWN" value1="${key_fontSize}" />
-					</then>
-				</if>
+				<execute function="Type#sendKeysAceEditor" locator1="TextArea#ACE_EDITOR" value1="${threadBody}" />
 			</then>
 			<else>
 				<execute function="Type#typeEditor" locator1="AlloyEditor#CONTENT_FIELD" value1="${threadBody}" />
@@ -95,7 +87,6 @@
 		<execute function="AssertClick" locator1="Button#POST_NEW_THREAD" value1="Post New Thread" />
 
 		<execute function="Type" locator1="TextInput#SUBJECT" value1="${threadSubject}" />
-
 		<execute function="Type#typeEditor" locator1="AlloyEditor#CONTENT_FIELD" value1="${threadBody}" />
 
 		<execute macro="Panel#expandPanel">
@@ -113,7 +104,6 @@
 		<execute function="AssertClick" locator1="Button#POST_NEW_THREAD" value1="Post New Thread" />
 
 		<execute function="Type" locator1="TextInput#SUBJECT" value1="${threadSubject}" />
-
 		<execute function="Type#typeEditor" locator1="AlloyEditor#CONTENT_FIELD" value1="${threadBody}" />
 
 		<execute macro="Panel#expandPanel">
@@ -135,7 +125,6 @@
 		<execute function="AssertClick" locator1="Button#POST_NEW_THREAD" value1="Post New Thread" />
 
 		<execute function="Type" locator1="TextInput#SUBJECT" value1="${threadSubject}" />
-
 		<execute function="Type#typeEditor" locator1="AlloyEditor#CONTENT_FIELD" value1="${threadBody}" />
 
 		<execute macro="Panel#expandPanel">
@@ -157,7 +146,6 @@
 		<execute function="AssertClick" locator1="Button#POST_NEW_THREAD" value1="Post New Thread" />
 
 		<execute function="Type" locator1="TextInput#SUBJECT" value1="${threadSubject}" />
-
 		<execute function="Type#typeEditor" locator1="AlloyEditor#CONTENT_FIELD" value1="${threadBody}" />
 
 		<execute macro="Panel#expandPanel">
@@ -173,7 +161,6 @@
 		<execute function="AssertClick" locator1="Button#POST_NEW_THREAD" value1="Post New Thread" />
 
 		<execute function="Type" locator1="TextInput#SUBJECT" value1="${threadSubject}" />
-
 		<execute function="Type#typeEditor" locator1="AlloyEditor#CONTENT_FIELD" value1="${threadBody}" />
 
 		<execute macro="Panel#expandPanel">
@@ -189,7 +176,6 @@
 		<execute function="AssertClick" locator1="Button#POST_NEW_THREAD" value1="Post New Thread" />
 
 		<execute function="Type" locator1="TextInput#SUBJECT" value1="${threadSubject}" />
-
 		<execute function="Type#typeEditor" locator1="AlloyEditor#CONTENT_FIELD" value1="${threadBody}" />
 
 		<execute function="AssertTextEquals" locator1="TextInput#SUBJECT" value1="${threadSubject}" />
@@ -239,7 +225,6 @@
 		<execute function="AssertClick" locator1="Button#POST_NEW_THREAD" value1="Post New Thread" />
 
 		<execute function="Type" locator1="TextInput#SUBJECT" value1="${threadSubject}" />
-
 		<execute function="Type#typeEditor" locator1="AlloyEditor#CONTENT_FIELD" value1="${threadBody}" />
 
 		<execute function="Click" locator1="Button#SUBMIT_FOR_PUBLICATION" />
@@ -507,7 +492,6 @@
 
 				<execute function="AssertElementPresent" locator1="MessageBoardsMoveThread#CATEGORY_FIELD" />
 				<execute function="Check" locator1="Checkbox#ADD_EXPLANATION_POST" />
-
 				<execute function="Type" locator1="TextInput#SUBJECT" value1="${explanationSubject}" />
 				<execute function="Type#typeEditor" locator1="AlloyEditor#CONTENT_FIELD" value1="${explanationBody}" />
 			</then>
@@ -679,9 +663,7 @@
 			<else>
 				<var name="key_threadSubject" value="${threadSubject}" />
 
-				<execute function="AssertTextEquals" locator1="MessageBoards#THREAD_LIST_THREAD" value1="${threadSubject}" />
-
-				<execute function="Click" locator1="MessageBoards#THREAD_LIST_THREAD" value1="${threadSubject}" />
+				<execute function="AssertClick" locator1="MessageBoards#THREAD_LIST_THREAD" value1="${threadSubject}" />
 			</else>
 		</if>
 
@@ -709,6 +691,8 @@
 		<if>
 			<isset var="mbThreadAttachment" />
 			<then>
+				<execute function="AssertClick" locator1="Button#ADVANCED_REPLY" value1="Advanced Reply" />
+
 				<if>
 					<condition function="IsNotVisible" locator1="MessageBoardsEditMessage#ATTACHMENTS_FILE_FIELD_1" />
 					<then>
@@ -982,7 +966,7 @@
 
 		<execute function="AssertVisible" locator1="Button#PUBLISH" />
 
-		<execute function="Type#mouseOverFocusType" locator1="TextInput#SUBJECT" value1="${threadSubject}" />
+		<execute function="Type" locator1="TextInput#SUBJECT" value1="${threadSubject}" />
 
 		<execute macro="Panel#expandPanel">
 			<var name="panelHeading" value="More Settings" />
@@ -1002,7 +986,7 @@
 
 		<execute function="AssertVisible" locator1="Button#PUBLISH" />
 
-		<execute function="Type#mouseOverFocusType" locator1="TextInput#SUBJECT" value1="${threadSubject}" />
+		<execute function="Type" locator1="TextInput#SUBJECT" value1="${threadSubject}" />
 
 		<execute macro="Panel#expandPanel">
 			<var name="panelHeading" value="More Settings" />

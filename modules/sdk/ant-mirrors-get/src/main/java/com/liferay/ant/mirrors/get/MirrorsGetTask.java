@@ -50,8 +50,8 @@ public class MirrorsGetTask extends Task {
 		}
 	}
 
-	public void setDest(File destDir) {
-		_destDir = destDir;
+	public void setDest(File dest) {
+		_dest = dest;
 	}
 
 	public void setForce(boolean force) {
@@ -69,11 +69,15 @@ public class MirrorsGetTask extends Task {
 			throw new RuntimeException("Invalid src attribute: " + src);
 		}
 
-		_fileName = matcher.group("fileName");
-		_path = matcher.group("path");
+		_fileName = matcher.group(2);
+		_path = matcher.group(1);
 
 		if (_path.startsWith("mirrors/")) {
 			_path = _path.replace("mirrors/", _HOSTNAME);
+		}
+
+		while (_path.endsWith("/")) {
+			_path = _path.substring(0, _path.length() - 1);
 		}
 	}
 
@@ -197,7 +201,12 @@ public class MirrorsGetTask extends Task {
 			}
 		}
 
-		copyFile(localCacheFile, new File(_destDir, _fileName));
+		if (_dest.exists() && _dest.isDirectory()) {
+			copyFile(localCacheFile, new File(_dest, _fileName));
+		}
+		else {
+			copyFile(localCacheFile, _dest);
+		}
 	}
 
 	protected void downloadFile(URL sourceURL, File targetFile)
@@ -444,9 +453,9 @@ public class MirrorsGetTask extends Task {
 	private static final String _HOSTNAME = "mirrors.lax.liferay.com";
 
 	private static final Pattern _pattern = Pattern.compile(
-		"https?://(?<path>.+/)(?<fileName>.+)");
+		"https?://(.+/)(.+)");
 
-	private File _destDir;
+	private File _dest;
 	private String _fileName;
 	private boolean _force;
 	private boolean _ignoreErrors;
