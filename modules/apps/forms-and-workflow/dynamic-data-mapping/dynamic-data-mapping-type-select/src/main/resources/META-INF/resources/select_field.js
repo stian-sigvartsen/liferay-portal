@@ -125,6 +125,16 @@ AUI.add(
 							value = inputNode.val();
 						}
 
+						if (!value) {
+							var contextValue = instance._getContextValue();
+
+							var hasOption = instance._hasOption(contextValue);
+
+							if (contextValue && !hasOption) {
+								value = contextValue;
+							}
+						}
+
 						return value;
 					},
 
@@ -237,6 +247,18 @@ AUI.add(
 						}
 					},
 
+					_getContextValue: function() {
+						var instance = this;
+
+						var contextValue = instance.get('value');
+
+						if (Lang.isArray(contextValue)) {
+							contextValue = contextValue[0];
+						}
+
+						return contextValue;
+					},
+
 					_getDataSourceType: function(value) {
 						if (Lang.isString(value)) {
 							try {
@@ -269,7 +291,7 @@ AUI.add(
 								function(value, index) {
 									options.forEach(
 										function(option, index) {
-											if (value && option.value.indexOf(value) > -1) {
+											if (value && option.value === value) {
 												optionsSelected.push(option);
 											}
 										}
@@ -285,6 +307,24 @@ AUI.add(
 						var instance = this;
 
 						return instance.get('container').one('.' + CSS_SELECT_TRIGGER_ACTION);
+					},
+
+					_hasOption: function(value) {
+						var instance = this;
+
+						var hasOption = false;
+
+						var inputNode = instance.getInputNode();
+
+						inputNode.all('option').each(
+							function(optionNode) {
+								if (optionNode.val() === value) {
+									hasOption = true;
+								}
+							}
+						);
+
+						return hasOption;
 					},
 
 					_isClickingOutSide: function(event) {

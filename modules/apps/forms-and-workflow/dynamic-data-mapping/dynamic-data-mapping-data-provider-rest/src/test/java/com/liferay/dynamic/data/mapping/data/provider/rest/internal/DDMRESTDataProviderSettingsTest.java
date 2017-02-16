@@ -61,18 +61,16 @@ public class DDMRESTDataProviderSettingsTest {
 		Map<String, DDMFormField> ddmFormFields = ddmForm.getDDMFormFieldsMap(
 			false);
 
-		Assert.assertEquals(10, ddmFormFields.size());
+		Assert.assertEquals(ddmFormFields.toString(), 8, ddmFormFields.size());
 
 		assertCacheable(ddmFormFields.get("cacheable"));
 		assertFilterable(ddmFormFields.get("filterable"));
 		assertFilterParameterName(ddmFormFields.get("filterParameterName"));
 		assertInputParameters(ddmFormFields.get("inputParameters"));
-		assertKey(ddmFormFields.get("key"));
 		assertOutputParameters(ddmFormFields.get("outputParameters"));
 		assertPassword(ddmFormFields.get("password"));
 		assertURL(ddmFormFields.get("url"));
 		assertUsername(ddmFormFields.get("username"));
-		assertValue(ddmFormFields.get("value"));
 	}
 
 	protected void assertCacheable(DDMFormField ddmFormField) {
@@ -112,7 +110,9 @@ public class DDMRESTDataProviderSettingsTest {
 		Map<String, DDMFormField> nestedDDMFormFieldsMap =
 			ddmFormField.getNestedDDMFormFieldsMap();
 
-		Assert.assertEquals(3, nestedDDMFormFieldsMap.size());
+		Assert.assertEquals(
+			nestedDDMFormFieldsMap.toString(), 3,
+			nestedDDMFormFieldsMap.size());
 
 		DDMFormField inputParameterNameDDMFormField =
 			nestedDDMFormFieldsMap.get("inputParameterName");
@@ -181,7 +181,9 @@ public class DDMRESTDataProviderSettingsTest {
 		Map<String, DDMFormField> nestedDDMFormFieldsMap =
 			ddmFormField.getNestedDDMFormFieldsMap();
 
-		Assert.assertEquals(3, nestedDDMFormFieldsMap.size());
+		Assert.assertEquals(
+			nestedDDMFormFieldsMap.toString(), 3,
+			nestedDDMFormFieldsMap.size());
 
 		DDMFormField outputParameterNameDDMFormField =
 			nestedDDMFormFieldsMap.get("outputParameterName");
