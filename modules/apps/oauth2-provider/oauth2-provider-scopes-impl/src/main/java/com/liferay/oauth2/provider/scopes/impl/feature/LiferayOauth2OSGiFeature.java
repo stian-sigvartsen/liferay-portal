@@ -15,6 +15,7 @@
 package com.liferay.oauth2.provider.scopes.impl.feature;
 
 import com.liferay.oauth2.provider.scopes.impl.jaxrs.OAuth2CompanySetterContainerRequestFilter;
+import com.liferay.oauth2.provider.scopes.impl.jaxrs.OAuth2ThreadLocalScopeCheckerContainerResponseFilter;
 import com.liferay.oauth2.provider.scopes.spi.OAuth2Grant;
 import com.liferay.oauth2.provider.scopes.api.RequiresScope;
 import com.liferay.oauth2.provider.scopes.api.ScopeChecker;
@@ -53,7 +54,7 @@ import java.util.stream.Stream;
 @Provider
 public class LiferayOauth2OSGiFeature implements Feature {
 
-	private ScopeContext _scopeStack;
+	private ScopeContext _scopeContext;
 	private ScopeChecker _scopeChecker;
 	private BundleContext _bundleContext;
 	private ScopeMatcherFactory _scopeMatcherFactory;
@@ -63,10 +64,10 @@ public class LiferayOauth2OSGiFeature implements Feature {
 		_serviceRegistration;
 
 	public LiferayOauth2OSGiFeature(
-		ScopeContext scopeStack, ScopeChecker scopeChecker,
+		ScopeContext scopeContext, ScopeChecker scopeChecker,
 		ScopeMatcherFactory scopeMatcherFactory, Bundle bundle, String name) {
 
-		_scopeStack = scopeStack;
+		_scopeContext = scopeContext;
 		_scopeChecker = scopeChecker;
 		_scopeMatcherFactory = scopeMatcherFactory;
 		_bundle = bundle;
@@ -78,17 +79,22 @@ public class LiferayOauth2OSGiFeature implements Feature {
 	@Override
 	public boolean configure(FeatureContext context) {
 		context.register(
-			new OAuth2CompanySetterContainerRequestFilter(_scopeStack),
+			new OAuth2CompanySetterContainerRequestFilter(_scopeContext),
 			Priorities.AUTHORIZATION - 10);
 
 		context.register(
 			new ScopeContextBundleContainerRequestFilter(
-				_scopeStack, _bundle, _name),
+				_scopeContext, _bundle, _name),
 			Priorities.AUTHORIZATION - 9);
 
 		context.register(
 			new OAuth2ResourceMethodCheckerContainerRequestFilter(
 				new AnnotationMethodAllowedChecker(_scopeChecker, true)),
+			Priorities.AUTHORIZATION - 8);
+
+		context.register(
+			new OAuth2ThreadLocalScopeCheckerContainerResponseFilter(
+				_scopeContext),
 			Priorities.AUTHORIZATION - 8);
 
 		ScopeFinder scopeFinder = new AnnotationGathererScopeFinder();

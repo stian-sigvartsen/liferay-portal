@@ -38,27 +38,11 @@ public class AnnotationMethodAllowedChecker implements MethodAllowedChecker {
 		RequiresScope annotation = method.getAnnotation(RequiresScope.class);
 
 		if (annotation != null) {
-			boolean allNeeded = annotation.allNeeded();
-
-			String[] scopes = annotation.value();
-
-			if (allNeeded) {
-				for (String scope : scopes) {
-					if (!_scopeChecker.hasScope(scope)) {
-						return false;
-					}
-				}
-
-				return true;
+			if (annotation.allNeeded()) {
+				return _scopeChecker.hasAllScopes(annotation.value());
 			}
 			else {
-				for (String scope : scopes) {
-					if (_scopeChecker.hasScope(scope)) {
-						return true;
-					}
-				}
-
-				return false;
+				return _scopeChecker.hasAnyScope(annotation.value());
 			}
 		}
 

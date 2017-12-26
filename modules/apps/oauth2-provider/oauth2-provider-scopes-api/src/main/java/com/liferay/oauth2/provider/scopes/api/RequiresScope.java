@@ -8,6 +8,6 @@ public @interface RequiresScope {
 
 	String[] value();
 
-	boolean allNeeded() default false;
+	boolean allNeeded() default true;
 
 }

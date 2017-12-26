@@ -1,17 +1,30 @@
 package com.liferay.oauth2.provider.scopes.api;
 
-import com.liferay.oauth2.provider.scopes.api.exceptions.ScopeNotGrantedException;
+import aQute.bnd.annotation.ProviderType;
 
+@ProviderType
 public interface ScopeChecker {
 
 	public boolean hasScope(String scope);
 
-	public default void requireScope(String scope)
-		throws ScopeNotGrantedException {
-
-		if (!hasScope(scope)) {
-			throw new ScopeNotGrantedException(scope);
+	public default boolean hasAllScopes(String ... scopes) {
+		for (String scope : scopes) {
+			if (!hasScope(scope)) {
+				return false;
+			}
 		}
+
+		return true;
+	}
+
+	public default boolean hasAnyScope(String ... scopes) {
+		for (String scope : scopes) {
+			if (hasScope(scope)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 }
