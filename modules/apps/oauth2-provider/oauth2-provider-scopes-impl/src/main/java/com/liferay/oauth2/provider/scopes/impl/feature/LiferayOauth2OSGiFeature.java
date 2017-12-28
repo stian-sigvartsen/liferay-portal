@@ -14,8 +14,9 @@
 
 package com.liferay.oauth2.provider.scopes.impl.feature;
 
-import com.liferay.oauth2.provider.scopes.impl.jaxrs.OAuth2CompanySetterContainerRequestFilter;
-import com.liferay.oauth2.provider.scopes.impl.jaxrs.OAuth2ThreadLocalScopeCheckerContainerResponseFilter;
+import com.liferay.oauth2.provider.scopes.impl.jaxrs.OAuth2BearerTokenRetriever;
+import com.liferay.oauth2.provider.scopes.impl.jaxrs.CompanyRetrieverContainerRequestFilter;
+import com.liferay.oauth2.provider.scopes.impl.jaxrs.RunnableExecutorContainerResponseFilter;
 import com.liferay.oauth2.provider.scopes.spi.OAuth2Grant;
 import com.liferay.oauth2.provider.scopes.api.RequiresScope;
 import com.liferay.oauth2.provider.scopes.api.ScopeChecker;
@@ -25,7 +26,7 @@ import com.liferay.oauth2.provider.scopes.spi.ScopeMatcherFactory;
 import com.liferay.oauth2.provider.scopes.api.ScopesDescriptionBundle;
 import com.liferay.oauth2.provider.scopes.impl.methodallowedchecker.AnnotationMethodAllowedChecker;
 import com.liferay.oauth2.provider.scopes.impl.jaxrs.OAuth2ResourceMethodCheckerContainerRequestFilter;
-import com.liferay.oauth2.provider.scopes.impl.jaxrs.ScopeContextBundleContainerRequestFilter;
+import com.liferay.oauth2.provider.scopes.impl.jaxrs.RunnableExecutorContainerRequestFilter;
 import com.liferay.oauth2.provider.scopes.liferay.api.ScopeContext;
 import com.liferay.portal.kernel.util.AggregateResourceBundleLoader;
 import com.liferay.portal.kernel.util.ClassResourceBundleLoader;
@@ -79,12 +80,19 @@ public class LiferayOauth2OSGiFeature implements Feature {
 	@Override
 	public boolean configure(FeatureContext context) {
 		context.register(
-			new OAuth2CompanySetterContainerRequestFilter(_scopeContext),
+			new OAuth2BearerTokenRetriever(_scopeContext::setTokenString),
+			Priorities.AUTHORIZATION - 11);
+
+		context.register(
+			new CompanyRetrieverContainerRequestFilter(_scopeContext::setCompany),
 			Priorities.AUTHORIZATION - 10);
 
 		context.register(
-			new ScopeContextBundleContainerRequestFilter(
-				_scopeContext, _bundle, _name),
+			new RunnableExecutorContainerRequestFilter(
+				() -> {
+					_scopeContext.setBundle(_bundle);
+					_scopeContext.setApplicationName(_name);
+				}),
 			Priorities.AUTHORIZATION - 9);
 
 		context.register(
@@ -93,8 +101,7 @@ public class LiferayOauth2OSGiFeature implements Feature {
 			Priorities.AUTHORIZATION - 8);
 
 		context.register(
-			new OAuth2ThreadLocalScopeCheckerContainerResponseFilter(
-				_scopeContext),
+			new RunnableExecutorContainerResponseFilter(_scopeContext::clear),
 			Priorities.AUTHORIZATION - 8);
 
 		ScopeFinder scopeFinder = new AnnotationGathererScopeFinder();

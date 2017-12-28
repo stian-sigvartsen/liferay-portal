@@ -14,29 +14,26 @@
 
 package com.liferay.oauth2.provider.scopes.impl.jaxrs;
 
-import com.liferay.oauth2.provider.scopes.liferay.api.ScopeContext;
 
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerResponseContext;
-import javax.ws.rs.container.ContainerResponseFilter;
 import java.io.IOException;
 
-public class OAuth2ThreadLocalScopeCheckerContainerResponseFilter
-	implements ContainerResponseFilter{
-	private ScopeContext _scopeContext;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ContainerRequestFilter;
 
-	public OAuth2ThreadLocalScopeCheckerContainerResponseFilter(
-		ScopeContext scopeContext) {
+public class RunnableExecutorContainerRequestFilter
+	implements ContainerRequestFilter {
 
-		_scopeContext = scopeContext;
+	public RunnableExecutorContainerRequestFilter(Runnable action) {
+		_action = action;
 	}
 
 	@Override
-	public void filter(
-			ContainerRequestContext requestContext,
-			ContainerResponseContext responseContext)
+	public void filter(ContainerRequestContext requestContext)
 		throws IOException {
 
-		_scopeContext.clear();
+		_action.run();
 	}
+
+	private Runnable _action;
+
 }

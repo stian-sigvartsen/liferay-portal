@@ -14,20 +14,25 @@
 
 package com.liferay.oauth2.provider.scopes.impl;
 
+import com.liferay.oauth2.provider.model.OAuth2ScopeGrant;
 import com.liferay.oauth2.provider.scopes.api.ScopeChecker;
 import com.liferay.oauth2.provider.scopes.liferay.api.RetentiveOAuth2Grant;
 import com.liferay.oauth2.provider.scopes.liferay.api.ScopeContext;
+import com.liferay.oauth2.provider.service.OAuth2ScopeGrantLocalService;
+import com.liferay.oauth2.provider.service.OAuth2TokenLocalService;
+import com.liferay.oauth2.provider.service.persistence.OAuth2ScopeGrantPK;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.util.StringPool;
 import org.osgi.framework.Bundle;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.stream.Stream;
 
 @Component(service = {ScopeChecker.class, ScopeContext.class})
-public class ThreadLocalScopeChecker implements ScopeChecker, ScopeContext {
+public class ThreadLocalServiceScopeChecker
+	implements ScopeChecker, ScopeContext {
 
 	ThreadLocal<Collection<RetentiveOAuth2Grant>> _allowedScopesThreadLocal =
 		ThreadLocal.withInitial(Collections::emptySet);
@@ -39,20 +44,18 @@ public class ThreadLocalScopeChecker implements ScopeChecker, ScopeContext {
 		() -> StringPool.BLANK);
 	ThreadLocal<String> _applicationName = ThreadLocal.withInitial(
 		() -> StringPool.BLANK);
+	ThreadLocal<String> _tokenString = ThreadLocal.withInitial(
+		() -> StringPool.BLANK);
 
 	@Override
 	public boolean hasScope(String scope) {
-		Stream<RetentiveOAuth2Grant> stream = _allowedScopesThreadLocal.get().stream();
+		OAuth2ScopeGrant oAuth2ScopeGrant =
+			_oAuth2ScopeGrantLocalService.fetchOAuth2ScopeGrant(
+				new OAuth2ScopeGrantPK(
+					_applicationName.get(), _bundleSymbolicName.get(),
+					_bundleVersion.get(), scope, _tokenString.get()));
 
-		return stream.filter(
-			o -> o.getCompanyId() == _companyIdThreadLocal.get()
-		).filter(
-			o -> o.getBundleSymbolicName().equals(_bundleSymbolicName.get())
-		).filter(
-			o -> o.getBundleVersion().equals(_bundleVersion.get())
-		).anyMatch(
-			o -> o.getNames().stream().anyMatch(scope::equals)
-		);
+		return oAuth2ScopeGrant != null;
 	}
 
 	public void setAllowedScopes(Collection<RetentiveOAuth2Grant> allowedScopes) {
@@ -76,11 +79,24 @@ public class ThreadLocalScopeChecker implements ScopeChecker, ScopeContext {
 	}
 
 	@Override
+	public String getTokenString() {
+		return _tokenString.get();
+	}
+
+	@Override
+	public void setTokenString(String tokenString) {
+		_tokenString.set(tokenString);
+	}
+
+	@Override
 	public void clear() {
 		_applicationName.remove();
 		_bundleSymbolicName.remove();
 		_bundleVersion.remove();
 		_companyIdThreadLocal.remove();
 	}
+
+	@Reference
+	OAuth2ScopeGrantLocalService _oAuth2ScopeGrantLocalService;
 
 }

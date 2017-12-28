@@ -19,6 +19,7 @@ import com.liferay.oauth2.provider.scopes.impl.scopematcher.ChunkScopeMatcherFac
 import com.liferay.oauth2.provider.scopes.spi.ScopeMatcher;
 import com.liferay.oauth2.provider.scopes.spi.ScopeMatcherFactory;
 import com.liferay.oauth2.provider.scopes.spi.PrefixHandler;
+import com.liferay.portal.kernel.util.StringPool;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -80,12 +81,13 @@ public class ChunkScopeMatcherFactoryTest {
 	}
 
 	@Test
-	public void testMatchWithNamespacesMatchingChunksAndEmpty() throws Exception {
+	public void testMatchWithNamespacesMatchingChunksAndEmpty()
+		throws Exception {
+
 		ScopeMatcherFactory chunkScopeMatcherFactory =
 			new ChunkScopeMatcherFactory();
 
-		ScopeMatcher scopeMatcher =
-			chunkScopeMatcherFactory.create("test.");
+		ScopeMatcher scopeMatcher = chunkScopeMatcherFactory.create("test.");
 
 		PrefixHandler namespaceAdder = localName -> "test." + localName;
 
@@ -115,6 +117,36 @@ public class ChunkScopeMatcherFactoryTest {
 
 		assertFalse(scopeMatcher.match("test.everything.readonly"));
 		assertFalse(scopeMatcher.match("test.everything"));
+	}
+
+	@Test
+	public void testMatchWithNamespacesAndMapperMatchingChunks()
+		throws Exception {
+
+		ScopeMatcherFactory chunkScopeMatcherFactory =
+			new ChunkScopeMatcherFactory();
+
+		ScopeMatcher scopeMatcher = chunkScopeMatcherFactory.create(
+			"test.everything");
+
+		PrefixHandler namespaceAdder = localName -> "test." + localName;
+
+		scopeMatcher = scopeMatcher.prepend(namespaceAdder);
+
+		scopeMatcher = scopeMatcher.withMapper(s -> {
+			switch (s) {
+				case "RW": return "everything";
+				case "RO": return "everything.readonly";
+			}
+
+			return s;
+		});
+
+		assertTrue(scopeMatcher.match("RO"));
+		assertTrue(scopeMatcher.match("RW"));
+
+		assertTrue(scopeMatcher.match("everything.readonly"));
+		assertTrue(scopeMatcher.match("everything"));
 	}
 
 }

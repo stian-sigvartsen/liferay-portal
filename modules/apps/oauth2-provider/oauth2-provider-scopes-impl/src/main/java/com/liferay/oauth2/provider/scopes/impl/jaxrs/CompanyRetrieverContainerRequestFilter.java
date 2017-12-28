@@ -14,36 +14,41 @@
 
 package com.liferay.oauth2.provider.scopes.impl.jaxrs;
 
-
-import com.liferay.oauth2.provider.scopes.liferay.api.ScopeContext;
-import org.osgi.framework.Bundle;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.Company;
+import com.liferay.portal.kernel.util.PortalUtil;
 
 import java.io.IOException;
+import java.util.function.Consumer;
+
+import javax.servlet.http.HttpServletRequest;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.core.Context;
 
-public class ScopeContextBundleContainerRequestFilter
+public class CompanyRetrieverContainerRequestFilter
 	implements ContainerRequestFilter {
 
-	public ScopeContextBundleContainerRequestFilter(
-		ScopeContext scopeContext, Bundle bundle, String applicationName) {
-
-		_scopeStack = scopeContext;
-		_bundle = bundle;
-		_applicationName = applicationName;
+	public CompanyRetrieverContainerRequestFilter(Consumer<Company> consumer) {
+		_consumer = consumer;
 	}
 
 	@Override
 	public void filter(ContainerRequestContext requestContext)
 		throws IOException {
 
-		_scopeStack.setBundle(_bundle);
-		_scopeStack.setApplicationName(_applicationName);
+		try {
+			_consumer.accept(PortalUtil.getCompany(_httpServletRequest));
+		}
+		catch (PortalException pe) {
+			pe.printStackTrace();
+		}
 	}
 
-	private final ScopeContext _scopeStack;
-	private final Bundle _bundle;
-	private final String _applicationName;
+	private Consumer<Company> _consumer;
+
+	@Context
+	private HttpServletRequest _httpServletRequest;
 
 }

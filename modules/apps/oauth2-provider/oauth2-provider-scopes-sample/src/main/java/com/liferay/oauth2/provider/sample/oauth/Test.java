@@ -14,11 +14,15 @@
 
 package com.liferay.oauth2.provider.sample.oauth;
 
+import com.liferay.oauth2.provider.model.OAuth2ScopeGrant;
 import com.liferay.oauth2.provider.scopes.api.LiferayOauth2OSGiFeatureFactory;
 import com.liferay.oauth2.provider.scopes.liferay.api.RetentiveOAuth2Grant;
+import com.liferay.oauth2.provider.scopes.liferay.api.ScopeContext;
 import com.liferay.oauth2.provider.scopes.liferay.api.ScopeFinderLocator;
 import com.liferay.oauth2.provider.scopes.api.RequiresScope;
 import com.liferay.oauth2.provider.scopes.api.ScopesDescriptionBundle;
+import com.liferay.oauth2.provider.service.OAuth2ScopeGrantLocalService;
+import com.liferay.oauth2.provider.service.persistence.OAuth2ScopeGrantPK;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -30,6 +34,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -139,9 +144,24 @@ public class Test extends Application {
 		Collection<RetentiveOAuth2Grant> scopes =
 			_scopeFinderLocator.locateScopes(company, scope);
 
-		HttpSession session = _httpServletRequest.getSession();
+		Stream<RetentiveOAuth2Grant> stream = scopes.stream();
 
-		session.setAttribute("GRANTED_SCOPES", scopes);
+		stream.flatMap(
+			o -> {
+				Stream<String> namesStream = o.getNames().stream();
+
+				return namesStream.map(
+					n -> _oAuth2ScopeGrantLocalService.createOAuth2ScopeGrant(
+						new OAuth2ScopeGrantPK(
+							o.getApplicationName(),
+							o.getBundleSymbolicName(),
+							o.getBundleVersion(), n,
+							_scopeContext.getTokenString()))
+				);
+			}
+		).forEach(
+			_oAuth2ScopeGrantLocalService::updateOAuth2ScopeGrant
+		);
 
 		List<String> names =
 			scopes.stream().flatMap(o -> o.getNames().stream()).collect(
@@ -163,9 +183,15 @@ public class Test extends Application {
 	@Reference
 	LiferayOauth2OSGiFeatureFactory _liferayOauth2OSGiFeatureFactory;
 
+	@Reference
+	ScopeContext _scopeContext;
+
 	@Context
 	HttpServletRequest _httpServletRequest;
 
 	@Reference
 	ScopeFinderLocator _scopeFinderLocator;
+
+	@Reference
+	OAuth2ScopeGrantLocalService _oAuth2ScopeGrantLocalService;
 }

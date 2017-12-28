@@ -13,5 +13,9 @@ public interface ScopeContext {
 
 	void setApplicationName(String applicationName);
 
+	String getTokenString();
+
+	void setTokenString(String tokenString);
+
 	void clear();
 }

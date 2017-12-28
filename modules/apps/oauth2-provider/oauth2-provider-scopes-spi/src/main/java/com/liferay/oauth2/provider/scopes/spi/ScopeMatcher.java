@@ -15,6 +15,10 @@ public interface ScopeMatcher {
 		return localName -> match(namespaceAdder.addPrefix(localName));
 	}
 
+	public default ScopeMatcher withMapper(ScopeMapper scopeMapper) {
+		return localName -> match(scopeMapper.map(localName));
+	}
+
 	public static ScopeMatcher NULL = __ -> false;
 
 }

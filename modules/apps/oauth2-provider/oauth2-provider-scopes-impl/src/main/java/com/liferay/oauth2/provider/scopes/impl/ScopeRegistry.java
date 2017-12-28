@@ -19,15 +19,12 @@ import com.liferay.oauth2.provider.scopes.liferay.api.ScopeFinderLocator;
 import com.liferay.oauth2.provider.scopes.impl.scopematcher.RetentiveOAuth2GrantImpl;
 import com.liferay.oauth2.provider.scopes.spi.OAuth2Grant;
 import com.liferay.oauth2.provider.scopes.spi.ScopeFinder;
+import com.liferay.oauth2.provider.scopes.spi.ScopeMapper;
 import com.liferay.oauth2.provider.scopes.spi.ScopeMatcher;
 import com.liferay.oauth2.provider.scopes.spi.PrefixHandler;
-import com.liferay.oauth2.provider.scopes.spi.PrefixHandlerFactory;
 import com.liferay.oauth2.provider.scopes.spi.PrefixHandlerMapper;
-import com.liferay.oauth2.provider.scopes.spi.PrefixHandlerMapperLocator;
 import com.liferay.oauth2.provider.scopes.spi.ScopeMatcherFactory;
 import com.liferay.osgi.service.tracker.collections.ServiceReferenceServiceTuple;
-import com.liferay.osgi.service.tracker.collections.map.PropertyServiceReferenceMapper;
-import com.liferay.osgi.service.tracker.collections.map.ServiceReferenceMapper;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
 import com.liferay.portal.kernel.model.Company;
@@ -40,46 +37,13 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 @Component(immediate = true, service = ScopeFinderLocator.class)
-public class ScopeRegistry
-	implements ScopeFinderLocator, PrefixHandlerMapperLocator {
-
-	@Override
-	public PrefixHandlerMapper locateMapper(Company company) {
-		return propertyHolder -> {
-			Object nameProperty = propertyHolder.get("osgi.jaxrs.name");
-
-			String name = nameProperty.toString();
-
-			long companyId = company.getCompanyId();
-
-			PrefixHandlerMapper namespaceAdder =
-				_namespacesByCompanyAndName.getService(companyId + '-' + name);
-
-			if (namespaceAdder != null) {
-				return namespaceAdder.mapFrom(propertyHolder);
-			}
-
-			namespaceAdder = _namespacesByName.getService(name);
-
-			if (namespaceAdder != null) {
-				return namespaceAdder.mapFrom(propertyHolder);
-			}
-
-			namespaceAdder = _namespacesByCompany.getService(
-				Long.toString(companyId));
-
-			if (namespaceAdder != null) {
-				return namespaceAdder.mapFrom(propertyHolder);
-			}
-
-			return _defaultNamespaceAdderMapper.mapFrom(propertyHolder);
-		};
-	}
+public class ScopeRegistry implements ScopeFinderLocator {
 
 	@Override
 	public Collection<RetentiveOAuth2Grant> locateScopes(
@@ -89,37 +53,54 @@ public class ScopeRegistry
 
 		Set<String> names = _scopeFinderByNameServiceTrackerMap.keySet();
 
+		long companyId = company.getCompanyId();
+
 		for (String name : names) {
 			ServiceReferenceServiceTuple<?, ScopeFinder> tuple =
 				_scopeFinderByNameServiceTrackerMap.getService(name);
 
-			PrefixHandlerMapper namespaceAdderMapper = locateMapper(
-				company);
-
 			ServiceReference<?> serviceReference = tuple.getServiceReference();
 
-			PrefixHandler namespaceAdder = namespaceAdderMapper.mapFrom(
+			PrefixHandlerMapper namespaceAdderMapper =
+				_scopedPrefixHandlerMappers.getService(companyId, name);
+
+			PrefixHandler prefixHandler = namespaceAdderMapper.mapFrom(
 				serviceReference::getProperty);
 
 			ScopeFinder scopeFinder = tuple.getService();
 
 			ScopeMatcherFactory scopeMatcherFactory =
-				scopeFinder.getDefaultScopeMatcherFactory();
+				_scopedScopeMatcherFactories.getService(companyId, name);
+
+			if (scopeMatcherFactory == null) {
+				scopeMatcherFactory =
+					scopeFinder.getDefaultScopeMatcherFactory();
+			}
 
 			ScopeMatcher scopeMatcher = scopeMatcherFactory.create(scope);
 
-			OAuth2Grant oAuth2Grant = scopeFinder.findScopes(
-				scopeMatcher.prepend(namespaceAdder));
+			scopeMatcher = scopeMatcher.prepend(prefixHandler);
+
+			scopeMatcher = scopeMatcher.withMapper(
+				_scopedScopeMapper.getService(companyId, name));
+
+			OAuth2Grant oAuth2Grant = scopeFinder.findScopes(scopeMatcher);
 
 			grants.add(
 				new RetentiveOAuth2GrantImpl(
-					company.getCompanyId(), serviceReference.getBundle(),
-					serviceReference.getProperty("osgi.jaxrs.name").toString(),
+					companyId, serviceReference.getBundle(), name,
 					oAuth2Grant));
 		}
 
 		return grants;
 	}
+
+	private ScopedServiceTrackerMap<PrefixHandlerMapper>
+		_scopedPrefixHandlerMappers;
+	private ScopedServiceTrackerMap<ScopeMatcherFactory>
+		_scopedScopeMatcherFactories;
+	private ScopedServiceTrackerMap<ScopeMapper>
+		_scopedScopeMapper;
 
 	@Override
 	public Collection<RetentiveOAuth2Grant> listScopes(Company company) {
@@ -156,46 +137,33 @@ public class ScopeRegistry
 				new ScopeFinderServiceTupleServiceTrackerCustomizer(
 					bundleContext));
 
-		_namespacesByCompany = ServiceTrackerMapFactory.openSingleValueMap(
-			bundleContext, PrefixHandlerMapper.class, "companyId");
+		_scopedPrefixHandlerMappers = new ScopedServiceTrackerMap<>(
+			bundleContext, PrefixHandlerMapper.class, "osgi.jaxrs.name",
+			() -> _defaultPrefixHandlerMapper);
 
-		_namespacesByName = ServiceTrackerMapFactory.openSingleValueMap(
-			bundleContext, PrefixHandlerMapper.class, "osgi.jaxrs.name");
+		_scopedScopeMatcherFactories = new ScopedServiceTrackerMap<>(
+			bundleContext, ScopeMatcherFactory.class, "osgi.jaxrs.name",
+			() -> null);
 
-		_namespacesByCompanyAndName =
-			ServiceTrackerMapFactory.openSingleValueMap(
-				bundleContext, PrefixHandlerMapper.class,
-				"(&(companyId=*)(osgi.jaxrs.name=*))",
-				(serviceReference, emitter) -> {
-					ServiceReferenceMapper<String, PrefixHandlerMapper>
-						companyMapper = new PropertyServiceReferenceMapper<>(
-							"companyId");
-					ServiceReferenceMapper<String, PrefixHandlerMapper>
-						nameMapper = new PropertyServiceReferenceMapper<>(
-							"osgi.jaxrs.name");
+		_scopedScopeMapper = new ScopedServiceTrackerMap<>(
+			bundleContext, ScopeMapper.class, "osgi.jaxrs.name",
+			() -> ScopeMapper.NULL);
+	}
 
-					companyMapper.map(
-						serviceReference,
-						key1 -> nameMapper.map(
-							serviceReference,
-							key2 -> emitter.emit(key1 + "-" + key2)));
-				});
+	@Deactivate
+	protected void deactivate() {
+		_scopeFinderByNameServiceTrackerMap.close();
+		_scopedPrefixHandlerMappers.close();
+		_scopedScopeMatcherFactories.close();
+		_scopedScopeMapper.close();
 	}
 
 	@Reference(
 		target = "(default=true)",
 		policyOption = ReferencePolicyOption.GREEDY
 	)
-	private PrefixHandlerMapper _defaultNamespaceAdderMapper;
+	private PrefixHandlerMapper _defaultPrefixHandlerMapper;
 
-	@Reference
-	private PrefixHandlerFactory _namespaceAdderFactory;
-
-	private ServiceTrackerMap<String, PrefixHandlerMapper>
-		_namespacesByCompany;
-	private ServiceTrackerMap<String, PrefixHandlerMapper>
-		_namespacesByCompanyAndName;
-	private ServiceTrackerMap<String, PrefixHandlerMapper> _namespacesByName;
 	private ServiceTrackerMap<
 		String, ServiceReferenceServiceTuple<?, ScopeFinder>>
 			_scopeFinderByNameServiceTrackerMap;

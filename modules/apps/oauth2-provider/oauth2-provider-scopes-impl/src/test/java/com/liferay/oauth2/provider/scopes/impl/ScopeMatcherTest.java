@@ -18,9 +18,11 @@ import com.liferay.oauth2.provider.scopes.impl.scopematcher.ChunkScopeMatcherFac
 import com.liferay.oauth2.provider.scopes.impl.prefixhandler.DefaultPrefixHandlerFactory;
 import com.liferay.oauth2.provider.scopes.spi.OAuth2Grant;
 import com.liferay.oauth2.provider.scopes.spi.ScopeFinder;
+import com.liferay.oauth2.provider.scopes.spi.ScopeMapper;
 import com.liferay.oauth2.provider.scopes.spi.ScopeMatcher;
 import com.liferay.oauth2.provider.scopes.spi.PrefixHandler;
 import com.liferay.oauth2.provider.scopes.spi.PrefixHandlerFactory;
+import com.liferay.oauth2.provider.scopes.spi.ScopeMatcherFactory;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -47,6 +49,27 @@ public class ScopeMatcherTest {
 		assertEquals(
 			Arrays.asList("RO", "RW"),
 			testScopeFinder.findScopes("RW"::equals).getNames());
+	}
+
+	@Test
+	public void testFindScopesWithMapper() {
+		ScopeFinder testScopeFinder = new TestHierarchyScopeFinder();
+
+		ScopeMatcher scopeMatcher = ScopeMatcherFactory.STRICT.create("RO2");
+
+		scopeMatcher = scopeMatcher.withMapper(new TestScopeMapper());
+
+		assertEquals(
+			Arrays.asList("RO"),
+			testScopeFinder.findScopes(scopeMatcher).getNames());
+
+		scopeMatcher = ScopeMatcherFactory.STRICT.create("RW2");
+
+		scopeMatcher = scopeMatcher.withMapper(new TestScopeMapper());
+
+		assertEquals(
+			Arrays.asList("RO", "RW"),
+			testScopeFinder.findScopes(scopeMatcher).getNames());
 	}
 
 	@Test
@@ -205,4 +228,18 @@ public class ScopeMatcherTest {
 		}
 	}
 
+	private static class TestScopeMapper implements ScopeMapper {
+
+		@Override
+		public String map(String s) {
+			switch (s) {
+				case "RW":
+					return "RW2";
+				case "RO":
+					return "RO2";
+			}
+
+			return s;
+		}
+	}
 }
