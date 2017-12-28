@@ -26,4 +26,46 @@
 		<column name="name" type="String" />
 		<column name="description" type="String" />
 	</entity>
+	<entity name="OAuth2Token" local-service="true" remote-service="false">
+		<!-- PK fields -->
+
+		<column name="oAuth2TokenId" primary="true" type="String" />
+
+		<!-- Audit fields -->
+
+		<column name="companyId" type="long" />
+		<column name="createDate" type="Date" />
+
+		<!-- Other fields -->
+
+		<column name="oAuth2ApplicationId" type="long" />
+
+		<finder name="A" return-type="Collection">
+			<finder-column name="oAuth2ApplicationId" />
+		</finder>
+
+		<reference entity="OAuth2Application" package-path="com.liferay.oauth2.provider" />
+	</entity>
+	<entity name="OAuth2ScopeGrant" local-service="true" remote-service="false">
+		<!-- PK fields -->
+
+		<column name="applicationName" primary="true" type="String" />
+		<column name="bundleSymbolicName" primary="true" type="String" />
+		<column name="bundleVersion" primary="true" type="String" />
+		<column name="oAuth2ScopeName" primary="true" type="String" />
+		<column name="oAuth2TokenId" type="String" primary="true"/>
+
+		<!-- Audit fields -->
+
+		<column name="companyId" type="long" />
+		<column name="createDate" type="Date" />
+
+		<!-- Other fields -->
+
+		<finder name="T" return-type="Collection">
+			<finder-column name="oAuth2TokenId" />
+		</finder>
+
+		<reference entity="OAuth2Token" package-path="com.liferay.oauth2.provider" />
+	</entity>
 </service-builder>

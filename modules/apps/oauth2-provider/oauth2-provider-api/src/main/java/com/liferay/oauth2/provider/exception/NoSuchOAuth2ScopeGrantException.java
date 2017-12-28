@@ -21,20 +21,20 @@ import com.liferay.portal.kernel.exception.NoSuchModelException;
  * @author Brian Wing Shun Chan
  */
 @ProviderType
-public class NoSuchOAuth2ApplicationException extends NoSuchModelException {
+public class NoSuchOAuth2ScopeGrantException extends NoSuchModelException {
 
-	public NoSuchOAuth2ApplicationException() {
+	public NoSuchOAuth2ScopeGrantException() {
 	}
 
-	public NoSuchOAuth2ApplicationException(String msg) {
+	public NoSuchOAuth2ScopeGrantException(String msg) {
 		super(msg);
 	}
 
-	public NoSuchOAuth2ApplicationException(String msg, Throwable cause) {
+	public NoSuchOAuth2ScopeGrantException(String msg, Throwable cause) {
 		super(msg, cause);
 	}
 
-	public NoSuchOAuth2ApplicationException(Throwable cause) {
+	public NoSuchOAuth2ScopeGrantException(Throwable cause) {
 		super(cause);
 	}
 

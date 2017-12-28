@@ -14,27 +14,27 @@
 
 package com.liferay.oauth2.provider.service.impl;
 
-import com.liferay.oauth2.provider.service.base.OAuth2ApplicationLocalServiceBaseImpl;
+import com.liferay.oauth2.provider.service.base.OAuth2ScopeGrantLocalServiceBaseImpl;
 
 /**
- * The implementation of the o auth2 application local service.
+ * The implementation of the o auth2 scope grant local service.
  *
  * <p>
- * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.oauth2.provider.service.OAuth2ApplicationLocalService} interface.
+ * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.oauth2.provider.service.OAuth2ScopeGrantLocalService} interface.
  *
  * <p>
  * This is a local service. Methods of this service will not have security checks based on the propagated JAAS credentials because this service can only be accessed from within the same VM.
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see OAuth2ApplicationLocalServiceBaseImpl
- * @see com.liferay.oauth2.provider.service.OAuth2ApplicationLocalServiceUtil
+ * @see OAuth2ScopeGrantLocalServiceBaseImpl
+ * @see com.liferay.oauth2.provider.service.OAuth2ScopeGrantLocalServiceUtil
  */
-public class OAuth2ApplicationLocalServiceImpl
-	extends OAuth2ApplicationLocalServiceBaseImpl {
+public class OAuth2ScopeGrantLocalServiceImpl
+	extends OAuth2ScopeGrantLocalServiceBaseImpl {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never reference this class directly. Always use {@link com.liferay.oauth2.provider.service.OAuth2ApplicationLocalServiceUtil} to access the o auth2 application local service.
+	 * Never reference this class directly. Always use {@link com.liferay.oauth2.provider.service.OAuth2ScopeGrantLocalServiceUtil} to access the o auth2 scope grant local service.
 	 */
 }

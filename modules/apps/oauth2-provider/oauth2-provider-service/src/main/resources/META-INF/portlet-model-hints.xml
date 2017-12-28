@@ -12,4 +12,19 @@
 		<field name="name" type="String" />
 		<field name="description" type="String" />
 	</model>
+	<model name="com.liferay.oauth2.provider.model.OAuth2ScopeGrant">
+		<field name="applicationName" type="String" />
+		<field name="bundleSymbolicName" type="String" />
+		<field name="bundleVersion" type="String" />
+		<field name="oAuth2ScopeName" type="String" />
+		<field name="oAuth2TokenId" type="String" />
+		<field name="companyId" type="long" />
+		<field name="createDate" type="Date" />
+	</model>
+	<model name="com.liferay.oauth2.provider.model.OAuth2Token">
+		<field name="oAuth2TokenId" type="String" />
+		<field name="companyId" type="long" />
+		<field name="createDate" type="Date" />
+		<field name="oAuth2ApplicationId" type="long" />
+	</model>
 </model-hints>

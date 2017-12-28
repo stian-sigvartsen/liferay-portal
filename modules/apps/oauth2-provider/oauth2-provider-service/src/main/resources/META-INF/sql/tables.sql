@@ -9,3 +9,21 @@ create table OAuth2Application (
 	name VARCHAR(75) null,
 	description VARCHAR(75) null
 );
+
+create table OAuth2ScopeGrant (
+	applicationName VARCHAR(75) not null,
+	bundleSymbolicName VARCHAR(75) not null,
+	bundleVersion VARCHAR(75) not null,
+	oAuth2ScopeName VARCHAR(75) not null,
+	oAuth2TokenId VARCHAR(75) not null,
+	companyId LONG,
+	createDate DATE null,
+	primary key (applicationName, bundleSymbolicName, bundleVersion, oAuth2ScopeName, oAuth2TokenId)
+);
+
+create table OAuth2Token (
+	oAuth2TokenId VARCHAR(75) not null primary key,
+	companyId LONG,
+	createDate DATE null,
+	oAuth2ApplicationId LONG
+);

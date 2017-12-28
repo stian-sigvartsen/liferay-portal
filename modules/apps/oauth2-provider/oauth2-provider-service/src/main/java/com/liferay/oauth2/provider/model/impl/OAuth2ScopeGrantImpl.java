@@ -17,21 +17,21 @@ package com.liferay.oauth2.provider.model.impl;
 import aQute.bnd.annotation.ProviderType;
 
 /**
- * The extended model implementation for the OAuth2Application service. Represents a row in the &quot;OAuth2Application&quot; database table, with each column mapped to a property of this class.
+ * The extended model implementation for the OAuth2ScopeGrant service. Represents a row in the &quot;OAuth2ScopeGrant&quot; database table, with each column mapped to a property of this class.
  *
  * <p>
- * Helper methods and all application logic should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.oauth2.provider.model.OAuth2Application} interface.
+ * Helper methods and all application logic should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.oauth2.provider.model.OAuth2ScopeGrant} interface.
  * </p>
  *
  * @author Brian Wing Shun Chan
  */
 @ProviderType
-public class OAuth2ApplicationImpl extends OAuth2ApplicationBaseImpl {
+public class OAuth2ScopeGrantImpl extends OAuth2ScopeGrantBaseImpl {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never reference this class directly. All methods that expect a o auth2 application model instance should use the {@link com.liferay.oauth2.provider.model.OAuth2Application} interface instead.
+	 * Never reference this class directly. All methods that expect a o auth2 scope grant model instance should use the {@link com.liferay.oauth2.provider.model.OAuth2ScopeGrant} interface instead.
 	 */
-	public OAuth2ApplicationImpl() {
+	public OAuth2ScopeGrantImpl() {
 	}
 }
