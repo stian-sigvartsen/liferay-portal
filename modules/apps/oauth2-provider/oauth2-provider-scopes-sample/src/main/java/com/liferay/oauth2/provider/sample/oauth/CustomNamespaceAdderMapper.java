@@ -25,15 +25,14 @@ import org.osgi.service.component.annotations.Reference;
 	immediate = true,
 	property = {
 		"service.ranking:Integer=100",
-		"default=true"
+		"companyId=20101"
 	}
 )
 public class CustomNamespaceAdderMapper implements PrefixHandlerMapper {
 
 	@Override
 	public PrefixHandler mapFrom(PropertyGetter propertyHolder) {
-		return _namespaceAdderFactory.create(
-			propertyHolder.get("osgi.jaxrs.name").toString());
+		return _namespaceAdderFactory.create("http://www.google.com");
 	}
 
 	@Reference

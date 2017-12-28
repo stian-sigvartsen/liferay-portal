@@ -17,7 +17,6 @@ package com.liferay.oauth2.provider.scopes.impl;
 import com.liferay.oauth2.provider.scopes.liferay.api.RetentiveOAuth2Grant;
 import com.liferay.oauth2.provider.scopes.liferay.api.ScopeFinderLocator;
 import com.liferay.oauth2.provider.scopes.impl.scopematcher.RetentiveOAuth2GrantImpl;
-import com.liferay.oauth2.provider.scopes.spi.OAuth2Grant;
 import com.liferay.oauth2.provider.scopes.spi.ScopeFinder;
 import com.liferay.oauth2.provider.scopes.spi.ScopeMapper;
 import com.liferay.oauth2.provider.scopes.spi.ScopeMatcher;
@@ -84,12 +83,15 @@ public class ScopeRegistry implements ScopeFinderLocator {
 			scopeMatcher = scopeMatcher.withMapper(
 				_scopedScopeMapper.getService(companyId, name));
 
-			OAuth2Grant oAuth2Grant = scopeFinder.findScopes(scopeMatcher);
+			Collection<String> grantedScopes = scopeFinder.findScopes(
+				scopeMatcher);
 
-			grants.add(
-				new RetentiveOAuth2GrantImpl(
-					companyId, serviceReference.getBundle(), name,
-					oAuth2Grant));
+			for (String grantedScope : grantedScopes) {
+				grants.add(
+					new RetentiveOAuth2GrantImpl(
+						companyId, serviceReference.getBundle(), name,
+						grantedScope));
+			}
 		}
 
 		return grants;
@@ -117,13 +119,15 @@ public class ScopeRegistry implements ScopeFinderLocator {
 
 			ScopeFinder scopeFinder = tuple.getService();
 
-			OAuth2Grant oAuth2Grant = scopeFinder.findScopes(__ -> true);
+			Collection<String> grantedScopes = scopeFinder.findScopes(
+				__ -> true);
 
-			grants.add(
-				new RetentiveOAuth2GrantImpl(
-					company.getCompanyId(), serviceReference.getBundle(),
-					serviceReference.getProperty("osgi.jaxrs.name").toString(),
-					oAuth2Grant));
+			for (String grantedScope : grantedScopes) {
+				grants.add(
+					new RetentiveOAuth2GrantImpl(
+						company.getCompanyId(), serviceReference.getBundle(),
+						name, grantedScope));
+			}
 		}
 
 		return grants;

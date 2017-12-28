@@ -1,15 +1,19 @@
 package com.liferay.oauth2.provider.scopes.spi;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Locale;
+
 @FunctionalInterface
 public interface ScopeFinder {
 
-	public OAuth2Grant findScopes(ScopeMatcher scopeMatcher);
+	public Collection<String> findScopes(ScopeMatcher scopeMatcher);
 
 	static ScopeFinder empty(ScopeMatcher matcher) {
-		return __ -> OAuth2Grant.NULL;
+		return __ -> Collections.emptyList();
 	}
 
-	public default OAuth2Grant findScopes(String scope) {
+	public default Collection<String> findScopes(String scope) {
 		ScopeMatcherFactory scopeMatcherFactory =
 			getDefaultScopeMatcherFactory();
 
@@ -18,6 +22,12 @@ public interface ScopeFinder {
 
 	public default ScopeMatcherFactory getDefaultScopeMatcherFactory() {
 		return ScopeMatcherFactory.STRICT;
+	}
+
+	public default String describe(
+		Collection<String> scopes, Locale locale) {
+
+		return String.join(", ", scopes);
 	}
 
 }

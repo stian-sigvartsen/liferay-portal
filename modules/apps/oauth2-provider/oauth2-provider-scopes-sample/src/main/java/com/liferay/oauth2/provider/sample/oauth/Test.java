@@ -14,7 +14,6 @@
 
 package com.liferay.oauth2.provider.sample.oauth;
 
-import com.liferay.oauth2.provider.model.OAuth2ScopeGrant;
 import com.liferay.oauth2.provider.scopes.api.LiferayOauth2OSGiFeatureFactory;
 import com.liferay.oauth2.provider.scopes.liferay.api.RetentiveOAuth2Grant;
 import com.liferay.oauth2.provider.scopes.liferay.api.ScopeContext;
@@ -79,11 +78,7 @@ public class Test extends Application {
 			_scopeFinderLocator.listScopes(company);
 
 		List<String> names =
-			scopes.stream().flatMap(o -> o.getNames().stream()).collect(
-				Collectors.toList());
-
-		List<String> descriptions =
-			scopes.stream().flatMap(o -> o.getDescriptions(Locale.ENGLISH).stream()).collect(
+			scopes.stream().map(RetentiveOAuth2Grant::getScope).collect(
 				Collectors.toList());
 
 		List<String> apps =
@@ -91,7 +86,6 @@ public class Test extends Application {
 				Collectors.toList());
 
 		return "Scopes: " + names + "\n" +
-			   "Description:" + descriptions + "\n" +
 			   "Names: " + apps;
 	}
 
@@ -104,11 +98,7 @@ public class Test extends Application {
 			_scopeFinderLocator.locateScopes(company, scope);
 
 		List<String> names =
-			scopes.stream().flatMap(o -> o.getNames().stream()).collect(
-				Collectors.toList());
-
-		List<String> descriptions =
-			scopes.stream().flatMap(o -> o.getDescriptions(Locale.ENGLISH).stream()).collect(
+			scopes.stream().map(RetentiveOAuth2Grant::getScope).collect(
 				Collectors.toList());
 
 		List<String> apps =
@@ -116,7 +106,6 @@ public class Test extends Application {
 				Collectors.toList());
 
 		return "Scopes: " + names + "\n" +
-			   "Description:" + descriptions + "\n" +
 			   "Names: " + apps;
 	}
 
@@ -146,26 +135,22 @@ public class Test extends Application {
 
 		Stream<RetentiveOAuth2Grant> stream = scopes.stream();
 
-		stream.flatMap(
-			o -> {
-				Stream<String> namesStream = o.getNames().stream();
-
-				return namesStream.map(
-					n -> _oAuth2ScopeGrantLocalService.createOAuth2ScopeGrant(
-						new OAuth2ScopeGrantPK(
-							o.getApplicationName(),
-							o.getBundleSymbolicName(),
-							o.getBundleVersion(), n,
-							_scopeContext.getTokenString()))
-				);
-			}
+		stream.map(
+			r -> _oAuth2ScopeGrantLocalService.createOAuth2ScopeGrant(
+				new OAuth2ScopeGrantPK(
+					r.getApplicationName(),
+					r.getBundleSymbolicName(),
+					r.getBundleVersion(), r.getScope(),
+					_scopeContext.getTokenString()))
 		).forEach(
 			_oAuth2ScopeGrantLocalService::updateOAuth2ScopeGrant
 		);
 
-		List<String> names =
-			scopes.stream().flatMap(o -> o.getNames().stream()).collect(
-				Collectors.toList());
+		List<String> names = scopes.stream().map(
+				RetentiveOAuth2Grant::getScope
+		).collect(
+				Collectors.toList()
+		);
 
 		return "Scopes: " + names;
 	}

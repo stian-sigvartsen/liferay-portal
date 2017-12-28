@@ -17,7 +17,6 @@ package com.liferay.oauth2.provider.scopes.impl.feature;
 import com.liferay.oauth2.provider.scopes.impl.jaxrs.OAuth2BearerTokenRetriever;
 import com.liferay.oauth2.provider.scopes.impl.jaxrs.CompanyRetrieverContainerRequestFilter;
 import com.liferay.oauth2.provider.scopes.impl.jaxrs.RunnableExecutorContainerResponseFilter;
-import com.liferay.oauth2.provider.scopes.spi.OAuth2Grant;
 import com.liferay.oauth2.provider.scopes.api.RequiresScope;
 import com.liferay.oauth2.provider.scopes.api.ScopeChecker;
 import com.liferay.oauth2.provider.scopes.spi.ScopeFinder;
@@ -28,7 +27,6 @@ import com.liferay.oauth2.provider.scopes.impl.methodallowedchecker.AnnotationMe
 import com.liferay.oauth2.provider.scopes.impl.jaxrs.OAuth2ResourceMethodCheckerContainerRequestFilter;
 import com.liferay.oauth2.provider.scopes.impl.jaxrs.RunnableExecutorContainerRequestFilter;
 import com.liferay.oauth2.provider.scopes.liferay.api.ScopeContext;
-import com.liferay.portal.kernel.util.AggregateResourceBundleLoader;
 import com.liferay.portal.kernel.util.ClassResourceBundleLoader;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import org.osgi.framework.Bundle;
@@ -42,10 +40,11 @@ import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
 import javax.ws.rs.ext.Provider;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.TreeSet;
@@ -126,13 +125,18 @@ public class LiferayOauth2OSGiFeature implements Feature {
 	private class AnnotationGathererScopeFinder
 		implements ScopeFinder, DynamicFeature {
 
-		Collection<String> _scopes = new TreeSet<>();
-		Collection<ResourceBundleLoader> resourceBundleLoaders =
-			new HashSet<>();
+		private Collection<String> _oAuth2Grants = new TreeSet<>();
+		private Collection<ResourceBundleLoader> _resourceBundleLoaders =
+			new ArrayList<>();
 
 		@Override
-		public OAuth2Grant findScopes(ScopeMatcher scopeMatcher) {
-			return new DefaultOAuth2Grant(scopeMatcher);
+		public Collection<String> findScopes(ScopeMatcher scopeMatcher) {
+			Stream<String> stream = _oAuth2Grants.stream();
+			return stream.filter(
+				scopeMatcher::match
+			).collect(
+				Collectors.toList()
+			);
 		}
 
 		@Override
@@ -150,7 +154,7 @@ public class LiferayOauth2OSGiFeature implements Feature {
 				resourceClass.getAnnotation(ScopesDescriptionBundle.class);
 
 			if (scopesDescriptionBundle != null) {
-				resourceBundleLoaders.add(
+				_resourceBundleLoaders.add(
 					new ClassResourceBundleLoader(
 						scopesDescriptionBundle.value(), resourceClass));
 			}
@@ -161,38 +165,10 @@ public class LiferayOauth2OSGiFeature implements Feature {
 				resourceMethod.getAnnotation(RequiresScope.class);
 
 			if (requiresScope != null) {
-				_scopes.addAll(Arrays.asList(requiresScope.value()));
+				_oAuth2Grants.addAll(Arrays.asList(requiresScope.value()));
 			}
 		}
 
-		private class DefaultOAuth2Grant implements OAuth2Grant {
-			private final ScopeMatcher _scopeMatcher;
-			Collection<String> scopes;
-			ResourceBundleLoader _resourceBundleLoader;
-
-			public DefaultOAuth2Grant(ScopeMatcher scopeMatcher) {
-				_scopeMatcher = scopeMatcher;
-
-				scopes = _scopeMatcher.filter(_scopes);
-				_resourceBundleLoader = new AggregateResourceBundleLoader(
-					resourceBundleLoaders.toArray(new ResourceBundleLoader[0]));
-			}
-
-			@Override
-			public Collection<String> getNames() {
-				return scopes;
-			}
-
-			@Override
-			public Collection<String> getDescriptions(Locale locale) {
-				Stream<String> stream = scopes.stream();
-
-				ResourceBundle resourceBundle =
-					_resourceBundleLoader.loadResourceBundle(locale);
-
-				return stream.map(resourceBundle::getString
-				).collect(Collectors.toList());
-			}
-		}
 	}
+
 }

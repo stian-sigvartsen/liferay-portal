@@ -26,27 +26,17 @@ public class TestOAuth2Grant implements RetentiveOAuth2Grant {
 	private final String _applicationName;
 	private final String _bundleSymbolicName;
 	private final String _bundleVersion;
-	private Collection<String> _scopes;
+	private final String _scope;
 
 	public TestOAuth2Grant(
 		long companyId, String applicationName, String bundleSymbolicName,
-		String bundleVersion, String ... scopes) {
+		String bundleVersion, String scope) {
 		_companyId = companyId;
 
 		_applicationName = applicationName;
 		_bundleSymbolicName = bundleSymbolicName;
 		_bundleVersion = bundleVersion;
-		_scopes = Arrays.asList(scopes);
-	}
-
-	@Override
-	public Collection<String> getNames() {
-		return _scopes;
-	}
-
-	@Override
-	public Collection<String> getDescriptions(Locale locale) {
-		return _scopes;
+		_scope = scope;
 	}
 
 	@Override
@@ -67,5 +57,10 @@ public class TestOAuth2Grant implements RetentiveOAuth2Grant {
 	@Override
 	public long getCompanyId() {
 		return _companyId;
+	}
+
+	@Override
+	public String getScope() {
+		return _scope;
 	}
 }

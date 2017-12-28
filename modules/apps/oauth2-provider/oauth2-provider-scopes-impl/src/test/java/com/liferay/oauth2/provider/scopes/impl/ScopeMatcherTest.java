@@ -16,7 +16,6 @@ package com.liferay.oauth2.provider.scopes.impl;
 
 import com.liferay.oauth2.provider.scopes.impl.scopematcher.ChunkScopeMatcherFactory;
 import com.liferay.oauth2.provider.scopes.impl.prefixhandler.DefaultPrefixHandlerFactory;
-import com.liferay.oauth2.provider.scopes.spi.OAuth2Grant;
 import com.liferay.oauth2.provider.scopes.spi.ScopeFinder;
 import com.liferay.oauth2.provider.scopes.spi.ScopeMapper;
 import com.liferay.oauth2.provider.scopes.spi.ScopeMatcher;
@@ -25,10 +24,10 @@ import com.liferay.oauth2.provider.scopes.spi.PrefixHandlerFactory;
 import com.liferay.oauth2.provider.scopes.spi.ScopeMatcherFactory;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -43,12 +42,11 @@ public class ScopeMatcherTest {
 		ScopeFinder testScopeFinder = new TestHierarchyScopeFinder();
 
 		assertEquals(
-			Arrays.asList("RO"),
-			testScopeFinder.findScopes("RO"::equals).getNames());
+			Arrays.asList("RO"), testScopeFinder.findScopes("RO"::equals));
 
 		assertEquals(
 			Arrays.asList("RO", "RW"),
-			testScopeFinder.findScopes("RW"::equals).getNames());
+			testScopeFinder.findScopes("RW"::equals));
 	}
 
 	@Test
@@ -60,8 +58,7 @@ public class ScopeMatcherTest {
 		scopeMatcher = scopeMatcher.withMapper(new TestScopeMapper());
 
 		assertEquals(
-			Arrays.asList("RO"),
-			testScopeFinder.findScopes(scopeMatcher).getNames());
+			Arrays.asList("RO"), testScopeFinder.findScopes(scopeMatcher));
 
 		scopeMatcher = ScopeMatcherFactory.STRICT.create("RW2");
 
@@ -69,7 +66,7 @@ public class ScopeMatcherTest {
 
 		assertEquals(
 			Arrays.asList("RO", "RW"),
-			testScopeFinder.findScopes(scopeMatcher).getNames());
+			testScopeFinder.findScopes(scopeMatcher));
 	}
 
 	@Test
@@ -85,15 +82,17 @@ public class ScopeMatcherTest {
 
 		assertEquals(
 			Arrays.asList("RO"),
-			testScopeFinder.findScopes(
-				scopeMatcher.prepend(namespaceAdder)).getNames());
+			new ArrayList<>(
+				testScopeFinder.findScopes(
+					scopeMatcher.prepend(namespaceAdder))));
 
 		scopeMatcher = "TEST_RW"::equals;
 
 		assertEquals(
 			Arrays.asList("RO", "RW"),
-			testScopeFinder.findScopes(
-				scopeMatcher.prepend(namespaceAdder)).getNames());
+			new ArrayList<>(
+				testScopeFinder.findScopes(
+					scopeMatcher.prepend(namespaceAdder))));
 	}
 
 	@Test
@@ -114,15 +113,13 @@ public class ScopeMatcherTest {
 
 		assertEquals(
 			Arrays.asList("RO"),
-			testScopeFinder.findScopes(
-				scopeMatcher.prepend(namespaceAdder)).getNames());
+			testScopeFinder.findScopes(scopeMatcher.prepend(namespaceAdder)));
 
 		scopeMatcher = "TEST_NESTED_RW"::equals;
 
 		assertEquals(
 			Arrays.asList("RO", "RW"),
-			testScopeFinder.findScopes(
-				scopeMatcher.prepend(namespaceAdder)).getNames());
+			testScopeFinder.findScopes(scopeMatcher.prepend(namespaceAdder)));
 	}
 
 	@Test
@@ -132,12 +129,11 @@ public class ScopeMatcherTest {
 
 		assertEquals(
 			Arrays.asList("everything", "everything.readonly"),
-			scopeFinder.findScopes(s -> s.startsWith("everything")).getNames());
+			scopeFinder.findScopes(s -> s.startsWith("everything")));
 
 		assertEquals(
 			Arrays.asList("everything.readonly"),
-			scopeFinder.findScopes(
-				s -> s.startsWith("everything.readonly")).getNames());
+			scopeFinder.findScopes(s -> s.startsWith("everything.readonly")));
 	}
 
 	@Test
@@ -159,16 +155,14 @@ public class ScopeMatcherTest {
 
 		assertEquals(
 			Arrays.asList("everything", "everything.readonly"),
-			scopeFinder.findScopes(
-				scopeMatcher.prepend(namespaceAdder)).getNames());
+			scopeFinder.findScopes(scopeMatcher.prepend(namespaceAdder)));
 
 		scopeMatcher = new ChunkScopeMatcherFactory().create(
 			"http://www.liferay.com/apio/everything.readonly");
 
 		assertEquals(
 			Arrays.asList("everything.readonly"),
-			scopeFinder.findScopes(
-				scopeMatcher.prepend(namespaceAdder)).getNames());
+			scopeFinder.findScopes(scopeMatcher.prepend(namespaceAdder)));
 	}
 
 	@Test
@@ -178,16 +172,18 @@ public class ScopeMatcherTest {
 
 		ScopeFinder scopeFinder = new TestTestAllScopeFinder(strings);
 
-		OAuth2Grant grant = scopeFinder.findScopes(__ -> true);
+		Collection<String> oAuth2Grants = scopeFinder.findScopes(__ -> true);
 
-		assertTrue(grant.getNames().containsAll(Arrays.asList(strings)));
+		List<String> scopes = Arrays.asList(strings);
+
+		assertTrue(scopes.containsAll(oAuth2Grants));
 	}
 
 	public static class TestHierarchyScopeFinder implements ScopeFinder {
 
 		@Override
-		public OAuth2Grant findScopes(ScopeMatcher scopeMatcher) {
-			Set<String> strings = new TreeSet<>();
+		public Collection<String> findScopes(ScopeMatcher scopeMatcher) {
+			Collection<String> strings = new TreeSet<>();
 
 			if (scopeMatcher.match("RO")) {
 				strings.add("RO");
@@ -195,8 +191,8 @@ public class ScopeMatcherTest {
 			if (scopeMatcher.match("RW")) {
 				strings.addAll(Arrays.asList("RO", "RW"));
 			}
-			return new TestOAuth2Grant(
-				0, "Test", "test", "0.0.0", strings.toArray(new String[]{}));
+
+			return new ArrayList<>(strings);
 		}
 	}
 
@@ -209,22 +205,12 @@ public class ScopeMatcherTest {
 		}
 
 		@Override
-		public OAuth2Grant findScopes(ScopeMatcher scopeMatcher) {
-			return new OAuth2Grant() {
-				List<String> strings =
-					_scopes.stream().filter(scopeMatcher::match).collect(
-						Collectors.toList());
-
-				@Override
-				public Collection<String> getNames() {
-					return strings;
-				}
-
-				@Override
-				public Collection<String> getDescriptions(Locale locale) {
-					return strings;
-				}
-			};
+		public Collection<String> findScopes(ScopeMatcher scopeMatcher) {
+			return _scopes.stream().filter(
+				scopeMatcher::match
+			).collect(
+				Collectors.toList()
+			);
 		}
 	}
 

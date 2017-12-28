@@ -19,7 +19,7 @@ import com.liferay.oauth2.provider.scopes.spi.ScopeMapper;
 import com.liferay.portal.kernel.util.StringPool;
 import org.osgi.service.component.annotations.Component;
 
-@Component(immediate = true, property = "osgi.jaxrs.name=Sample")
+@Component(immediate = true, property = "companyId=20101")
 public class CustomScopeMapper implements ScopeMapper{
 
 	@Override

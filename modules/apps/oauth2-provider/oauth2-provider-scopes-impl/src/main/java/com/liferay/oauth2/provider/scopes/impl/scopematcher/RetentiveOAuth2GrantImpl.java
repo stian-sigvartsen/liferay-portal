@@ -15,37 +15,23 @@
 package com.liferay.oauth2.provider.scopes.impl.scopematcher;
 
 import com.liferay.oauth2.provider.scopes.liferay.api.RetentiveOAuth2Grant;
-import com.liferay.oauth2.provider.scopes.spi.OAuth2Grant;
 import org.osgi.framework.Bundle;
-
-import java.util.Collection;
-import java.util.Locale;
 
 public class RetentiveOAuth2GrantImpl implements RetentiveOAuth2Grant {
 
 	private final long _companyId;
 	private final String _applicationName;
-	private final OAuth2Grant _oAuth2Grant;
+	private final String _scope;
 	private final String _bundleSymbolicName;
 	private final String _bundleVersion;
 
-	@Override
-	public Collection<String> getNames() {
-		return _oAuth2Grant.getNames();
-	}
-
-	@Override
-	public Collection<String> getDescriptions(Locale locale) {
-		return _oAuth2Grant.getDescriptions(locale);
-	}
-
 	public RetentiveOAuth2GrantImpl(
 		long companyId, Bundle bundle, String applicationName,
-		OAuth2Grant oAuth2Grant) {
+		String scope) {
 
 		_companyId = companyId;
 		_applicationName = applicationName;
-		_oAuth2Grant = oAuth2Grant;
+		_scope = scope;
 
 		_bundleSymbolicName = bundle.getSymbolicName();
 		_bundleVersion = bundle.getVersion().toString();
@@ -69,6 +55,11 @@ public class RetentiveOAuth2GrantImpl implements RetentiveOAuth2Grant {
 	@Override
 	public long getCompanyId() {
 		return _companyId;
+	}
+
+	@Override
+	public String getScope() {
+		return _scope;
 	}
 
 }
