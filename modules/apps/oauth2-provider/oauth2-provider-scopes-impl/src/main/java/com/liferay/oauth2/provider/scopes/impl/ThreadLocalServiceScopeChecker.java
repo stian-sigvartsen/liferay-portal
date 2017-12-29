@@ -16,26 +16,22 @@ package com.liferay.oauth2.provider.scopes.impl;
 
 import com.liferay.oauth2.provider.model.OAuth2ScopeGrant;
 import com.liferay.oauth2.provider.scopes.api.ScopeChecker;
-import com.liferay.oauth2.provider.scopes.liferay.api.RetentiveOAuth2Grant;
 import com.liferay.oauth2.provider.scopes.liferay.api.ScopeContext;
 import com.liferay.oauth2.provider.service.OAuth2ScopeGrantLocalService;
-import com.liferay.oauth2.provider.service.OAuth2TokenLocalService;
-import com.liferay.oauth2.provider.service.persistence.OAuth2ScopeGrantPK;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import org.osgi.framework.Bundle;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Optional;
 
 @Component(service = {ScopeChecker.class, ScopeContext.class})
 public class ThreadLocalServiceScopeChecker
 	implements ScopeChecker, ScopeContext {
-
-	ThreadLocal<Collection<RetentiveOAuth2Grant>> _allowedScopesThreadLocal =
-		ThreadLocal.withInitial(Collections::emptySet);
 
 	ThreadLocal<Long> _companyIdThreadLocal = ThreadLocal.withInitial(() -> 0L);
 	ThreadLocal<String> _bundleSymbolicName = ThreadLocal.withInitial(
@@ -49,17 +45,73 @@ public class ThreadLocalServiceScopeChecker
 
 	@Override
 	public boolean hasScope(String scope) {
-		OAuth2ScopeGrant oAuth2ScopeGrant =
-			_oAuth2ScopeGrantLocalService.fetchOAuth2ScopeGrant(
-				new OAuth2ScopeGrantPK(
-					_applicationName.get(), _bundleSymbolicName.get(),
-					_bundleVersion.get(), scope, _tokenString.get()));
+		if (Validator.isNull(scope)) {
+			throw new IllegalArgumentException("Scope can't be null");
+		}
 
-		return oAuth2ScopeGrant != null;
+		Optional<OAuth2ScopeGrant> optionalScope =
+			_oAuth2ScopeGrantLocalService.findByA_BNS_BV_C_O_T(
+				_applicationName.get(), _bundleSymbolicName.get(),
+				_bundleVersion.get(), _companyIdThreadLocal.get(),
+				scope, _tokenString.get());
+
+		return optionalScope.isPresent();
 	}
 
-	public void setAllowedScopes(Collection<RetentiveOAuth2Grant> allowedScopes) {
-		_allowedScopesThreadLocal.set(allowedScopes);
+	@Override
+	public boolean hasAllScopes(String... scopes) {
+		if (Validator.isNull(scopes)) {
+			throw new IllegalArgumentException("Scopes can't be null");
+		}
+		Collection<OAuth2ScopeGrant> oAuth2ScopeGrants =
+			new ArrayList<>(
+				_oAuth2ScopeGrantLocalService.findByA_BNS_BV_C_T(
+					_applicationName.get(), _bundleSymbolicName.get(),
+					_bundleVersion.get(), _companyIdThreadLocal.get(),
+					_tokenString.get()));
+
+		if (scopes.length > oAuth2ScopeGrants.size()) {
+			return false;
+		}
+
+		for (String scope : scopes) {
+			if (Validator.isNull(scope)) {
+				throw new IllegalArgumentException("Scope can't be null");
+			}
+			boolean found = oAuth2ScopeGrants.removeIf(
+				o -> scope.equals(o.getOAuth2ScopeName()));
+
+			if (!found) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	@Override
+	public boolean hasAnyScope(String... scopes) {
+		if (Validator.isNull(scopes)) {
+			throw new IllegalArgumentException("Scopes can't be null");
+		}
+		Collection<OAuth2ScopeGrant> oAuth2ScopeGrants =
+			_oAuth2ScopeGrantLocalService.findByA_BNS_BV_C_T(
+				_applicationName.get(), _bundleSymbolicName.get(),
+				_bundleVersion.get(), _companyIdThreadLocal.get(),
+				_tokenString.get());
+
+		for (String scope : scopes) {
+			if (Validator.isNull(scope)) {
+				throw new IllegalArgumentException("Scope can't be null");
+			}
+			for (OAuth2ScopeGrant oAuth2ScopeGrant : oAuth2ScopeGrants) {
+				if (scope.equals(oAuth2ScopeGrant.getOAuth2ScopeName())) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	@Override

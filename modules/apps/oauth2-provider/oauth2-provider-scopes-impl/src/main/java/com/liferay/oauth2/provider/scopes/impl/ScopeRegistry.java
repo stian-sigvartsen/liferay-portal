@@ -14,15 +14,17 @@
 
 package com.liferay.oauth2.provider.scopes.impl;
 
-import com.liferay.oauth2.provider.scopes.liferay.api.RetentiveOAuth2Grant;
+import com.liferay.oauth2.provider.model.LiferayOAuth2Scope;
+import com.liferay.oauth2.provider.model.LiferayOAuth2ScopeExternalIdentifier;
+import com.liferay.oauth2.provider.scopes.impl.model.LiferayOAuth2ScopeImpl;
 import com.liferay.oauth2.provider.scopes.liferay.api.ScopeFinderLocator;
-import com.liferay.oauth2.provider.scopes.impl.scopematcher.RetentiveOAuth2GrantImpl;
 import com.liferay.oauth2.provider.scopes.spi.ScopeFinder;
 import com.liferay.oauth2.provider.scopes.spi.ScopeMapper;
 import com.liferay.oauth2.provider.scopes.spi.ScopeMatcher;
 import com.liferay.oauth2.provider.scopes.spi.PrefixHandler;
 import com.liferay.oauth2.provider.scopes.spi.PrefixHandlerMapper;
 import com.liferay.oauth2.provider.scopes.spi.ScopeMatcherFactory;
+import com.liferay.oauth2.provider.service.OAuth2ScopeGrantLocalService;
 import com.liferay.osgi.service.tracker.collections.ServiceReferenceServiceTuple;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
@@ -32,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Activate;
@@ -45,10 +48,10 @@ import org.osgi.util.tracker.ServiceTrackerCustomizer;
 public class ScopeRegistry implements ScopeFinderLocator {
 
 	@Override
-	public Collection<RetentiveOAuth2Grant> locateScopes(
+	public Collection<LiferayOAuth2Scope> locateScopes(
 		Company company, String scope) {
 
-		Collection<RetentiveOAuth2Grant> grants = new ArrayList<>();
+		Collection<LiferayOAuth2Scope> grants = new ArrayList<>();
 
 		Set<String> names = _scopeFinderByNameServiceTrackerMap.keySet();
 
@@ -60,10 +63,10 @@ public class ScopeRegistry implements ScopeFinderLocator {
 
 			ServiceReference<?> serviceReference = tuple.getServiceReference();
 
-			PrefixHandlerMapper namespaceAdderMapper =
+			PrefixHandlerMapper prefixHandlerMapper =
 				_scopedPrefixHandlerMappers.getService(companyId, name);
 
-			PrefixHandler prefixHandler = namespaceAdderMapper.mapFrom(
+			PrefixHandler prefixHandler = prefixHandlerMapper.mapFrom(
 				serviceReference::getProperty);
 
 			ScopeFinder scopeFinder = tuple.getService();
@@ -87,10 +90,10 @@ public class ScopeRegistry implements ScopeFinderLocator {
 				scopeMatcher);
 
 			for (String grantedScope : grantedScopes) {
+				Bundle bundle = serviceReference.getBundle();
+
 				grants.add(
-					new RetentiveOAuth2GrantImpl(
-						companyId, serviceReference.getBundle(), name,
-						grantedScope));
+					new LiferayOAuth2ScopeImpl(name, bundle, grantedScope));
 			}
 		}
 
@@ -105,8 +108,8 @@ public class ScopeRegistry implements ScopeFinderLocator {
 		_scopedScopeMapper;
 
 	@Override
-	public Collection<RetentiveOAuth2Grant> listScopes(Company company) {
-		Collection<RetentiveOAuth2Grant> grants = new ArrayList<>();
+	public Collection<LiferayOAuth2ScopeExternalIdentifier> listScopes(Company company) {
+		Collection<LiferayOAuth2ScopeExternalIdentifier> scopes = new ArrayList<>();
 
 		Set<String> names = _scopeFinderByNameServiceTrackerMap.keySet();
 
@@ -119,18 +122,32 @@ public class ScopeRegistry implements ScopeFinderLocator {
 
 			ScopeFinder scopeFinder = tuple.getService();
 
-			Collection<String> grantedScopes = scopeFinder.findScopes(
+			Collection<String> availableScopes = scopeFinder.findScopes(
 				__ -> true);
 
-			for (String grantedScope : grantedScopes) {
-				grants.add(
-					new RetentiveOAuth2GrantImpl(
-						company.getCompanyId(), serviceReference.getBundle(),
-						name, grantedScope));
+			long companyId = company.getCompanyId();
+
+			PrefixHandlerMapper prefixHandlerMapper =
+				_scopedPrefixHandlerMappers.getService(companyId, name);
+
+			PrefixHandler prefixHandler = prefixHandlerMapper.mapFrom(
+				serviceReference::getProperty);
+
+			ScopeMapper scopeMapper =
+				_scopedScopeMapper.getService(companyId, name);
+
+			for (String availableScope : availableScopes) {
+				Bundle bundle = serviceReference.getBundle();
+
+				availableScope = prefixHandler.addPrefix(
+					scopeMapper.map(availableScope));
+
+				scopes.add(
+					new LiferayOAuth2ScopeImpl(name, bundle, availableScope));
 			}
 		}
 
-		return grants;
+		return scopes;
 	}
 
 	@Activate
@@ -167,6 +184,9 @@ public class ScopeRegistry implements ScopeFinderLocator {
 		policyOption = ReferencePolicyOption.GREEDY
 	)
 	private PrefixHandlerMapper _defaultPrefixHandlerMapper;
+
+	@Reference
+	private OAuth2ScopeGrantLocalService _oAuth2ScopeGrantLocalService;
 
 	private ServiceTrackerMap<
 		String, ServiceReferenceServiceTuple<?, ScopeFinder>>

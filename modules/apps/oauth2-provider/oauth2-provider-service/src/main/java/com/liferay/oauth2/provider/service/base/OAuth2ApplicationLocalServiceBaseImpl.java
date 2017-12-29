@@ -25,11 +25,8 @@ import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdate;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DefaultActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -93,7 +90,7 @@ public abstract class OAuth2ApplicationLocalServiceBaseImpl
 	 * @return the new o auth2 application
 	 */
 	@Override
-	public OAuth2Application createOAuth2Application(long oAuth2ApplicationId) {
+	public OAuth2Application createOAuth2Application(String oAuth2ApplicationId) {
 		return oAuth2ApplicationPersistence.create(oAuth2ApplicationId);
 	}
 
@@ -106,7 +103,7 @@ public abstract class OAuth2ApplicationLocalServiceBaseImpl
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public OAuth2Application deleteOAuth2Application(long oAuth2ApplicationId)
+	public OAuth2Application deleteOAuth2Application(String oAuth2ApplicationId)
 		throws PortalException {
 		return oAuth2ApplicationPersistence.remove(oAuth2ApplicationId);
 	}
@@ -208,7 +205,7 @@ public abstract class OAuth2ApplicationLocalServiceBaseImpl
 	}
 
 	@Override
-	public OAuth2Application fetchOAuth2Application(long oAuth2ApplicationId) {
+	public OAuth2Application fetchOAuth2Application(String oAuth2ApplicationId) {
 		return oAuth2ApplicationPersistence.fetchByPrimaryKey(oAuth2ApplicationId);
 	}
 
@@ -220,45 +217,9 @@ public abstract class OAuth2ApplicationLocalServiceBaseImpl
 	 * @throws PortalException if a o auth2 application with the primary key could not be found
 	 */
 	@Override
-	public OAuth2Application getOAuth2Application(long oAuth2ApplicationId)
+	public OAuth2Application getOAuth2Application(String oAuth2ApplicationId)
 		throws PortalException {
 		return oAuth2ApplicationPersistence.findByPrimaryKey(oAuth2ApplicationId);
-	}
-
-	@Override
-	public ActionableDynamicQuery getActionableDynamicQuery() {
-		ActionableDynamicQuery actionableDynamicQuery = new DefaultActionableDynamicQuery();
-
-		actionableDynamicQuery.setBaseLocalService(oAuth2ApplicationLocalService);
-		actionableDynamicQuery.setClassLoader(getClassLoader());
-		actionableDynamicQuery.setModelClass(OAuth2Application.class);
-
-		actionableDynamicQuery.setPrimaryKeyPropertyName("oAuth2ApplicationId");
-
-		return actionableDynamicQuery;
-	}
-
-	@Override
-	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery() {
-		IndexableActionableDynamicQuery indexableActionableDynamicQuery = new IndexableActionableDynamicQuery();
-
-		indexableActionableDynamicQuery.setBaseLocalService(oAuth2ApplicationLocalService);
-		indexableActionableDynamicQuery.setClassLoader(getClassLoader());
-		indexableActionableDynamicQuery.setModelClass(OAuth2Application.class);
-
-		indexableActionableDynamicQuery.setPrimaryKeyPropertyName(
-			"oAuth2ApplicationId");
-
-		return indexableActionableDynamicQuery;
-	}
-
-	protected void initActionableDynamicQuery(
-		ActionableDynamicQuery actionableDynamicQuery) {
-		actionableDynamicQuery.setBaseLocalService(oAuth2ApplicationLocalService);
-		actionableDynamicQuery.setClassLoader(getClassLoader());
-		actionableDynamicQuery.setModelClass(OAuth2Application.class);
-
-		actionableDynamicQuery.setPrimaryKeyPropertyName("oAuth2ApplicationId");
 	}
 
 	/**

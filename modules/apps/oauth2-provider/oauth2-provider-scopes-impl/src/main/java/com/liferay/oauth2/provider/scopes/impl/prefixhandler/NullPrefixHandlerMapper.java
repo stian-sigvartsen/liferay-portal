@@ -23,7 +23,7 @@ import org.osgi.service.component.annotations.Component;
 public class NullPrefixHandlerMapper implements PrefixHandlerMapper {
 
 	@Override
-	public PrefixHandler mapFrom(PropertyGetter propertyHolder) {
+	public PrefixHandler mapFrom(PropertyGetter propertyGetter) {
 		return PrefixHandler.NULL_HANDLER;
 	}
 

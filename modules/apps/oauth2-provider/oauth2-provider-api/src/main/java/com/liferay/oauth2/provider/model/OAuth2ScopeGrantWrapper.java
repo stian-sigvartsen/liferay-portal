@@ -61,9 +61,9 @@ public class OAuth2ScopeGrantWrapper implements OAuth2ScopeGrant,
 		attributes.put("applicationName", getApplicationName());
 		attributes.put("bundleSymbolicName", getBundleSymbolicName());
 		attributes.put("bundleVersion", getBundleVersion());
+		attributes.put("companyId", getCompanyId());
 		attributes.put("oAuth2ScopeName", getOAuth2ScopeName());
 		attributes.put("oAuth2TokenId", getOAuth2TokenId());
-		attributes.put("companyId", getCompanyId());
 		attributes.put("createDate", getCreateDate());
 
 		return attributes;
@@ -89,6 +89,12 @@ public class OAuth2ScopeGrantWrapper implements OAuth2ScopeGrant,
 			setBundleVersion(bundleVersion);
 		}
 
+		Long companyId = (Long)attributes.get("companyId");
+
+		if (companyId != null) {
+			setCompanyId(companyId);
+		}
+
 		String oAuth2ScopeName = (String)attributes.get("oAuth2ScopeName");
 
 		if (oAuth2ScopeName != null) {
@@ -99,12 +105,6 @@ public class OAuth2ScopeGrantWrapper implements OAuth2ScopeGrant,
 
 		if (oAuth2TokenId != null) {
 			setOAuth2TokenId(oAuth2TokenId);
-		}
-
-		Long companyId = (Long)attributes.get("companyId");
-
-		if (companyId != null) {
-			setCompanyId(companyId);
 		}
 
 		Date createDate = (Date)attributes.get("createDate");

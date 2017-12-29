@@ -113,14 +113,15 @@ public interface OAuth2TokenModel extends BaseModel<OAuth2Token>, ShardedModel {
 	 *
 	 * @return the o auth2 application ID of this o auth2 token
 	 */
-	public long getOAuth2ApplicationId();
+	@AutoEscape
+	public String getOAuth2ApplicationId();
 
 	/**
 	 * Sets the o auth2 application ID of this o auth2 token.
 	 *
 	 * @param oAuth2ApplicationId the o auth2 application ID of this o auth2 token
 	 */
-	public void setOAuth2ApplicationId(long oAuth2ApplicationId);
+	public void setOAuth2ApplicationId(String oAuth2ApplicationId);
 
 	@Override
 	public boolean isNew();

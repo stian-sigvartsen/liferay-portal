@@ -91,6 +91,23 @@ public interface OAuth2ScopeGrant extends OAuth2ScopeGrantModel, PersistedModel 
 			}
 		};
 
+	public static final Accessor<OAuth2ScopeGrant, Long> COMPANY_ID_ACCESSOR = new Accessor<OAuth2ScopeGrant, Long>() {
+			@Override
+			public Long get(OAuth2ScopeGrant oAuth2ScopeGrant) {
+				return oAuth2ScopeGrant.getCompanyId();
+			}
+
+			@Override
+			public Class<Long> getAttributeClass() {
+				return Long.class;
+			}
+
+			@Override
+			public Class<OAuth2ScopeGrant> getTypeClass() {
+				return OAuth2ScopeGrant.class;
+			}
+		};
+
 	public static final Accessor<OAuth2ScopeGrant, String> O_AUTH2_SCOPE_NAME_ACCESSOR =
 		new Accessor<OAuth2ScopeGrant, String>() {
 			@Override

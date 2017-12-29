@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.dao.orm.EntityCache;
 import com.liferay.portal.kernel.dao.orm.FinderCache;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
 import com.liferay.portal.kernel.dao.orm.Query;
+import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
@@ -175,7 +176,7 @@ public class OAuth2ApplicationPersistenceImpl extends BasePersistenceImpl<OAuth2
 	 * @return the new o auth2 application
 	 */
 	@Override
-	public OAuth2Application create(long oAuth2ApplicationId) {
+	public OAuth2Application create(String oAuth2ApplicationId) {
 		OAuth2Application oAuth2Application = new OAuth2ApplicationImpl();
 
 		oAuth2Application.setNew(true);
@@ -194,7 +195,7 @@ public class OAuth2ApplicationPersistenceImpl extends BasePersistenceImpl<OAuth2
 	 * @throws NoSuchOAuth2ApplicationException if a o auth2 application with the primary key could not be found
 	 */
 	@Override
-	public OAuth2Application remove(long oAuth2ApplicationId)
+	public OAuth2Application remove(String oAuth2ApplicationId)
 		throws NoSuchOAuth2ApplicationException {
 		return remove((Serializable)oAuth2ApplicationId);
 	}
@@ -353,12 +354,12 @@ public class OAuth2ApplicationPersistenceImpl extends BasePersistenceImpl<OAuth2
 		oAuth2ApplicationImpl.setPrimaryKey(oAuth2Application.getPrimaryKey());
 
 		oAuth2ApplicationImpl.setOAuth2ApplicationId(oAuth2Application.getOAuth2ApplicationId());
-		oAuth2ApplicationImpl.setGroupId(oAuth2Application.getGroupId());
 		oAuth2ApplicationImpl.setCompanyId(oAuth2Application.getCompanyId());
 		oAuth2ApplicationImpl.setUserId(oAuth2Application.getUserId());
 		oAuth2ApplicationImpl.setUserName(oAuth2Application.getUserName());
 		oAuth2ApplicationImpl.setCreateDate(oAuth2Application.getCreateDate());
 		oAuth2ApplicationImpl.setModifiedDate(oAuth2Application.getModifiedDate());
+		oAuth2ApplicationImpl.setOAuth2ApplicationSecret(oAuth2Application.getOAuth2ApplicationSecret());
 		oAuth2ApplicationImpl.setName(oAuth2Application.getName());
 		oAuth2ApplicationImpl.setDescription(oAuth2Application.getDescription());
 
@@ -397,7 +398,7 @@ public class OAuth2ApplicationPersistenceImpl extends BasePersistenceImpl<OAuth2
 	 * @throws NoSuchOAuth2ApplicationException if a o auth2 application with the primary key could not be found
 	 */
 	@Override
-	public OAuth2Application findByPrimaryKey(long oAuth2ApplicationId)
+	public OAuth2Application findByPrimaryKey(String oAuth2ApplicationId)
 		throws NoSuchOAuth2ApplicationException {
 		return findByPrimaryKey((Serializable)oAuth2ApplicationId);
 	}
@@ -457,7 +458,7 @@ public class OAuth2ApplicationPersistenceImpl extends BasePersistenceImpl<OAuth2
 	 * @return the o auth2 application, or <code>null</code> if a o auth2 application with the primary key could not be found
 	 */
 	@Override
-	public OAuth2Application fetchByPrimaryKey(long oAuth2ApplicationId) {
+	public OAuth2Application fetchByPrimaryKey(String oAuth2ApplicationId) {
 		return fetchByPrimaryKey((Serializable)oAuth2ApplicationId);
 	}
 
@@ -513,8 +514,8 @@ public class OAuth2ApplicationPersistenceImpl extends BasePersistenceImpl<OAuth2
 
 		query.append(_SQL_SELECT_OAUTH2APPLICATION_WHERE_PKS_IN);
 
-		for (Serializable primaryKey : uncachedPrimaryKeys) {
-			query.append((long)primaryKey);
+		for (int i = 0; i < uncachedPrimaryKeys.size(); i++) {
+			query.append("?");
 
 			query.append(",");
 		}
@@ -531,6 +532,12 @@ public class OAuth2ApplicationPersistenceImpl extends BasePersistenceImpl<OAuth2
 			session = openSession();
 
 			Query q = session.createQuery(sql);
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			for (Serializable primaryKey : uncachedPrimaryKeys) {
+				qPos.add((String)primaryKey);
+			}
 
 			for (OAuth2Application oAuth2Application : (List<OAuth2Application>)q.list()) {
 				map.put(oAuth2Application.getPrimaryKeyObj(), oAuth2Application);

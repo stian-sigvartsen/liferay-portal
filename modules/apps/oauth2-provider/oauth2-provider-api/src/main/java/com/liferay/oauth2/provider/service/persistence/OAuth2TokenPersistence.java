@@ -47,7 +47,8 @@ public interface OAuth2TokenPersistence extends BasePersistence<OAuth2Token> {
 	* @param oAuth2ApplicationId the o auth2 application ID
 	* @return the matching o auth2 tokens
 	*/
-	public java.util.List<OAuth2Token> findByA(long oAuth2ApplicationId);
+	public java.util.List<OAuth2Token> findByA(
+		java.lang.String oAuth2ApplicationId);
 
 	/**
 	* Returns a range of all the o auth2 tokens where oAuth2ApplicationId = &#63;.
@@ -61,8 +62,8 @@ public interface OAuth2TokenPersistence extends BasePersistence<OAuth2Token> {
 	* @param end the upper bound of the range of o auth2 tokens (not inclusive)
 	* @return the range of matching o auth2 tokens
 	*/
-	public java.util.List<OAuth2Token> findByA(long oAuth2ApplicationId,
-		int start, int end);
+	public java.util.List<OAuth2Token> findByA(
+		java.lang.String oAuth2ApplicationId, int start, int end);
 
 	/**
 	* Returns an ordered range of all the o auth2 tokens where oAuth2ApplicationId = &#63;.
@@ -77,8 +78,8 @@ public interface OAuth2TokenPersistence extends BasePersistence<OAuth2Token> {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching o auth2 tokens
 	*/
-	public java.util.List<OAuth2Token> findByA(long oAuth2ApplicationId,
-		int start, int end,
+	public java.util.List<OAuth2Token> findByA(
+		java.lang.String oAuth2ApplicationId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<OAuth2Token> orderByComparator);
 
 	/**
@@ -95,8 +96,8 @@ public interface OAuth2TokenPersistence extends BasePersistence<OAuth2Token> {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching o auth2 tokens
 	*/
-	public java.util.List<OAuth2Token> findByA(long oAuth2ApplicationId,
-		int start, int end,
+	public java.util.List<OAuth2Token> findByA(
+		java.lang.String oAuth2ApplicationId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<OAuth2Token> orderByComparator,
 		boolean retrieveFromCache);
 
@@ -108,7 +109,7 @@ public interface OAuth2TokenPersistence extends BasePersistence<OAuth2Token> {
 	* @return the first matching o auth2 token
 	* @throws NoSuchOAuth2TokenException if a matching o auth2 token could not be found
 	*/
-	public OAuth2Token findByA_First(long oAuth2ApplicationId,
+	public OAuth2Token findByA_First(java.lang.String oAuth2ApplicationId,
 		com.liferay.portal.kernel.util.OrderByComparator<OAuth2Token> orderByComparator)
 		throws NoSuchOAuth2TokenException;
 
@@ -119,7 +120,7 @@ public interface OAuth2TokenPersistence extends BasePersistence<OAuth2Token> {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching o auth2 token, or <code>null</code> if a matching o auth2 token could not be found
 	*/
-	public OAuth2Token fetchByA_First(long oAuth2ApplicationId,
+	public OAuth2Token fetchByA_First(java.lang.String oAuth2ApplicationId,
 		com.liferay.portal.kernel.util.OrderByComparator<OAuth2Token> orderByComparator);
 
 	/**
@@ -130,7 +131,7 @@ public interface OAuth2TokenPersistence extends BasePersistence<OAuth2Token> {
 	* @return the last matching o auth2 token
 	* @throws NoSuchOAuth2TokenException if a matching o auth2 token could not be found
 	*/
-	public OAuth2Token findByA_Last(long oAuth2ApplicationId,
+	public OAuth2Token findByA_Last(java.lang.String oAuth2ApplicationId,
 		com.liferay.portal.kernel.util.OrderByComparator<OAuth2Token> orderByComparator)
 		throws NoSuchOAuth2TokenException;
 
@@ -141,7 +142,7 @@ public interface OAuth2TokenPersistence extends BasePersistence<OAuth2Token> {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching o auth2 token, or <code>null</code> if a matching o auth2 token could not be found
 	*/
-	public OAuth2Token fetchByA_Last(long oAuth2ApplicationId,
+	public OAuth2Token fetchByA_Last(java.lang.String oAuth2ApplicationId,
 		com.liferay.portal.kernel.util.OrderByComparator<OAuth2Token> orderByComparator);
 
 	/**
@@ -154,7 +155,7 @@ public interface OAuth2TokenPersistence extends BasePersistence<OAuth2Token> {
 	* @throws NoSuchOAuth2TokenException if a o auth2 token with the primary key could not be found
 	*/
 	public OAuth2Token[] findByA_PrevAndNext(java.lang.String oAuth2TokenId,
-		long oAuth2ApplicationId,
+		java.lang.String oAuth2ApplicationId,
 		com.liferay.portal.kernel.util.OrderByComparator<OAuth2Token> orderByComparator)
 		throws NoSuchOAuth2TokenException;
 
@@ -163,7 +164,7 @@ public interface OAuth2TokenPersistence extends BasePersistence<OAuth2Token> {
 	*
 	* @param oAuth2ApplicationId the o auth2 application ID
 	*/
-	public void removeByA(long oAuth2ApplicationId);
+	public void removeByA(java.lang.String oAuth2ApplicationId);
 
 	/**
 	* Returns the number of o auth2 tokens where oAuth2ApplicationId = &#63;.
@@ -171,7 +172,7 @@ public interface OAuth2TokenPersistence extends BasePersistence<OAuth2Token> {
 	* @param oAuth2ApplicationId the o auth2 application ID
 	* @return the number of matching o auth2 tokens
 	*/
-	public int countByA(long oAuth2ApplicationId);
+	public int countByA(java.lang.String oAuth2ApplicationId);
 
 	/**
 	* Caches the o auth2 token in the entity cache if it is enabled.

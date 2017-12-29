@@ -61,9 +61,9 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 			{ "applicationName", Types.VARCHAR },
 			{ "bundleSymbolicName", Types.VARCHAR },
 			{ "bundleVersion", Types.VARCHAR },
+			{ "companyId", Types.BIGINT },
 			{ "oAuth2ScopeName", Types.VARCHAR },
 			{ "oAuth2TokenId", Types.VARCHAR },
-			{ "companyId", Types.BIGINT },
 			{ "createDate", Types.TIMESTAMP }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
@@ -72,16 +72,16 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 		TABLE_COLUMNS_MAP.put("applicationName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("bundleSymbolicName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("bundleVersion", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("oAuth2ScopeName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("oAuth2TokenId", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table OAuth2ScopeGrant (applicationName VARCHAR(75) not null,bundleSymbolicName VARCHAR(75) not null,bundleVersion VARCHAR(75) not null,oAuth2ScopeName VARCHAR(75) not null,oAuth2TokenId VARCHAR(75) not null,companyId LONG,createDate DATE null,primary key (applicationName, bundleSymbolicName, bundleVersion, oAuth2ScopeName, oAuth2TokenId))";
+	public static final String TABLE_SQL_CREATE = "create table OAuth2ScopeGrant (applicationName VARCHAR(75) not null,bundleSymbolicName VARCHAR(75) not null,bundleVersion VARCHAR(75) not null,companyId LONG not null,oAuth2ScopeName VARCHAR(75) not null,oAuth2TokenId VARCHAR(75) not null,createDate DATE null,primary key (applicationName, bundleSymbolicName, bundleVersion, companyId, oAuth2ScopeName, oAuth2TokenId))";
 	public static final String TABLE_SQL_DROP = "drop table OAuth2ScopeGrant";
-	public static final String ORDER_BY_JPQL = " ORDER BY oAuth2ScopeGrant.id.applicationName ASC, oAuth2ScopeGrant.id.bundleSymbolicName ASC, oAuth2ScopeGrant.id.bundleVersion ASC, oAuth2ScopeGrant.id.oAuth2ScopeName ASC, oAuth2ScopeGrant.id.oAuth2TokenId ASC";
-	public static final String ORDER_BY_SQL = " ORDER BY OAuth2ScopeGrant.applicationName ASC, OAuth2ScopeGrant.bundleSymbolicName ASC, OAuth2ScopeGrant.bundleVersion ASC, OAuth2ScopeGrant.oAuth2ScopeName ASC, OAuth2ScopeGrant.oAuth2TokenId ASC";
+	public static final String ORDER_BY_JPQL = " ORDER BY oAuth2ScopeGrant.id.applicationName ASC, oAuth2ScopeGrant.id.bundleSymbolicName ASC, oAuth2ScopeGrant.id.bundleVersion ASC, oAuth2ScopeGrant.id.companyId ASC, oAuth2ScopeGrant.id.oAuth2ScopeName ASC, oAuth2ScopeGrant.id.oAuth2TokenId ASC";
+	public static final String ORDER_BY_SQL = " ORDER BY OAuth2ScopeGrant.applicationName ASC, OAuth2ScopeGrant.bundleSymbolicName ASC, OAuth2ScopeGrant.bundleVersion ASC, OAuth2ScopeGrant.companyId ASC, OAuth2ScopeGrant.oAuth2ScopeName ASC, OAuth2ScopeGrant.oAuth2TokenId ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";
@@ -94,11 +94,12 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 	public static final boolean COLUMN_BITMASK_ENABLED = GetterUtil.getBoolean(com.liferay.oauth2.provider.service.util.ServiceProps.get(
 				"value.object.column.bitmask.enabled.com.liferay.oauth2.provider.model.OAuth2ScopeGrant"),
 			true);
-	public static final long OAUTH2TOKENID_COLUMN_BITMASK = 1L;
-	public static final long APPLICATIONNAME_COLUMN_BITMASK = 2L;
-	public static final long BUNDLESYMBOLICNAME_COLUMN_BITMASK = 4L;
-	public static final long BUNDLEVERSION_COLUMN_BITMASK = 8L;
+	public static final long APPLICATIONNAME_COLUMN_BITMASK = 1L;
+	public static final long BUNDLESYMBOLICNAME_COLUMN_BITMASK = 2L;
+	public static final long BUNDLEVERSION_COLUMN_BITMASK = 4L;
+	public static final long COMPANYID_COLUMN_BITMASK = 8L;
 	public static final long OAUTH2SCOPENAME_COLUMN_BITMASK = 16L;
+	public static final long OAUTH2TOKENID_COLUMN_BITMASK = 32L;
 	public static final long LOCK_EXPIRATION_TIME = GetterUtil.getLong(com.liferay.oauth2.provider.service.util.ServiceProps.get(
 				"lock.expiration.time.com.liferay.oauth2.provider.model.OAuth2ScopeGrant"));
 
@@ -108,7 +109,7 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 	@Override
 	public OAuth2ScopeGrantPK getPrimaryKey() {
 		return new OAuth2ScopeGrantPK(_applicationName, _bundleSymbolicName,
-			_bundleVersion, _oAuth2ScopeName, _oAuth2TokenId);
+			_bundleVersion, _companyId, _oAuth2ScopeName, _oAuth2TokenId);
 	}
 
 	@Override
@@ -116,6 +117,7 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 		setApplicationName(primaryKey.applicationName);
 		setBundleSymbolicName(primaryKey.bundleSymbolicName);
 		setBundleVersion(primaryKey.bundleVersion);
+		setCompanyId(primaryKey.companyId);
 		setOAuth2ScopeName(primaryKey.oAuth2ScopeName);
 		setOAuth2TokenId(primaryKey.oAuth2TokenId);
 	}
@@ -123,7 +125,7 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 	@Override
 	public Serializable getPrimaryKeyObj() {
 		return new OAuth2ScopeGrantPK(_applicationName, _bundleSymbolicName,
-			_bundleVersion, _oAuth2ScopeName, _oAuth2TokenId);
+			_bundleVersion, _companyId, _oAuth2ScopeName, _oAuth2TokenId);
 	}
 
 	@Override
@@ -148,9 +150,9 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 		attributes.put("applicationName", getApplicationName());
 		attributes.put("bundleSymbolicName", getBundleSymbolicName());
 		attributes.put("bundleVersion", getBundleVersion());
+		attributes.put("companyId", getCompanyId());
 		attributes.put("oAuth2ScopeName", getOAuth2ScopeName());
 		attributes.put("oAuth2TokenId", getOAuth2TokenId());
-		attributes.put("companyId", getCompanyId());
 		attributes.put("createDate", getCreateDate());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
@@ -179,6 +181,12 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 			setBundleVersion(bundleVersion);
 		}
 
+		Long companyId = (Long)attributes.get("companyId");
+
+		if (companyId != null) {
+			setCompanyId(companyId);
+		}
+
 		String oAuth2ScopeName = (String)attributes.get("oAuth2ScopeName");
 
 		if (oAuth2ScopeName != null) {
@@ -189,12 +197,6 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 
 		if (oAuth2TokenId != null) {
 			setOAuth2TokenId(oAuth2TokenId);
-		}
-
-		Long companyId = (Long)attributes.get("companyId");
-
-		if (companyId != null) {
-			setCompanyId(companyId);
 		}
 
 		Date createDate = (Date)attributes.get("createDate");
@@ -216,7 +218,17 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 
 	@Override
 	public void setApplicationName(String applicationName) {
+		_columnBitmask |= APPLICATIONNAME_COLUMN_BITMASK;
+
+		if (_originalApplicationName == null) {
+			_originalApplicationName = _applicationName;
+		}
+
 		_applicationName = applicationName;
+	}
+
+	public String getOriginalApplicationName() {
+		return GetterUtil.getString(_originalApplicationName);
 	}
 
 	@Override
@@ -231,7 +243,17 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 
 	@Override
 	public void setBundleSymbolicName(String bundleSymbolicName) {
+		_columnBitmask |= BUNDLESYMBOLICNAME_COLUMN_BITMASK;
+
+		if (_originalBundleSymbolicName == null) {
+			_originalBundleSymbolicName = _bundleSymbolicName;
+		}
+
 		_bundleSymbolicName = bundleSymbolicName;
+	}
+
+	public String getOriginalBundleSymbolicName() {
+		return GetterUtil.getString(_originalBundleSymbolicName);
 	}
 
 	@Override
@@ -246,7 +268,39 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 
 	@Override
 	public void setBundleVersion(String bundleVersion) {
+		_columnBitmask |= BUNDLEVERSION_COLUMN_BITMASK;
+
+		if (_originalBundleVersion == null) {
+			_originalBundleVersion = _bundleVersion;
+		}
+
 		_bundleVersion = bundleVersion;
+	}
+
+	public String getOriginalBundleVersion() {
+		return GetterUtil.getString(_originalBundleVersion);
+	}
+
+	@Override
+	public long getCompanyId() {
+		return _companyId;
+	}
+
+	@Override
+	public void setCompanyId(long companyId) {
+		_columnBitmask |= COMPANYID_COLUMN_BITMASK;
+
+		if (!_setOriginalCompanyId) {
+			_setOriginalCompanyId = true;
+
+			_originalCompanyId = _companyId;
+		}
+
+		_companyId = companyId;
+	}
+
+	public long getOriginalCompanyId() {
+		return _originalCompanyId;
 	}
 
 	@Override
@@ -261,7 +315,17 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 
 	@Override
 	public void setOAuth2ScopeName(String oAuth2ScopeName) {
+		_columnBitmask |= OAUTH2SCOPENAME_COLUMN_BITMASK;
+
+		if (_originalOAuth2ScopeName == null) {
+			_originalOAuth2ScopeName = _oAuth2ScopeName;
+		}
+
 		_oAuth2ScopeName = oAuth2ScopeName;
+	}
+
+	public String getOriginalOAuth2ScopeName() {
+		return GetterUtil.getString(_originalOAuth2ScopeName);
 	}
 
 	@Override
@@ -287,16 +351,6 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 
 	public String getOriginalOAuth2TokenId() {
 		return GetterUtil.getString(_originalOAuth2TokenId);
-	}
-
-	@Override
-	public long getCompanyId() {
-		return _companyId;
-	}
-
-	@Override
-	public void setCompanyId(long companyId) {
-		_companyId = companyId;
 	}
 
 	@Override
@@ -330,9 +384,9 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 		oAuth2ScopeGrantImpl.setApplicationName(getApplicationName());
 		oAuth2ScopeGrantImpl.setBundleSymbolicName(getBundleSymbolicName());
 		oAuth2ScopeGrantImpl.setBundleVersion(getBundleVersion());
+		oAuth2ScopeGrantImpl.setCompanyId(getCompanyId());
 		oAuth2ScopeGrantImpl.setOAuth2ScopeName(getOAuth2ScopeName());
 		oAuth2ScopeGrantImpl.setOAuth2TokenId(getOAuth2TokenId());
-		oAuth2ScopeGrantImpl.setCompanyId(getCompanyId());
 		oAuth2ScopeGrantImpl.setCreateDate(getCreateDate());
 
 		oAuth2ScopeGrantImpl.resetOriginalValues();
@@ -388,6 +442,18 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 	public void resetOriginalValues() {
 		OAuth2ScopeGrantModelImpl oAuth2ScopeGrantModelImpl = this;
 
+		oAuth2ScopeGrantModelImpl._originalApplicationName = oAuth2ScopeGrantModelImpl._applicationName;
+
+		oAuth2ScopeGrantModelImpl._originalBundleSymbolicName = oAuth2ScopeGrantModelImpl._bundleSymbolicName;
+
+		oAuth2ScopeGrantModelImpl._originalBundleVersion = oAuth2ScopeGrantModelImpl._bundleVersion;
+
+		oAuth2ScopeGrantModelImpl._originalCompanyId = oAuth2ScopeGrantModelImpl._companyId;
+
+		oAuth2ScopeGrantModelImpl._setOriginalCompanyId = false;
+
+		oAuth2ScopeGrantModelImpl._originalOAuth2ScopeName = oAuth2ScopeGrantModelImpl._oAuth2ScopeName;
+
 		oAuth2ScopeGrantModelImpl._originalOAuth2TokenId = oAuth2ScopeGrantModelImpl._oAuth2TokenId;
 
 		oAuth2ScopeGrantModelImpl._columnBitmask = 0;
@@ -423,6 +489,8 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 			oAuth2ScopeGrantCacheModel.bundleVersion = null;
 		}
 
+		oAuth2ScopeGrantCacheModel.companyId = getCompanyId();
+
 		oAuth2ScopeGrantCacheModel.oAuth2ScopeName = getOAuth2ScopeName();
 
 		String oAuth2ScopeName = oAuth2ScopeGrantCacheModel.oAuth2ScopeName;
@@ -438,8 +506,6 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 		if ((oAuth2TokenId != null) && (oAuth2TokenId.length() == 0)) {
 			oAuth2ScopeGrantCacheModel.oAuth2TokenId = null;
 		}
-
-		oAuth2ScopeGrantCacheModel.companyId = getCompanyId();
 
 		Date createDate = getCreateDate();
 
@@ -463,12 +529,12 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 		sb.append(getBundleSymbolicName());
 		sb.append(", bundleVersion=");
 		sb.append(getBundleVersion());
+		sb.append(", companyId=");
+		sb.append(getCompanyId());
 		sb.append(", oAuth2ScopeName=");
 		sb.append(getOAuth2ScopeName());
 		sb.append(", oAuth2TokenId=");
 		sb.append(getOAuth2TokenId());
-		sb.append(", companyId=");
-		sb.append(getCompanyId());
 		sb.append(", createDate=");
 		sb.append(getCreateDate());
 		sb.append("}");
@@ -497,16 +563,16 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 		sb.append(getBundleVersion());
 		sb.append("]]></column-value></column>");
 		sb.append(
+			"<column><column-name>companyId</column-name><column-value><![CDATA[");
+		sb.append(getCompanyId());
+		sb.append("]]></column-value></column>");
+		sb.append(
 			"<column><column-name>oAuth2ScopeName</column-name><column-value><![CDATA[");
 		sb.append(getOAuth2ScopeName());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>oAuth2TokenId</column-name><column-value><![CDATA[");
 		sb.append(getOAuth2TokenId());
-		sb.append("]]></column-value></column>");
-		sb.append(
-			"<column><column-name>companyId</column-name><column-value><![CDATA[");
-		sb.append(getCompanyId());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>createDate</column-name><column-value><![CDATA[");
@@ -523,12 +589,18 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 			OAuth2ScopeGrant.class
 		};
 	private String _applicationName;
+	private String _originalApplicationName;
 	private String _bundleSymbolicName;
+	private String _originalBundleSymbolicName;
 	private String _bundleVersion;
+	private String _originalBundleVersion;
+	private long _companyId;
+	private long _originalCompanyId;
+	private boolean _setOriginalCompanyId;
 	private String _oAuth2ScopeName;
+	private String _originalOAuth2ScopeName;
 	private String _oAuth2TokenId;
 	private String _originalOAuth2TokenId;
-	private long _companyId;
 	private Date _createDate;
 	private long _columnBitmask;
 	private OAuth2ScopeGrant _escapedModel;

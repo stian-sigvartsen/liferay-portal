@@ -100,7 +100,12 @@ public class OAuth2TokenCacheModel implements CacheModel<OAuth2Token>,
 			oAuth2TokenImpl.setCreateDate(new Date(createDate));
 		}
 
-		oAuth2TokenImpl.setOAuth2ApplicationId(oAuth2ApplicationId);
+		if (oAuth2ApplicationId == null) {
+			oAuth2TokenImpl.setOAuth2ApplicationId("");
+		}
+		else {
+			oAuth2TokenImpl.setOAuth2ApplicationId(oAuth2ApplicationId);
+		}
 
 		oAuth2TokenImpl.resetOriginalValues();
 
@@ -113,8 +118,7 @@ public class OAuth2TokenCacheModel implements CacheModel<OAuth2Token>,
 
 		companyId = objectInput.readLong();
 		createDate = objectInput.readLong();
-
-		oAuth2ApplicationId = objectInput.readLong();
+		oAuth2ApplicationId = objectInput.readUTF();
 	}
 
 	@Override
@@ -130,11 +134,16 @@ public class OAuth2TokenCacheModel implements CacheModel<OAuth2Token>,
 		objectOutput.writeLong(companyId);
 		objectOutput.writeLong(createDate);
 
-		objectOutput.writeLong(oAuth2ApplicationId);
+		if (oAuth2ApplicationId == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(oAuth2ApplicationId);
+		}
 	}
 
 	public String oAuth2TokenId;
 	public long companyId;
 	public long createDate;
-	public long oAuth2ApplicationId;
+	public String oAuth2ApplicationId;
 }

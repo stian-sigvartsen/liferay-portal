@@ -51,7 +51,8 @@ public class OAuth2ApplicationCacheModel implements CacheModel<OAuth2Application
 
 		OAuth2ApplicationCacheModel oAuth2ApplicationCacheModel = (OAuth2ApplicationCacheModel)obj;
 
-		if (oAuth2ApplicationId == oAuth2ApplicationCacheModel.oAuth2ApplicationId) {
+		if (oAuth2ApplicationId.equals(
+					oAuth2ApplicationCacheModel.oAuth2ApplicationId)) {
 			return true;
 		}
 
@@ -69,8 +70,6 @@ public class OAuth2ApplicationCacheModel implements CacheModel<OAuth2Application
 
 		sb.append("{oAuth2ApplicationId=");
 		sb.append(oAuth2ApplicationId);
-		sb.append(", groupId=");
-		sb.append(groupId);
 		sb.append(", companyId=");
 		sb.append(companyId);
 		sb.append(", userId=");
@@ -81,6 +80,8 @@ public class OAuth2ApplicationCacheModel implements CacheModel<OAuth2Application
 		sb.append(createDate);
 		sb.append(", modifiedDate=");
 		sb.append(modifiedDate);
+		sb.append(", oAuth2ApplicationSecret=");
+		sb.append(oAuth2ApplicationSecret);
 		sb.append(", name=");
 		sb.append(name);
 		sb.append(", description=");
@@ -94,8 +95,13 @@ public class OAuth2ApplicationCacheModel implements CacheModel<OAuth2Application
 	public OAuth2Application toEntityModel() {
 		OAuth2ApplicationImpl oAuth2ApplicationImpl = new OAuth2ApplicationImpl();
 
-		oAuth2ApplicationImpl.setOAuth2ApplicationId(oAuth2ApplicationId);
-		oAuth2ApplicationImpl.setGroupId(groupId);
+		if (oAuth2ApplicationId == null) {
+			oAuth2ApplicationImpl.setOAuth2ApplicationId("");
+		}
+		else {
+			oAuth2ApplicationImpl.setOAuth2ApplicationId(oAuth2ApplicationId);
+		}
+
 		oAuth2ApplicationImpl.setCompanyId(companyId);
 		oAuth2ApplicationImpl.setUserId(userId);
 
@@ -120,6 +126,13 @@ public class OAuth2ApplicationCacheModel implements CacheModel<OAuth2Application
 			oAuth2ApplicationImpl.setModifiedDate(new Date(modifiedDate));
 		}
 
+		if (oAuth2ApplicationSecret == null) {
+			oAuth2ApplicationImpl.setOAuth2ApplicationSecret("");
+		}
+		else {
+			oAuth2ApplicationImpl.setOAuth2ApplicationSecret(oAuth2ApplicationSecret);
+		}
+
 		if (name == null) {
 			oAuth2ApplicationImpl.setName("");
 		}
@@ -141,9 +154,7 @@ public class OAuth2ApplicationCacheModel implements CacheModel<OAuth2Application
 
 	@Override
 	public void readExternal(ObjectInput objectInput) throws IOException {
-		oAuth2ApplicationId = objectInput.readLong();
-
-		groupId = objectInput.readLong();
+		oAuth2ApplicationId = objectInput.readUTF();
 
 		companyId = objectInput.readLong();
 
@@ -151,6 +162,7 @@ public class OAuth2ApplicationCacheModel implements CacheModel<OAuth2Application
 		userName = objectInput.readUTF();
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
+		oAuth2ApplicationSecret = objectInput.readUTF();
 		name = objectInput.readUTF();
 		description = objectInput.readUTF();
 	}
@@ -158,9 +170,12 @@ public class OAuth2ApplicationCacheModel implements CacheModel<OAuth2Application
 	@Override
 	public void writeExternal(ObjectOutput objectOutput)
 		throws IOException {
-		objectOutput.writeLong(oAuth2ApplicationId);
-
-		objectOutput.writeLong(groupId);
+		if (oAuth2ApplicationId == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(oAuth2ApplicationId);
+		}
 
 		objectOutput.writeLong(companyId);
 
@@ -175,6 +190,13 @@ public class OAuth2ApplicationCacheModel implements CacheModel<OAuth2Application
 
 		objectOutput.writeLong(createDate);
 		objectOutput.writeLong(modifiedDate);
+
+		if (oAuth2ApplicationSecret == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(oAuth2ApplicationSecret);
+		}
 
 		if (name == null) {
 			objectOutput.writeUTF("");
@@ -191,13 +213,13 @@ public class OAuth2ApplicationCacheModel implements CacheModel<OAuth2Application
 		}
 	}
 
-	public long oAuth2ApplicationId;
-	public long groupId;
+	public String oAuth2ApplicationId;
 	public long companyId;
 	public long userId;
 	public String userName;
 	public long createDate;
 	public long modifiedDate;
+	public String oAuth2ApplicationSecret;
 	public String name;
 	public String description;
 }

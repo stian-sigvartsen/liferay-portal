@@ -2,13 +2,13 @@
 
 <model-hints>
 	<model name="com.liferay.oauth2.provider.model.OAuth2Application">
-		<field name="oAuth2ApplicationId" type="long" />
-		<field name="groupId" type="long" />
+		<field name="oAuth2ApplicationId" type="String" />
 		<field name="companyId" type="long" />
 		<field name="userId" type="long" />
 		<field name="userName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
+		<field name="oAuth2ApplicationSecret" type="String" />
 		<field name="name" type="String" />
 		<field name="description" type="String" />
 	</model>
@@ -16,15 +16,15 @@
 		<field name="applicationName" type="String" />
 		<field name="bundleSymbolicName" type="String" />
 		<field name="bundleVersion" type="String" />
+		<field name="companyId" type="long" />
 		<field name="oAuth2ScopeName" type="String" />
 		<field name="oAuth2TokenId" type="String" />
-		<field name="companyId" type="long" />
 		<field name="createDate" type="Date" />
 	</model>
 	<model name="com.liferay.oauth2.provider.model.OAuth2Token">
 		<field name="oAuth2TokenId" type="String" />
 		<field name="companyId" type="long" />
 		<field name="createDate" type="Date" />
-		<field name="oAuth2ApplicationId" type="long" />
+		<field name="oAuth2ApplicationId" type="String" />
 	</model>
 </model-hints>

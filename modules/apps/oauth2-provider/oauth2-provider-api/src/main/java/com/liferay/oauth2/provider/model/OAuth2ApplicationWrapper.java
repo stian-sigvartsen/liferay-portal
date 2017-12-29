@@ -59,12 +59,12 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
 		attributes.put("oAuth2ApplicationId", getOAuth2ApplicationId());
-		attributes.put("groupId", getGroupId());
 		attributes.put("companyId", getCompanyId());
 		attributes.put("userId", getUserId());
 		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
+		attributes.put("oAuth2ApplicationSecret", getOAuth2ApplicationSecret());
 		attributes.put("name", getName());
 		attributes.put("description", getDescription());
 
@@ -73,16 +73,11 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 
 	@Override
 	public void setModelAttributes(Map<String, Object> attributes) {
-		Long oAuth2ApplicationId = (Long)attributes.get("oAuth2ApplicationId");
+		String oAuth2ApplicationId = (String)attributes.get(
+				"oAuth2ApplicationId");
 
 		if (oAuth2ApplicationId != null) {
 			setOAuth2ApplicationId(oAuth2ApplicationId);
-		}
-
-		Long groupId = (Long)attributes.get("groupId");
-
-		if (groupId != null) {
-			setGroupId(groupId);
 		}
 
 		Long companyId = (Long)attributes.get("companyId");
@@ -113,6 +108,13 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 
 		if (modifiedDate != null) {
 			setModifiedDate(modifiedDate);
+		}
+
+		String oAuth2ApplicationSecret = (String)attributes.get(
+				"oAuth2ApplicationSecret");
+
+		if (oAuth2ApplicationSecret != null) {
+			setOAuth2ApplicationSecret(oAuth2ApplicationSecret);
 		}
 
 		String name = (String)attributes.get("name");
@@ -174,16 +176,6 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 	}
 
 	/**
-	* Returns the group ID of this o auth2 application.
-	*
-	* @return the group ID of this o auth2 application
-	*/
-	@Override
-	public long getGroupId() {
-		return _oAuth2Application.getGroupId();
-	}
-
-	/**
 	* Returns the modified date of this o auth2 application.
 	*
 	* @return the modified date of this o auth2 application
@@ -209,8 +201,18 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 	* @return the o auth2 application ID of this o auth2 application
 	*/
 	@Override
-	public long getOAuth2ApplicationId() {
+	public java.lang.String getOAuth2ApplicationId() {
 		return _oAuth2Application.getOAuth2ApplicationId();
+	}
+
+	/**
+	* Returns the o auth2 application secret of this o auth2 application.
+	*
+	* @return the o auth2 application secret of this o auth2 application
+	*/
+	@Override
+	public java.lang.String getOAuth2ApplicationSecret() {
+		return _oAuth2Application.getOAuth2ApplicationSecret();
 	}
 
 	/**
@@ -219,7 +221,7 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 	* @return the primary key of this o auth2 application
 	*/
 	@Override
-	public long getPrimaryKey() {
+	public java.lang.String getPrimaryKey() {
 		return _oAuth2Application.getPrimaryKey();
 	}
 
@@ -335,16 +337,6 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 	}
 
 	/**
-	* Sets the group ID of this o auth2 application.
-	*
-	* @param groupId the group ID of this o auth2 application
-	*/
-	@Override
-	public void setGroupId(long groupId) {
-		_oAuth2Application.setGroupId(groupId);
-	}
-
-	/**
 	* Sets the modified date of this o auth2 application.
 	*
 	* @param modifiedDate the modified date of this o auth2 application
@@ -375,8 +367,19 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 	* @param oAuth2ApplicationId the o auth2 application ID of this o auth2 application
 	*/
 	@Override
-	public void setOAuth2ApplicationId(long oAuth2ApplicationId) {
+	public void setOAuth2ApplicationId(java.lang.String oAuth2ApplicationId) {
 		_oAuth2Application.setOAuth2ApplicationId(oAuth2ApplicationId);
+	}
+
+	/**
+	* Sets the o auth2 application secret of this o auth2 application.
+	*
+	* @param oAuth2ApplicationSecret the o auth2 application secret of this o auth2 application
+	*/
+	@Override
+	public void setOAuth2ApplicationSecret(
+		java.lang.String oAuth2ApplicationSecret) {
+		_oAuth2Application.setOAuth2ApplicationSecret(oAuth2ApplicationSecret);
 	}
 
 	/**
@@ -385,7 +388,7 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 	* @param primaryKey the primary key of this o auth2 application
 	*/
 	@Override
-	public void setPrimaryKey(long primaryKey) {
+	public void setPrimaryKey(java.lang.String primaryKey) {
 		_oAuth2Application.setPrimaryKey(primaryKey);
 	}
 

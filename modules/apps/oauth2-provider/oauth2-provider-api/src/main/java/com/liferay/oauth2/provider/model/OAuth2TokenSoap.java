@@ -113,16 +113,16 @@ public class OAuth2TokenSoap implements Serializable {
 		_createDate = createDate;
 	}
 
-	public long getOAuth2ApplicationId() {
+	public String getOAuth2ApplicationId() {
 		return _oAuth2ApplicationId;
 	}
 
-	public void setOAuth2ApplicationId(long oAuth2ApplicationId) {
+	public void setOAuth2ApplicationId(String oAuth2ApplicationId) {
 		_oAuth2ApplicationId = oAuth2ApplicationId;
 	}
 
 	private String _oAuth2TokenId;
 	private long _companyId;
 	private Date _createDate;
-	private long _oAuth2ApplicationId;
+	private String _oAuth2ApplicationId;
 }

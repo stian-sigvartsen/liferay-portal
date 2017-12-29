@@ -135,7 +135,7 @@ public class OAuth2ApplicationUtil {
 	* @param oAuth2ApplicationId the primary key for the new o auth2 application
 	* @return the new o auth2 application
 	*/
-	public static OAuth2Application create(long oAuth2ApplicationId) {
+	public static OAuth2Application create(java.lang.String oAuth2ApplicationId) {
 		return getPersistence().create(oAuth2ApplicationId);
 	}
 
@@ -146,7 +146,7 @@ public class OAuth2ApplicationUtil {
 	* @return the o auth2 application that was removed
 	* @throws NoSuchOAuth2ApplicationException if a o auth2 application with the primary key could not be found
 	*/
-	public static OAuth2Application remove(long oAuth2ApplicationId)
+	public static OAuth2Application remove(java.lang.String oAuth2ApplicationId)
 		throws com.liferay.oauth2.provider.exception.NoSuchOAuth2ApplicationException {
 		return getPersistence().remove(oAuth2ApplicationId);
 	}
@@ -163,7 +163,8 @@ public class OAuth2ApplicationUtil {
 	* @return the o auth2 application
 	* @throws NoSuchOAuth2ApplicationException if a o auth2 application with the primary key could not be found
 	*/
-	public static OAuth2Application findByPrimaryKey(long oAuth2ApplicationId)
+	public static OAuth2Application findByPrimaryKey(
+		java.lang.String oAuth2ApplicationId)
 		throws com.liferay.oauth2.provider.exception.NoSuchOAuth2ApplicationException {
 		return getPersistence().findByPrimaryKey(oAuth2ApplicationId);
 	}
@@ -174,7 +175,8 @@ public class OAuth2ApplicationUtil {
 	* @param oAuth2ApplicationId the primary key of the o auth2 application
 	* @return the o auth2 application, or <code>null</code> if a o auth2 application with the primary key could not be found
 	*/
-	public static OAuth2Application fetchByPrimaryKey(long oAuth2ApplicationId) {
+	public static OAuth2Application fetchByPrimaryKey(
+		java.lang.String oAuth2ApplicationId) {
 		return getPersistence().fetchByPrimaryKey(oAuth2ApplicationId);
 	}
 

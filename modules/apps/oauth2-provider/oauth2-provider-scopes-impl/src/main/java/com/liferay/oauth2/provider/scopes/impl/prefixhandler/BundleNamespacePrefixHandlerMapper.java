@@ -29,15 +29,15 @@ import org.osgi.service.component.annotations.Reference;
 public class BundleNamespacePrefixHandlerMapper implements PrefixHandlerMapper {
 
 	@Override
-	public PrefixHandler mapFrom(PropertyGetter propertyHolder) {
+	public PrefixHandler mapFrom(PropertyGetter propertyGetter) {
 		long bundleId = Long.parseLong(
-			propertyHolder.get("service.bundleid").toString());
+			propertyGetter.get("service.bundleid").toString());
 
 		Bundle bundle = _bundleContext.getBundle(bundleId);
 
 		Version bundleVersion = bundle.getVersion();
 
-		Object applicationNameObject = propertyHolder.get("osgi.jaxrs.name");
+		Object applicationNameObject = propertyGetter.get("osgi.jaxrs.name");
 
 		String applicationName = applicationNameObject.toString();
 

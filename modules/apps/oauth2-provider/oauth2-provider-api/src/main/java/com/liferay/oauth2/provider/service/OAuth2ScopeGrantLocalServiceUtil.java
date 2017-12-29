@@ -180,6 +180,28 @@ public class OAuth2ScopeGrantLocalServiceUtil {
 		return getService().fetchOAuth2ScopeGrant(oAuth2ScopeGrantPK);
 	}
 
+	public static java.util.Optional<com.liferay.oauth2.provider.model.OAuth2ScopeGrant> findByA_BNS_BV_C_O_T(
+		java.lang.String applicationName, java.lang.String bundleSymbolicName,
+		java.lang.String bundleVersion, long companyId, java.lang.String scope,
+		java.lang.String tokenId) {
+		return getService()
+				   .findByA_BNS_BV_C_O_T(applicationName, bundleSymbolicName,
+			bundleVersion, companyId, scope, tokenId);
+	}
+
+	public static java.util.Collection<com.liferay.oauth2.provider.model.OAuth2ScopeGrant> findByA_BNS_BV_C_T(
+		java.lang.String applicationName, java.lang.String bundleSymbolicName,
+		java.lang.String bundleVersion, long companyId, java.lang.String tokenId) {
+		return getService()
+				   .findByA_BNS_BV_C_T(applicationName, bundleSymbolicName,
+			bundleVersion, companyId, tokenId);
+	}
+
+	public static java.util.Collection<com.liferay.oauth2.provider.model.OAuth2ScopeGrant> findByTokenId(
+		java.lang.String tokenId) {
+		return getService().findByTokenId(tokenId);
+	}
+
 	/**
 	* Returns the o auth2 scope grant with the primary key.
 	*
@@ -231,6 +253,13 @@ public class OAuth2ScopeGrantLocalServiceUtil {
 		java.io.Serializable primaryKeyObj)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getPersistedModel(primaryKeyObj);
+	}
+
+	public static java.util.Collection<com.liferay.oauth2.provider.model.OAuth2ScopeGrant> grantScopesToToken(
+		java.lang.String tokenString,
+		java.util.Collection<com.liferay.oauth2.provider.model.LiferayOAuth2Scope> scopes)
+		throws com.liferay.oauth2.provider.exception.NoSuchOAuth2TokenException {
+		return getService().grantScopesToToken(tokenString, scopes);
 	}
 
 	/**

@@ -14,14 +14,14 @@
 
 package com.liferay.oauth2.provider.sample.oauth;
 
+import com.liferay.oauth2.provider.model.LiferayOAuth2Scope;
+import com.liferay.oauth2.provider.model.LiferayOAuth2ScopeExternalIdentifier;
 import com.liferay.oauth2.provider.scopes.api.LiferayOauth2OSGiFeatureFactory;
-import com.liferay.oauth2.provider.scopes.liferay.api.RetentiveOAuth2Grant;
 import com.liferay.oauth2.provider.scopes.liferay.api.ScopeContext;
 import com.liferay.oauth2.provider.scopes.liferay.api.ScopeFinderLocator;
 import com.liferay.oauth2.provider.scopes.api.RequiresScope;
 import com.liferay.oauth2.provider.scopes.api.ScopesDescriptionBundle;
 import com.liferay.oauth2.provider.service.OAuth2ScopeGrantLocalService;
-import com.liferay.oauth2.provider.service.persistence.OAuth2ScopeGrantPK;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -30,10 +30,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -74,16 +72,22 @@ public class Test extends Application {
 	public String scopes() throws PortalException {
 		Company company = PortalUtil.getCompany(_httpServletRequest);
 
-		Collection<RetentiveOAuth2Grant> scopes =
+		Collection<LiferayOAuth2ScopeExternalIdentifier> scopes =
 			_scopeFinderLocator.listScopes(company);
 
 		List<String> names =
-			scopes.stream().map(RetentiveOAuth2Grant::getScope).collect(
-				Collectors.toList());
+			scopes.stream().map(
+				LiferayOAuth2ScopeExternalIdentifier::getScopeExternalIdentifier
+			).collect(
+				Collectors.toList()
+			);
 
 		List<String> apps =
-			scopes.stream().map(RetentiveOAuth2Grant::getApplicationName).collect(
-				Collectors.toList());
+			scopes.stream().map(
+				LiferayOAuth2ScopeExternalIdentifier::getApplicationName
+			).collect(
+				Collectors.toList()
+			);
 
 		return "Scopes: " + names + "\n" +
 			   "Names: " + apps;
@@ -94,15 +98,15 @@ public class Test extends Application {
 	public String testScopes(@PathParam("scope") String scope) throws PortalException {
 		Company company = PortalUtil.getCompany(_httpServletRequest);
 
-		Collection<RetentiveOAuth2Grant> scopes =
+		Collection<LiferayOAuth2Scope> scopes =
 			_scopeFinderLocator.locateScopes(company, scope);
 
 		List<String> names =
-			scopes.stream().map(RetentiveOAuth2Grant::getScope).collect(
+			scopes.stream().map(LiferayOAuth2Scope::getScope).collect(
 				Collectors.toList());
 
 		List<String> apps =
-			scopes.stream().map(RetentiveOAuth2Grant::getApplicationName).collect(
+			scopes.stream().map(LiferayOAuth2Scope::getApplicationName).collect(
 				Collectors.toList());
 
 		return "Scopes: " + names + "\n" +
@@ -130,26 +134,16 @@ public class Test extends Application {
 
 		Company company = PortalUtil.getCompany(_httpServletRequest);
 
-		Collection<RetentiveOAuth2Grant> scopes =
+		Collection<LiferayOAuth2Scope> scopes =
 			_scopeFinderLocator.locateScopes(company, scope);
 
-		Stream<RetentiveOAuth2Grant> stream = scopes.stream();
-
-		stream.map(
-			r -> _oAuth2ScopeGrantLocalService.createOAuth2ScopeGrant(
-				new OAuth2ScopeGrantPK(
-					r.getApplicationName(),
-					r.getBundleSymbolicName(),
-					r.getBundleVersion(), r.getScope(),
-					_scopeContext.getTokenString()))
-		).forEach(
-			_oAuth2ScopeGrantLocalService::updateOAuth2ScopeGrant
-		);
+		_oAuth2ScopeGrantLocalService.grantScopesToToken(
+			_scopeContext.getTokenString(), scopes);
 
 		List<String> names = scopes.stream().map(
-				RetentiveOAuth2Grant::getScope
+				LiferayOAuth2Scope::getScope
 		).collect(
-				Collectors.toList()
+			Collectors.toList()
 		);
 
 		return "Scopes: " + names;

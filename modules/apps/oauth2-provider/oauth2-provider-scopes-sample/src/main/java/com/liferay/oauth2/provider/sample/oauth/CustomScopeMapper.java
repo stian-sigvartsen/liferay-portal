@@ -29,6 +29,6 @@ public class CustomScopeMapper implements ScopeMapper{
 			case "everything.readonly": return "todo.sololectura";
 		}
 
-		return StringPool.BLANK;
+		return scope;
 	}
 }

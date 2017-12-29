@@ -60,21 +60,8 @@ public class OAuth2ApplicationLocalServiceUtil {
 	* @return the new o auth2 application
 	*/
 	public static com.liferay.oauth2.provider.model.OAuth2Application createOAuth2Application(
-		long oAuth2ApplicationId) {
+		java.lang.String oAuth2ApplicationId) {
 		return getService().createOAuth2Application(oAuth2ApplicationId);
-	}
-
-	/**
-	* Deletes the o auth2 application with the primary key from the database. Also notifies the appropriate model listeners.
-	*
-	* @param oAuth2ApplicationId the primary key of the o auth2 application
-	* @return the o auth2 application that was removed
-	* @throws PortalException if a o auth2 application with the primary key could not be found
-	*/
-	public static com.liferay.oauth2.provider.model.OAuth2Application deleteOAuth2Application(
-		long oAuth2ApplicationId)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		return getService().deleteOAuth2Application(oAuth2ApplicationId);
 	}
 
 	/**
@@ -86,6 +73,19 @@ public class OAuth2ApplicationLocalServiceUtil {
 	public static com.liferay.oauth2.provider.model.OAuth2Application deleteOAuth2Application(
 		com.liferay.oauth2.provider.model.OAuth2Application oAuth2Application) {
 		return getService().deleteOAuth2Application(oAuth2Application);
+	}
+
+	/**
+	* Deletes the o auth2 application with the primary key from the database. Also notifies the appropriate model listeners.
+	*
+	* @param oAuth2ApplicationId the primary key of the o auth2 application
+	* @return the o auth2 application that was removed
+	* @throws PortalException if a o auth2 application with the primary key could not be found
+	*/
+	public static com.liferay.oauth2.provider.model.OAuth2Application deleteOAuth2Application(
+		java.lang.String oAuth2ApplicationId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().deleteOAuth2Application(oAuth2ApplicationId);
 	}
 
 	/**
@@ -176,16 +176,8 @@ public class OAuth2ApplicationLocalServiceUtil {
 	}
 
 	public static com.liferay.oauth2.provider.model.OAuth2Application fetchOAuth2Application(
-		long oAuth2ApplicationId) {
+		java.lang.String oAuth2ApplicationId) {
 		return getService().fetchOAuth2Application(oAuth2ApplicationId);
-	}
-
-	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {
-		return getService().getActionableDynamicQuery();
-	}
-
-	public static com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery getIndexableActionableDynamicQuery() {
-		return getService().getIndexableActionableDynamicQuery();
 	}
 
 	/**
@@ -196,7 +188,7 @@ public class OAuth2ApplicationLocalServiceUtil {
 	* @throws PortalException if a o auth2 application with the primary key could not be found
 	*/
 	public static com.liferay.oauth2.provider.model.OAuth2Application getOAuth2Application(
-		long oAuth2ApplicationId)
+		java.lang.String oAuth2ApplicationId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getOAuth2Application(oAuth2ApplicationId);
 	}

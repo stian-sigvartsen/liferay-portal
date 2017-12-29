@@ -86,7 +86,8 @@ public class OAuth2TokenWrapper implements OAuth2Token,
 			setCreateDate(createDate);
 		}
 
-		Long oAuth2ApplicationId = (Long)attributes.get("oAuth2ApplicationId");
+		String oAuth2ApplicationId = (String)attributes.get(
+				"oAuth2ApplicationId");
 
 		if (oAuth2ApplicationId != null) {
 			setOAuth2ApplicationId(oAuth2ApplicationId);
@@ -134,7 +135,7 @@ public class OAuth2TokenWrapper implements OAuth2Token,
 	* @return the o auth2 application ID of this o auth2 token
 	*/
 	@Override
-	public long getOAuth2ApplicationId() {
+	public java.lang.String getOAuth2ApplicationId() {
 		return _oAuth2Token.getOAuth2ApplicationId();
 	}
 
@@ -240,7 +241,7 @@ public class OAuth2TokenWrapper implements OAuth2Token,
 	* @param oAuth2ApplicationId the o auth2 application ID of this o auth2 token
 	*/
 	@Override
-	public void setOAuth2ApplicationId(long oAuth2ApplicationId) {
+	public void setOAuth2ApplicationId(java.lang.String oAuth2ApplicationId) {
 		_oAuth2Token.setOAuth2ApplicationId(oAuth2ApplicationId);
 	}
 

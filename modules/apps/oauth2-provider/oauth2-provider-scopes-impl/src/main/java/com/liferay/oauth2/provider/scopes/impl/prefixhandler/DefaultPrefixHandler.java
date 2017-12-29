@@ -27,8 +27,8 @@ public class DefaultPrefixHandler implements PrefixHandler {
 	}
 
 	@Override
-	public String addPrefix(String string) {
-		return _prefix + string;
+	public String addPrefix(String input) {
+		return _prefix + input;
 	}
 
 	@Override

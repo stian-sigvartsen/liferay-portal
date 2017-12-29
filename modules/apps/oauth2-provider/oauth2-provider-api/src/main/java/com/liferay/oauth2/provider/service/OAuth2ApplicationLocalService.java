@@ -18,9 +18,7 @@ import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.oauth2.provider.model.OAuth2Application;
 
-import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -77,18 +75,8 @@ public interface OAuth2ApplicationLocalService extends BaseLocalService,
 	* @param oAuth2ApplicationId the primary key for the new o auth2 application
 	* @return the new o auth2 application
 	*/
-	public OAuth2Application createOAuth2Application(long oAuth2ApplicationId);
-
-	/**
-	* Deletes the o auth2 application with the primary key from the database. Also notifies the appropriate model listeners.
-	*
-	* @param oAuth2ApplicationId the primary key of the o auth2 application
-	* @return the o auth2 application that was removed
-	* @throws PortalException if a o auth2 application with the primary key could not be found
-	*/
-	@Indexable(type = IndexableType.DELETE)
-	public OAuth2Application deleteOAuth2Application(long oAuth2ApplicationId)
-		throws PortalException;
+	public OAuth2Application createOAuth2Application(
+		java.lang.String oAuth2ApplicationId);
 
 	/**
 	* Deletes the o auth2 application from the database. Also notifies the appropriate model listeners.
@@ -99,6 +87,17 @@ public interface OAuth2ApplicationLocalService extends BaseLocalService,
 	@Indexable(type = IndexableType.DELETE)
 	public OAuth2Application deleteOAuth2Application(
 		OAuth2Application oAuth2Application);
+
+	/**
+	* Deletes the o auth2 application with the primary key from the database. Also notifies the appropriate model listeners.
+	*
+	* @param oAuth2ApplicationId the primary key of the o auth2 application
+	* @return the o auth2 application that was removed
+	* @throws PortalException if a o auth2 application with the primary key could not be found
+	*/
+	@Indexable(type = IndexableType.DELETE)
+	public OAuth2Application deleteOAuth2Application(
+		java.lang.String oAuth2ApplicationId) throws PortalException;
 
 	/**
 	* @throws PortalException
@@ -167,13 +166,8 @@ public interface OAuth2ApplicationLocalService extends BaseLocalService,
 		Projection projection);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public OAuth2Application fetchOAuth2Application(long oAuth2ApplicationId);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public ActionableDynamicQuery getActionableDynamicQuery();
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
+	public OAuth2Application fetchOAuth2Application(
+		java.lang.String oAuth2ApplicationId);
 
 	/**
 	* Returns the o auth2 application with the primary key.
@@ -183,8 +177,8 @@ public interface OAuth2ApplicationLocalService extends BaseLocalService,
 	* @throws PortalException if a o auth2 application with the primary key could not be found
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public OAuth2Application getOAuth2Application(long oAuth2ApplicationId)
-		throws PortalException;
+	public OAuth2Application getOAuth2Application(
+		java.lang.String oAuth2ApplicationId) throws PortalException;
 
 	/**
 	* Returns a range of all the o auth2 applications.

@@ -16,6 +16,8 @@ package com.liferay.oauth2.provider.service;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.oauth2.provider.exception.NoSuchOAuth2TokenException;
+import com.liferay.oauth2.provider.model.LiferayOAuth2Scope;
 import com.liferay.oauth2.provider.model.OAuth2ScopeGrant;
 import com.liferay.oauth2.provider.service.persistence.OAuth2ScopeGrantPK;
 
@@ -35,7 +37,9 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 
 import java.io.Serializable;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Provides the local service interface for OAuth2ScopeGrant. Methods of this
@@ -170,6 +174,17 @@ public interface OAuth2ScopeGrantLocalService extends BaseLocalService,
 	public OAuth2ScopeGrant fetchOAuth2ScopeGrant(
 		OAuth2ScopeGrantPK oAuth2ScopeGrantPK);
 
+	public Optional<OAuth2ScopeGrant> findByA_BNS_BV_C_O_T(
+		java.lang.String applicationName, java.lang.String bundleSymbolicName,
+		java.lang.String bundleVersion, long companyId, java.lang.String scope,
+		java.lang.String tokenId);
+
+	public Collection<OAuth2ScopeGrant> findByA_BNS_BV_C_T(
+		java.lang.String applicationName, java.lang.String bundleSymbolicName,
+		java.lang.String bundleVersion, long companyId, java.lang.String tokenId);
+
+	public Collection<OAuth2ScopeGrant> findByTokenId(java.lang.String tokenId);
+
 	/**
 	* Returns the o auth2 scope grant with the primary key.
 	*
@@ -214,6 +229,10 @@ public interface OAuth2ScopeGrantLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException;
+
+	public Collection<OAuth2ScopeGrant> grantScopesToToken(
+		java.lang.String tokenString, Collection<LiferayOAuth2Scope> scopes)
+		throws NoSuchOAuth2TokenException;
 
 	/**
 	* Updates the o auth2 scope grant in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.

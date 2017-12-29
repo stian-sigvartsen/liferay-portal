@@ -49,10 +49,10 @@ public class DefaultPrefixHandlerFactory implements PrefixHandlerFactory {
 	}
 
 	@Override
-	public PrefixHandler create(String ... namespaces) {
-		StringBundler sb = new StringBundler(namespaces.length * 2);
+	public PrefixHandler create(String ... prefixes) {
+		StringBundler sb = new StringBundler(prefixes.length * 2);
 
-		for (String namespace : namespaces) {
+		for (String namespace : prefixes) {
 			sb.append(namespace);
 			sb.append(_separator);
 		}

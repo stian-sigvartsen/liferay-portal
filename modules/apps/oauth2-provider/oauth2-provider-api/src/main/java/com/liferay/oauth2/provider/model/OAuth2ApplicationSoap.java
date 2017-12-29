@@ -34,12 +34,12 @@ public class OAuth2ApplicationSoap implements Serializable {
 		OAuth2ApplicationSoap soapModel = new OAuth2ApplicationSoap();
 
 		soapModel.setOAuth2ApplicationId(model.getOAuth2ApplicationId());
-		soapModel.setGroupId(model.getGroupId());
 		soapModel.setCompanyId(model.getCompanyId());
 		soapModel.setUserId(model.getUserId());
 		soapModel.setUserName(model.getUserName());
 		soapModel.setCreateDate(model.getCreateDate());
 		soapModel.setModifiedDate(model.getModifiedDate());
+		soapModel.setOAuth2ApplicationSecret(model.getOAuth2ApplicationSecret());
 		soapModel.setName(model.getName());
 		soapModel.setDescription(model.getDescription());
 
@@ -89,28 +89,20 @@ public class OAuth2ApplicationSoap implements Serializable {
 	public OAuth2ApplicationSoap() {
 	}
 
-	public long getPrimaryKey() {
+	public String getPrimaryKey() {
 		return _oAuth2ApplicationId;
 	}
 
-	public void setPrimaryKey(long pk) {
+	public void setPrimaryKey(String pk) {
 		setOAuth2ApplicationId(pk);
 	}
 
-	public long getOAuth2ApplicationId() {
+	public String getOAuth2ApplicationId() {
 		return _oAuth2ApplicationId;
 	}
 
-	public void setOAuth2ApplicationId(long oAuth2ApplicationId) {
+	public void setOAuth2ApplicationId(String oAuth2ApplicationId) {
 		_oAuth2ApplicationId = oAuth2ApplicationId;
-	}
-
-	public long getGroupId() {
-		return _groupId;
-	}
-
-	public void setGroupId(long groupId) {
-		_groupId = groupId;
 	}
 
 	public long getCompanyId() {
@@ -153,6 +145,14 @@ public class OAuth2ApplicationSoap implements Serializable {
 		_modifiedDate = modifiedDate;
 	}
 
+	public String getOAuth2ApplicationSecret() {
+		return _oAuth2ApplicationSecret;
+	}
+
+	public void setOAuth2ApplicationSecret(String oAuth2ApplicationSecret) {
+		_oAuth2ApplicationSecret = oAuth2ApplicationSecret;
+	}
+
 	public String getName() {
 		return _name;
 	}
@@ -169,13 +169,13 @@ public class OAuth2ApplicationSoap implements Serializable {
 		_description = description;
 	}
 
-	private long _oAuth2ApplicationId;
-	private long _groupId;
+	private String _oAuth2ApplicationId;
 	private long _companyId;
 	private long _userId;
 	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;
+	private String _oAuth2ApplicationSecret;
 	private String _name;
 	private String _description;
 }

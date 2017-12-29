@@ -37,16 +37,16 @@ public interface OAuth2Application extends OAuth2ApplicationModel, PersistedMode
 	 *
 	 * Never modify this interface directly. Add methods to {@link com.liferay.oauth2.provider.model.impl.OAuth2ApplicationImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
-	public static final Accessor<OAuth2Application, Long> O_AUTH2_APPLICATION_ID_ACCESSOR =
-		new Accessor<OAuth2Application, Long>() {
+	public static final Accessor<OAuth2Application, String> O_AUTH2_APPLICATION_ID_ACCESSOR =
+		new Accessor<OAuth2Application, String>() {
 			@Override
-			public Long get(OAuth2Application oAuth2Application) {
+			public String get(OAuth2Application oAuth2Application) {
 				return oAuth2Application.getOAuth2ApplicationId();
 			}
 
 			@Override
-			public Class<Long> getAttributeClass() {
-				return Long.class;
+			public Class<String> getAttributeClass() {
+				return String.class;
 			}
 
 			@Override

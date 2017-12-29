@@ -18,12 +18,29 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Interface to create {@link PrefixHandler} using a given prefix.
+ * This allows components to switch prefixing strategies using configuration,
+ * such as using different characters <i>'_'</i> or <i>'.'</i>, thus keeping
+ * the prefixing strategy consistent across components.
+ */
 public interface PrefixHandlerFactory {
 
-	public PrefixHandler create(String namespace);
+	/**
+	 * Creates a {@link PrefixHandler} using the given prefix.
+	 * @param prefix the prefix for the {@link PrefixHandler}
+	 * @return the {@link PrefixHandler} for the given prefix.
+	 */
+	public PrefixHandler create(String prefix);
 
-	public default PrefixHandler create(String ... namespaces) {
-		Stream<String> stream = Arrays.stream(namespaces);
+	/**
+	 * Creates a {@link PrefixHandler} given several prefixes. Some
+	 * implementations may provide an optimized version.
+	 * @param prefixes the prefixes for the {@link PrefixHandler}
+	 * @return a {@link PrefixHandler} for all the given prefixes.
+	 */
+	public default PrefixHandler create(String ... prefixes) {
+		Stream<String> stream = Arrays.stream(prefixes);
 
 		return PrefixHandler.merge(
 			stream.map(

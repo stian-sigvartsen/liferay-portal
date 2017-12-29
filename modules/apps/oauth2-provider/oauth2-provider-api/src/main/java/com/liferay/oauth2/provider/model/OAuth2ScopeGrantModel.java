@@ -112,6 +112,22 @@ public interface OAuth2ScopeGrantModel extends BaseModel<OAuth2ScopeGrant>,
 	public void setBundleVersion(String bundleVersion);
 
 	/**
+	 * Returns the company ID of this o auth2 scope grant.
+	 *
+	 * @return the company ID of this o auth2 scope grant
+	 */
+	@Override
+	public long getCompanyId();
+
+	/**
+	 * Sets the company ID of this o auth2 scope grant.
+	 *
+	 * @param companyId the company ID of this o auth2 scope grant
+	 */
+	@Override
+	public void setCompanyId(long companyId);
+
+	/**
 	 * Returns the o auth2 scope name of this o auth2 scope grant.
 	 *
 	 * @return the o auth2 scope name of this o auth2 scope grant
@@ -140,22 +156,6 @@ public interface OAuth2ScopeGrantModel extends BaseModel<OAuth2ScopeGrant>,
 	 * @param oAuth2TokenId the o auth2 token ID of this o auth2 scope grant
 	 */
 	public void setOAuth2TokenId(String oAuth2TokenId);
-
-	/**
-	 * Returns the company ID of this o auth2 scope grant.
-	 *
-	 * @return the company ID of this o auth2 scope grant
-	 */
-	@Override
-	public long getCompanyId();
-
-	/**
-	 * Sets the company ID of this o auth2 scope grant.
-	 *
-	 * @param companyId the company ID of this o auth2 scope grant
-	 */
-	@Override
-	public void setCompanyId(long companyId);
 
 	/**
 	 * Returns the create date of this o auth2 scope grant.

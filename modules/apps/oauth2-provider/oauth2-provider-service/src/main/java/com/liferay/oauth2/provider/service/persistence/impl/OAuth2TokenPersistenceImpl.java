@@ -46,6 +46,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -86,7 +87,7 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 			OAuth2TokenModelImpl.FINDER_CACHE_ENABLED, OAuth2TokenImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByA",
 			new String[] {
-				Long.class.getName(),
+				String.class.getName(),
 				
 			Integer.class.getName(), Integer.class.getName(),
 				OrderByComparator.class.getName()
@@ -94,12 +95,12 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_A = new FinderPath(OAuth2TokenModelImpl.ENTITY_CACHE_ENABLED,
 			OAuth2TokenModelImpl.FINDER_CACHE_ENABLED, OAuth2TokenImpl.class,
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByA",
-			new String[] { Long.class.getName() },
+			new String[] { String.class.getName() },
 			OAuth2TokenModelImpl.OAUTH2APPLICATIONID_COLUMN_BITMASK);
 	public static final FinderPath FINDER_PATH_COUNT_BY_A = new FinderPath(OAuth2TokenModelImpl.ENTITY_CACHE_ENABLED,
 			OAuth2TokenModelImpl.FINDER_CACHE_ENABLED, Long.class,
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByA",
-			new String[] { Long.class.getName() });
+			new String[] { String.class.getName() });
 
 	/**
 	 * Returns all the o auth2 tokens where oAuth2ApplicationId = &#63;.
@@ -108,7 +109,7 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 	 * @return the matching o auth2 tokens
 	 */
 	@Override
-	public List<OAuth2Token> findByA(long oAuth2ApplicationId) {
+	public List<OAuth2Token> findByA(String oAuth2ApplicationId) {
 		return findByA(oAuth2ApplicationId, QueryUtil.ALL_POS,
 			QueryUtil.ALL_POS, null);
 	}
@@ -126,7 +127,7 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 	 * @return the range of matching o auth2 tokens
 	 */
 	@Override
-	public List<OAuth2Token> findByA(long oAuth2ApplicationId, int start,
+	public List<OAuth2Token> findByA(String oAuth2ApplicationId, int start,
 		int end) {
 		return findByA(oAuth2ApplicationId, start, end, null);
 	}
@@ -145,7 +146,7 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 	 * @return the ordered range of matching o auth2 tokens
 	 */
 	@Override
-	public List<OAuth2Token> findByA(long oAuth2ApplicationId, int start,
+	public List<OAuth2Token> findByA(String oAuth2ApplicationId, int start,
 		int end, OrderByComparator<OAuth2Token> orderByComparator) {
 		return findByA(oAuth2ApplicationId, start, end, orderByComparator, true);
 	}
@@ -165,7 +166,7 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 	 * @return the ordered range of matching o auth2 tokens
 	 */
 	@Override
-	public List<OAuth2Token> findByA(long oAuth2ApplicationId, int start,
+	public List<OAuth2Token> findByA(String oAuth2ApplicationId, int start,
 		int end, OrderByComparator<OAuth2Token> orderByComparator,
 		boolean retrieveFromCache) {
 		boolean pagination = true;
@@ -195,7 +196,8 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (OAuth2Token oAuth2Token : list) {
-					if ((oAuth2ApplicationId != oAuth2Token.getOAuth2ApplicationId())) {
+					if (!Objects.equals(oAuth2ApplicationId,
+								oAuth2Token.getOAuth2ApplicationId())) {
 						list = null;
 
 						break;
@@ -217,7 +219,19 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 
 			query.append(_SQL_SELECT_OAUTH2TOKEN_WHERE);
 
-			query.append(_FINDER_COLUMN_A_OAUTH2APPLICATIONID_2);
+			boolean bindOAuth2ApplicationId = false;
+
+			if (oAuth2ApplicationId == null) {
+				query.append(_FINDER_COLUMN_A_OAUTH2APPLICATIONID_1);
+			}
+			else if (oAuth2ApplicationId.equals("")) {
+				query.append(_FINDER_COLUMN_A_OAUTH2APPLICATIONID_3);
+			}
+			else {
+				bindOAuth2ApplicationId = true;
+
+				query.append(_FINDER_COLUMN_A_OAUTH2APPLICATIONID_2);
+			}
 
 			if (orderByComparator != null) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
@@ -239,7 +253,9 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				qPos.add(oAuth2ApplicationId);
+				if (bindOAuth2ApplicationId) {
+					qPos.add(oAuth2ApplicationId);
+				}
 
 				if (!pagination) {
 					list = (List<OAuth2Token>)QueryUtil.list(q, getDialect(),
@@ -280,7 +296,7 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 	 * @throws NoSuchOAuth2TokenException if a matching o auth2 token could not be found
 	 */
 	@Override
-	public OAuth2Token findByA_First(long oAuth2ApplicationId,
+	public OAuth2Token findByA_First(String oAuth2ApplicationId,
 		OrderByComparator<OAuth2Token> orderByComparator)
 		throws NoSuchOAuth2TokenException {
 		OAuth2Token oAuth2Token = fetchByA_First(oAuth2ApplicationId,
@@ -310,7 +326,7 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 	 * @return the first matching o auth2 token, or <code>null</code> if a matching o auth2 token could not be found
 	 */
 	@Override
-	public OAuth2Token fetchByA_First(long oAuth2ApplicationId,
+	public OAuth2Token fetchByA_First(String oAuth2ApplicationId,
 		OrderByComparator<OAuth2Token> orderByComparator) {
 		List<OAuth2Token> list = findByA(oAuth2ApplicationId, 0, 1,
 				orderByComparator);
@@ -331,7 +347,7 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 	 * @throws NoSuchOAuth2TokenException if a matching o auth2 token could not be found
 	 */
 	@Override
-	public OAuth2Token findByA_Last(long oAuth2ApplicationId,
+	public OAuth2Token findByA_Last(String oAuth2ApplicationId,
 		OrderByComparator<OAuth2Token> orderByComparator)
 		throws NoSuchOAuth2TokenException {
 		OAuth2Token oAuth2Token = fetchByA_Last(oAuth2ApplicationId,
@@ -361,7 +377,7 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 	 * @return the last matching o auth2 token, or <code>null</code> if a matching o auth2 token could not be found
 	 */
 	@Override
-	public OAuth2Token fetchByA_Last(long oAuth2ApplicationId,
+	public OAuth2Token fetchByA_Last(String oAuth2ApplicationId,
 		OrderByComparator<OAuth2Token> orderByComparator) {
 		int count = countByA(oAuth2ApplicationId);
 
@@ -390,7 +406,7 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 	 */
 	@Override
 	public OAuth2Token[] findByA_PrevAndNext(String oAuth2TokenId,
-		long oAuth2ApplicationId,
+		String oAuth2ApplicationId,
 		OrderByComparator<OAuth2Token> orderByComparator)
 		throws NoSuchOAuth2TokenException {
 		OAuth2Token oAuth2Token = findByPrimaryKey(oAuth2TokenId);
@@ -421,7 +437,7 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 	}
 
 	protected OAuth2Token getByA_PrevAndNext(Session session,
-		OAuth2Token oAuth2Token, long oAuth2ApplicationId,
+		OAuth2Token oAuth2Token, String oAuth2ApplicationId,
 		OrderByComparator<OAuth2Token> orderByComparator, boolean previous) {
 		StringBundler query = null;
 
@@ -436,7 +452,19 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 
 		query.append(_SQL_SELECT_OAUTH2TOKEN_WHERE);
 
-		query.append(_FINDER_COLUMN_A_OAUTH2APPLICATIONID_2);
+		boolean bindOAuth2ApplicationId = false;
+
+		if (oAuth2ApplicationId == null) {
+			query.append(_FINDER_COLUMN_A_OAUTH2APPLICATIONID_1);
+		}
+		else if (oAuth2ApplicationId.equals("")) {
+			query.append(_FINDER_COLUMN_A_OAUTH2APPLICATIONID_3);
+		}
+		else {
+			bindOAuth2ApplicationId = true;
+
+			query.append(_FINDER_COLUMN_A_OAUTH2APPLICATIONID_2);
+		}
 
 		if (orderByComparator != null) {
 			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
@@ -506,7 +534,9 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		qPos.add(oAuth2ApplicationId);
+		if (bindOAuth2ApplicationId) {
+			qPos.add(oAuth2ApplicationId);
+		}
 
 		if (orderByComparator != null) {
 			Object[] values = orderByComparator.getOrderByConditionValues(oAuth2Token);
@@ -532,7 +562,7 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 	 * @param oAuth2ApplicationId the o auth2 application ID
 	 */
 	@Override
-	public void removeByA(long oAuth2ApplicationId) {
+	public void removeByA(String oAuth2ApplicationId) {
 		for (OAuth2Token oAuth2Token : findByA(oAuth2ApplicationId,
 				QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
 			remove(oAuth2Token);
@@ -546,7 +576,7 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 	 * @return the number of matching o auth2 tokens
 	 */
 	@Override
-	public int countByA(long oAuth2ApplicationId) {
+	public int countByA(String oAuth2ApplicationId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_A;
 
 		Object[] finderArgs = new Object[] { oAuth2ApplicationId };
@@ -558,7 +588,19 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 
 			query.append(_SQL_COUNT_OAUTH2TOKEN_WHERE);
 
-			query.append(_FINDER_COLUMN_A_OAUTH2APPLICATIONID_2);
+			boolean bindOAuth2ApplicationId = false;
+
+			if (oAuth2ApplicationId == null) {
+				query.append(_FINDER_COLUMN_A_OAUTH2APPLICATIONID_1);
+			}
+			else if (oAuth2ApplicationId.equals("")) {
+				query.append(_FINDER_COLUMN_A_OAUTH2APPLICATIONID_3);
+			}
+			else {
+				bindOAuth2ApplicationId = true;
+
+				query.append(_FINDER_COLUMN_A_OAUTH2APPLICATIONID_2);
+			}
 
 			String sql = query.toString();
 
@@ -571,7 +613,9 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				qPos.add(oAuth2ApplicationId);
+				if (bindOAuth2ApplicationId) {
+					qPos.add(oAuth2ApplicationId);
+				}
 
 				count = (Long)q.uniqueResult();
 
@@ -590,7 +634,9 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 		return count.intValue();
 	}
 
+	private static final String _FINDER_COLUMN_A_OAUTH2APPLICATIONID_1 = "oAuth2Token.oAuth2ApplicationId IS NULL";
 	private static final String _FINDER_COLUMN_A_OAUTH2APPLICATIONID_2 = "oAuth2Token.oAuth2ApplicationId = ?";
+	private static final String _FINDER_COLUMN_A_OAUTH2APPLICATIONID_3 = "(oAuth2Token.oAuth2ApplicationId IS NULL OR oAuth2Token.oAuth2ApplicationId = '')";
 
 	public OAuth2TokenPersistenceImpl() {
 		setModelClass(OAuth2Token.class);

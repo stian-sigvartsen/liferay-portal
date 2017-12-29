@@ -60,7 +60,7 @@ public class OAuth2TokenModelImpl extends BaseModelImpl<OAuth2Token>
 			{ "oAuth2TokenId", Types.VARCHAR },
 			{ "companyId", Types.BIGINT },
 			{ "createDate", Types.TIMESTAMP },
-			{ "oAuth2ApplicationId", Types.BIGINT }
+			{ "oAuth2ApplicationId", Types.VARCHAR }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
 
@@ -68,10 +68,10 @@ public class OAuth2TokenModelImpl extends BaseModelImpl<OAuth2Token>
 		TABLE_COLUMNS_MAP.put("oAuth2TokenId", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
-		TABLE_COLUMNS_MAP.put("oAuth2ApplicationId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("oAuth2ApplicationId", Types.VARCHAR);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table OAuth2Token (oAuth2TokenId VARCHAR(75) not null primary key,companyId LONG,createDate DATE null,oAuth2ApplicationId LONG)";
+	public static final String TABLE_SQL_CREATE = "create table OAuth2Token (oAuth2TokenId VARCHAR(75) not null primary key,companyId LONG,createDate DATE null,oAuth2ApplicationId VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table OAuth2Token";
 	public static final String ORDER_BY_JPQL = " ORDER BY oAuth2Token.oAuth2TokenId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY OAuth2Token.oAuth2TokenId ASC";
@@ -160,7 +160,8 @@ public class OAuth2TokenModelImpl extends BaseModelImpl<OAuth2Token>
 			setCreateDate(createDate);
 		}
 
-		Long oAuth2ApplicationId = (Long)attributes.get("oAuth2ApplicationId");
+		String oAuth2ApplicationId = (String)attributes.get(
+				"oAuth2ApplicationId");
 
 		if (oAuth2ApplicationId != null) {
 			setOAuth2ApplicationId(oAuth2ApplicationId);
@@ -203,25 +204,28 @@ public class OAuth2TokenModelImpl extends BaseModelImpl<OAuth2Token>
 	}
 
 	@Override
-	public long getOAuth2ApplicationId() {
-		return _oAuth2ApplicationId;
+	public String getOAuth2ApplicationId() {
+		if (_oAuth2ApplicationId == null) {
+			return "";
+		}
+		else {
+			return _oAuth2ApplicationId;
+		}
 	}
 
 	@Override
-	public void setOAuth2ApplicationId(long oAuth2ApplicationId) {
+	public void setOAuth2ApplicationId(String oAuth2ApplicationId) {
 		_columnBitmask |= OAUTH2APPLICATIONID_COLUMN_BITMASK;
 
-		if (!_setOriginalOAuth2ApplicationId) {
-			_setOriginalOAuth2ApplicationId = true;
-
+		if (_originalOAuth2ApplicationId == null) {
 			_originalOAuth2ApplicationId = _oAuth2ApplicationId;
 		}
 
 		_oAuth2ApplicationId = oAuth2ApplicationId;
 	}
 
-	public long getOriginalOAuth2ApplicationId() {
-		return _originalOAuth2ApplicationId;
+	public String getOriginalOAuth2ApplicationId() {
+		return GetterUtil.getString(_originalOAuth2ApplicationId);
 	}
 
 	public long getColumnBitmask() {
@@ -302,8 +306,6 @@ public class OAuth2TokenModelImpl extends BaseModelImpl<OAuth2Token>
 
 		oAuth2TokenModelImpl._originalOAuth2ApplicationId = oAuth2TokenModelImpl._oAuth2ApplicationId;
 
-		oAuth2TokenModelImpl._setOriginalOAuth2ApplicationId = false;
-
 		oAuth2TokenModelImpl._columnBitmask = 0;
 	}
 
@@ -331,6 +333,13 @@ public class OAuth2TokenModelImpl extends BaseModelImpl<OAuth2Token>
 		}
 
 		oAuth2TokenCacheModel.oAuth2ApplicationId = getOAuth2ApplicationId();
+
+		String oAuth2ApplicationId = oAuth2TokenCacheModel.oAuth2ApplicationId;
+
+		if ((oAuth2ApplicationId != null) &&
+				(oAuth2ApplicationId.length() == 0)) {
+			oAuth2TokenCacheModel.oAuth2ApplicationId = null;
+		}
 
 		return oAuth2TokenCacheModel;
 	}
@@ -389,9 +398,8 @@ public class OAuth2TokenModelImpl extends BaseModelImpl<OAuth2Token>
 	private String _oAuth2TokenId;
 	private long _companyId;
 	private Date _createDate;
-	private long _oAuth2ApplicationId;
-	private long _originalOAuth2ApplicationId;
-	private boolean _setOriginalOAuth2ApplicationId;
+	private String _oAuth2ApplicationId;
+	private String _originalOAuth2ApplicationId;
 	private long _columnBitmask;
 	private OAuth2Token _escapedModel;
 }

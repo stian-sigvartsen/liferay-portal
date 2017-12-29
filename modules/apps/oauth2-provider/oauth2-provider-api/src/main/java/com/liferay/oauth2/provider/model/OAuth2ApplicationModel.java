@@ -19,9 +19,9 @@ import aQute.bnd.annotation.ProviderType;
 import com.liferay.expando.kernel.model.ExpandoBridge;
 
 import com.liferay.portal.kernel.bean.AutoEscape;
+import com.liferay.portal.kernel.model.AuditedModel;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.GroupedModel;
 import com.liferay.portal.kernel.model.ShardedModel;
 import com.liferay.portal.kernel.service.ServiceContext;
 
@@ -43,8 +43,8 @@ import java.util.Date;
  * @generated
  */
 @ProviderType
-public interface OAuth2ApplicationModel extends BaseModel<OAuth2Application>,
-	GroupedModel, ShardedModel {
+public interface OAuth2ApplicationModel extends AuditedModel,
+	BaseModel<OAuth2Application>, ShardedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
@@ -56,44 +56,29 @@ public interface OAuth2ApplicationModel extends BaseModel<OAuth2Application>,
 	 *
 	 * @return the primary key of this o auth2 application
 	 */
-	public long getPrimaryKey();
+	public String getPrimaryKey();
 
 	/**
 	 * Sets the primary key of this o auth2 application.
 	 *
 	 * @param primaryKey the primary key of this o auth2 application
 	 */
-	public void setPrimaryKey(long primaryKey);
+	public void setPrimaryKey(String primaryKey);
 
 	/**
 	 * Returns the o auth2 application ID of this o auth2 application.
 	 *
 	 * @return the o auth2 application ID of this o auth2 application
 	 */
-	public long getOAuth2ApplicationId();
+	@AutoEscape
+	public String getOAuth2ApplicationId();
 
 	/**
 	 * Sets the o auth2 application ID of this o auth2 application.
 	 *
 	 * @param oAuth2ApplicationId the o auth2 application ID of this o auth2 application
 	 */
-	public void setOAuth2ApplicationId(long oAuth2ApplicationId);
-
-	/**
-	 * Returns the group ID of this o auth2 application.
-	 *
-	 * @return the group ID of this o auth2 application
-	 */
-	@Override
-	public long getGroupId();
-
-	/**
-	 * Sets the group ID of this o auth2 application.
-	 *
-	 * @param groupId the group ID of this o auth2 application
-	 */
-	@Override
-	public void setGroupId(long groupId);
+	public void setOAuth2ApplicationId(String oAuth2ApplicationId);
 
 	/**
 	 * Returns the company ID of this o auth2 application.
@@ -191,6 +176,21 @@ public interface OAuth2ApplicationModel extends BaseModel<OAuth2Application>,
 	 */
 	@Override
 	public void setModifiedDate(Date modifiedDate);
+
+	/**
+	 * Returns the o auth2 application secret of this o auth2 application.
+	 *
+	 * @return the o auth2 application secret of this o auth2 application
+	 */
+	@AutoEscape
+	public String getOAuth2ApplicationSecret();
+
+	/**
+	 * Sets the o auth2 application secret of this o auth2 application.
+	 *
+	 * @param oAuth2ApplicationSecret the o auth2 application secret of this o auth2 application
+	 */
+	public void setOAuth2ApplicationSecret(String oAuth2ApplicationSecret);
 
 	/**
 	 * Returns the name of this o auth2 application.

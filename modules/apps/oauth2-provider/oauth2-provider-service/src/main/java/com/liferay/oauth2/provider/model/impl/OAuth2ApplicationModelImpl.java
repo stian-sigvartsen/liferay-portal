@@ -16,9 +16,6 @@ package com.liferay.oauth2.provider.model.impl;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.expando.kernel.model.ExpandoBridge;
-import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
-
 import com.liferay.oauth2.provider.model.OAuth2Application;
 import com.liferay.oauth2.provider.model.OAuth2ApplicationModel;
 
@@ -27,7 +24,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
-import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
@@ -64,31 +60,31 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	 */
 	public static final String TABLE_NAME = "OAuth2Application";
 	public static final Object[][] TABLE_COLUMNS = {
-			{ "oAuth2ApplicationId", Types.BIGINT },
-			{ "groupId", Types.BIGINT },
+			{ "oAuth2ApplicationId", Types.VARCHAR },
 			{ "companyId", Types.BIGINT },
 			{ "userId", Types.BIGINT },
 			{ "userName", Types.VARCHAR },
 			{ "createDate", Types.TIMESTAMP },
 			{ "modifiedDate", Types.TIMESTAMP },
+			{ "oAuth2ApplicationSecret", Types.VARCHAR },
 			{ "name", Types.VARCHAR },
 			{ "description", Types.VARCHAR }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
 
 	static {
-		TABLE_COLUMNS_MAP.put("oAuth2ApplicationId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("groupId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("oAuth2ApplicationId", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("userId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("userName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
+		TABLE_COLUMNS_MAP.put("oAuth2ApplicationSecret", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("name", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("description", Types.VARCHAR);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table OAuth2Application (oAuth2ApplicationId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,name VARCHAR(75) null,description VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table OAuth2Application (oAuth2ApplicationId VARCHAR(75) not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,oAuth2ApplicationSecret VARCHAR(75) null,name VARCHAR(75) null,description VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table OAuth2Application";
 	public static final String ORDER_BY_JPQL = " ORDER BY oAuth2Application.oAuth2ApplicationId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY OAuth2Application.oAuth2ApplicationId ASC";
@@ -109,12 +105,12 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	}
 
 	@Override
-	public long getPrimaryKey() {
+	public String getPrimaryKey() {
 		return _oAuth2ApplicationId;
 	}
 
 	@Override
-	public void setPrimaryKey(long primaryKey) {
+	public void setPrimaryKey(String primaryKey) {
 		setOAuth2ApplicationId(primaryKey);
 	}
 
@@ -125,7 +121,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 
 	@Override
 	public void setPrimaryKeyObj(Serializable primaryKeyObj) {
-		setPrimaryKey(((Long)primaryKeyObj).longValue());
+		setPrimaryKey((String)primaryKeyObj);
 	}
 
 	@Override
@@ -143,12 +139,12 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
 		attributes.put("oAuth2ApplicationId", getOAuth2ApplicationId());
-		attributes.put("groupId", getGroupId());
 		attributes.put("companyId", getCompanyId());
 		attributes.put("userId", getUserId());
 		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
+		attributes.put("oAuth2ApplicationSecret", getOAuth2ApplicationSecret());
 		attributes.put("name", getName());
 		attributes.put("description", getDescription());
 
@@ -160,16 +156,11 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 
 	@Override
 	public void setModelAttributes(Map<String, Object> attributes) {
-		Long oAuth2ApplicationId = (Long)attributes.get("oAuth2ApplicationId");
+		String oAuth2ApplicationId = (String)attributes.get(
+				"oAuth2ApplicationId");
 
 		if (oAuth2ApplicationId != null) {
 			setOAuth2ApplicationId(oAuth2ApplicationId);
-		}
-
-		Long groupId = (Long)attributes.get("groupId");
-
-		if (groupId != null) {
-			setGroupId(groupId);
 		}
 
 		Long companyId = (Long)attributes.get("companyId");
@@ -202,6 +193,13 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 			setModifiedDate(modifiedDate);
 		}
 
+		String oAuth2ApplicationSecret = (String)attributes.get(
+				"oAuth2ApplicationSecret");
+
+		if (oAuth2ApplicationSecret != null) {
+			setOAuth2ApplicationSecret(oAuth2ApplicationSecret);
+		}
+
 		String name = (String)attributes.get("name");
 
 		if (name != null) {
@@ -216,23 +214,18 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	}
 
 	@Override
-	public long getOAuth2ApplicationId() {
-		return _oAuth2ApplicationId;
+	public String getOAuth2ApplicationId() {
+		if (_oAuth2ApplicationId == null) {
+			return "";
+		}
+		else {
+			return _oAuth2ApplicationId;
+		}
 	}
 
 	@Override
-	public void setOAuth2ApplicationId(long oAuth2ApplicationId) {
+	public void setOAuth2ApplicationId(String oAuth2ApplicationId) {
 		_oAuth2ApplicationId = oAuth2ApplicationId;
-	}
-
-	@Override
-	public long getGroupId() {
-		return _groupId;
-	}
-
-	@Override
-	public void setGroupId(long groupId) {
-		_groupId = groupId;
 	}
 
 	@Override
@@ -313,6 +306,21 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	}
 
 	@Override
+	public String getOAuth2ApplicationSecret() {
+		if (_oAuth2ApplicationSecret == null) {
+			return "";
+		}
+		else {
+			return _oAuth2ApplicationSecret;
+		}
+	}
+
+	@Override
+	public void setOAuth2ApplicationSecret(String oAuth2ApplicationSecret) {
+		_oAuth2ApplicationSecret = oAuth2ApplicationSecret;
+	}
+
+	@Override
 	public String getName() {
 		if (_name == null) {
 			return "";
@@ -343,19 +351,6 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	}
 
 	@Override
-	public ExpandoBridge getExpandoBridge() {
-		return ExpandoBridgeFactoryUtil.getExpandoBridge(getCompanyId(),
-			OAuth2Application.class.getName(), getPrimaryKey());
-	}
-
-	@Override
-	public void setExpandoBridgeAttributes(ServiceContext serviceContext) {
-		ExpandoBridge expandoBridge = getExpandoBridge();
-
-		expandoBridge.setAttributes(serviceContext);
-	}
-
-	@Override
 	public OAuth2Application toEscapedModel() {
 		if (_escapedModel == null) {
 			_escapedModel = (OAuth2Application)ProxyUtil.newProxyInstance(_classLoader,
@@ -370,12 +365,12 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 		OAuth2ApplicationImpl oAuth2ApplicationImpl = new OAuth2ApplicationImpl();
 
 		oAuth2ApplicationImpl.setOAuth2ApplicationId(getOAuth2ApplicationId());
-		oAuth2ApplicationImpl.setGroupId(getGroupId());
 		oAuth2ApplicationImpl.setCompanyId(getCompanyId());
 		oAuth2ApplicationImpl.setUserId(getUserId());
 		oAuth2ApplicationImpl.setUserName(getUserName());
 		oAuth2ApplicationImpl.setCreateDate(getCreateDate());
 		oAuth2ApplicationImpl.setModifiedDate(getModifiedDate());
+		oAuth2ApplicationImpl.setOAuth2ApplicationSecret(getOAuth2ApplicationSecret());
 		oAuth2ApplicationImpl.setName(getName());
 		oAuth2ApplicationImpl.setDescription(getDescription());
 
@@ -386,17 +381,9 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 
 	@Override
 	public int compareTo(OAuth2Application oAuth2Application) {
-		long primaryKey = oAuth2Application.getPrimaryKey();
+		String primaryKey = oAuth2Application.getPrimaryKey();
 
-		if (getPrimaryKey() < primaryKey) {
-			return -1;
-		}
-		else if (getPrimaryKey() > primaryKey) {
-			return 1;
-		}
-		else {
-			return 0;
-		}
+		return getPrimaryKey().compareTo(primaryKey);
 	}
 
 	@Override
@@ -411,9 +398,9 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 
 		OAuth2Application oAuth2Application = (OAuth2Application)obj;
 
-		long primaryKey = oAuth2Application.getPrimaryKey();
+		String primaryKey = oAuth2Application.getPrimaryKey();
 
-		if (getPrimaryKey() == primaryKey) {
+		if (getPrimaryKey().equals(primaryKey)) {
 			return true;
 		}
 		else {
@@ -423,7 +410,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 
 	@Override
 	public int hashCode() {
-		return (int)getPrimaryKey();
+		return getPrimaryKey().hashCode();
 	}
 
 	@Override
@@ -449,7 +436,12 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 
 		oAuth2ApplicationCacheModel.oAuth2ApplicationId = getOAuth2ApplicationId();
 
-		oAuth2ApplicationCacheModel.groupId = getGroupId();
+		String oAuth2ApplicationId = oAuth2ApplicationCacheModel.oAuth2ApplicationId;
+
+		if ((oAuth2ApplicationId != null) &&
+				(oAuth2ApplicationId.length() == 0)) {
+			oAuth2ApplicationCacheModel.oAuth2ApplicationId = null;
+		}
 
 		oAuth2ApplicationCacheModel.companyId = getCompanyId();
 
@@ -481,6 +473,15 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 			oAuth2ApplicationCacheModel.modifiedDate = Long.MIN_VALUE;
 		}
 
+		oAuth2ApplicationCacheModel.oAuth2ApplicationSecret = getOAuth2ApplicationSecret();
+
+		String oAuth2ApplicationSecret = oAuth2ApplicationCacheModel.oAuth2ApplicationSecret;
+
+		if ((oAuth2ApplicationSecret != null) &&
+				(oAuth2ApplicationSecret.length() == 0)) {
+			oAuth2ApplicationCacheModel.oAuth2ApplicationSecret = null;
+		}
+
 		oAuth2ApplicationCacheModel.name = getName();
 
 		String name = oAuth2ApplicationCacheModel.name;
@@ -506,8 +507,6 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 
 		sb.append("{oAuth2ApplicationId=");
 		sb.append(getOAuth2ApplicationId());
-		sb.append(", groupId=");
-		sb.append(getGroupId());
 		sb.append(", companyId=");
 		sb.append(getCompanyId());
 		sb.append(", userId=");
@@ -518,6 +517,8 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 		sb.append(getCreateDate());
 		sb.append(", modifiedDate=");
 		sb.append(getModifiedDate());
+		sb.append(", oAuth2ApplicationSecret=");
+		sb.append(getOAuth2ApplicationSecret());
 		sb.append(", name=");
 		sb.append(getName());
 		sb.append(", description=");
@@ -540,10 +541,6 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 		sb.append(getOAuth2ApplicationId());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>groupId</column-name><column-value><![CDATA[");
-		sb.append(getGroupId());
-		sb.append("]]></column-value></column>");
-		sb.append(
 			"<column><column-name>companyId</column-name><column-value><![CDATA[");
 		sb.append(getCompanyId());
 		sb.append("]]></column-value></column>");
@@ -564,6 +561,10 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 		sb.append(getModifiedDate());
 		sb.append("]]></column-value></column>");
 		sb.append(
+			"<column><column-name>oAuth2ApplicationSecret</column-name><column-value><![CDATA[");
+		sb.append(getOAuth2ApplicationSecret());
+		sb.append("]]></column-value></column>");
+		sb.append(
 			"<column><column-name>name</column-name><column-value><![CDATA[");
 		sb.append(getName());
 		sb.append("]]></column-value></column>");
@@ -581,14 +582,14 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			OAuth2Application.class
 		};
-	private long _oAuth2ApplicationId;
-	private long _groupId;
+	private String _oAuth2ApplicationId;
 	private long _companyId;
 	private long _userId;
 	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
+	private String _oAuth2ApplicationSecret;
 	private String _name;
 	private String _description;
 	private OAuth2Application _escapedModel;
