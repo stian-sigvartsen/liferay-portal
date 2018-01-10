@@ -1,5 +1,6 @@
 package com.liferay.oauth2.provider.scopes.spi;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -73,6 +74,16 @@ public interface ScopeMatcher {
 	 */
 	public default ScopeMatcher withMapper(ScopeMapper scopeMapper) {
 		return localName -> match(scopeMapper.map(localName));
+	}
+
+	public default ScopeMatcher and(ScopeMatcher scopeMatcher) {
+		return localName ->
+			match(localName) && scopeMatcher.match(localName);
+	}
+
+	public default ScopeMatcher or(ScopeMatcher scopeMatcher) {
+		return localName ->
+			match(localName) || scopeMatcher.match(localName);
 	}
 
 	public static ScopeMatcher ALL = __ -> true;

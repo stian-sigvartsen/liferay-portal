@@ -5,6 +5,11 @@ import org.osgi.framework.Bundle;
 
 import java.util.Collection;
 
+/**
+ * This interface represents the context associated to the scopes.
+ * This scope, together with the scope name, will univocally identify
+ * a checking point in a Liferay environment.
+ */
 public interface ScopeContext {
 
 	void setCompany(Company company);
