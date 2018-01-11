@@ -46,16 +46,8 @@ import org.osgi.util.tracker.ServiceTrackerCustomizer;
 @Component(immediate = true, service = ScopeFinderLocator.class)
 public class ScopeRegistry implements ScopeFinderLocator {
 
-	private ScopedServiceTrackerMap<PrefixHandlerMapper>
-		_scopedPrefixHandlerMappers;
-	private ScopedServiceTrackerMap<ScopeMatcherFactory>
-		_scopedScopeMatcherFactories;
-	private ScopedServiceTrackerMap<ScopeMapper>
-		_scopedScopeMapper;
-
 	@Override
-	public Collection<LiferayOAuth2ScopeInternalIdentifier> listScopes(
-		Company company) {
+	public Collection<LiferayOAuth2ScopeInternalIdentifier> listScopes() {
 
 		Collection<LiferayOAuth2ScopeInternalIdentifier> scopes = new ArrayList<>();
 
@@ -73,22 +65,8 @@ public class ScopeRegistry implements ScopeFinderLocator {
 			Collection<String> availableScopes = scopeFinder.findScopes(
 				ScopeMatcher.ALL);
 
-			long companyId = company.getCompanyId();
-
-			PrefixHandlerMapper prefixHandlerMapper =
-				_scopedPrefixHandlerMappers.getService(companyId, name);
-
-			PrefixHandler prefixHandler = prefixHandlerMapper.mapFrom(
-				serviceReference::getProperty);
-
-			ScopeMapper scopeMapper =
-				_scopedScopeMapper.getService(companyId, name);
-
 			for (String availableScope : availableScopes) {
 				Bundle bundle = serviceReference.getBundle();
-
-				availableScope = prefixHandler.addPrefix(
-					scopeMapper.map(availableScope));
 
 				scopes.add(
 					new LiferayOAuth2ScopeImpl(name, bundle, availableScope));
@@ -105,26 +83,11 @@ public class ScopeRegistry implements ScopeFinderLocator {
 				bundleContext, ScopeFinder.class, "osgi.jaxrs.name",
 				new ScopeFinderServiceTupleServiceTrackerCustomizer(
 					bundleContext));
-
-		_scopedPrefixHandlerMappers = new ScopedServiceTrackerMap<>(
-			bundleContext, PrefixHandlerMapper.class, "osgi.jaxrs.name",
-			() -> _defaultPrefixHandlerMapper);
-
-		_scopedScopeMatcherFactories = new ScopedServiceTrackerMap<>(
-			bundleContext, ScopeMatcherFactory.class, "osgi.jaxrs.name",
-			() -> null);
-
-		_scopedScopeMapper = new ScopedServiceTrackerMap<>(
-			bundleContext, ScopeMapper.class, "osgi.jaxrs.name",
-			() -> ScopeMapper.NULL);
 	}
 
 	@Deactivate
 	protected void deactivate() {
 		_scopeFinderByNameServiceTrackerMap.close();
-		_scopedPrefixHandlerMappers.close();
-		_scopedScopeMatcherFactories.close();
-		_scopedScopeMapper.close();
 	}
 
 	@Reference(
