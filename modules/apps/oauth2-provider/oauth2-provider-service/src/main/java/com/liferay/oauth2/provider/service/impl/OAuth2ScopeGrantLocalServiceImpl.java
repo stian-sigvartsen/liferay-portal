@@ -15,7 +15,7 @@
 package com.liferay.oauth2.provider.service.impl;
 
 import com.liferay.oauth2.provider.exception.NoSuchOAuth2TokenException;
-import com.liferay.oauth2.provider.model.LiferayOAuth2Scope;
+import com.liferay.oauth2.provider.model.LiferayOAuth2ScopeInternalIdentifier;
 import com.liferay.oauth2.provider.model.OAuth2ScopeGrant;
 import com.liferay.oauth2.provider.model.OAuth2Token;
 import com.liferay.oauth2.provider.service.base.OAuth2ScopeGrantLocalServiceBaseImpl;
@@ -25,7 +25,6 @@ import org.osgi.framework.Version;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
 
 /**
@@ -51,12 +50,9 @@ public class OAuth2ScopeGrantLocalServiceImpl
 	 */
 
 	public Collection<OAuth2ScopeGrant> grantScopesToToken(
-		String tokenString, Collection<LiferayOAuth2Scope> scopes)
+			String tokenString,
+			Iterable<LiferayOAuth2ScopeInternalIdentifier> scopes)
 		throws NoSuchOAuth2TokenException {
-
-		if (scopes.isEmpty()) {
-			return Collections.emptyList();
-		}
 
 		OAuth2Token oAuth2Token = oAuth2TokenLocalService.fetchOAuth2Token(
 			tokenString);
@@ -65,10 +61,9 @@ public class OAuth2ScopeGrantLocalServiceImpl
 			throw new NoSuchOAuth2TokenException(tokenString);
 		}
 
-		Collection<OAuth2ScopeGrant> oAuth2ScopeGrants = new ArrayList<>(
-			scopes.size());
+		Collection<OAuth2ScopeGrant> oAuth2ScopeGrants = new ArrayList<>();
 
-		for (LiferayOAuth2Scope scope : scopes) {
+		for (LiferayOAuth2ScopeInternalIdentifier scope : scopes) {
 			Bundle bundle = scope.getBundle();
 			Version version = bundle.getVersion();
 
@@ -76,7 +71,7 @@ public class OAuth2ScopeGrantLocalServiceImpl
 				new OAuth2ScopeGrantPK(
 					scope.getApplicationName(), bundle.getSymbolicName(),
 					version.toString(), oAuth2Token.getCompanyId(),
-					scope.getScope(), tokenString));
+					scope.getScopeInternalIdentifier(), tokenString));
 
 			oAuth2ScopeGrants.add(updateOAuth2ScopeGrant(oAuth2ScopeGrant));
 		}

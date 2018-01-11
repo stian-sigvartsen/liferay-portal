@@ -14,7 +14,7 @@
 
 package com.liferay.oauth2.provider.web;
 
-import com.liferay.oauth2.provider.model.LiferayOAuth2ScopeExternalIdentifier;
+import com.liferay.oauth2.provider.model.LiferayOAuth2ScopeInternalIdentifier;
 import com.liferay.oauth2.provider.scopes.liferay.api.ScopeFinderLocator;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
@@ -29,7 +29,6 @@ import javax.portlet.RenderResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.Collection;
 
 @Component(
 	immediate = true,
@@ -54,13 +53,13 @@ public class LiferayOAuth2ScopesGrantPortlet extends MVCPortlet {
 		printWriter.println("Hello world");
 
 		try {
-			for (LiferayOAuth2ScopeExternalIdentifier
+			for (LiferayOAuth2ScopeInternalIdentifier
 				identifier : _scopeFinderLocator.listScopes(
 					PortalUtil.getCompany(renderRequest))) {
 
 				printWriter.print(identifier.getApplicationName());
 				printWriter.print(":");
-				printWriter.print(identifier.getScopeExternalIdentifier());
+				printWriter.print(identifier.getScopeInternalIdentifier());
 				printWriter.println("<br>");
 			}
 		}

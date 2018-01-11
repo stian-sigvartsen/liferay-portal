@@ -17,7 +17,7 @@ package com.liferay.oauth2.provider.service;
 import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.oauth2.provider.exception.NoSuchOAuth2TokenException;
-import com.liferay.oauth2.provider.model.LiferayOAuth2Scope;
+import com.liferay.oauth2.provider.model.LiferayOAuth2ScopeInternalIdentifier;
 import com.liferay.oauth2.provider.model.OAuth2ScopeGrant;
 import com.liferay.oauth2.provider.service.persistence.OAuth2ScopeGrantPK;
 
@@ -231,7 +231,8 @@ public interface OAuth2ScopeGrantLocalService extends BaseLocalService,
 		throws PortalException;
 
 	public Collection<OAuth2ScopeGrant> grantScopesToToken(
-		java.lang.String tokenString, Collection<LiferayOAuth2Scope> scopes)
+		java.lang.String tokenString,
+		java.lang.Iterable<LiferayOAuth2ScopeInternalIdentifier> scopes)
 		throws NoSuchOAuth2TokenException;
 
 	/**
