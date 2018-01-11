@@ -66,7 +66,7 @@ public class OAuth2ApplicationCacheModel implements CacheModel<OAuth2Application
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(19);
+		StringBundler sb = new StringBundler(23);
 
 		sb.append("{oAuth2ApplicationId=");
 		sb.append(oAuth2ApplicationId);
@@ -80,12 +80,16 @@ public class OAuth2ApplicationCacheModel implements CacheModel<OAuth2Application
 		sb.append(createDate);
 		sb.append(", modifiedDate=");
 		sb.append(modifiedDate);
-		sb.append(", oAuth2ApplicationSecret=");
-		sb.append(oAuth2ApplicationSecret);
-		sb.append(", name=");
-		sb.append(name);
+		sb.append(", applicationSecret=");
+		sb.append(applicationSecret);
+		sb.append(", confidential=");
+		sb.append(confidential);
 		sb.append(", description=");
 		sb.append(description);
+		sb.append(", name=");
+		sb.append(name);
+		sb.append(", webUrl=");
+		sb.append(webUrl);
 		sb.append("}");
 
 		return sb.toString();
@@ -126,11 +130,20 @@ public class OAuth2ApplicationCacheModel implements CacheModel<OAuth2Application
 			oAuth2ApplicationImpl.setModifiedDate(new Date(modifiedDate));
 		}
 
-		if (oAuth2ApplicationSecret == null) {
-			oAuth2ApplicationImpl.setOAuth2ApplicationSecret("");
+		if (applicationSecret == null) {
+			oAuth2ApplicationImpl.setApplicationSecret("");
 		}
 		else {
-			oAuth2ApplicationImpl.setOAuth2ApplicationSecret(oAuth2ApplicationSecret);
+			oAuth2ApplicationImpl.setApplicationSecret(applicationSecret);
+		}
+
+		oAuth2ApplicationImpl.setConfidential(confidential);
+
+		if (description == null) {
+			oAuth2ApplicationImpl.setDescription("");
+		}
+		else {
+			oAuth2ApplicationImpl.setDescription(description);
 		}
 
 		if (name == null) {
@@ -140,11 +153,11 @@ public class OAuth2ApplicationCacheModel implements CacheModel<OAuth2Application
 			oAuth2ApplicationImpl.setName(name);
 		}
 
-		if (description == null) {
-			oAuth2ApplicationImpl.setDescription("");
+		if (webUrl == null) {
+			oAuth2ApplicationImpl.setWebUrl("");
 		}
 		else {
-			oAuth2ApplicationImpl.setDescription(description);
+			oAuth2ApplicationImpl.setWebUrl(webUrl);
 		}
 
 		oAuth2ApplicationImpl.resetOriginalValues();
@@ -162,9 +175,12 @@ public class OAuth2ApplicationCacheModel implements CacheModel<OAuth2Application
 		userName = objectInput.readUTF();
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
-		oAuth2ApplicationSecret = objectInput.readUTF();
-		name = objectInput.readUTF();
+		applicationSecret = objectInput.readUTF();
+
+		confidential = objectInput.readBoolean();
 		description = objectInput.readUTF();
+		name = objectInput.readUTF();
+		webUrl = objectInput.readUTF();
 	}
 
 	@Override
@@ -191,11 +207,20 @@ public class OAuth2ApplicationCacheModel implements CacheModel<OAuth2Application
 		objectOutput.writeLong(createDate);
 		objectOutput.writeLong(modifiedDate);
 
-		if (oAuth2ApplicationSecret == null) {
+		if (applicationSecret == null) {
 			objectOutput.writeUTF("");
 		}
 		else {
-			objectOutput.writeUTF(oAuth2ApplicationSecret);
+			objectOutput.writeUTF(applicationSecret);
+		}
+
+		objectOutput.writeBoolean(confidential);
+
+		if (description == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(description);
 		}
 
 		if (name == null) {
@@ -205,11 +230,11 @@ public class OAuth2ApplicationCacheModel implements CacheModel<OAuth2Application
 			objectOutput.writeUTF(name);
 		}
 
-		if (description == null) {
+		if (webUrl == null) {
 			objectOutput.writeUTF("");
 		}
 		else {
-			objectOutput.writeUTF(description);
+			objectOutput.writeUTF(webUrl);
 		}
 	}
 
@@ -219,7 +244,9 @@ public class OAuth2ApplicationCacheModel implements CacheModel<OAuth2Application
 	public String userName;
 	public long createDate;
 	public long modifiedDate;
-	public String oAuth2ApplicationSecret;
-	public String name;
+	public String applicationSecret;
+	public boolean confidential;
 	public String description;
+	public String name;
+	public String webUrl;
 }

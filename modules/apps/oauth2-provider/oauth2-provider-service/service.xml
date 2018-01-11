@@ -20,9 +20,11 @@
 
 		<!-- Other fields -->
 
-		<column name="oAuth2ApplicationSecret" type="String" />
-		<column name="name" type="String" />
+		<column name="applicationSecret" type="String" />
+		<column name="confidential" type="Boolean" />
 		<column name="description" type="String" />
+		<column name="name" type="String" />
+		<column name="webUrl" type="String" />
 	</entity>
 	<entity name="OAuth2Token" local-service="true" remote-service="false">
 		<!-- PK fields -->

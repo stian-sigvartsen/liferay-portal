@@ -64,9 +64,11 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
-		attributes.put("oAuth2ApplicationSecret", getOAuth2ApplicationSecret());
-		attributes.put("name", getName());
+		attributes.put("applicationSecret", getApplicationSecret());
+		attributes.put("confidential", getConfidential());
 		attributes.put("description", getDescription());
+		attributes.put("name", getName());
+		attributes.put("webUrl", getWebUrl());
 
 		return attributes;
 	}
@@ -110,11 +112,22 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 			setModifiedDate(modifiedDate);
 		}
 
-		String oAuth2ApplicationSecret = (String)attributes.get(
-				"oAuth2ApplicationSecret");
+		String applicationSecret = (String)attributes.get("applicationSecret");
 
-		if (oAuth2ApplicationSecret != null) {
-			setOAuth2ApplicationSecret(oAuth2ApplicationSecret);
+		if (applicationSecret != null) {
+			setApplicationSecret(applicationSecret);
+		}
+
+		Boolean confidential = (Boolean)attributes.get("confidential");
+
+		if (confidential != null) {
+			setConfidential(confidential);
+		}
+
+		String description = (String)attributes.get("description");
+
+		if (description != null) {
+			setDescription(description);
 		}
 
 		String name = (String)attributes.get("name");
@@ -123,10 +136,10 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 			setName(name);
 		}
 
-		String description = (String)attributes.get("description");
+		String webUrl = (String)attributes.get("webUrl");
 
-		if (description != null) {
-			setDescription(description);
+		if (webUrl != null) {
+			setWebUrl(webUrl);
 		}
 	}
 
@@ -141,6 +154,16 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 	}
 
 	/**
+	* Returns the application secret of this o auth2 application.
+	*
+	* @return the application secret of this o auth2 application
+	*/
+	@Override
+	public java.lang.String getApplicationSecret() {
+		return _oAuth2Application.getApplicationSecret();
+	}
+
+	/**
 	* Returns the company ID of this o auth2 application.
 	*
 	* @return the company ID of this o auth2 application
@@ -148,6 +171,16 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 	@Override
 	public long getCompanyId() {
 		return _oAuth2Application.getCompanyId();
+	}
+
+	/**
+	* Returns the confidential of this o auth2 application.
+	*
+	* @return the confidential of this o auth2 application
+	*/
+	@Override
+	public java.lang.Boolean getConfidential() {
+		return _oAuth2Application.getConfidential();
 	}
 
 	/**
@@ -206,16 +239,6 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 	}
 
 	/**
-	* Returns the o auth2 application secret of this o auth2 application.
-	*
-	* @return the o auth2 application secret of this o auth2 application
-	*/
-	@Override
-	public java.lang.String getOAuth2ApplicationSecret() {
-		return _oAuth2Application.getOAuth2ApplicationSecret();
-	}
-
-	/**
 	* Returns the primary key of this o auth2 application.
 	*
 	* @return the primary key of this o auth2 application
@@ -260,6 +283,16 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 		return _oAuth2Application.getUserUuid();
 	}
 
+	/**
+	* Returns the web url of this o auth2 application.
+	*
+	* @return the web url of this o auth2 application
+	*/
+	@Override
+	public java.lang.String getWebUrl() {
+		return _oAuth2Application.getWebUrl();
+	}
+
 	@Override
 	public int hashCode() {
 		return _oAuth2Application.hashCode();
@@ -285,6 +318,16 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 		_oAuth2Application.persist();
 	}
 
+	/**
+	* Sets the application secret of this o auth2 application.
+	*
+	* @param applicationSecret the application secret of this o auth2 application
+	*/
+	@Override
+	public void setApplicationSecret(java.lang.String applicationSecret) {
+		_oAuth2Application.setApplicationSecret(applicationSecret);
+	}
+
 	@Override
 	public void setCachedModel(boolean cachedModel) {
 		_oAuth2Application.setCachedModel(cachedModel);
@@ -298,6 +341,16 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 	@Override
 	public void setCompanyId(long companyId) {
 		_oAuth2Application.setCompanyId(companyId);
+	}
+
+	/**
+	* Sets the confidential of this o auth2 application.
+	*
+	* @param confidential the confidential of this o auth2 application
+	*/
+	@Override
+	public void setConfidential(java.lang.Boolean confidential) {
+		_oAuth2Application.setConfidential(confidential);
 	}
 
 	/**
@@ -372,17 +425,6 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 	}
 
 	/**
-	* Sets the o auth2 application secret of this o auth2 application.
-	*
-	* @param oAuth2ApplicationSecret the o auth2 application secret of this o auth2 application
-	*/
-	@Override
-	public void setOAuth2ApplicationSecret(
-		java.lang.String oAuth2ApplicationSecret) {
-		_oAuth2Application.setOAuth2ApplicationSecret(oAuth2ApplicationSecret);
-	}
-
-	/**
 	* Sets the primary key of this o auth2 application.
 	*
 	* @param primaryKey the primary key of this o auth2 application
@@ -425,6 +467,16 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 	@Override
 	public void setUserUuid(java.lang.String userUuid) {
 		_oAuth2Application.setUserUuid(userUuid);
+	}
+
+	/**
+	* Sets the web url of this o auth2 application.
+	*
+	* @param webUrl the web url of this o auth2 application
+	*/
+	@Override
+	public void setWebUrl(java.lang.String webUrl) {
+		_oAuth2Application.setWebUrl(webUrl);
 	}
 
 	@Override

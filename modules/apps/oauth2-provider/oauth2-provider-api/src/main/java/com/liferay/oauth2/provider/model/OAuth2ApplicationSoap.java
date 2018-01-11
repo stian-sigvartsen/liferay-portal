@@ -39,9 +39,11 @@ public class OAuth2ApplicationSoap implements Serializable {
 		soapModel.setUserName(model.getUserName());
 		soapModel.setCreateDate(model.getCreateDate());
 		soapModel.setModifiedDate(model.getModifiedDate());
-		soapModel.setOAuth2ApplicationSecret(model.getOAuth2ApplicationSecret());
-		soapModel.setName(model.getName());
+		soapModel.setApplicationSecret(model.getApplicationSecret());
+		soapModel.setConfidential(model.getConfidential());
 		soapModel.setDescription(model.getDescription());
+		soapModel.setName(model.getName());
+		soapModel.setWebUrl(model.getWebUrl());
 
 		return soapModel;
 	}
@@ -145,20 +147,20 @@ public class OAuth2ApplicationSoap implements Serializable {
 		_modifiedDate = modifiedDate;
 	}
 
-	public String getOAuth2ApplicationSecret() {
-		return _oAuth2ApplicationSecret;
+	public String getApplicationSecret() {
+		return _applicationSecret;
 	}
 
-	public void setOAuth2ApplicationSecret(String oAuth2ApplicationSecret) {
-		_oAuth2ApplicationSecret = oAuth2ApplicationSecret;
+	public void setApplicationSecret(String applicationSecret) {
+		_applicationSecret = applicationSecret;
 	}
 
-	public String getName() {
-		return _name;
+	public Boolean getConfidential() {
+		return _confidential;
 	}
 
-	public void setName(String name) {
-		_name = name;
+	public void setConfidential(Boolean confidential) {
+		_confidential = confidential;
 	}
 
 	public String getDescription() {
@@ -169,13 +171,31 @@ public class OAuth2ApplicationSoap implements Serializable {
 		_description = description;
 	}
 
+	public String getName() {
+		return _name;
+	}
+
+	public void setName(String name) {
+		_name = name;
+	}
+
+	public String getWebUrl() {
+		return _webUrl;
+	}
+
+	public void setWebUrl(String webUrl) {
+		_webUrl = webUrl;
+	}
+
 	private String _oAuth2ApplicationId;
 	private long _companyId;
 	private long _userId;
 	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;
-	private String _oAuth2ApplicationSecret;
-	private String _name;
+	private String _applicationSecret;
+	private Boolean _confidential;
 	private String _description;
+	private String _name;
+	private String _webUrl;
 }

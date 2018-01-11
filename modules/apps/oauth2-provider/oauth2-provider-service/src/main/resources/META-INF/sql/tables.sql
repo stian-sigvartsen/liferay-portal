@@ -5,9 +5,11 @@ create table OAuth2Application (
 	userName VARCHAR(75) null,
 	createDate DATE null,
 	modifiedDate DATE null,
-	oAuth2ApplicationSecret VARCHAR(75) null,
+	applicationSecret VARCHAR(75) null,
+	confidential BOOLEAN,
+	description VARCHAR(75) null,
 	name VARCHAR(75) null,
-	description VARCHAR(75) null
+	webUrl VARCHAR(75) null
 );
 
 create table OAuth2ScopeGrant (

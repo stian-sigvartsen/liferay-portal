@@ -178,19 +178,48 @@ public interface OAuth2ApplicationModel extends AuditedModel,
 	public void setModifiedDate(Date modifiedDate);
 
 	/**
-	 * Returns the o auth2 application secret of this o auth2 application.
+	 * Returns the application secret of this o auth2 application.
 	 *
-	 * @return the o auth2 application secret of this o auth2 application
+	 * @return the application secret of this o auth2 application
 	 */
 	@AutoEscape
-	public String getOAuth2ApplicationSecret();
+	public String getApplicationSecret();
 
 	/**
-	 * Sets the o auth2 application secret of this o auth2 application.
+	 * Sets the application secret of this o auth2 application.
 	 *
-	 * @param oAuth2ApplicationSecret the o auth2 application secret of this o auth2 application
+	 * @param applicationSecret the application secret of this o auth2 application
 	 */
-	public void setOAuth2ApplicationSecret(String oAuth2ApplicationSecret);
+	public void setApplicationSecret(String applicationSecret);
+
+	/**
+	 * Returns the confidential of this o auth2 application.
+	 *
+	 * @return the confidential of this o auth2 application
+	 */
+	public Boolean getConfidential();
+
+	/**
+	 * Sets the confidential of this o auth2 application.
+	 *
+	 * @param confidential the confidential of this o auth2 application
+	 */
+	public void setConfidential(Boolean confidential);
+
+	/**
+	 * Returns the description of this o auth2 application.
+	 *
+	 * @return the description of this o auth2 application
+	 */
+	@AutoEscape
+	public String getDescription();
+
+	/**
+	 * Sets the description of this o auth2 application.
+	 *
+	 * @param description the description of this o auth2 application
+	 */
+	public void setDescription(String description);
 
 	/**
 	 * Returns the name of this o auth2 application.
@@ -208,19 +237,19 @@ public interface OAuth2ApplicationModel extends AuditedModel,
 	public void setName(String name);
 
 	/**
-	 * Returns the description of this o auth2 application.
+	 * Returns the web url of this o auth2 application.
 	 *
-	 * @return the description of this o auth2 application
+	 * @return the web url of this o auth2 application
 	 */
 	@AutoEscape
-	public String getDescription();
+	public String getWebUrl();
 
 	/**
-	 * Sets the description of this o auth2 application.
+	 * Sets the web url of this o auth2 application.
 	 *
-	 * @param description the description of this o auth2 application
+	 * @param webUrl the web url of this o auth2 application
 	 */
-	public void setDescription(String description);
+	public void setWebUrl(String webUrl);
 
 	@Override
 	public boolean isNew();

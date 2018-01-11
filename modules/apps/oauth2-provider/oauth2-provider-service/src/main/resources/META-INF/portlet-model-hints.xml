@@ -8,9 +8,11 @@
 		<field name="userName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
-		<field name="oAuth2ApplicationSecret" type="String" />
-		<field name="name" type="String" />
+		<field name="applicationSecret" type="String" />
+		<field name="confidential" type="Boolean" />
 		<field name="description" type="String" />
+		<field name="name" type="String" />
+		<field name="webUrl" type="String" />
 	</model>
 	<model name="com.liferay.oauth2.provider.model.OAuth2ScopeGrant">
 		<field name="applicationName" type="String" />

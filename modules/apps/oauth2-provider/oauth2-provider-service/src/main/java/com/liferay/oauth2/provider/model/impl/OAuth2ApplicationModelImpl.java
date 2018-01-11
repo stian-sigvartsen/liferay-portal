@@ -66,9 +66,11 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 			{ "userName", Types.VARCHAR },
 			{ "createDate", Types.TIMESTAMP },
 			{ "modifiedDate", Types.TIMESTAMP },
-			{ "oAuth2ApplicationSecret", Types.VARCHAR },
+			{ "applicationSecret", Types.VARCHAR },
+			{ "confidential", Types.BOOLEAN },
+			{ "description", Types.VARCHAR },
 			{ "name", Types.VARCHAR },
-			{ "description", Types.VARCHAR }
+			{ "webUrl", Types.VARCHAR }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
 
@@ -79,12 +81,14 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 		TABLE_COLUMNS_MAP.put("userName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
-		TABLE_COLUMNS_MAP.put("oAuth2ApplicationSecret", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("name", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("applicationSecret", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("confidential", Types.BOOLEAN);
 		TABLE_COLUMNS_MAP.put("description", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("name", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("webUrl", Types.VARCHAR);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table OAuth2Application (oAuth2ApplicationId VARCHAR(75) not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,oAuth2ApplicationSecret VARCHAR(75) null,name VARCHAR(75) null,description VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table OAuth2Application (oAuth2ApplicationId VARCHAR(75) not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,applicationSecret VARCHAR(75) null,confidential BOOLEAN,description VARCHAR(75) null,name VARCHAR(75) null,webUrl VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table OAuth2Application";
 	public static final String ORDER_BY_JPQL = " ORDER BY oAuth2Application.oAuth2ApplicationId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY OAuth2Application.oAuth2ApplicationId ASC";
@@ -144,9 +148,11 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
-		attributes.put("oAuth2ApplicationSecret", getOAuth2ApplicationSecret());
-		attributes.put("name", getName());
+		attributes.put("applicationSecret", getApplicationSecret());
+		attributes.put("confidential", getConfidential());
 		attributes.put("description", getDescription());
+		attributes.put("name", getName());
+		attributes.put("webUrl", getWebUrl());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -193,11 +199,22 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 			setModifiedDate(modifiedDate);
 		}
 
-		String oAuth2ApplicationSecret = (String)attributes.get(
-				"oAuth2ApplicationSecret");
+		String applicationSecret = (String)attributes.get("applicationSecret");
 
-		if (oAuth2ApplicationSecret != null) {
-			setOAuth2ApplicationSecret(oAuth2ApplicationSecret);
+		if (applicationSecret != null) {
+			setApplicationSecret(applicationSecret);
+		}
+
+		Boolean confidential = (Boolean)attributes.get("confidential");
+
+		if (confidential != null) {
+			setConfidential(confidential);
+		}
+
+		String description = (String)attributes.get("description");
+
+		if (description != null) {
+			setDescription(description);
 		}
 
 		String name = (String)attributes.get("name");
@@ -206,10 +223,10 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 			setName(name);
 		}
 
-		String description = (String)attributes.get("description");
+		String webUrl = (String)attributes.get("webUrl");
 
-		if (description != null) {
-			setDescription(description);
+		if (webUrl != null) {
+			setWebUrl(webUrl);
 		}
 	}
 
@@ -306,18 +323,43 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	}
 
 	@Override
-	public String getOAuth2ApplicationSecret() {
-		if (_oAuth2ApplicationSecret == null) {
+	public String getApplicationSecret() {
+		if (_applicationSecret == null) {
 			return "";
 		}
 		else {
-			return _oAuth2ApplicationSecret;
+			return _applicationSecret;
 		}
 	}
 
 	@Override
-	public void setOAuth2ApplicationSecret(String oAuth2ApplicationSecret) {
-		_oAuth2ApplicationSecret = oAuth2ApplicationSecret;
+	public void setApplicationSecret(String applicationSecret) {
+		_applicationSecret = applicationSecret;
+	}
+
+	@Override
+	public Boolean getConfidential() {
+		return _confidential;
+	}
+
+	@Override
+	public void setConfidential(Boolean confidential) {
+		_confidential = confidential;
+	}
+
+	@Override
+	public String getDescription() {
+		if (_description == null) {
+			return "";
+		}
+		else {
+			return _description;
+		}
+	}
+
+	@Override
+	public void setDescription(String description) {
+		_description = description;
 	}
 
 	@Override
@@ -336,18 +378,18 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	}
 
 	@Override
-	public String getDescription() {
-		if (_description == null) {
+	public String getWebUrl() {
+		if (_webUrl == null) {
 			return "";
 		}
 		else {
-			return _description;
+			return _webUrl;
 		}
 	}
 
 	@Override
-	public void setDescription(String description) {
-		_description = description;
+	public void setWebUrl(String webUrl) {
+		_webUrl = webUrl;
 	}
 
 	@Override
@@ -370,9 +412,11 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 		oAuth2ApplicationImpl.setUserName(getUserName());
 		oAuth2ApplicationImpl.setCreateDate(getCreateDate());
 		oAuth2ApplicationImpl.setModifiedDate(getModifiedDate());
-		oAuth2ApplicationImpl.setOAuth2ApplicationSecret(getOAuth2ApplicationSecret());
-		oAuth2ApplicationImpl.setName(getName());
+		oAuth2ApplicationImpl.setApplicationSecret(getApplicationSecret());
+		oAuth2ApplicationImpl.setConfidential(getConfidential());
 		oAuth2ApplicationImpl.setDescription(getDescription());
+		oAuth2ApplicationImpl.setName(getName());
+		oAuth2ApplicationImpl.setWebUrl(getWebUrl());
 
 		oAuth2ApplicationImpl.resetOriginalValues();
 
@@ -473,13 +517,22 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 			oAuth2ApplicationCacheModel.modifiedDate = Long.MIN_VALUE;
 		}
 
-		oAuth2ApplicationCacheModel.oAuth2ApplicationSecret = getOAuth2ApplicationSecret();
+		oAuth2ApplicationCacheModel.applicationSecret = getApplicationSecret();
 
-		String oAuth2ApplicationSecret = oAuth2ApplicationCacheModel.oAuth2ApplicationSecret;
+		String applicationSecret = oAuth2ApplicationCacheModel.applicationSecret;
 
-		if ((oAuth2ApplicationSecret != null) &&
-				(oAuth2ApplicationSecret.length() == 0)) {
-			oAuth2ApplicationCacheModel.oAuth2ApplicationSecret = null;
+		if ((applicationSecret != null) && (applicationSecret.length() == 0)) {
+			oAuth2ApplicationCacheModel.applicationSecret = null;
+		}
+
+		oAuth2ApplicationCacheModel.confidential = getConfidential();
+
+		oAuth2ApplicationCacheModel.description = getDescription();
+
+		String description = oAuth2ApplicationCacheModel.description;
+
+		if ((description != null) && (description.length() == 0)) {
+			oAuth2ApplicationCacheModel.description = null;
 		}
 
 		oAuth2ApplicationCacheModel.name = getName();
@@ -490,12 +543,12 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 			oAuth2ApplicationCacheModel.name = null;
 		}
 
-		oAuth2ApplicationCacheModel.description = getDescription();
+		oAuth2ApplicationCacheModel.webUrl = getWebUrl();
 
-		String description = oAuth2ApplicationCacheModel.description;
+		String webUrl = oAuth2ApplicationCacheModel.webUrl;
 
-		if ((description != null) && (description.length() == 0)) {
-			oAuth2ApplicationCacheModel.description = null;
+		if ((webUrl != null) && (webUrl.length() == 0)) {
+			oAuth2ApplicationCacheModel.webUrl = null;
 		}
 
 		return oAuth2ApplicationCacheModel;
@@ -503,7 +556,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(19);
+		StringBundler sb = new StringBundler(23);
 
 		sb.append("{oAuth2ApplicationId=");
 		sb.append(getOAuth2ApplicationId());
@@ -517,12 +570,16 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 		sb.append(getCreateDate());
 		sb.append(", modifiedDate=");
 		sb.append(getModifiedDate());
-		sb.append(", oAuth2ApplicationSecret=");
-		sb.append(getOAuth2ApplicationSecret());
-		sb.append(", name=");
-		sb.append(getName());
+		sb.append(", applicationSecret=");
+		sb.append(getApplicationSecret());
+		sb.append(", confidential=");
+		sb.append(getConfidential());
 		sb.append(", description=");
 		sb.append(getDescription());
+		sb.append(", name=");
+		sb.append(getName());
+		sb.append(", webUrl=");
+		sb.append(getWebUrl());
 		sb.append("}");
 
 		return sb.toString();
@@ -530,7 +587,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(31);
+		StringBundler sb = new StringBundler(37);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.oauth2.provider.model.OAuth2Application");
@@ -561,16 +618,24 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 		sb.append(getModifiedDate());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>oAuth2ApplicationSecret</column-name><column-value><![CDATA[");
-		sb.append(getOAuth2ApplicationSecret());
+			"<column><column-name>applicationSecret</column-name><column-value><![CDATA[");
+		sb.append(getApplicationSecret());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>confidential</column-name><column-value><![CDATA[");
+		sb.append(getConfidential());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>description</column-name><column-value><![CDATA[");
+		sb.append(getDescription());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>name</column-name><column-value><![CDATA[");
 		sb.append(getName());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>description</column-name><column-value><![CDATA[");
-		sb.append(getDescription());
+			"<column><column-name>webUrl</column-name><column-value><![CDATA[");
+		sb.append(getWebUrl());
 		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
@@ -589,8 +654,10 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private String _oAuth2ApplicationSecret;
-	private String _name;
+	private String _applicationSecret;
+	private Boolean _confidential;
 	private String _description;
+	private String _name;
+	private String _webUrl;
 	private OAuth2Application _escapedModel;
 }
