@@ -16,7 +16,9 @@ package com.liferay.oauth2.provider.web;
 
 import com.liferay.oauth2.provider.model.LiferayOAuth2ScopeInternalIdentifier;
 import com.liferay.oauth2.provider.scopes.liferay.api.ScopeFinderLocator;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.util.PortalUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -50,13 +52,19 @@ public class LiferayOAuth2ScopesGrantPortlet extends MVCPortlet {
 
 		printWriter.println("Hello world");
 
-		for (LiferayOAuth2ScopeInternalIdentifier
-			identifier : _scopeFinderLocator.listScopes()) {
+		try {
+			for (LiferayOAuth2ScopeInternalIdentifier
+				identifier : _scopeFinderLocator.listScopes(
+					PortalUtil.getCompany(renderRequest))) {
 
-			printWriter.print(identifier.getApplicationName());
-			printWriter.print(":");
-			printWriter.print(identifier.getScopeInternalIdentifier());
-			printWriter.println("<br>");
+				printWriter.print(identifier.getApplicationName());
+				printWriter.print(":");
+				printWriter.print(identifier.getScopeInternalIdentifier());
+				printWriter.println("<br>");
+			}
+		}
+		catch (PortalException e) {
+			throw new PortletException(e);
 		}
 	}
 

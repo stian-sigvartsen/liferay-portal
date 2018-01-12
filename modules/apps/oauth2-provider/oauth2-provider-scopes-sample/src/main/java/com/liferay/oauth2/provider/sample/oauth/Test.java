@@ -69,8 +69,10 @@ public class Test extends Application {
 	@Path("/scopes")
 	@RequiresScope("everything.readonly")
 	public String scopes() throws PortalException {
+		Company company = PortalUtil.getCompany(_httpServletRequest);
+
 		Collection<LiferayOAuth2ScopeInternalIdentifier> scopes =
-			_scopeFinderLocator.listScopes();
+			_scopeFinderLocator.listScopes(company);
 
 		List<String> names =
 			scopes.stream().map(
