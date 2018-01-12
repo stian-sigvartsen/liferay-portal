@@ -14,7 +14,8 @@
 
 package com.liferay.oauth2.provider.sample.oauth;
 
-import com.liferay.oauth2.provider.model.LiferayOAuth2ScopeInternalIdentifier;
+import com.liferay.oauth2.provider.model.LiferayOAuth2Scope;
+import com.liferay.oauth2.provider.model.LiferayOAuth2ScopeExternalIdentifier;
 import com.liferay.oauth2.provider.scopes.api.LiferayOauth2OSGiFeatureFactory;
 import com.liferay.oauth2.provider.scopes.liferay.api.ScopeContext;
 import com.liferay.oauth2.provider.scopes.liferay.api.ScopeFinderLocator;
@@ -71,19 +72,19 @@ public class Test extends Application {
 	public String scopes() throws PortalException {
 		Company company = PortalUtil.getCompany(_httpServletRequest);
 
-		Collection<LiferayOAuth2ScopeInternalIdentifier> scopes =
+		Collection<LiferayOAuth2ScopeExternalIdentifier> scopes =
 			_scopeFinderLocator.listScopes(company);
 
 		List<String> names =
 			scopes.stream().map(
-				LiferayOAuth2ScopeInternalIdentifier::getScopeInternalIdentifier
+				LiferayOAuth2ScopeExternalIdentifier::getScopeExternalIdentifier
 			).collect(
 				Collectors.toList()
 			);
 
 		List<String> apps =
 			scopes.stream().map(
-				LiferayOAuth2ScopeInternalIdentifier::getApplicationName
+				LiferayOAuth2ScopeExternalIdentifier::getApplicationName
 			).collect(
 				Collectors.toList()
 			);
@@ -92,6 +93,25 @@ public class Test extends Application {
 			   "Names: " + apps;
 	}
 
+	@GET
+	@Path("/test-scopes/{scope}")
+	public String testScopes(@PathParam("scope") String scope) throws PortalException {
+		Company company = PortalUtil.getCompany(_httpServletRequest);
+
+		Collection<LiferayOAuth2Scope> scopes =
+			_scopeFinderLocator.locateScopes(company, scope);
+
+		List<String> names =
+			scopes.stream().map(LiferayOAuth2Scope::getScope).collect(
+				Collectors.toList());
+
+		List<String> apps =
+			scopes.stream().map(LiferayOAuth2Scope::getApplicationName).collect(
+				Collectors.toList());
+
+		return "Scopes: " + names + "\n" +
+			   "Names: " + apps;
+	}
 
 	@PUT
 	@Path("/write")
@@ -107,6 +127,27 @@ public class Test extends Application {
 		return "Destroyed";
 	}
 
+	@PUT
+	@Path("/grant-scope/{scope}")
+	public String grantScope(
+		@PathParam("scope") String scope) throws PortalException {
+
+		Company company = PortalUtil.getCompany(_httpServletRequest);
+
+		Collection<LiferayOAuth2Scope> scopes =
+			_scopeFinderLocator.locateScopes(company, scope);
+
+		_oAuth2ScopeGrantLocalService.grantScopesToToken(
+			_scopeContext.getTokenString(), scopes);
+
+		List<String> names = scopes.stream().map(
+				LiferayOAuth2Scope::getScope
+		).collect(
+			Collectors.toList()
+		);
+
+		return "Scopes: " + names;
+	}
 
 	@DELETE
 	@Path("/grant-scope")

@@ -14,11 +14,12 @@
 
 package com.liferay.oauth2.provider.scopes.impl.model;
 
-import com.liferay.oauth2.provider.model.LiferayOAuth2ScopeInternalIdentifier;
+import com.liferay.oauth2.provider.model.LiferayOAuth2Scope;
+import com.liferay.oauth2.provider.model.LiferayOAuth2ScopeExternalIdentifier;
 import org.osgi.framework.Bundle;
 
 public class LiferayOAuth2ScopeImpl implements
-	LiferayOAuth2ScopeInternalIdentifier {
+	LiferayOAuth2Scope, LiferayOAuth2ScopeExternalIdentifier {
 
 	public LiferayOAuth2ScopeImpl(
 		String applicationName, Bundle bundle, String scope) {
@@ -39,7 +40,12 @@ public class LiferayOAuth2ScopeImpl implements
 	}
 
 	@Override
-	public String getScopeInternalIdentifier() {
+	public String getScopeExternalIdentifier() {
+		return _scope;
+	}
+
+	@Override
+	public String getScope() {
 		return _scope;
 	}
 

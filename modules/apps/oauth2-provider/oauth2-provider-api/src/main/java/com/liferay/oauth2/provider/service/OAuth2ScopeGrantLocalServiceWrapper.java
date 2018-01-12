@@ -270,7 +270,7 @@ public class OAuth2ScopeGrantLocalServiceWrapper
 	@Override
 	public java.util.Collection<com.liferay.oauth2.provider.model.OAuth2ScopeGrant> grantScopesToToken(
 		java.lang.String tokenString,
-		java.lang.Iterable<com.liferay.oauth2.provider.model.LiferayOAuth2ScopeInternalIdentifier> scopes)
+		java.util.Collection<com.liferay.oauth2.provider.model.LiferayOAuth2Scope> scopes)
 		throws com.liferay.oauth2.provider.exception.NoSuchOAuth2TokenException {
 		return _oAuth2ScopeGrantLocalService.grantScopesToToken(tokenString,
 			scopes);
