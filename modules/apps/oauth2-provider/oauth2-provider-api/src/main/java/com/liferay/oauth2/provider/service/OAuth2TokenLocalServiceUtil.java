@@ -180,6 +180,16 @@ public class OAuth2TokenLocalServiceUtil {
 		return getService().fetchOAuth2Token(oAuth2TokenId);
 	}
 
+	public static java.util.Collection<com.liferay.oauth2.provider.model.OAuth2Token> findByApplicationAndUserName(
+		java.lang.String applicationId, java.lang.String username) {
+		return getService().findByApplicationAndUserName(applicationId, username);
+	}
+
+	public static java.util.Collection<com.liferay.oauth2.provider.model.OAuth2Token> findByRefreshToken(
+		java.lang.String refreshToken) {
+		return getService().findByRefreshToken(refreshToken);
+	}
+
 	/**
 	* Returns the o auth2 token with the primary key.
 	*

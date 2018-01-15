@@ -14,10 +14,9 @@
 
 package com.liferay.oauth2.provider.web;
 
-import com.liferay.oauth2.provider.model.LiferayOAuth2ScopeExternalIdentifier;
 import com.liferay.oauth2.provider.scopes.liferay.api.ScopeFinderLocator;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -26,10 +25,10 @@ import javax.portlet.Portlet;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.Collection;
 
 @Component(
 	immediate = true,
@@ -49,24 +48,38 @@ public class LiferayOAuth2ScopesGrantPortlet extends MVCPortlet {
 		OutputStream portletOutputStream =
 			renderResponse.getPortletOutputStream();
 
+		HttpServletRequest httpServletRequest =
+			PortalUtil.getHttpServletRequest(renderRequest);
+
 		PrintWriter printWriter = new PrintWriter(portletOutputStream, true);
 
-		printWriter.println("Hello world");
-
-		try {
-			for (LiferayOAuth2ScopeExternalIdentifier
-				identifier : _scopeFinderLocator.listScopes(
-					PortalUtil.getCompany(renderRequest))) {
-
-				printWriter.print(identifier.getApplicationName());
-				printWriter.print(":");
-				printWriter.print(identifier.getScopeExternalIdentifier());
-				printWriter.println("<br>");
-			}
-		}
-		catch (PortalException e) {
-			throw new PortletException(e);
-		}
+		printWriter.append("<form method=\"POST\" action=\"");
+		printWriter.append(
+			ParamUtil.get(httpServletRequest, "reply_to", ""));
+		printWriter.append("\">");
+		printWriter.append(
+			"<input type=\"hidden\" name=\"client_id\" value=\"");
+		printWriter.append(
+			ParamUtil.get(httpServletRequest, "client_id", ""));
+		printWriter.append("\">");
+		printWriter.append(
+			"<input type=\"hidden\" name=\"redirect_uri\" value=\"");
+		printWriter.append(
+			ParamUtil.get(httpServletRequest, "redirect_uri", ""));
+		printWriter.append("\">");
+		printWriter.append(
+			"<input type=\"hidden\" name=\"session_authenticity_token\" " +
+			"value=\"");
+		printWriter.append(
+			ParamUtil.get(httpServletRequest, "session_authenticity_token", ""));
+		printWriter.append("\">");
+		printWriter.append(
+			"<button type=\"submit\" name=\"oauthDecision\" value=\"allow\">" +
+				"Allow</button>");
+		printWriter.append(
+			"<button type=\"submit\" name=\"oauthDecision\" value=\"deny\">" +
+				"Deny</button>");
+		printWriter.append("</form>");
 	}
 
 	@Reference

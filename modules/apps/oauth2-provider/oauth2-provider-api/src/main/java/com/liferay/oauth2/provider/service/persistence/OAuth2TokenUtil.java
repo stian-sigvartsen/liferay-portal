@@ -280,6 +280,370 @@ public class OAuth2TokenUtil {
 	}
 
 	/**
+	* Returns all the o auth2 tokens where oAuth2ApplicationId = &#63; and userName = &#63;.
+	*
+	* @param oAuth2ApplicationId the o auth2 application ID
+	* @param userName the user name
+	* @return the matching o auth2 tokens
+	*/
+	public static List<OAuth2Token> findByA_U(
+		java.lang.String oAuth2ApplicationId, java.lang.String userName) {
+		return getPersistence().findByA_U(oAuth2ApplicationId, userName);
+	}
+
+	/**
+	* Returns a range of all the o auth2 tokens where oAuth2ApplicationId = &#63; and userName = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link OAuth2TokenModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param oAuth2ApplicationId the o auth2 application ID
+	* @param userName the user name
+	* @param start the lower bound of the range of o auth2 tokens
+	* @param end the upper bound of the range of o auth2 tokens (not inclusive)
+	* @return the range of matching o auth2 tokens
+	*/
+	public static List<OAuth2Token> findByA_U(
+		java.lang.String oAuth2ApplicationId, java.lang.String userName,
+		int start, int end) {
+		return getPersistence()
+				   .findByA_U(oAuth2ApplicationId, userName, start, end);
+	}
+
+	/**
+	* Returns an ordered range of all the o auth2 tokens where oAuth2ApplicationId = &#63; and userName = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link OAuth2TokenModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param oAuth2ApplicationId the o auth2 application ID
+	* @param userName the user name
+	* @param start the lower bound of the range of o auth2 tokens
+	* @param end the upper bound of the range of o auth2 tokens (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of matching o auth2 tokens
+	*/
+	public static List<OAuth2Token> findByA_U(
+		java.lang.String oAuth2ApplicationId, java.lang.String userName,
+		int start, int end, OrderByComparator<OAuth2Token> orderByComparator) {
+		return getPersistence()
+				   .findByA_U(oAuth2ApplicationId, userName, start, end,
+			orderByComparator);
+	}
+
+	/**
+	* Returns an ordered range of all the o auth2 tokens where oAuth2ApplicationId = &#63; and userName = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link OAuth2TokenModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param oAuth2ApplicationId the o auth2 application ID
+	* @param userName the user name
+	* @param start the lower bound of the range of o auth2 tokens
+	* @param end the upper bound of the range of o auth2 tokens (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the ordered range of matching o auth2 tokens
+	*/
+	public static List<OAuth2Token> findByA_U(
+		java.lang.String oAuth2ApplicationId, java.lang.String userName,
+		int start, int end, OrderByComparator<OAuth2Token> orderByComparator,
+		boolean retrieveFromCache) {
+		return getPersistence()
+				   .findByA_U(oAuth2ApplicationId, userName, start, end,
+			orderByComparator, retrieveFromCache);
+	}
+
+	/**
+	* Returns the first o auth2 token in the ordered set where oAuth2ApplicationId = &#63; and userName = &#63;.
+	*
+	* @param oAuth2ApplicationId the o auth2 application ID
+	* @param userName the user name
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching o auth2 token
+	* @throws NoSuchOAuth2TokenException if a matching o auth2 token could not be found
+	*/
+	public static OAuth2Token findByA_U_First(
+		java.lang.String oAuth2ApplicationId, java.lang.String userName,
+		OrderByComparator<OAuth2Token> orderByComparator)
+		throws com.liferay.oauth2.provider.exception.NoSuchOAuth2TokenException {
+		return getPersistence()
+				   .findByA_U_First(oAuth2ApplicationId, userName,
+			orderByComparator);
+	}
+
+	/**
+	* Returns the first o auth2 token in the ordered set where oAuth2ApplicationId = &#63; and userName = &#63;.
+	*
+	* @param oAuth2ApplicationId the o auth2 application ID
+	* @param userName the user name
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching o auth2 token, or <code>null</code> if a matching o auth2 token could not be found
+	*/
+	public static OAuth2Token fetchByA_U_First(
+		java.lang.String oAuth2ApplicationId, java.lang.String userName,
+		OrderByComparator<OAuth2Token> orderByComparator) {
+		return getPersistence()
+				   .fetchByA_U_First(oAuth2ApplicationId, userName,
+			orderByComparator);
+	}
+
+	/**
+	* Returns the last o auth2 token in the ordered set where oAuth2ApplicationId = &#63; and userName = &#63;.
+	*
+	* @param oAuth2ApplicationId the o auth2 application ID
+	* @param userName the user name
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching o auth2 token
+	* @throws NoSuchOAuth2TokenException if a matching o auth2 token could not be found
+	*/
+	public static OAuth2Token findByA_U_Last(
+		java.lang.String oAuth2ApplicationId, java.lang.String userName,
+		OrderByComparator<OAuth2Token> orderByComparator)
+		throws com.liferay.oauth2.provider.exception.NoSuchOAuth2TokenException {
+		return getPersistence()
+				   .findByA_U_Last(oAuth2ApplicationId, userName,
+			orderByComparator);
+	}
+
+	/**
+	* Returns the last o auth2 token in the ordered set where oAuth2ApplicationId = &#63; and userName = &#63;.
+	*
+	* @param oAuth2ApplicationId the o auth2 application ID
+	* @param userName the user name
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching o auth2 token, or <code>null</code> if a matching o auth2 token could not be found
+	*/
+	public static OAuth2Token fetchByA_U_Last(
+		java.lang.String oAuth2ApplicationId, java.lang.String userName,
+		OrderByComparator<OAuth2Token> orderByComparator) {
+		return getPersistence()
+				   .fetchByA_U_Last(oAuth2ApplicationId, userName,
+			orderByComparator);
+	}
+
+	/**
+	* Returns the o auth2 tokens before and after the current o auth2 token in the ordered set where oAuth2ApplicationId = &#63; and userName = &#63;.
+	*
+	* @param oAuth2TokenId the primary key of the current o auth2 token
+	* @param oAuth2ApplicationId the o auth2 application ID
+	* @param userName the user name
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the previous, current, and next o auth2 token
+	* @throws NoSuchOAuth2TokenException if a o auth2 token with the primary key could not be found
+	*/
+	public static OAuth2Token[] findByA_U_PrevAndNext(
+		java.lang.String oAuth2TokenId, java.lang.String oAuth2ApplicationId,
+		java.lang.String userName,
+		OrderByComparator<OAuth2Token> orderByComparator)
+		throws com.liferay.oauth2.provider.exception.NoSuchOAuth2TokenException {
+		return getPersistence()
+				   .findByA_U_PrevAndNext(oAuth2TokenId, oAuth2ApplicationId,
+			userName, orderByComparator);
+	}
+
+	/**
+	* Removes all the o auth2 tokens where oAuth2ApplicationId = &#63; and userName = &#63; from the database.
+	*
+	* @param oAuth2ApplicationId the o auth2 application ID
+	* @param userName the user name
+	*/
+	public static void removeByA_U(java.lang.String oAuth2ApplicationId,
+		java.lang.String userName) {
+		getPersistence().removeByA_U(oAuth2ApplicationId, userName);
+	}
+
+	/**
+	* Returns the number of o auth2 tokens where oAuth2ApplicationId = &#63; and userName = &#63;.
+	*
+	* @param oAuth2ApplicationId the o auth2 application ID
+	* @param userName the user name
+	* @return the number of matching o auth2 tokens
+	*/
+	public static int countByA_U(java.lang.String oAuth2ApplicationId,
+		java.lang.String userName) {
+		return getPersistence().countByA_U(oAuth2ApplicationId, userName);
+	}
+
+	/**
+	* Returns all the o auth2 tokens where oAuth2RefreshTokenId = &#63;.
+	*
+	* @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	* @return the matching o auth2 tokens
+	*/
+	public static List<OAuth2Token> findByRefreshToken(
+		java.lang.String oAuth2RefreshTokenId) {
+		return getPersistence().findByRefreshToken(oAuth2RefreshTokenId);
+	}
+
+	/**
+	* Returns a range of all the o auth2 tokens where oAuth2RefreshTokenId = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link OAuth2TokenModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	* @param start the lower bound of the range of o auth2 tokens
+	* @param end the upper bound of the range of o auth2 tokens (not inclusive)
+	* @return the range of matching o auth2 tokens
+	*/
+	public static List<OAuth2Token> findByRefreshToken(
+		java.lang.String oAuth2RefreshTokenId, int start, int end) {
+		return getPersistence()
+				   .findByRefreshToken(oAuth2RefreshTokenId, start, end);
+	}
+
+	/**
+	* Returns an ordered range of all the o auth2 tokens where oAuth2RefreshTokenId = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link OAuth2TokenModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	* @param start the lower bound of the range of o auth2 tokens
+	* @param end the upper bound of the range of o auth2 tokens (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of matching o auth2 tokens
+	*/
+	public static List<OAuth2Token> findByRefreshToken(
+		java.lang.String oAuth2RefreshTokenId, int start, int end,
+		OrderByComparator<OAuth2Token> orderByComparator) {
+		return getPersistence()
+				   .findByRefreshToken(oAuth2RefreshTokenId, start, end,
+			orderByComparator);
+	}
+
+	/**
+	* Returns an ordered range of all the o auth2 tokens where oAuth2RefreshTokenId = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link OAuth2TokenModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	* @param start the lower bound of the range of o auth2 tokens
+	* @param end the upper bound of the range of o auth2 tokens (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the ordered range of matching o auth2 tokens
+	*/
+	public static List<OAuth2Token> findByRefreshToken(
+		java.lang.String oAuth2RefreshTokenId, int start, int end,
+		OrderByComparator<OAuth2Token> orderByComparator,
+		boolean retrieveFromCache) {
+		return getPersistence()
+				   .findByRefreshToken(oAuth2RefreshTokenId, start, end,
+			orderByComparator, retrieveFromCache);
+	}
+
+	/**
+	* Returns the first o auth2 token in the ordered set where oAuth2RefreshTokenId = &#63;.
+	*
+	* @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching o auth2 token
+	* @throws NoSuchOAuth2TokenException if a matching o auth2 token could not be found
+	*/
+	public static OAuth2Token findByRefreshToken_First(
+		java.lang.String oAuth2RefreshTokenId,
+		OrderByComparator<OAuth2Token> orderByComparator)
+		throws com.liferay.oauth2.provider.exception.NoSuchOAuth2TokenException {
+		return getPersistence()
+				   .findByRefreshToken_First(oAuth2RefreshTokenId,
+			orderByComparator);
+	}
+
+	/**
+	* Returns the first o auth2 token in the ordered set where oAuth2RefreshTokenId = &#63;.
+	*
+	* @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching o auth2 token, or <code>null</code> if a matching o auth2 token could not be found
+	*/
+	public static OAuth2Token fetchByRefreshToken_First(
+		java.lang.String oAuth2RefreshTokenId,
+		OrderByComparator<OAuth2Token> orderByComparator) {
+		return getPersistence()
+				   .fetchByRefreshToken_First(oAuth2RefreshTokenId,
+			orderByComparator);
+	}
+
+	/**
+	* Returns the last o auth2 token in the ordered set where oAuth2RefreshTokenId = &#63;.
+	*
+	* @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching o auth2 token
+	* @throws NoSuchOAuth2TokenException if a matching o auth2 token could not be found
+	*/
+	public static OAuth2Token findByRefreshToken_Last(
+		java.lang.String oAuth2RefreshTokenId,
+		OrderByComparator<OAuth2Token> orderByComparator)
+		throws com.liferay.oauth2.provider.exception.NoSuchOAuth2TokenException {
+		return getPersistence()
+				   .findByRefreshToken_Last(oAuth2RefreshTokenId,
+			orderByComparator);
+	}
+
+	/**
+	* Returns the last o auth2 token in the ordered set where oAuth2RefreshTokenId = &#63;.
+	*
+	* @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching o auth2 token, or <code>null</code> if a matching o auth2 token could not be found
+	*/
+	public static OAuth2Token fetchByRefreshToken_Last(
+		java.lang.String oAuth2RefreshTokenId,
+		OrderByComparator<OAuth2Token> orderByComparator) {
+		return getPersistence()
+				   .fetchByRefreshToken_Last(oAuth2RefreshTokenId,
+			orderByComparator);
+	}
+
+	/**
+	* Returns the o auth2 tokens before and after the current o auth2 token in the ordered set where oAuth2RefreshTokenId = &#63;.
+	*
+	* @param oAuth2TokenId the primary key of the current o auth2 token
+	* @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the previous, current, and next o auth2 token
+	* @throws NoSuchOAuth2TokenException if a o auth2 token with the primary key could not be found
+	*/
+	public static OAuth2Token[] findByRefreshToken_PrevAndNext(
+		java.lang.String oAuth2TokenId, java.lang.String oAuth2RefreshTokenId,
+		OrderByComparator<OAuth2Token> orderByComparator)
+		throws com.liferay.oauth2.provider.exception.NoSuchOAuth2TokenException {
+		return getPersistence()
+				   .findByRefreshToken_PrevAndNext(oAuth2TokenId,
+			oAuth2RefreshTokenId, orderByComparator);
+	}
+
+	/**
+	* Removes all the o auth2 tokens where oAuth2RefreshTokenId = &#63; from the database.
+	*
+	* @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	*/
+	public static void removeByRefreshToken(
+		java.lang.String oAuth2RefreshTokenId) {
+		getPersistence().removeByRefreshToken(oAuth2RefreshTokenId);
+	}
+
+	/**
+	* Returns the number of o auth2 tokens where oAuth2RefreshTokenId = &#63;.
+	*
+	* @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	* @return the number of matching o auth2 tokens
+	*/
+	public static int countByRefreshToken(java.lang.String oAuth2RefreshTokenId) {
+		return getPersistence().countByRefreshToken(oAuth2RefreshTokenId);
+	}
+
+	/**
 	* Caches the o auth2 token in the entity cache if it is enabled.
 	*
 	* @param oAuth2Token the o auth2 token

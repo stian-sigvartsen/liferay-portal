@@ -184,6 +184,19 @@ public class OAuth2TokenLocalServiceWrapper implements OAuth2TokenLocalService,
 		return _oAuth2TokenLocalService.fetchOAuth2Token(oAuth2TokenId);
 	}
 
+	@Override
+	public java.util.Collection<com.liferay.oauth2.provider.model.OAuth2Token> findByApplicationAndUserName(
+		java.lang.String applicationId, java.lang.String username) {
+		return _oAuth2TokenLocalService.findByApplicationAndUserName(applicationId,
+			username);
+	}
+
+	@Override
+	public java.util.Collection<com.liferay.oauth2.provider.model.OAuth2Token> findByRefreshToken(
+		java.lang.String refreshToken) {
+		return _oAuth2TokenLocalService.findByRefreshToken(refreshToken);
+	}
+
 	/**
 	* Returns the o auth2 token with the primary key.
 	*

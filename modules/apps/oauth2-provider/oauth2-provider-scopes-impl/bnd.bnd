@@ -7,8 +7,6 @@ Import-Package:\
 	!org.apache.avalon.*,\
 	!org.apache.cxf.aegis.*,\
 	!org.apache.cxf.jaxrs.client.*,\
-	!org.apache.cxf.rt.security.crypto.*,\
-	!org.apache.cxf.rs.security.jose.*,\
 	!org.apache.html.dom.*,\
 	!org.apache.log.*,\
 	!org.apache.xmlbeans.*,\
@@ -30,4 +28,7 @@ Import-Package:\
 
 -includeresource:\
  	@cxf-rt-rs-extension-providers*.jar,\
- 	@cxf-rt-rs-security-oauth2*.jar
+ 	@cxf-rt-security*.jar,\
+ 	@cxf-rt-rs-security-oauth2*.jar,\
+ 	@cxf-rt-rs-security-jose*.jar,\
+ 	@cxf-rt-rs-security-jose-jaxrs*.jar

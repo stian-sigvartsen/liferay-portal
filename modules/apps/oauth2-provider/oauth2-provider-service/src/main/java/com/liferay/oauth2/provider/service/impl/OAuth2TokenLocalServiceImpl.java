@@ -14,7 +14,11 @@
 
 package com.liferay.oauth2.provider.service.impl;
 
+import com.liferay.oauth2.provider.exception.NoSuchOAuth2TokenException;
+import com.liferay.oauth2.provider.model.OAuth2Token;
 import com.liferay.oauth2.provider.service.base.OAuth2TokenLocalServiceBaseImpl;
+
+import java.util.Collection;
 
 /**
  * The implementation of the o auth2 token local service.
@@ -36,4 +40,16 @@ public class OAuth2TokenLocalServiceImpl extends OAuth2TokenLocalServiceBaseImpl
 	 *
 	 * Never reference this class directly. Always use {@link com.liferay.oauth2.provider.service.OAuth2TokenLocalServiceUtil} to access the o auth2 token local service.
 	 */
+
+	public Collection<OAuth2Token> findByApplicationAndUserName(
+		String applicationId, String username) {
+
+		return oAuth2TokenPersistence.findByA_U(applicationId, username);
+	}
+
+	@Override
+	public Collection<OAuth2Token> findByRefreshToken(String refreshToken) {
+		return oAuth2TokenPersistence.findByRefreshToken(refreshToken);
+	}
+
 }

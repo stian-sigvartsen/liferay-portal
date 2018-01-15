@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 
 import java.io.Serializable;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -164,6 +165,12 @@ public interface OAuth2TokenLocalService extends BaseLocalService,
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public OAuth2Token fetchOAuth2Token(java.lang.String oAuth2TokenId);
+
+	public Collection<OAuth2Token> findByApplicationAndUserName(
+		java.lang.String applicationId, java.lang.String username);
+
+	public Collection<OAuth2Token> findByRefreshToken(
+		java.lang.String refreshToken);
 
 	/**
 	* Returns the o auth2 token with the primary key.

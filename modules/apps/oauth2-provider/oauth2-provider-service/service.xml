@@ -34,7 +34,43 @@
 		<!-- Audit fields -->
 
 		<column name="companyId" type="long" />
+		<column name="userId" type="long" />
+		<column name="userName" type="String" />
 		<column name="createDate" type="Date" />
+		<column name="lifeTime" type="long" />
+
+		<!-- Other fields -->
+
+		<column name="oAuth2ApplicationId" type="String" />
+		<column name="oAuth2TokenType" type="String" />
+		<column name="oAuth2RefreshTokenId" type="String" />
+
+		<finder name="A" return-type="Collection">
+			<finder-column name="oAuth2ApplicationId" />
+		</finder>
+		<finder name="A_U" return-type="Collection">
+			<finder-column name="oAuth2ApplicationId" />
+			<finder-column name="userName" />
+		</finder>
+		<finder name="RefreshToken" return-type="Collection">
+			<finder-column name="oAuth2RefreshTokenId"></finder-column>
+		</finder>
+
+		<reference entity="OAuth2Application" package-path="com.liferay.oauth2.provider" />
+		<reference entity="OAuth2RefreshToken" package-path="com.liferay.oauth2.provider" />
+	</entity>
+	<entity name="OAuth2RefreshToken" local-service="true" remote-service="false">
+		<!-- PK fields -->
+
+		<column name="oAuth2RefreshTokenId" primary="true" type="String" />
+
+		<!-- Audit fields -->
+
+		<column name="companyId" type="long" />
+		<column name="userId" type="long" />
+		<column name="userName" type="String" />
+		<column name="createDate" type="Date" />
+		<column name="lifeTime" type="long" />
 
 		<!-- Other fields -->
 
@@ -43,9 +79,15 @@
 		<finder name="A" return-type="Collection">
 			<finder-column name="oAuth2ApplicationId" />
 		</finder>
+		<finder name="A_U" return-type="Collection">
+			<finder-column name="oAuth2ApplicationId" />
+			<finder-column name="userName" />
+		</finder>
 
 		<reference entity="OAuth2Application" package-path="com.liferay.oauth2.provider" />
+		<reference entity="OAuth2Token" package-path="com.liferay.oauth2.provider" />
 	</entity>
+
 	<entity name="OAuth2ScopeGrant" local-service="true" remote-service="false">
 		<!-- PK fields -->
 

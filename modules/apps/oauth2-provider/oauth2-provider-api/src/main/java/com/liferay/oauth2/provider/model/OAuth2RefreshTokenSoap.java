@@ -29,25 +29,24 @@ import java.util.List;
  * @generated
  */
 @ProviderType
-public class OAuth2TokenSoap implements Serializable {
-	public static OAuth2TokenSoap toSoapModel(OAuth2Token model) {
-		OAuth2TokenSoap soapModel = new OAuth2TokenSoap();
+public class OAuth2RefreshTokenSoap implements Serializable {
+	public static OAuth2RefreshTokenSoap toSoapModel(OAuth2RefreshToken model) {
+		OAuth2RefreshTokenSoap soapModel = new OAuth2RefreshTokenSoap();
 
-		soapModel.setOAuth2TokenId(model.getOAuth2TokenId());
+		soapModel.setOAuth2RefreshTokenId(model.getOAuth2RefreshTokenId());
 		soapModel.setCompanyId(model.getCompanyId());
 		soapModel.setUserId(model.getUserId());
 		soapModel.setUserName(model.getUserName());
 		soapModel.setCreateDate(model.getCreateDate());
 		soapModel.setLifeTime(model.getLifeTime());
 		soapModel.setOAuth2ApplicationId(model.getOAuth2ApplicationId());
-		soapModel.setOAuth2TokenType(model.getOAuth2TokenType());
-		soapModel.setOAuth2RefreshTokenId(model.getOAuth2RefreshTokenId());
 
 		return soapModel;
 	}
 
-	public static OAuth2TokenSoap[] toSoapModels(OAuth2Token[] models) {
-		OAuth2TokenSoap[] soapModels = new OAuth2TokenSoap[models.length];
+	public static OAuth2RefreshTokenSoap[] toSoapModels(
+		OAuth2RefreshToken[] models) {
+		OAuth2RefreshTokenSoap[] soapModels = new OAuth2RefreshTokenSoap[models.length];
 
 		for (int i = 0; i < models.length; i++) {
 			soapModels[i] = toSoapModel(models[i]);
@@ -56,14 +55,15 @@ public class OAuth2TokenSoap implements Serializable {
 		return soapModels;
 	}
 
-	public static OAuth2TokenSoap[][] toSoapModels(OAuth2Token[][] models) {
-		OAuth2TokenSoap[][] soapModels = null;
+	public static OAuth2RefreshTokenSoap[][] toSoapModels(
+		OAuth2RefreshToken[][] models) {
+		OAuth2RefreshTokenSoap[][] soapModels = null;
 
 		if (models.length > 0) {
-			soapModels = new OAuth2TokenSoap[models.length][models[0].length];
+			soapModels = new OAuth2RefreshTokenSoap[models.length][models[0].length];
 		}
 		else {
-			soapModels = new OAuth2TokenSoap[0][0];
+			soapModels = new OAuth2RefreshTokenSoap[0][0];
 		}
 
 		for (int i = 0; i < models.length; i++) {
@@ -73,33 +73,34 @@ public class OAuth2TokenSoap implements Serializable {
 		return soapModels;
 	}
 
-	public static OAuth2TokenSoap[] toSoapModels(List<OAuth2Token> models) {
-		List<OAuth2TokenSoap> soapModels = new ArrayList<OAuth2TokenSoap>(models.size());
+	public static OAuth2RefreshTokenSoap[] toSoapModels(
+		List<OAuth2RefreshToken> models) {
+		List<OAuth2RefreshTokenSoap> soapModels = new ArrayList<OAuth2RefreshTokenSoap>(models.size());
 
-		for (OAuth2Token model : models) {
+		for (OAuth2RefreshToken model : models) {
 			soapModels.add(toSoapModel(model));
 		}
 
-		return soapModels.toArray(new OAuth2TokenSoap[soapModels.size()]);
+		return soapModels.toArray(new OAuth2RefreshTokenSoap[soapModels.size()]);
 	}
 
-	public OAuth2TokenSoap() {
+	public OAuth2RefreshTokenSoap() {
 	}
 
 	public String getPrimaryKey() {
-		return _oAuth2TokenId;
+		return _oAuth2RefreshTokenId;
 	}
 
 	public void setPrimaryKey(String pk) {
-		setOAuth2TokenId(pk);
+		setOAuth2RefreshTokenId(pk);
 	}
 
-	public String getOAuth2TokenId() {
-		return _oAuth2TokenId;
+	public String getOAuth2RefreshTokenId() {
+		return _oAuth2RefreshTokenId;
 	}
 
-	public void setOAuth2TokenId(String oAuth2TokenId) {
-		_oAuth2TokenId = oAuth2TokenId;
+	public void setOAuth2RefreshTokenId(String oAuth2RefreshTokenId) {
+		_oAuth2RefreshTokenId = oAuth2RefreshTokenId;
 	}
 
 	public long getCompanyId() {
@@ -150,29 +151,11 @@ public class OAuth2TokenSoap implements Serializable {
 		_oAuth2ApplicationId = oAuth2ApplicationId;
 	}
 
-	public String getOAuth2TokenType() {
-		return _oAuth2TokenType;
-	}
-
-	public void setOAuth2TokenType(String oAuth2TokenType) {
-		_oAuth2TokenType = oAuth2TokenType;
-	}
-
-	public String getOAuth2RefreshTokenId() {
-		return _oAuth2RefreshTokenId;
-	}
-
-	public void setOAuth2RefreshTokenId(String oAuth2RefreshTokenId) {
-		_oAuth2RefreshTokenId = oAuth2RefreshTokenId;
-	}
-
-	private String _oAuth2TokenId;
+	private String _oAuth2RefreshTokenId;
 	private long _companyId;
 	private long _userId;
 	private String _userName;
 	private Date _createDate;
 	private long _lifeTime;
 	private String _oAuth2ApplicationId;
-	private String _oAuth2TokenType;
-	private String _oAuth2RefreshTokenId;
 }

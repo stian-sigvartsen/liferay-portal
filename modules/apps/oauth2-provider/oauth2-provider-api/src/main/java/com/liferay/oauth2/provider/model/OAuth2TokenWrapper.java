@@ -60,8 +60,13 @@ public class OAuth2TokenWrapper implements OAuth2Token,
 
 		attributes.put("oAuth2TokenId", getOAuth2TokenId());
 		attributes.put("companyId", getCompanyId());
+		attributes.put("userId", getUserId());
+		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
+		attributes.put("lifeTime", getLifeTime());
 		attributes.put("oAuth2ApplicationId", getOAuth2ApplicationId());
+		attributes.put("oAuth2TokenType", getOAuth2TokenType());
+		attributes.put("oAuth2RefreshTokenId", getOAuth2RefreshTokenId());
 
 		return attributes;
 	}
@@ -80,10 +85,28 @@ public class OAuth2TokenWrapper implements OAuth2Token,
 			setCompanyId(companyId);
 		}
 
+		Long userId = (Long)attributes.get("userId");
+
+		if (userId != null) {
+			setUserId(userId);
+		}
+
+		String userName = (String)attributes.get("userName");
+
+		if (userName != null) {
+			setUserName(userName);
+		}
+
 		Date createDate = (Date)attributes.get("createDate");
 
 		if (createDate != null) {
 			setCreateDate(createDate);
+		}
+
+		Long lifeTime = (Long)attributes.get("lifeTime");
+
+		if (lifeTime != null) {
+			setLifeTime(lifeTime);
 		}
 
 		String oAuth2ApplicationId = (String)attributes.get(
@@ -91,6 +114,19 @@ public class OAuth2TokenWrapper implements OAuth2Token,
 
 		if (oAuth2ApplicationId != null) {
 			setOAuth2ApplicationId(oAuth2ApplicationId);
+		}
+
+		String oAuth2TokenType = (String)attributes.get("oAuth2TokenType");
+
+		if (oAuth2TokenType != null) {
+			setOAuth2TokenType(oAuth2TokenType);
+		}
+
+		String oAuth2RefreshTokenId = (String)attributes.get(
+				"oAuth2RefreshTokenId");
+
+		if (oAuth2RefreshTokenId != null) {
+			setOAuth2RefreshTokenId(oAuth2RefreshTokenId);
 		}
 	}
 
@@ -130,6 +166,16 @@ public class OAuth2TokenWrapper implements OAuth2Token,
 	}
 
 	/**
+	* Returns the life time of this o auth2 token.
+	*
+	* @return the life time of this o auth2 token
+	*/
+	@Override
+	public long getLifeTime() {
+		return _oAuth2Token.getLifeTime();
+	}
+
+	/**
 	* Returns the o auth2 application ID of this o auth2 token.
 	*
 	* @return the o auth2 application ID of this o auth2 token
@@ -140,6 +186,16 @@ public class OAuth2TokenWrapper implements OAuth2Token,
 	}
 
 	/**
+	* Returns the o auth2 refresh token ID of this o auth2 token.
+	*
+	* @return the o auth2 refresh token ID of this o auth2 token
+	*/
+	@Override
+	public java.lang.String getOAuth2RefreshTokenId() {
+		return _oAuth2Token.getOAuth2RefreshTokenId();
+	}
+
+	/**
 	* Returns the o auth2 token ID of this o auth2 token.
 	*
 	* @return the o auth2 token ID of this o auth2 token
@@ -147,6 +203,16 @@ public class OAuth2TokenWrapper implements OAuth2Token,
 	@Override
 	public java.lang.String getOAuth2TokenId() {
 		return _oAuth2Token.getOAuth2TokenId();
+	}
+
+	/**
+	* Returns the o auth2 token type of this o auth2 token.
+	*
+	* @return the o auth2 token type of this o auth2 token
+	*/
+	@Override
+	public java.lang.String getOAuth2TokenType() {
+		return _oAuth2Token.getOAuth2TokenType();
 	}
 
 	/**
@@ -162,6 +228,36 @@ public class OAuth2TokenWrapper implements OAuth2Token,
 	@Override
 	public Serializable getPrimaryKeyObj() {
 		return _oAuth2Token.getPrimaryKeyObj();
+	}
+
+	/**
+	* Returns the user ID of this o auth2 token.
+	*
+	* @return the user ID of this o auth2 token
+	*/
+	@Override
+	public long getUserId() {
+		return _oAuth2Token.getUserId();
+	}
+
+	/**
+	* Returns the user name of this o auth2 token.
+	*
+	* @return the user name of this o auth2 token
+	*/
+	@Override
+	public java.lang.String getUserName() {
+		return _oAuth2Token.getUserName();
+	}
+
+	/**
+	* Returns the user uuid of this o auth2 token.
+	*
+	* @return the user uuid of this o auth2 token
+	*/
+	@Override
+	public java.lang.String getUserUuid() {
+		return _oAuth2Token.getUserUuid();
 	}
 
 	@Override
@@ -230,6 +326,16 @@ public class OAuth2TokenWrapper implements OAuth2Token,
 		_oAuth2Token.setExpandoBridgeAttributes(serviceContext);
 	}
 
+	/**
+	* Sets the life time of this o auth2 token.
+	*
+	* @param lifeTime the life time of this o auth2 token
+	*/
+	@Override
+	public void setLifeTime(long lifeTime) {
+		_oAuth2Token.setLifeTime(lifeTime);
+	}
+
 	@Override
 	public void setNew(boolean n) {
 		_oAuth2Token.setNew(n);
@@ -246,6 +352,16 @@ public class OAuth2TokenWrapper implements OAuth2Token,
 	}
 
 	/**
+	* Sets the o auth2 refresh token ID of this o auth2 token.
+	*
+	* @param oAuth2RefreshTokenId the o auth2 refresh token ID of this o auth2 token
+	*/
+	@Override
+	public void setOAuth2RefreshTokenId(java.lang.String oAuth2RefreshTokenId) {
+		_oAuth2Token.setOAuth2RefreshTokenId(oAuth2RefreshTokenId);
+	}
+
+	/**
 	* Sets the o auth2 token ID of this o auth2 token.
 	*
 	* @param oAuth2TokenId the o auth2 token ID of this o auth2 token
@@ -253,6 +369,16 @@ public class OAuth2TokenWrapper implements OAuth2Token,
 	@Override
 	public void setOAuth2TokenId(java.lang.String oAuth2TokenId) {
 		_oAuth2Token.setOAuth2TokenId(oAuth2TokenId);
+	}
+
+	/**
+	* Sets the o auth2 token type of this o auth2 token.
+	*
+	* @param oAuth2TokenType the o auth2 token type of this o auth2 token
+	*/
+	@Override
+	public void setOAuth2TokenType(java.lang.String oAuth2TokenType) {
+		_oAuth2Token.setOAuth2TokenType(oAuth2TokenType);
 	}
 
 	/**
@@ -268,6 +394,36 @@ public class OAuth2TokenWrapper implements OAuth2Token,
 	@Override
 	public void setPrimaryKeyObj(Serializable primaryKeyObj) {
 		_oAuth2Token.setPrimaryKeyObj(primaryKeyObj);
+	}
+
+	/**
+	* Sets the user ID of this o auth2 token.
+	*
+	* @param userId the user ID of this o auth2 token
+	*/
+	@Override
+	public void setUserId(long userId) {
+		_oAuth2Token.setUserId(userId);
+	}
+
+	/**
+	* Sets the user name of this o auth2 token.
+	*
+	* @param userName the user name of this o auth2 token
+	*/
+	@Override
+	public void setUserName(java.lang.String userName) {
+		_oAuth2Token.setUserName(userName);
+	}
+
+	/**
+	* Sets the user uuid of this o auth2 token.
+	*
+	* @param userUuid the user uuid of this o auth2 token
+	*/
+	@Override
+	public void setUserUuid(java.lang.String userUuid) {
+		_oAuth2Token.setUserUuid(userUuid);
 	}
 
 	@Override

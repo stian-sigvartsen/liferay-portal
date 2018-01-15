@@ -95,6 +95,49 @@ public interface OAuth2TokenModel extends BaseModel<OAuth2Token>, ShardedModel {
 	public void setCompanyId(long companyId);
 
 	/**
+	 * Returns the user ID of this o auth2 token.
+	 *
+	 * @return the user ID of this o auth2 token
+	 */
+	public long getUserId();
+
+	/**
+	 * Sets the user ID of this o auth2 token.
+	 *
+	 * @param userId the user ID of this o auth2 token
+	 */
+	public void setUserId(long userId);
+
+	/**
+	 * Returns the user uuid of this o auth2 token.
+	 *
+	 * @return the user uuid of this o auth2 token
+	 */
+	public String getUserUuid();
+
+	/**
+	 * Sets the user uuid of this o auth2 token.
+	 *
+	 * @param userUuid the user uuid of this o auth2 token
+	 */
+	public void setUserUuid(String userUuid);
+
+	/**
+	 * Returns the user name of this o auth2 token.
+	 *
+	 * @return the user name of this o auth2 token
+	 */
+	@AutoEscape
+	public String getUserName();
+
+	/**
+	 * Sets the user name of this o auth2 token.
+	 *
+	 * @param userName the user name of this o auth2 token
+	 */
+	public void setUserName(String userName);
+
+	/**
 	 * Returns the create date of this o auth2 token.
 	 *
 	 * @return the create date of this o auth2 token
@@ -107,6 +150,20 @@ public interface OAuth2TokenModel extends BaseModel<OAuth2Token>, ShardedModel {
 	 * @param createDate the create date of this o auth2 token
 	 */
 	public void setCreateDate(Date createDate);
+
+	/**
+	 * Returns the life time of this o auth2 token.
+	 *
+	 * @return the life time of this o auth2 token
+	 */
+	public long getLifeTime();
+
+	/**
+	 * Sets the life time of this o auth2 token.
+	 *
+	 * @param lifeTime the life time of this o auth2 token
+	 */
+	public void setLifeTime(long lifeTime);
 
 	/**
 	 * Returns the o auth2 application ID of this o auth2 token.
@@ -122,6 +179,36 @@ public interface OAuth2TokenModel extends BaseModel<OAuth2Token>, ShardedModel {
 	 * @param oAuth2ApplicationId the o auth2 application ID of this o auth2 token
 	 */
 	public void setOAuth2ApplicationId(String oAuth2ApplicationId);
+
+	/**
+	 * Returns the o auth2 token type of this o auth2 token.
+	 *
+	 * @return the o auth2 token type of this o auth2 token
+	 */
+	@AutoEscape
+	public String getOAuth2TokenType();
+
+	/**
+	 * Sets the o auth2 token type of this o auth2 token.
+	 *
+	 * @param oAuth2TokenType the o auth2 token type of this o auth2 token
+	 */
+	public void setOAuth2TokenType(String oAuth2TokenType);
+
+	/**
+	 * Returns the o auth2 refresh token ID of this o auth2 token.
+	 *
+	 * @return the o auth2 refresh token ID of this o auth2 token
+	 */
+	@AutoEscape
+	public String getOAuth2RefreshTokenId();
+
+	/**
+	 * Sets the o auth2 refresh token ID of this o auth2 token.
+	 *
+	 * @param oAuth2RefreshTokenId the o auth2 refresh token ID of this o auth2 token
+	 */
+	public void setOAuth2RefreshTokenId(String oAuth2RefreshTokenId);
 
 	@Override
 	public boolean isNew();

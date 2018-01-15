@@ -637,6 +637,1200 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 	private static final String _FINDER_COLUMN_A_OAUTH2APPLICATIONID_1 = "oAuth2Token.oAuth2ApplicationId IS NULL";
 	private static final String _FINDER_COLUMN_A_OAUTH2APPLICATIONID_2 = "oAuth2Token.oAuth2ApplicationId = ?";
 	private static final String _FINDER_COLUMN_A_OAUTH2APPLICATIONID_3 = "(oAuth2Token.oAuth2ApplicationId IS NULL OR oAuth2Token.oAuth2ApplicationId = '')";
+	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_A_U = new FinderPath(OAuth2TokenModelImpl.ENTITY_CACHE_ENABLED,
+			OAuth2TokenModelImpl.FINDER_CACHE_ENABLED, OAuth2TokenImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByA_U",
+			new String[] {
+				String.class.getName(), String.class.getName(),
+				
+			Integer.class.getName(), Integer.class.getName(),
+				OrderByComparator.class.getName()
+			});
+	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_A_U = new FinderPath(OAuth2TokenModelImpl.ENTITY_CACHE_ENABLED,
+			OAuth2TokenModelImpl.FINDER_CACHE_ENABLED, OAuth2TokenImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByA_U",
+			new String[] { String.class.getName(), String.class.getName() },
+			OAuth2TokenModelImpl.OAUTH2APPLICATIONID_COLUMN_BITMASK |
+			OAuth2TokenModelImpl.USERNAME_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_A_U = new FinderPath(OAuth2TokenModelImpl.ENTITY_CACHE_ENABLED,
+			OAuth2TokenModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByA_U",
+			new String[] { String.class.getName(), String.class.getName() });
+
+	/**
+	 * Returns all the o auth2 tokens where oAuth2ApplicationId = &#63; and userName = &#63;.
+	 *
+	 * @param oAuth2ApplicationId the o auth2 application ID
+	 * @param userName the user name
+	 * @return the matching o auth2 tokens
+	 */
+	@Override
+	public List<OAuth2Token> findByA_U(String oAuth2ApplicationId,
+		String userName) {
+		return findByA_U(oAuth2ApplicationId, userName, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the o auth2 tokens where oAuth2ApplicationId = &#63; and userName = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link OAuth2TokenModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param oAuth2ApplicationId the o auth2 application ID
+	 * @param userName the user name
+	 * @param start the lower bound of the range of o auth2 tokens
+	 * @param end the upper bound of the range of o auth2 tokens (not inclusive)
+	 * @return the range of matching o auth2 tokens
+	 */
+	@Override
+	public List<OAuth2Token> findByA_U(String oAuth2ApplicationId,
+		String userName, int start, int end) {
+		return findByA_U(oAuth2ApplicationId, userName, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the o auth2 tokens where oAuth2ApplicationId = &#63; and userName = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link OAuth2TokenModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param oAuth2ApplicationId the o auth2 application ID
+	 * @param userName the user name
+	 * @param start the lower bound of the range of o auth2 tokens
+	 * @param end the upper bound of the range of o auth2 tokens (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching o auth2 tokens
+	 */
+	@Override
+	public List<OAuth2Token> findByA_U(String oAuth2ApplicationId,
+		String userName, int start, int end,
+		OrderByComparator<OAuth2Token> orderByComparator) {
+		return findByA_U(oAuth2ApplicationId, userName, start, end,
+			orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the o auth2 tokens where oAuth2ApplicationId = &#63; and userName = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link OAuth2TokenModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param oAuth2ApplicationId the o auth2 application ID
+	 * @param userName the user name
+	 * @param start the lower bound of the range of o auth2 tokens
+	 * @param end the upper bound of the range of o auth2 tokens (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param retrieveFromCache whether to retrieve from the finder cache
+	 * @return the ordered range of matching o auth2 tokens
+	 */
+	@Override
+	public List<OAuth2Token> findByA_U(String oAuth2ApplicationId,
+		String userName, int start, int end,
+		OrderByComparator<OAuth2Token> orderByComparator,
+		boolean retrieveFromCache) {
+		boolean pagination = true;
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+				(orderByComparator == null)) {
+			pagination = false;
+			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_A_U;
+			finderArgs = new Object[] { oAuth2ApplicationId, userName };
+		}
+		else {
+			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_A_U;
+			finderArgs = new Object[] {
+					oAuth2ApplicationId, userName,
+					
+					start, end, orderByComparator
+				};
+		}
+
+		List<OAuth2Token> list = null;
+
+		if (retrieveFromCache) {
+			list = (List<OAuth2Token>)finderCache.getResult(finderPath,
+					finderArgs, this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (OAuth2Token oAuth2Token : list) {
+					if (!Objects.equals(oAuth2ApplicationId,
+								oAuth2Token.getOAuth2ApplicationId()) ||
+							!Objects.equals(userName, oAuth2Token.getUserName())) {
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(4 +
+						(orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				query = new StringBundler(4);
+			}
+
+			query.append(_SQL_SELECT_OAUTH2TOKEN_WHERE);
+
+			boolean bindOAuth2ApplicationId = false;
+
+			if (oAuth2ApplicationId == null) {
+				query.append(_FINDER_COLUMN_A_U_OAUTH2APPLICATIONID_1);
+			}
+			else if (oAuth2ApplicationId.equals("")) {
+				query.append(_FINDER_COLUMN_A_U_OAUTH2APPLICATIONID_3);
+			}
+			else {
+				bindOAuth2ApplicationId = true;
+
+				query.append(_FINDER_COLUMN_A_U_OAUTH2APPLICATIONID_2);
+			}
+
+			boolean bindUserName = false;
+
+			if (userName == null) {
+				query.append(_FINDER_COLUMN_A_U_USERNAME_1);
+			}
+			else if (userName.equals("")) {
+				query.append(_FINDER_COLUMN_A_U_USERNAME_3);
+			}
+			else {
+				bindUserName = true;
+
+				query.append(_FINDER_COLUMN_A_U_USERNAME_2);
+			}
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+			else
+			 if (pagination) {
+				query.append(OAuth2TokenModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (bindOAuth2ApplicationId) {
+					qPos.add(oAuth2ApplicationId);
+				}
+
+				if (bindUserName) {
+					qPos.add(userName);
+				}
+
+				if (!pagination) {
+					list = (List<OAuth2Token>)QueryUtil.list(q, getDialect(),
+							start, end, false);
+
+					Collections.sort(list);
+
+					list = Collections.unmodifiableList(list);
+				}
+				else {
+					list = (List<OAuth2Token>)QueryUtil.list(q, getDialect(),
+							start, end);
+				}
+
+				cacheResult(list);
+
+				finderCache.putResult(finderPath, finderArgs, list);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first o auth2 token in the ordered set where oAuth2ApplicationId = &#63; and userName = &#63;.
+	 *
+	 * @param oAuth2ApplicationId the o auth2 application ID
+	 * @param userName the user name
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching o auth2 token
+	 * @throws NoSuchOAuth2TokenException if a matching o auth2 token could not be found
+	 */
+	@Override
+	public OAuth2Token findByA_U_First(String oAuth2ApplicationId,
+		String userName, OrderByComparator<OAuth2Token> orderByComparator)
+		throws NoSuchOAuth2TokenException {
+		OAuth2Token oAuth2Token = fetchByA_U_First(oAuth2ApplicationId,
+				userName, orderByComparator);
+
+		if (oAuth2Token != null) {
+			return oAuth2Token;
+		}
+
+		StringBundler msg = new StringBundler(6);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("oAuth2ApplicationId=");
+		msg.append(oAuth2ApplicationId);
+
+		msg.append(", userName=");
+		msg.append(userName);
+
+		msg.append("}");
+
+		throw new NoSuchOAuth2TokenException(msg.toString());
+	}
+
+	/**
+	 * Returns the first o auth2 token in the ordered set where oAuth2ApplicationId = &#63; and userName = &#63;.
+	 *
+	 * @param oAuth2ApplicationId the o auth2 application ID
+	 * @param userName the user name
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching o auth2 token, or <code>null</code> if a matching o auth2 token could not be found
+	 */
+	@Override
+	public OAuth2Token fetchByA_U_First(String oAuth2ApplicationId,
+		String userName, OrderByComparator<OAuth2Token> orderByComparator) {
+		List<OAuth2Token> list = findByA_U(oAuth2ApplicationId, userName, 0, 1,
+				orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last o auth2 token in the ordered set where oAuth2ApplicationId = &#63; and userName = &#63;.
+	 *
+	 * @param oAuth2ApplicationId the o auth2 application ID
+	 * @param userName the user name
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching o auth2 token
+	 * @throws NoSuchOAuth2TokenException if a matching o auth2 token could not be found
+	 */
+	@Override
+	public OAuth2Token findByA_U_Last(String oAuth2ApplicationId,
+		String userName, OrderByComparator<OAuth2Token> orderByComparator)
+		throws NoSuchOAuth2TokenException {
+		OAuth2Token oAuth2Token = fetchByA_U_Last(oAuth2ApplicationId,
+				userName, orderByComparator);
+
+		if (oAuth2Token != null) {
+			return oAuth2Token;
+		}
+
+		StringBundler msg = new StringBundler(6);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("oAuth2ApplicationId=");
+		msg.append(oAuth2ApplicationId);
+
+		msg.append(", userName=");
+		msg.append(userName);
+
+		msg.append("}");
+
+		throw new NoSuchOAuth2TokenException(msg.toString());
+	}
+
+	/**
+	 * Returns the last o auth2 token in the ordered set where oAuth2ApplicationId = &#63; and userName = &#63;.
+	 *
+	 * @param oAuth2ApplicationId the o auth2 application ID
+	 * @param userName the user name
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching o auth2 token, or <code>null</code> if a matching o auth2 token could not be found
+	 */
+	@Override
+	public OAuth2Token fetchByA_U_Last(String oAuth2ApplicationId,
+		String userName, OrderByComparator<OAuth2Token> orderByComparator) {
+		int count = countByA_U(oAuth2ApplicationId, userName);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<OAuth2Token> list = findByA_U(oAuth2ApplicationId, userName,
+				count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the o auth2 tokens before and after the current o auth2 token in the ordered set where oAuth2ApplicationId = &#63; and userName = &#63;.
+	 *
+	 * @param oAuth2TokenId the primary key of the current o auth2 token
+	 * @param oAuth2ApplicationId the o auth2 application ID
+	 * @param userName the user name
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next o auth2 token
+	 * @throws NoSuchOAuth2TokenException if a o auth2 token with the primary key could not be found
+	 */
+	@Override
+	public OAuth2Token[] findByA_U_PrevAndNext(String oAuth2TokenId,
+		String oAuth2ApplicationId, String userName,
+		OrderByComparator<OAuth2Token> orderByComparator)
+		throws NoSuchOAuth2TokenException {
+		OAuth2Token oAuth2Token = findByPrimaryKey(oAuth2TokenId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			OAuth2Token[] array = new OAuth2TokenImpl[3];
+
+			array[0] = getByA_U_PrevAndNext(session, oAuth2Token,
+					oAuth2ApplicationId, userName, orderByComparator, true);
+
+			array[1] = oAuth2Token;
+
+			array[2] = getByA_U_PrevAndNext(session, oAuth2Token,
+					oAuth2ApplicationId, userName, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected OAuth2Token getByA_U_PrevAndNext(Session session,
+		OAuth2Token oAuth2Token, String oAuth2ApplicationId, String userName,
+		OrderByComparator<OAuth2Token> orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(5 +
+					(orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			query = new StringBundler(4);
+		}
+
+		query.append(_SQL_SELECT_OAUTH2TOKEN_WHERE);
+
+		boolean bindOAuth2ApplicationId = false;
+
+		if (oAuth2ApplicationId == null) {
+			query.append(_FINDER_COLUMN_A_U_OAUTH2APPLICATIONID_1);
+		}
+		else if (oAuth2ApplicationId.equals("")) {
+			query.append(_FINDER_COLUMN_A_U_OAUTH2APPLICATIONID_3);
+		}
+		else {
+			bindOAuth2ApplicationId = true;
+
+			query.append(_FINDER_COLUMN_A_U_OAUTH2APPLICATIONID_2);
+		}
+
+		boolean bindUserName = false;
+
+		if (userName == null) {
+			query.append(_FINDER_COLUMN_A_U_USERNAME_1);
+		}
+		else if (userName.equals("")) {
+			query.append(_FINDER_COLUMN_A_U_USERNAME_3);
+		}
+		else {
+			bindUserName = true;
+
+			query.append(_FINDER_COLUMN_A_U_USERNAME_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			query.append(OAuth2TokenModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = query.toString();
+
+		Query q = session.createQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		if (bindOAuth2ApplicationId) {
+			qPos.add(oAuth2ApplicationId);
+		}
+
+		if (bindUserName) {
+			qPos.add(userName);
+		}
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(oAuth2Token);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<OAuth2Token> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the o auth2 tokens where oAuth2ApplicationId = &#63; and userName = &#63; from the database.
+	 *
+	 * @param oAuth2ApplicationId the o auth2 application ID
+	 * @param userName the user name
+	 */
+	@Override
+	public void removeByA_U(String oAuth2ApplicationId, String userName) {
+		for (OAuth2Token oAuth2Token : findByA_U(oAuth2ApplicationId, userName,
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+			remove(oAuth2Token);
+		}
+	}
+
+	/**
+	 * Returns the number of o auth2 tokens where oAuth2ApplicationId = &#63; and userName = &#63;.
+	 *
+	 * @param oAuth2ApplicationId the o auth2 application ID
+	 * @param userName the user name
+	 * @return the number of matching o auth2 tokens
+	 */
+	@Override
+	public int countByA_U(String oAuth2ApplicationId, String userName) {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_A_U;
+
+		Object[] finderArgs = new Object[] { oAuth2ApplicationId, userName };
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(3);
+
+			query.append(_SQL_COUNT_OAUTH2TOKEN_WHERE);
+
+			boolean bindOAuth2ApplicationId = false;
+
+			if (oAuth2ApplicationId == null) {
+				query.append(_FINDER_COLUMN_A_U_OAUTH2APPLICATIONID_1);
+			}
+			else if (oAuth2ApplicationId.equals("")) {
+				query.append(_FINDER_COLUMN_A_U_OAUTH2APPLICATIONID_3);
+			}
+			else {
+				bindOAuth2ApplicationId = true;
+
+				query.append(_FINDER_COLUMN_A_U_OAUTH2APPLICATIONID_2);
+			}
+
+			boolean bindUserName = false;
+
+			if (userName == null) {
+				query.append(_FINDER_COLUMN_A_U_USERNAME_1);
+			}
+			else if (userName.equals("")) {
+				query.append(_FINDER_COLUMN_A_U_USERNAME_3);
+			}
+			else {
+				bindUserName = true;
+
+				query.append(_FINDER_COLUMN_A_U_USERNAME_2);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (bindOAuth2ApplicationId) {
+					qPos.add(oAuth2ApplicationId);
+				}
+
+				if (bindUserName) {
+					qPos.add(userName);
+				}
+
+				count = (Long)q.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_A_U_OAUTH2APPLICATIONID_1 = "oAuth2Token.oAuth2ApplicationId IS NULL AND ";
+	private static final String _FINDER_COLUMN_A_U_OAUTH2APPLICATIONID_2 = "oAuth2Token.oAuth2ApplicationId = ? AND ";
+	private static final String _FINDER_COLUMN_A_U_OAUTH2APPLICATIONID_3 = "(oAuth2Token.oAuth2ApplicationId IS NULL OR oAuth2Token.oAuth2ApplicationId = '') AND ";
+	private static final String _FINDER_COLUMN_A_U_USERNAME_1 = "oAuth2Token.userName IS NULL";
+	private static final String _FINDER_COLUMN_A_U_USERNAME_2 = "oAuth2Token.userName = ?";
+	private static final String _FINDER_COLUMN_A_U_USERNAME_3 = "(oAuth2Token.userName IS NULL OR oAuth2Token.userName = '')";
+	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_REFRESHTOKEN =
+		new FinderPath(OAuth2TokenModelImpl.ENTITY_CACHE_ENABLED,
+			OAuth2TokenModelImpl.FINDER_CACHE_ENABLED, OAuth2TokenImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByRefreshToken",
+			new String[] {
+				String.class.getName(),
+				
+			Integer.class.getName(), Integer.class.getName(),
+				OrderByComparator.class.getName()
+			});
+	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_REFRESHTOKEN =
+		new FinderPath(OAuth2TokenModelImpl.ENTITY_CACHE_ENABLED,
+			OAuth2TokenModelImpl.FINDER_CACHE_ENABLED, OAuth2TokenImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByRefreshToken",
+			new String[] { String.class.getName() },
+			OAuth2TokenModelImpl.OAUTH2REFRESHTOKENID_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_REFRESHTOKEN = new FinderPath(OAuth2TokenModelImpl.ENTITY_CACHE_ENABLED,
+			OAuth2TokenModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByRefreshToken",
+			new String[] { String.class.getName() });
+
+	/**
+	 * Returns all the o auth2 tokens where oAuth2RefreshTokenId = &#63;.
+	 *
+	 * @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	 * @return the matching o auth2 tokens
+	 */
+	@Override
+	public List<OAuth2Token> findByRefreshToken(String oAuth2RefreshTokenId) {
+		return findByRefreshToken(oAuth2RefreshTokenId, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the o auth2 tokens where oAuth2RefreshTokenId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link OAuth2TokenModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	 * @param start the lower bound of the range of o auth2 tokens
+	 * @param end the upper bound of the range of o auth2 tokens (not inclusive)
+	 * @return the range of matching o auth2 tokens
+	 */
+	@Override
+	public List<OAuth2Token> findByRefreshToken(String oAuth2RefreshTokenId,
+		int start, int end) {
+		return findByRefreshToken(oAuth2RefreshTokenId, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the o auth2 tokens where oAuth2RefreshTokenId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link OAuth2TokenModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	 * @param start the lower bound of the range of o auth2 tokens
+	 * @param end the upper bound of the range of o auth2 tokens (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching o auth2 tokens
+	 */
+	@Override
+	public List<OAuth2Token> findByRefreshToken(String oAuth2RefreshTokenId,
+		int start, int end, OrderByComparator<OAuth2Token> orderByComparator) {
+		return findByRefreshToken(oAuth2RefreshTokenId, start, end,
+			orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the o auth2 tokens where oAuth2RefreshTokenId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link OAuth2TokenModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	 * @param start the lower bound of the range of o auth2 tokens
+	 * @param end the upper bound of the range of o auth2 tokens (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param retrieveFromCache whether to retrieve from the finder cache
+	 * @return the ordered range of matching o auth2 tokens
+	 */
+	@Override
+	public List<OAuth2Token> findByRefreshToken(String oAuth2RefreshTokenId,
+		int start, int end, OrderByComparator<OAuth2Token> orderByComparator,
+		boolean retrieveFromCache) {
+		boolean pagination = true;
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+				(orderByComparator == null)) {
+			pagination = false;
+			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_REFRESHTOKEN;
+			finderArgs = new Object[] { oAuth2RefreshTokenId };
+		}
+		else {
+			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_REFRESHTOKEN;
+			finderArgs = new Object[] {
+					oAuth2RefreshTokenId,
+					
+					start, end, orderByComparator
+				};
+		}
+
+		List<OAuth2Token> list = null;
+
+		if (retrieveFromCache) {
+			list = (List<OAuth2Token>)finderCache.getResult(finderPath,
+					finderArgs, this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (OAuth2Token oAuth2Token : list) {
+					if (!Objects.equals(oAuth2RefreshTokenId,
+								oAuth2Token.getOAuth2RefreshTokenId())) {
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(3 +
+						(orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				query = new StringBundler(3);
+			}
+
+			query.append(_SQL_SELECT_OAUTH2TOKEN_WHERE);
+
+			boolean bindOAuth2RefreshTokenId = false;
+
+			if (oAuth2RefreshTokenId == null) {
+				query.append(_FINDER_COLUMN_REFRESHTOKEN_OAUTH2REFRESHTOKENID_1);
+			}
+			else if (oAuth2RefreshTokenId.equals("")) {
+				query.append(_FINDER_COLUMN_REFRESHTOKEN_OAUTH2REFRESHTOKENID_3);
+			}
+			else {
+				bindOAuth2RefreshTokenId = true;
+
+				query.append(_FINDER_COLUMN_REFRESHTOKEN_OAUTH2REFRESHTOKENID_2);
+			}
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+			else
+			 if (pagination) {
+				query.append(OAuth2TokenModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (bindOAuth2RefreshTokenId) {
+					qPos.add(oAuth2RefreshTokenId);
+				}
+
+				if (!pagination) {
+					list = (List<OAuth2Token>)QueryUtil.list(q, getDialect(),
+							start, end, false);
+
+					Collections.sort(list);
+
+					list = Collections.unmodifiableList(list);
+				}
+				else {
+					list = (List<OAuth2Token>)QueryUtil.list(q, getDialect(),
+							start, end);
+				}
+
+				cacheResult(list);
+
+				finderCache.putResult(finderPath, finderArgs, list);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first o auth2 token in the ordered set where oAuth2RefreshTokenId = &#63;.
+	 *
+	 * @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching o auth2 token
+	 * @throws NoSuchOAuth2TokenException if a matching o auth2 token could not be found
+	 */
+	@Override
+	public OAuth2Token findByRefreshToken_First(String oAuth2RefreshTokenId,
+		OrderByComparator<OAuth2Token> orderByComparator)
+		throws NoSuchOAuth2TokenException {
+		OAuth2Token oAuth2Token = fetchByRefreshToken_First(oAuth2RefreshTokenId,
+				orderByComparator);
+
+		if (oAuth2Token != null) {
+			return oAuth2Token;
+		}
+
+		StringBundler msg = new StringBundler(4);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("oAuth2RefreshTokenId=");
+		msg.append(oAuth2RefreshTokenId);
+
+		msg.append("}");
+
+		throw new NoSuchOAuth2TokenException(msg.toString());
+	}
+
+	/**
+	 * Returns the first o auth2 token in the ordered set where oAuth2RefreshTokenId = &#63;.
+	 *
+	 * @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching o auth2 token, or <code>null</code> if a matching o auth2 token could not be found
+	 */
+	@Override
+	public OAuth2Token fetchByRefreshToken_First(String oAuth2RefreshTokenId,
+		OrderByComparator<OAuth2Token> orderByComparator) {
+		List<OAuth2Token> list = findByRefreshToken(oAuth2RefreshTokenId, 0, 1,
+				orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last o auth2 token in the ordered set where oAuth2RefreshTokenId = &#63;.
+	 *
+	 * @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching o auth2 token
+	 * @throws NoSuchOAuth2TokenException if a matching o auth2 token could not be found
+	 */
+	@Override
+	public OAuth2Token findByRefreshToken_Last(String oAuth2RefreshTokenId,
+		OrderByComparator<OAuth2Token> orderByComparator)
+		throws NoSuchOAuth2TokenException {
+		OAuth2Token oAuth2Token = fetchByRefreshToken_Last(oAuth2RefreshTokenId,
+				orderByComparator);
+
+		if (oAuth2Token != null) {
+			return oAuth2Token;
+		}
+
+		StringBundler msg = new StringBundler(4);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("oAuth2RefreshTokenId=");
+		msg.append(oAuth2RefreshTokenId);
+
+		msg.append("}");
+
+		throw new NoSuchOAuth2TokenException(msg.toString());
+	}
+
+	/**
+	 * Returns the last o auth2 token in the ordered set where oAuth2RefreshTokenId = &#63;.
+	 *
+	 * @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching o auth2 token, or <code>null</code> if a matching o auth2 token could not be found
+	 */
+	@Override
+	public OAuth2Token fetchByRefreshToken_Last(String oAuth2RefreshTokenId,
+		OrderByComparator<OAuth2Token> orderByComparator) {
+		int count = countByRefreshToken(oAuth2RefreshTokenId);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<OAuth2Token> list = findByRefreshToken(oAuth2RefreshTokenId,
+				count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the o auth2 tokens before and after the current o auth2 token in the ordered set where oAuth2RefreshTokenId = &#63;.
+	 *
+	 * @param oAuth2TokenId the primary key of the current o auth2 token
+	 * @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next o auth2 token
+	 * @throws NoSuchOAuth2TokenException if a o auth2 token with the primary key could not be found
+	 */
+	@Override
+	public OAuth2Token[] findByRefreshToken_PrevAndNext(String oAuth2TokenId,
+		String oAuth2RefreshTokenId,
+		OrderByComparator<OAuth2Token> orderByComparator)
+		throws NoSuchOAuth2TokenException {
+		OAuth2Token oAuth2Token = findByPrimaryKey(oAuth2TokenId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			OAuth2Token[] array = new OAuth2TokenImpl[3];
+
+			array[0] = getByRefreshToken_PrevAndNext(session, oAuth2Token,
+					oAuth2RefreshTokenId, orderByComparator, true);
+
+			array[1] = oAuth2Token;
+
+			array[2] = getByRefreshToken_PrevAndNext(session, oAuth2Token,
+					oAuth2RefreshTokenId, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected OAuth2Token getByRefreshToken_PrevAndNext(Session session,
+		OAuth2Token oAuth2Token, String oAuth2RefreshTokenId,
+		OrderByComparator<OAuth2Token> orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(4 +
+					(orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		query.append(_SQL_SELECT_OAUTH2TOKEN_WHERE);
+
+		boolean bindOAuth2RefreshTokenId = false;
+
+		if (oAuth2RefreshTokenId == null) {
+			query.append(_FINDER_COLUMN_REFRESHTOKEN_OAUTH2REFRESHTOKENID_1);
+		}
+		else if (oAuth2RefreshTokenId.equals("")) {
+			query.append(_FINDER_COLUMN_REFRESHTOKEN_OAUTH2REFRESHTOKENID_3);
+		}
+		else {
+			bindOAuth2RefreshTokenId = true;
+
+			query.append(_FINDER_COLUMN_REFRESHTOKEN_OAUTH2REFRESHTOKENID_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			query.append(OAuth2TokenModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = query.toString();
+
+		Query q = session.createQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		if (bindOAuth2RefreshTokenId) {
+			qPos.add(oAuth2RefreshTokenId);
+		}
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(oAuth2Token);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<OAuth2Token> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the o auth2 tokens where oAuth2RefreshTokenId = &#63; from the database.
+	 *
+	 * @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	 */
+	@Override
+	public void removeByRefreshToken(String oAuth2RefreshTokenId) {
+		for (OAuth2Token oAuth2Token : findByRefreshToken(
+				oAuth2RefreshTokenId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+			remove(oAuth2Token);
+		}
+	}
+
+	/**
+	 * Returns the number of o auth2 tokens where oAuth2RefreshTokenId = &#63;.
+	 *
+	 * @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	 * @return the number of matching o auth2 tokens
+	 */
+	@Override
+	public int countByRefreshToken(String oAuth2RefreshTokenId) {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_REFRESHTOKEN;
+
+		Object[] finderArgs = new Object[] { oAuth2RefreshTokenId };
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(2);
+
+			query.append(_SQL_COUNT_OAUTH2TOKEN_WHERE);
+
+			boolean bindOAuth2RefreshTokenId = false;
+
+			if (oAuth2RefreshTokenId == null) {
+				query.append(_FINDER_COLUMN_REFRESHTOKEN_OAUTH2REFRESHTOKENID_1);
+			}
+			else if (oAuth2RefreshTokenId.equals("")) {
+				query.append(_FINDER_COLUMN_REFRESHTOKEN_OAUTH2REFRESHTOKENID_3);
+			}
+			else {
+				bindOAuth2RefreshTokenId = true;
+
+				query.append(_FINDER_COLUMN_REFRESHTOKEN_OAUTH2REFRESHTOKENID_2);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (bindOAuth2RefreshTokenId) {
+					qPos.add(oAuth2RefreshTokenId);
+				}
+
+				count = (Long)q.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_REFRESHTOKEN_OAUTH2REFRESHTOKENID_1 =
+		"oAuth2Token.oAuth2RefreshTokenId IS NULL";
+	private static final String _FINDER_COLUMN_REFRESHTOKEN_OAUTH2REFRESHTOKENID_2 =
+		"oAuth2Token.oAuth2RefreshTokenId = ?";
+	private static final String _FINDER_COLUMN_REFRESHTOKEN_OAUTH2REFRESHTOKENID_3 =
+		"(oAuth2Token.oAuth2RefreshTokenId IS NULL OR oAuth2Token.oAuth2RefreshTokenId = '')";
 
 	public OAuth2TokenPersistenceImpl() {
 		setModelClass(OAuth2Token.class);
@@ -864,6 +2058,21 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 			finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_A,
 				args);
 
+			args = new Object[] {
+					oAuth2TokenModelImpl.getOAuth2ApplicationId(),
+					oAuth2TokenModelImpl.getUserName()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_A_U, args);
+			finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_A_U,
+				args);
+
+			args = new Object[] { oAuth2TokenModelImpl.getOAuth2RefreshTokenId() };
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_REFRESHTOKEN, args);
+			finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_REFRESHTOKEN,
+				args);
+
 			finderCache.removeResult(FINDER_PATH_COUNT_ALL, FINDER_ARGS_EMPTY);
 			finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_ALL,
 				FINDER_ARGS_EMPTY);
@@ -886,6 +2095,46 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 
 				finderCache.removeResult(FINDER_PATH_COUNT_BY_A, args);
 				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_A,
+					args);
+			}
+
+			if ((oAuth2TokenModelImpl.getColumnBitmask() &
+					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_A_U.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						oAuth2TokenModelImpl.getOriginalOAuth2ApplicationId(),
+						oAuth2TokenModelImpl.getOriginalUserName()
+					};
+
+				finderCache.removeResult(FINDER_PATH_COUNT_BY_A_U, args);
+				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_A_U,
+					args);
+
+				args = new Object[] {
+						oAuth2TokenModelImpl.getOAuth2ApplicationId(),
+						oAuth2TokenModelImpl.getUserName()
+					};
+
+				finderCache.removeResult(FINDER_PATH_COUNT_BY_A_U, args);
+				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_A_U,
+					args);
+			}
+
+			if ((oAuth2TokenModelImpl.getColumnBitmask() &
+					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_REFRESHTOKEN.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						oAuth2TokenModelImpl.getOriginalOAuth2RefreshTokenId()
+					};
+
+				finderCache.removeResult(FINDER_PATH_COUNT_BY_REFRESHTOKEN, args);
+				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_REFRESHTOKEN,
+					args);
+
+				args = new Object[] {
+						oAuth2TokenModelImpl.getOAuth2RefreshTokenId()
+					};
+
+				finderCache.removeResult(FINDER_PATH_COUNT_BY_REFRESHTOKEN, args);
+				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_REFRESHTOKEN,
 					args);
 			}
 		}
@@ -911,8 +2160,13 @@ public class OAuth2TokenPersistenceImpl extends BasePersistenceImpl<OAuth2Token>
 
 		oAuth2TokenImpl.setOAuth2TokenId(oAuth2Token.getOAuth2TokenId());
 		oAuth2TokenImpl.setCompanyId(oAuth2Token.getCompanyId());
+		oAuth2TokenImpl.setUserId(oAuth2Token.getUserId());
+		oAuth2TokenImpl.setUserName(oAuth2Token.getUserName());
 		oAuth2TokenImpl.setCreateDate(oAuth2Token.getCreateDate());
+		oAuth2TokenImpl.setLifeTime(oAuth2Token.getLifeTime());
 		oAuth2TokenImpl.setOAuth2ApplicationId(oAuth2Token.getOAuth2ApplicationId());
+		oAuth2TokenImpl.setOAuth2TokenType(oAuth2Token.getOAuth2TokenType());
+		oAuth2TokenImpl.setOAuth2RefreshTokenId(oAuth2Token.getOAuth2RefreshTokenId());
 
 		return oAuth2TokenImpl;
 	}

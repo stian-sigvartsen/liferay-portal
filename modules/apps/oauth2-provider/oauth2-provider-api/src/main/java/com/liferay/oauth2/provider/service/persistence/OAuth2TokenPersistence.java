@@ -175,6 +175,296 @@ public interface OAuth2TokenPersistence extends BasePersistence<OAuth2Token> {
 	public int countByA(java.lang.String oAuth2ApplicationId);
 
 	/**
+	* Returns all the o auth2 tokens where oAuth2ApplicationId = &#63; and userName = &#63;.
+	*
+	* @param oAuth2ApplicationId the o auth2 application ID
+	* @param userName the user name
+	* @return the matching o auth2 tokens
+	*/
+	public java.util.List<OAuth2Token> findByA_U(
+		java.lang.String oAuth2ApplicationId, java.lang.String userName);
+
+	/**
+	* Returns a range of all the o auth2 tokens where oAuth2ApplicationId = &#63; and userName = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link OAuth2TokenModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param oAuth2ApplicationId the o auth2 application ID
+	* @param userName the user name
+	* @param start the lower bound of the range of o auth2 tokens
+	* @param end the upper bound of the range of o auth2 tokens (not inclusive)
+	* @return the range of matching o auth2 tokens
+	*/
+	public java.util.List<OAuth2Token> findByA_U(
+		java.lang.String oAuth2ApplicationId, java.lang.String userName,
+		int start, int end);
+
+	/**
+	* Returns an ordered range of all the o auth2 tokens where oAuth2ApplicationId = &#63; and userName = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link OAuth2TokenModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param oAuth2ApplicationId the o auth2 application ID
+	* @param userName the user name
+	* @param start the lower bound of the range of o auth2 tokens
+	* @param end the upper bound of the range of o auth2 tokens (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of matching o auth2 tokens
+	*/
+	public java.util.List<OAuth2Token> findByA_U(
+		java.lang.String oAuth2ApplicationId, java.lang.String userName,
+		int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<OAuth2Token> orderByComparator);
+
+	/**
+	* Returns an ordered range of all the o auth2 tokens where oAuth2ApplicationId = &#63; and userName = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link OAuth2TokenModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param oAuth2ApplicationId the o auth2 application ID
+	* @param userName the user name
+	* @param start the lower bound of the range of o auth2 tokens
+	* @param end the upper bound of the range of o auth2 tokens (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the ordered range of matching o auth2 tokens
+	*/
+	public java.util.List<OAuth2Token> findByA_U(
+		java.lang.String oAuth2ApplicationId, java.lang.String userName,
+		int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<OAuth2Token> orderByComparator,
+		boolean retrieveFromCache);
+
+	/**
+	* Returns the first o auth2 token in the ordered set where oAuth2ApplicationId = &#63; and userName = &#63;.
+	*
+	* @param oAuth2ApplicationId the o auth2 application ID
+	* @param userName the user name
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching o auth2 token
+	* @throws NoSuchOAuth2TokenException if a matching o auth2 token could not be found
+	*/
+	public OAuth2Token findByA_U_First(java.lang.String oAuth2ApplicationId,
+		java.lang.String userName,
+		com.liferay.portal.kernel.util.OrderByComparator<OAuth2Token> orderByComparator)
+		throws NoSuchOAuth2TokenException;
+
+	/**
+	* Returns the first o auth2 token in the ordered set where oAuth2ApplicationId = &#63; and userName = &#63;.
+	*
+	* @param oAuth2ApplicationId the o auth2 application ID
+	* @param userName the user name
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching o auth2 token, or <code>null</code> if a matching o auth2 token could not be found
+	*/
+	public OAuth2Token fetchByA_U_First(java.lang.String oAuth2ApplicationId,
+		java.lang.String userName,
+		com.liferay.portal.kernel.util.OrderByComparator<OAuth2Token> orderByComparator);
+
+	/**
+	* Returns the last o auth2 token in the ordered set where oAuth2ApplicationId = &#63; and userName = &#63;.
+	*
+	* @param oAuth2ApplicationId the o auth2 application ID
+	* @param userName the user name
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching o auth2 token
+	* @throws NoSuchOAuth2TokenException if a matching o auth2 token could not be found
+	*/
+	public OAuth2Token findByA_U_Last(java.lang.String oAuth2ApplicationId,
+		java.lang.String userName,
+		com.liferay.portal.kernel.util.OrderByComparator<OAuth2Token> orderByComparator)
+		throws NoSuchOAuth2TokenException;
+
+	/**
+	* Returns the last o auth2 token in the ordered set where oAuth2ApplicationId = &#63; and userName = &#63;.
+	*
+	* @param oAuth2ApplicationId the o auth2 application ID
+	* @param userName the user name
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching o auth2 token, or <code>null</code> if a matching o auth2 token could not be found
+	*/
+	public OAuth2Token fetchByA_U_Last(java.lang.String oAuth2ApplicationId,
+		java.lang.String userName,
+		com.liferay.portal.kernel.util.OrderByComparator<OAuth2Token> orderByComparator);
+
+	/**
+	* Returns the o auth2 tokens before and after the current o auth2 token in the ordered set where oAuth2ApplicationId = &#63; and userName = &#63;.
+	*
+	* @param oAuth2TokenId the primary key of the current o auth2 token
+	* @param oAuth2ApplicationId the o auth2 application ID
+	* @param userName the user name
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the previous, current, and next o auth2 token
+	* @throws NoSuchOAuth2TokenException if a o auth2 token with the primary key could not be found
+	*/
+	public OAuth2Token[] findByA_U_PrevAndNext(java.lang.String oAuth2TokenId,
+		java.lang.String oAuth2ApplicationId, java.lang.String userName,
+		com.liferay.portal.kernel.util.OrderByComparator<OAuth2Token> orderByComparator)
+		throws NoSuchOAuth2TokenException;
+
+	/**
+	* Removes all the o auth2 tokens where oAuth2ApplicationId = &#63; and userName = &#63; from the database.
+	*
+	* @param oAuth2ApplicationId the o auth2 application ID
+	* @param userName the user name
+	*/
+	public void removeByA_U(java.lang.String oAuth2ApplicationId,
+		java.lang.String userName);
+
+	/**
+	* Returns the number of o auth2 tokens where oAuth2ApplicationId = &#63; and userName = &#63;.
+	*
+	* @param oAuth2ApplicationId the o auth2 application ID
+	* @param userName the user name
+	* @return the number of matching o auth2 tokens
+	*/
+	public int countByA_U(java.lang.String oAuth2ApplicationId,
+		java.lang.String userName);
+
+	/**
+	* Returns all the o auth2 tokens where oAuth2RefreshTokenId = &#63;.
+	*
+	* @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	* @return the matching o auth2 tokens
+	*/
+	public java.util.List<OAuth2Token> findByRefreshToken(
+		java.lang.String oAuth2RefreshTokenId);
+
+	/**
+	* Returns a range of all the o auth2 tokens where oAuth2RefreshTokenId = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link OAuth2TokenModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	* @param start the lower bound of the range of o auth2 tokens
+	* @param end the upper bound of the range of o auth2 tokens (not inclusive)
+	* @return the range of matching o auth2 tokens
+	*/
+	public java.util.List<OAuth2Token> findByRefreshToken(
+		java.lang.String oAuth2RefreshTokenId, int start, int end);
+
+	/**
+	* Returns an ordered range of all the o auth2 tokens where oAuth2RefreshTokenId = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link OAuth2TokenModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	* @param start the lower bound of the range of o auth2 tokens
+	* @param end the upper bound of the range of o auth2 tokens (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of matching o auth2 tokens
+	*/
+	public java.util.List<OAuth2Token> findByRefreshToken(
+		java.lang.String oAuth2RefreshTokenId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<OAuth2Token> orderByComparator);
+
+	/**
+	* Returns an ordered range of all the o auth2 tokens where oAuth2RefreshTokenId = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link OAuth2TokenModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	* @param start the lower bound of the range of o auth2 tokens
+	* @param end the upper bound of the range of o auth2 tokens (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the ordered range of matching o auth2 tokens
+	*/
+	public java.util.List<OAuth2Token> findByRefreshToken(
+		java.lang.String oAuth2RefreshTokenId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<OAuth2Token> orderByComparator,
+		boolean retrieveFromCache);
+
+	/**
+	* Returns the first o auth2 token in the ordered set where oAuth2RefreshTokenId = &#63;.
+	*
+	* @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching o auth2 token
+	* @throws NoSuchOAuth2TokenException if a matching o auth2 token could not be found
+	*/
+	public OAuth2Token findByRefreshToken_First(
+		java.lang.String oAuth2RefreshTokenId,
+		com.liferay.portal.kernel.util.OrderByComparator<OAuth2Token> orderByComparator)
+		throws NoSuchOAuth2TokenException;
+
+	/**
+	* Returns the first o auth2 token in the ordered set where oAuth2RefreshTokenId = &#63;.
+	*
+	* @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching o auth2 token, or <code>null</code> if a matching o auth2 token could not be found
+	*/
+	public OAuth2Token fetchByRefreshToken_First(
+		java.lang.String oAuth2RefreshTokenId,
+		com.liferay.portal.kernel.util.OrderByComparator<OAuth2Token> orderByComparator);
+
+	/**
+	* Returns the last o auth2 token in the ordered set where oAuth2RefreshTokenId = &#63;.
+	*
+	* @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching o auth2 token
+	* @throws NoSuchOAuth2TokenException if a matching o auth2 token could not be found
+	*/
+	public OAuth2Token findByRefreshToken_Last(
+		java.lang.String oAuth2RefreshTokenId,
+		com.liferay.portal.kernel.util.OrderByComparator<OAuth2Token> orderByComparator)
+		throws NoSuchOAuth2TokenException;
+
+	/**
+	* Returns the last o auth2 token in the ordered set where oAuth2RefreshTokenId = &#63;.
+	*
+	* @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching o auth2 token, or <code>null</code> if a matching o auth2 token could not be found
+	*/
+	public OAuth2Token fetchByRefreshToken_Last(
+		java.lang.String oAuth2RefreshTokenId,
+		com.liferay.portal.kernel.util.OrderByComparator<OAuth2Token> orderByComparator);
+
+	/**
+	* Returns the o auth2 tokens before and after the current o auth2 token in the ordered set where oAuth2RefreshTokenId = &#63;.
+	*
+	* @param oAuth2TokenId the primary key of the current o auth2 token
+	* @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the previous, current, and next o auth2 token
+	* @throws NoSuchOAuth2TokenException if a o auth2 token with the primary key could not be found
+	*/
+	public OAuth2Token[] findByRefreshToken_PrevAndNext(
+		java.lang.String oAuth2TokenId, java.lang.String oAuth2RefreshTokenId,
+		com.liferay.portal.kernel.util.OrderByComparator<OAuth2Token> orderByComparator)
+		throws NoSuchOAuth2TokenException;
+
+	/**
+	* Removes all the o auth2 tokens where oAuth2RefreshTokenId = &#63; from the database.
+	*
+	* @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	*/
+	public void removeByRefreshToken(java.lang.String oAuth2RefreshTokenId);
+
+	/**
+	* Returns the number of o auth2 tokens where oAuth2RefreshTokenId = &#63;.
+	*
+	* @param oAuth2RefreshTokenId the o auth2 refresh token ID
+	* @return the number of matching o auth2 tokens
+	*/
+	public int countByRefreshToken(java.lang.String oAuth2RefreshTokenId);
+
+	/**
 	* Caches the o auth2 token in the entity cache if it is enabled.
 	*
 	* @param oAuth2Token the o auth2 token

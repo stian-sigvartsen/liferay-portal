@@ -14,28 +14,55 @@
 
 package com.liferay.oauth2.provider.scopes.impl.jaxrs;
 
+import com.liferay.oauth2.provider.scopes.impl.cxf.LiferayOAuthDataProvider;
 import org.apache.cxf.rs.security.oauth2.grants.code.AuthorizationCodeGrantHandler;
-import org.apache.cxf.rs.security.oauth2.provider.AccessTokenGrantHandler;
 import org.apache.cxf.rs.security.oauth2.services.AccessTokenService;
+import org.apache.cxf.rs.security.oauth2.services.AuthorizationCodeGrantService;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
+import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 @Component(
 	immediate = true,
 	service = Application.class
 )
-public class OAuth2EnpointApplication extends Application {
+@ApplicationPath("/oauth2")
+public class OAuth2EndpointApplication extends Application {
 
 	@Override
 	public Set<Object> getSingletons() {
-		AccessTokenGrantHandler authorizationCodeGrantHandler =
+		AuthorizationCodeGrantService authorizationCodeGrantService =
+			new AuthorizationCodeGrantService();
+
+		authorizationCodeGrantService.setDataProvider(
+			_liferayOAuthDataProvider);
+		AccessTokenService accessTokenService = new AccessTokenService();
+
+		accessTokenService.setBlockUnsecureRequests(true);
+		accessTokenService.setDataProvider(_liferayOAuthDataProvider);
+		AuthorizationCodeGrantHandler authorizationCodeGrantHandler =
 			new AuthorizationCodeGrantHandler();
 
-		AccessTokenService accessTokenService = new AccessTokenService();
+		authorizationCodeGrantHandler.setDataProvider(
+			_liferayOAuthDataProvider);
 
 		accessTokenService.setGrantHandler(authorizationCodeGrantHandler);
 
+		return new HashSet<>(
+			Arrays.asList(
+				authorizationCodeGrantService, accessTokenService,
+				_authorizationMessageBodyWriter));
 	}
+
+	@Reference
+	private LiferayOAuthDataProvider _liferayOAuthDataProvider;
+
+	@Reference
+	AuthorizationMessageBodyWriter _authorizationMessageBodyWriter;
+
 }

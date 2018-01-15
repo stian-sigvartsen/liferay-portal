@@ -12,6 +12,16 @@ create table OAuth2Application (
 	webUrl VARCHAR(75) null
 );
 
+create table OAuth2RefreshToken (
+	oAuth2RefreshTokenId VARCHAR(75) not null primary key,
+	companyId LONG,
+	userId LONG,
+	userName VARCHAR(75) null,
+	createDate DATE null,
+	lifeTime LONG,
+	oAuth2ApplicationId VARCHAR(75) null
+);
+
 create table OAuth2ScopeGrant (
 	applicationName VARCHAR(75) not null,
 	bundleSymbolicName VARCHAR(75) not null,
@@ -26,6 +36,11 @@ create table OAuth2ScopeGrant (
 create table OAuth2Token (
 	oAuth2TokenId VARCHAR(75) not null primary key,
 	companyId LONG,
+	userId LONG,
+	userName VARCHAR(75) null,
 	createDate DATE null,
-	oAuth2ApplicationId VARCHAR(75) null
+	lifeTime LONG,
+	oAuth2ApplicationId VARCHAR(75) null,
+	oAuth2TokenType VARCHAR(75) null,
+	oAuth2RefreshTokenId VARCHAR(75) null
 );

@@ -15,25 +15,37 @@
 package com.liferay.oauth2.provider.scopes.impl.cxf;
 
 import com.liferay.oauth2.provider.model.OAuth2Application;
+import com.liferay.oauth2.provider.model.OAuth2RefreshToken;
+import com.liferay.oauth2.provider.model.OAuth2Token;
 import com.liferay.oauth2.provider.service.OAuth2ApplicationLocalService;
+import com.liferay.oauth2.provider.service.OAuth2RefreshTokenLocalService;
 import com.liferay.oauth2.provider.service.OAuth2ScopeGrantLocalService;
 import com.liferay.oauth2.provider.service.OAuth2TokenLocalService;
 import com.liferay.portal.kernel.cache.MultiVMPool;
 import com.liferay.portal.kernel.cache.PortalCache;
+import com.liferay.portal.kernel.exception.PortalException;
+import org.apache.cxf.rs.security.oauth2.common.AccessTokenRegistration;
 import org.apache.cxf.rs.security.oauth2.common.Client;
+import org.apache.cxf.rs.security.oauth2.common.OAuthPermission;
 import org.apache.cxf.rs.security.oauth2.common.ServerAccessToken;
 import org.apache.cxf.rs.security.oauth2.common.UserSubject;
 import org.apache.cxf.rs.security.oauth2.grants.code.AbstractAuthorizationCodeDataProvider;
 import org.apache.cxf.rs.security.oauth2.grants.code.AuthorizationCodeRegistration;
 import org.apache.cxf.rs.security.oauth2.grants.code.ServerAuthorizationCodeGrant;
 import org.apache.cxf.rs.security.oauth2.provider.OAuthServiceException;
+import org.apache.cxf.rs.security.oauth2.tokens.bearer.BearerAccessToken;
 import org.apache.cxf.rs.security.oauth2.tokens.refresh.RefreshToken;
+import org.apache.cxf.rs.security.oauth2.utils.OAuthConstants;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component(service = LiferayOAuthDataProvider.class)
 public class LiferayOAuthDataProvider extends AbstractAuthorizationCodeDataProvider {
@@ -66,8 +78,16 @@ public class LiferayOAuthDataProvider extends AbstractAuthorizationCodeDataProvi
 	@Override
 	public ServerAuthorizationCodeGrant removeCodeGrant(String code)
 		throws OAuthServiceException {
+		if (code == null) {
+			return null;
+		}
+
+		ServerAuthorizationCodeGrant serverAuthorizationCodeGrant =
+			_codeGrantsPortalCache.get(code);
 
 		_codeGrantsPortalCache.remove(code);
+
+		return serverAuthorizationCodeGrant;
 	}
 
 	@Override
@@ -96,31 +116,103 @@ public class LiferayOAuthDataProvider extends AbstractAuthorizationCodeDataProvi
 
 	@Override
 	protected void saveAccessToken(ServerAccessToken serverToken) {
+		OAuth2Token oAuth2Token = _oAuth2TokenLocalService.createOAuth2Token(
+			serverToken.getTokenKey());
+
+		Client client = serverToken.getClient();
+
+		oAuth2Token.setOAuth2ApplicationId(client.getClientId());
+		oAuth2Token.setOAuth2RefreshTokenId(serverToken.getRefreshToken());
+		oAuth2Token.setCreateDate(new Date(serverToken.getIssuedAt()));
+		oAuth2Token.setLifeTime(
+			serverToken.getExpiresIn() - serverToken.getIssuedAt());
+		oAuth2Token.setOAuth2TokenType(OAuthConstants.BEARER_TOKEN_TYPE);
+
+		_oAuth2TokenLocalService.updateOAuth2Token(oAuth2Token);
 	}
 
 	@Override
 	protected void saveRefreshToken(RefreshToken refreshToken) {
+		String tokenKey = refreshToken.getTokenKey();
 
+		OAuth2RefreshToken oAuth2RefreshToken =
+			_oAuth2RefreshTokenLocalService.createOAuth2RefreshToken(
+				tokenKey);
+
+		oAuth2RefreshToken.setLifeTime(
+			refreshToken.getExpiresIn() - refreshToken.getIssuedAt());
+
+		Client client = refreshToken.getClient();
+
+		oAuth2RefreshToken.setOAuth2ApplicationId(client.getClientId());
+		oAuth2RefreshToken.setUserName(refreshToken.getSubject().getLogin());
+
+		_oAuth2RefreshTokenLocalService.updateOAuth2RefreshToken(
+			oAuth2RefreshToken);
+
+		List<String> accessTokens = refreshToken.getAccessTokens();
+
+		for (String accessToken : accessTokens) {
+			OAuth2Token oAuth2Token =
+				_oAuth2TokenLocalService.fetchOAuth2Token(accessToken);
+
+			oAuth2Token.setOAuth2RefreshTokenId(tokenKey);
+
+			_oAuth2TokenLocalService.updateOAuth2Token(oAuth2Token);
+		}
 	}
 
 	@Override
 	protected void doRevokeAccessToken(ServerAccessToken accessToken) {
-
+		try {
+			_oAuth2TokenLocalService.deleteOAuth2Token(accessToken.getTokenKey());
+		}
+		catch (PortalException e) {
+		}
 	}
 
 	@Override
 	protected void doRevokeRefreshToken(RefreshToken refreshToken) {
+		try {
 
+			Collection<OAuth2Token> oAuth2Tokens =
+				_oAuth2TokenLocalService.findByRefreshToken(
+					refreshToken.getTokenKey());
+
+			for (OAuth2Token oAuth2Token : oAuth2Tokens) {
+				_oAuth2TokenLocalService.deleteOAuth2Token(oAuth2Token);
+			}
+
+			_oAuth2RefreshTokenLocalService.deleteOAuth2RefreshToken(
+				refreshToken.getTokenKey());
+		}
+		catch (PortalException e) {
+
+		}
 	}
 
 	@Override
 	protected RefreshToken getRefreshToken(String refreshTokenKey) {
-		return null;
+		try {
+			OAuth2RefreshToken oAuth2RefreshToken =
+				_oAuth2RefreshTokenLocalService.getOAuth2RefreshToken(
+					refreshTokenKey);
+
+			Date createDate = oAuth2RefreshToken.getCreateDate();
+
+			return new RefreshToken(
+				getClient(oAuth2RefreshToken.getOAuth2ApplicationId()),
+				refreshTokenKey, oAuth2RefreshToken.getLifeTime(),
+				createDate.getTime());
+		}
+		catch (PortalException e) {
+			throw new OAuthServiceException(e);
+		}
 	}
 
 	@Override
 	protected void doRemoveClient(Client c) {
-
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -148,26 +240,93 @@ public class LiferayOAuthDataProvider extends AbstractAuthorizationCodeDataProvi
 		client.setApplicationDescription(
 			oAuth2Application.getDescription());
 
-		client.setRegisteredScopes();
+		client.setRedirectUris(
+			Collections.singletonList(oAuth2Application.getWebUrl()));
+
+		return client;
 	}
 
 	@Override
 	public ServerAccessToken getAccessToken(String accessToken)
 		throws OAuthServiceException {
 
-		return null;
+		try {
+			OAuth2Token oAuth2Token = _oAuth2TokenLocalService.getOAuth2Token(
+				accessToken);
+
+			return populateToken(oAuth2Token);
+		}
+		catch (PortalException e) {
+			throw new OAuthServiceException(e);
+		}
+	}
+
+	private ServerAccessToken populateToken(OAuth2Token oAuth2Token)
+		throws PortalException {
+
+		OAuth2Application oAuth2Application =
+			_oAuth2ApplicationLocalService.getOAuth2Application(
+				oAuth2Token.getOAuth2ApplicationId());
+		Date createDate = oAuth2Token.getCreateDate();
+
+		BearerAccessToken bearerAccessToken = new BearerAccessToken(
+			getClient(oAuth2Application.getOAuth2ApplicationId()),
+			oAuth2Token.getOAuth2TokenId(), oAuth2Token.getLifeTime(),
+			createDate.getTime());
+
+		bearerAccessToken.setSubject(
+			new UserSubject(oAuth2Token.getUserName()));
+
+		return bearerAccessToken;
 	}
 
 	@Override
 	public List<ServerAccessToken> getAccessTokens(
-		Client client, UserSubject subject) throws OAuthServiceException {
-		return null;
+			Client client, UserSubject subject)
+		throws OAuthServiceException {
+
+		Collection<OAuth2Token> oAuth2Tokens =
+			_oAuth2TokenLocalService.findByApplicationAndUserName(
+				client.getClientId(), subject.getLogin());
+
+		List<ServerAccessToken> serverAccessTokens = new ArrayList<>();
+
+		for (OAuth2Token oAuth2Token : oAuth2Tokens) {
+			try {
+				serverAccessTokens.add(populateToken(oAuth2Token));
+			}
+			catch (PortalException e) {
+				try {
+					_oAuth2TokenLocalService.deleteOAuth2Token(
+						oAuth2Token.getOAuth2TokenId());
+				}
+				catch (PortalException e1) {
+				}
+			}
+		}
+
+		return serverAccessTokens;
 	}
 
 	@Override
 	public List<RefreshToken> getRefreshTokens(
-		Client client, UserSubject subject) throws OAuthServiceException {
+			Client client, UserSubject subject)
+		throws OAuthServiceException {
+
 		return null;
+	}
+
+	@Override
+	public List<OAuthPermission> convertScopeToPermissions(
+		Client client, List<String> requestedScopes) {
+
+		List<OAuthPermission> permissions = new ArrayList<>();
+
+		for (String requestedScope : requestedScopes) {
+			permissions.add(new OAuthPermission(requestedScope));
+		}
+
+		return permissions;
 	}
 
 	@Reference
@@ -175,6 +334,9 @@ public class LiferayOAuthDataProvider extends AbstractAuthorizationCodeDataProvi
 
 	@Reference
 	private OAuth2TokenLocalService _oAuth2TokenLocalService;
+
+	@Reference
+	private OAuth2RefreshTokenLocalService _oAuth2RefreshTokenLocalService;
 
 	@Reference
 	private OAuth2ApplicationLocalService _oAuth2ApplicationLocalService;
