@@ -22,7 +22,7 @@ public interface ScopeFinderLocator {
 	 * scope name
 	 */
 	Collection<LiferayOAuth2Scope> locateScopes(
-		Company company, String scope);
+		long companyId, String scope);
 
 	/**
 	 * Returns a list of the scope names that would be a match if

@@ -210,6 +210,21 @@ public interface OAuth2TokenModel extends BaseModel<OAuth2Token>, ShardedModel {
 	 */
 	public void setOAuth2RefreshTokenId(String oAuth2RefreshTokenId);
 
+	/**
+	 * Returns the scopes of this o auth2 token.
+	 *
+	 * @return the scopes of this o auth2 token
+	 */
+	@AutoEscape
+	public String getScopes();
+
+	/**
+	 * Sets the scopes of this o auth2 token.
+	 *
+	 * @param scopes the scopes of this o auth2 token
+	 */
+	public void setScopes(String scopes);
+
 	@Override
 	public boolean isNew();
 

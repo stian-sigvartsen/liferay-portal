@@ -14,7 +14,6 @@
 
 package com.liferay.oauth2.provider.scopes.impl.feature;
 
-import com.liferay.oauth2.provider.scopes.impl.jaxrs.OAuth2BearerTokenRetriever;
 import com.liferay.oauth2.provider.scopes.impl.jaxrs.CompanyRetrieverContainerRequestFilter;
 import com.liferay.oauth2.provider.scopes.impl.jaxrs.RunnableExecutorContainerResponseFilter;
 import com.liferay.oauth2.provider.scopes.api.RequiresScope;
@@ -75,10 +74,6 @@ public class LiferayOauth2OSGiFeature implements Feature {
 
 	@Override
 	public boolean configure(FeatureContext context) {
-		context.register(
-			new OAuth2BearerTokenRetriever(_scopeContext::setTokenString),
-			Priorities.AUTHORIZATION - 11);
-
 		context.register(
 			new CompanyRetrieverContainerRequestFilter(_scopeContext::setCompany),
 			Priorities.AUTHORIZATION - 10);

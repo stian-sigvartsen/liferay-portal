@@ -14,9 +14,11 @@
 
 package com.liferay.oauth2.provider.scopes.impl.cxf;
 
+import com.liferay.oauth2.provider.exception.NoSuchOAuth2TokenException;
 import com.liferay.oauth2.provider.model.OAuth2Application;
 import com.liferay.oauth2.provider.model.OAuth2RefreshToken;
 import com.liferay.oauth2.provider.model.OAuth2Token;
+import com.liferay.oauth2.provider.scopes.liferay.api.ScopeFinderLocator;
 import com.liferay.oauth2.provider.service.OAuth2ApplicationLocalService;
 import com.liferay.oauth2.provider.service.OAuth2RefreshTokenLocalService;
 import com.liferay.oauth2.provider.service.OAuth2ScopeGrantLocalService;
@@ -24,7 +26,7 @@ import com.liferay.oauth2.provider.service.OAuth2TokenLocalService;
 import com.liferay.portal.kernel.cache.MultiVMPool;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.exception.PortalException;
-import org.apache.cxf.rs.security.oauth2.common.AccessTokenRegistration;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import org.apache.cxf.rs.security.oauth2.common.Client;
 import org.apache.cxf.rs.security.oauth2.common.OAuthPermission;
 import org.apache.cxf.rs.security.oauth2.common.ServerAccessToken;
@@ -36,6 +38,7 @@ import org.apache.cxf.rs.security.oauth2.provider.OAuthServiceException;
 import org.apache.cxf.rs.security.oauth2.tokens.bearer.BearerAccessToken;
 import org.apache.cxf.rs.security.oauth2.tokens.refresh.RefreshToken;
 import org.apache.cxf.rs.security.oauth2.utils.OAuthConstants;
+import org.apache.cxf.rs.security.oauth2.utils.OAuthUtils;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -45,7 +48,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component(service = LiferayOAuthDataProvider.class)
 public class LiferayOAuthDataProvider extends AbstractAuthorizationCodeDataProvider {
@@ -125,10 +127,31 @@ public class LiferayOAuthDataProvider extends AbstractAuthorizationCodeDataProvi
 		oAuth2Token.setOAuth2RefreshTokenId(serverToken.getRefreshToken());
 		oAuth2Token.setCreateDate(new Date(serverToken.getIssuedAt()));
 		oAuth2Token.setLifeTime(
-			serverToken.getExpiresIn() - serverToken.getIssuedAt());
+			serverToken.getExpiresIn() == -1 ? -1 :
+				serverToken.getExpiresIn() - serverToken.getIssuedAt());
 		oAuth2Token.setOAuth2TokenType(OAuthConstants.BEARER_TOKEN_TYPE);
+		UserSubject subject = serverToken.getSubject();
+		oAuth2Token.setUserId(Long.parseLong(subject.getId()));
+		oAuth2Token.setUserName(subject.getLogin());
+		oAuth2Token.setScopes(
+			OAuthUtils.convertPermissionsToScope(serverToken.getScopes()));
 
 		_oAuth2TokenLocalService.updateOAuth2Token(oAuth2Token);
+
+		List<String> scopeList =
+			OAuthUtils.convertPermissionsToScopeList(serverToken.getScopes());
+
+		for (String scope : scopeList) {
+			try {
+				_oAuth2ScopeGrantLocalService.grantScopesToToken(
+					serverToken.getTokenKey(),
+					_scopeFinderLocator.locateScopes(
+						CompanyThreadLocal.getCompanyId(), scope));
+			}
+			catch (NoSuchOAuth2TokenException e) {
+				continue;
+			}
+		}
 	}
 
 	@Override
@@ -343,5 +366,8 @@ public class LiferayOAuthDataProvider extends AbstractAuthorizationCodeDataProvi
 
 	@Reference
 	private OAuth2ScopeGrantLocalService _oAuth2ScopeGrantLocalService;
+
+	@Reference
+	ScopeFinderLocator _scopeFinderLocator;
 
 }

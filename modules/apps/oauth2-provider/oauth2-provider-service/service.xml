@@ -44,6 +44,7 @@
 		<column name="oAuth2ApplicationId" type="String" />
 		<column name="oAuth2TokenType" type="String" />
 		<column name="oAuth2RefreshTokenId" type="String" />
+		<column name="scopes" type="String" />
 
 		<finder name="A" return-type="Collection">
 			<finder-column name="oAuth2ApplicationId" />

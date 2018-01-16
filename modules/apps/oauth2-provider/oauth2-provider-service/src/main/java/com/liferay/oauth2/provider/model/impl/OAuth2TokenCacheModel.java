@@ -65,7 +65,7 @@ public class OAuth2TokenCacheModel implements CacheModel<OAuth2Token>,
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(19);
+		StringBundler sb = new StringBundler(21);
 
 		sb.append("{oAuth2TokenId=");
 		sb.append(oAuth2TokenId);
@@ -85,6 +85,8 @@ public class OAuth2TokenCacheModel implements CacheModel<OAuth2Token>,
 		sb.append(oAuth2TokenType);
 		sb.append(", oAuth2RefreshTokenId=");
 		sb.append(oAuth2RefreshTokenId);
+		sb.append(", scopes=");
+		sb.append(scopes);
 		sb.append("}");
 
 		return sb.toString();
@@ -141,6 +143,13 @@ public class OAuth2TokenCacheModel implements CacheModel<OAuth2Token>,
 			oAuth2TokenImpl.setOAuth2RefreshTokenId(oAuth2RefreshTokenId);
 		}
 
+		if (scopes == null) {
+			oAuth2TokenImpl.setScopes("");
+		}
+		else {
+			oAuth2TokenImpl.setScopes(scopes);
+		}
+
 		oAuth2TokenImpl.resetOriginalValues();
 
 		return oAuth2TokenImpl;
@@ -160,6 +169,7 @@ public class OAuth2TokenCacheModel implements CacheModel<OAuth2Token>,
 		oAuth2ApplicationId = objectInput.readUTF();
 		oAuth2TokenType = objectInput.readUTF();
 		oAuth2RefreshTokenId = objectInput.readUTF();
+		scopes = objectInput.readUTF();
 	}
 
 	@Override
@@ -207,6 +217,13 @@ public class OAuth2TokenCacheModel implements CacheModel<OAuth2Token>,
 		else {
 			objectOutput.writeUTF(oAuth2RefreshTokenId);
 		}
+
+		if (scopes == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(scopes);
+		}
 	}
 
 	public String oAuth2TokenId;
@@ -218,4 +235,5 @@ public class OAuth2TokenCacheModel implements CacheModel<OAuth2Token>,
 	public String oAuth2ApplicationId;
 	public String oAuth2TokenType;
 	public String oAuth2RefreshTokenId;
+	public String scopes;
 }

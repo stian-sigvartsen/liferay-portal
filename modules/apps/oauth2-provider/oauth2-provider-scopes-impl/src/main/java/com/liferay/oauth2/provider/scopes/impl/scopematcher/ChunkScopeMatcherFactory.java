@@ -63,7 +63,7 @@ public class ChunkScopeMatcherFactory implements ScopeMatcherFactory {
 		private String _input;
 		private final String[] _inputParts;
 
-		public ChunkScopeMatcher(String input, String[] inputParts) {
+		private ChunkScopeMatcher(String input, String[] inputParts) {
 			_input = input;
 			_inputParts = inputParts;
 		}
@@ -100,4 +100,5 @@ public class ChunkScopeMatcherFactory implements ScopeMatcherFactory {
 			return create(_input.substring(namespace.length()));
 		}
 	}
+
 }

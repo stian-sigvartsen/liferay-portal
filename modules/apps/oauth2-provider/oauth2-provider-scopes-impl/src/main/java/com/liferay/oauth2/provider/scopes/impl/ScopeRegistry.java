@@ -49,13 +49,11 @@ public class ScopeRegistry implements ScopeFinderLocator {
 
 	@Override
 	public Collection<LiferayOAuth2Scope> locateScopes(
-		Company company, String scope) {
+		long companyId, String scope) {
 
 		Collection<LiferayOAuth2Scope> grants = new ArrayList<>();
 
 		Set<String> names = _scopeFinderByNameServiceTrackerMap.keySet();
-
-		long companyId = company.getCompanyId();
 
 		for (String name : names) {
 			ServiceReferenceServiceTuple<?, ScopeFinder> tuple =

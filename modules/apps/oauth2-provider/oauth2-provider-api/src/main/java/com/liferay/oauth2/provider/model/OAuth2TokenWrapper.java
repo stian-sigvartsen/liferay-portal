@@ -67,6 +67,7 @@ public class OAuth2TokenWrapper implements OAuth2Token,
 		attributes.put("oAuth2ApplicationId", getOAuth2ApplicationId());
 		attributes.put("oAuth2TokenType", getOAuth2TokenType());
 		attributes.put("oAuth2RefreshTokenId", getOAuth2RefreshTokenId());
+		attributes.put("scopes", getScopes());
 
 		return attributes;
 	}
@@ -127,6 +128,12 @@ public class OAuth2TokenWrapper implements OAuth2Token,
 
 		if (oAuth2RefreshTokenId != null) {
 			setOAuth2RefreshTokenId(oAuth2RefreshTokenId);
+		}
+
+		String scopes = (String)attributes.get("scopes");
+
+		if (scopes != null) {
+			setScopes(scopes);
 		}
 	}
 
@@ -228,6 +235,16 @@ public class OAuth2TokenWrapper implements OAuth2Token,
 	@Override
 	public Serializable getPrimaryKeyObj() {
 		return _oAuth2Token.getPrimaryKeyObj();
+	}
+
+	/**
+	* Returns the scopes of this o auth2 token.
+	*
+	* @return the scopes of this o auth2 token
+	*/
+	@Override
+	public java.lang.String getScopes() {
+		return _oAuth2Token.getScopes();
 	}
 
 	/**
@@ -394,6 +411,16 @@ public class OAuth2TokenWrapper implements OAuth2Token,
 	@Override
 	public void setPrimaryKeyObj(Serializable primaryKeyObj) {
 		_oAuth2Token.setPrimaryKeyObj(primaryKeyObj);
+	}
+
+	/**
+	* Sets the scopes of this o auth2 token.
+	*
+	* @param scopes the scopes of this o auth2 token
+	*/
+	@Override
+	public void setScopes(java.lang.String scopes) {
+		_oAuth2Token.setScopes(scopes);
 	}
 
 	/**

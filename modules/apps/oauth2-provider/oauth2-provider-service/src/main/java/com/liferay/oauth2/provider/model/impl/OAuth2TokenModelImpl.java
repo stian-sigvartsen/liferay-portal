@@ -68,7 +68,8 @@ public class OAuth2TokenModelImpl extends BaseModelImpl<OAuth2Token>
 			{ "lifeTime", Types.BIGINT },
 			{ "oAuth2ApplicationId", Types.VARCHAR },
 			{ "oAuth2TokenType", Types.VARCHAR },
-			{ "oAuth2RefreshTokenId", Types.VARCHAR }
+			{ "oAuth2RefreshTokenId", Types.VARCHAR },
+			{ "scopes", Types.VARCHAR }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
 
@@ -82,9 +83,10 @@ public class OAuth2TokenModelImpl extends BaseModelImpl<OAuth2Token>
 		TABLE_COLUMNS_MAP.put("oAuth2ApplicationId", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("oAuth2TokenType", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("oAuth2RefreshTokenId", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("scopes", Types.VARCHAR);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table OAuth2Token (oAuth2TokenId VARCHAR(75) not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,lifeTime LONG,oAuth2ApplicationId VARCHAR(75) null,oAuth2TokenType VARCHAR(75) null,oAuth2RefreshTokenId VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table OAuth2Token (oAuth2TokenId VARCHAR(75) not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,lifeTime LONG,oAuth2ApplicationId VARCHAR(75) null,oAuth2TokenType VARCHAR(75) null,oAuth2RefreshTokenId VARCHAR(75) null,scopes VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table OAuth2Token";
 	public static final String ORDER_BY_JPQL = " ORDER BY oAuth2Token.oAuth2TokenId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY OAuth2Token.oAuth2TokenId ASC";
@@ -153,6 +155,7 @@ public class OAuth2TokenModelImpl extends BaseModelImpl<OAuth2Token>
 		attributes.put("oAuth2ApplicationId", getOAuth2ApplicationId());
 		attributes.put("oAuth2TokenType", getOAuth2TokenType());
 		attributes.put("oAuth2RefreshTokenId", getOAuth2RefreshTokenId());
+		attributes.put("scopes", getScopes());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -216,6 +219,12 @@ public class OAuth2TokenModelImpl extends BaseModelImpl<OAuth2Token>
 
 		if (oAuth2RefreshTokenId != null) {
 			setOAuth2RefreshTokenId(oAuth2RefreshTokenId);
+		}
+
+		String scopes = (String)attributes.get("scopes");
+
+		if (scopes != null) {
+			setScopes(scopes);
 		}
 	}
 
@@ -380,6 +389,21 @@ public class OAuth2TokenModelImpl extends BaseModelImpl<OAuth2Token>
 		return GetterUtil.getString(_originalOAuth2RefreshTokenId);
 	}
 
+	@Override
+	public String getScopes() {
+		if (_scopes == null) {
+			return "";
+		}
+		else {
+			return _scopes;
+		}
+	}
+
+	@Override
+	public void setScopes(String scopes) {
+		_scopes = scopes;
+	}
+
 	public long getColumnBitmask() {
 		return _columnBitmask;
 	}
@@ -407,6 +431,7 @@ public class OAuth2TokenModelImpl extends BaseModelImpl<OAuth2Token>
 		oAuth2TokenImpl.setOAuth2ApplicationId(getOAuth2ApplicationId());
 		oAuth2TokenImpl.setOAuth2TokenType(getOAuth2TokenType());
 		oAuth2TokenImpl.setOAuth2RefreshTokenId(getOAuth2RefreshTokenId());
+		oAuth2TokenImpl.setScopes(getScopes());
 
 		oAuth2TokenImpl.resetOriginalValues();
 
@@ -531,12 +556,20 @@ public class OAuth2TokenModelImpl extends BaseModelImpl<OAuth2Token>
 			oAuth2TokenCacheModel.oAuth2RefreshTokenId = null;
 		}
 
+		oAuth2TokenCacheModel.scopes = getScopes();
+
+		String scopes = oAuth2TokenCacheModel.scopes;
+
+		if ((scopes != null) && (scopes.length() == 0)) {
+			oAuth2TokenCacheModel.scopes = null;
+		}
+
 		return oAuth2TokenCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(19);
+		StringBundler sb = new StringBundler(21);
 
 		sb.append("{oAuth2TokenId=");
 		sb.append(getOAuth2TokenId());
@@ -556,6 +589,8 @@ public class OAuth2TokenModelImpl extends BaseModelImpl<OAuth2Token>
 		sb.append(getOAuth2TokenType());
 		sb.append(", oAuth2RefreshTokenId=");
 		sb.append(getOAuth2RefreshTokenId());
+		sb.append(", scopes=");
+		sb.append(getScopes());
 		sb.append("}");
 
 		return sb.toString();
@@ -563,7 +598,7 @@ public class OAuth2TokenModelImpl extends BaseModelImpl<OAuth2Token>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(31);
+		StringBundler sb = new StringBundler(34);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.oauth2.provider.model.OAuth2Token");
@@ -605,6 +640,10 @@ public class OAuth2TokenModelImpl extends BaseModelImpl<OAuth2Token>
 			"<column><column-name>oAuth2RefreshTokenId</column-name><column-value><![CDATA[");
 		sb.append(getOAuth2RefreshTokenId());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>scopes</column-name><column-value><![CDATA[");
+		sb.append(getScopes());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -627,6 +666,7 @@ public class OAuth2TokenModelImpl extends BaseModelImpl<OAuth2Token>
 	private String _oAuth2TokenType;
 	private String _oAuth2RefreshTokenId;
 	private String _originalOAuth2RefreshTokenId;
+	private String _scopes;
 	private long _columnBitmask;
 	private OAuth2Token _escapedModel;
 }

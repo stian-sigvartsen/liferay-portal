@@ -42,6 +42,7 @@ public class OAuth2TokenSoap implements Serializable {
 		soapModel.setOAuth2ApplicationId(model.getOAuth2ApplicationId());
 		soapModel.setOAuth2TokenType(model.getOAuth2TokenType());
 		soapModel.setOAuth2RefreshTokenId(model.getOAuth2RefreshTokenId());
+		soapModel.setScopes(model.getScopes());
 
 		return soapModel;
 	}
@@ -166,6 +167,14 @@ public class OAuth2TokenSoap implements Serializable {
 		_oAuth2RefreshTokenId = oAuth2RefreshTokenId;
 	}
 
+	public String getScopes() {
+		return _scopes;
+	}
+
+	public void setScopes(String scopes) {
+		_scopes = scopes;
+	}
+
 	private String _oAuth2TokenId;
 	private long _companyId;
 	private long _userId;
@@ -175,4 +184,5 @@ public class OAuth2TokenSoap implements Serializable {
 	private String _oAuth2ApplicationId;
 	private String _oAuth2TokenType;
 	private String _oAuth2RefreshTokenId;
+	private String _scopes;
 }

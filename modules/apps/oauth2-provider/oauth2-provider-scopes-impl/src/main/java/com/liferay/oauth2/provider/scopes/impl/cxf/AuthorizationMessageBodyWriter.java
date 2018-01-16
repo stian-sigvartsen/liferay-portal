@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.oauth2.provider.scopes.impl.jaxrs;
+package com.liferay.oauth2.provider.scopes.impl.cxf;
 
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -75,7 +75,7 @@ public class AuthorizationMessageBodyWriter
 
 		StringBundler sb = new StringBundler(portalURL);
 
-		sb.append("/web/guest/auth-portlet");
+		sb.append("/group/guest/oauth2-authorize");
 
 		sb.append(StringPool.QUESTION);
 		sb.append("reply_to");

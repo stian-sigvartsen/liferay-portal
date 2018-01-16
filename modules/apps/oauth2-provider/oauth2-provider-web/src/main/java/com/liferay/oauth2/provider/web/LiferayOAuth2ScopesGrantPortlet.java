@@ -33,8 +33,10 @@ import java.io.PrintWriter;
 @Component(
 	immediate = true,
 	property = {
+		"com.liferay.portlet.application-type=full-page-application",
 		"javax.portlet.name=com.liferay.oauth2.provider.web.LiferayOAuth2ScopesGrantPortlet",
 		"javax.portlet.display-name=OAuth2 Grant Scopes Portlet"
+
 	},
 	service = Portlet.class
 )
@@ -51,12 +53,17 @@ public class LiferayOAuth2ScopesGrantPortlet extends MVCPortlet {
 		HttpServletRequest httpServletRequest =
 			PortalUtil.getHttpServletRequest(renderRequest);
 
+		httpServletRequest = PortalUtil.getOriginalServletRequest(
+			httpServletRequest);
+
 		PrintWriter printWriter = new PrintWriter(portletOutputStream, true);
 
-		printWriter.append("<form method=\"POST\" action=\"");
+		printWriter.append(
+			"<form method=\"GET\" " +
+				"enctype=\"application/x-www-form-urlencoded\" action=\"");
 		printWriter.append(
 			ParamUtil.get(httpServletRequest, "reply_to", ""));
-		printWriter.append("\">");
+		printWriter.append("\" >");
 		printWriter.append(
 			"<input type=\"hidden\" name=\"client_id\" value=\"");
 		printWriter.append(
@@ -66,6 +73,10 @@ public class LiferayOAuth2ScopesGrantPortlet extends MVCPortlet {
 			"<input type=\"hidden\" name=\"redirect_uri\" value=\"");
 		printWriter.append(
 			ParamUtil.get(httpServletRequest, "redirect_uri", ""));
+		printWriter.append("\">");
+		printWriter.append(
+			"<input type=\"hidden\" name=\"scope\" value=\"");
+		printWriter.append(ParamUtil.get(httpServletRequest, "scope", ""));
 		printWriter.append("\">");
 		printWriter.append(
 			"<input type=\"hidden\" name=\"session_authenticity_token\" " +
@@ -80,6 +91,10 @@ public class LiferayOAuth2ScopesGrantPortlet extends MVCPortlet {
 			"<button type=\"submit\" name=\"oauthDecision\" value=\"deny\">" +
 				"Deny</button>");
 		printWriter.append("</form>");
+
+		printWriter.println("Hello world!<br>");
+
+		printWriter.flush();
 	}
 
 	@Reference

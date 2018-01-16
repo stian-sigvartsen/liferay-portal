@@ -42,5 +42,6 @@ create table OAuth2Token (
 	lifeTime LONG,
 	oAuth2ApplicationId VARCHAR(75) null,
 	oAuth2TokenType VARCHAR(75) null,
-	oAuth2RefreshTokenId VARCHAR(75) null
+	oAuth2RefreshTokenId VARCHAR(75) null,
+	scopes VARCHAR(75) null
 );
