@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.service.UserLocalService;
 import org.apache.cxf.rs.security.oauth2.common.UserSubject;
 import org.apache.cxf.rs.security.oauth2.grants.code.AuthorizationCodeGrantHandler;
 import org.apache.cxf.rs.security.oauth2.grants.refresh.RefreshTokenGrantHandler;
+import org.apache.cxf.rs.security.oauth2.provider.OAuthJSONProvider;
 import org.apache.cxf.rs.security.oauth2.provider.OAuthServiceException;
 import org.apache.cxf.rs.security.oauth2.services.AccessTokenService;
 import org.apache.cxf.rs.security.oauth2.services.AuthorizationCodeGrantService;
@@ -33,6 +34,7 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -91,6 +93,11 @@ public class OAuth2EndpointApplication extends Application {
 			Arrays.asList(
 				authorizationCodeGrantService, accessTokenService,
 				_authorizationMessageBodyWriter));
+	}
+
+	@Override
+	public Set<Class<?>> getClasses() {
+		return Collections.singleton(OAuthJSONProvider.class);
 	}
 
 	@Reference
