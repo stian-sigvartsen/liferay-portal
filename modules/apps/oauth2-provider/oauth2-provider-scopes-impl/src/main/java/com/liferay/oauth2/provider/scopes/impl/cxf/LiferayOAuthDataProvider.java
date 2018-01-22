@@ -55,6 +55,11 @@ public class LiferayOAuthDataProvider extends AbstractAuthorizationCodeDataProvi
 	private PortalCache<String, ServerAuthorizationCodeGrant>
 		_codeGrantsPortalCache;
 
+	public LiferayOAuthDataProvider() {
+		setInvisibleToClientScopes(
+			Collections.singletonList(OAuthConstants.REFRESH_TOKEN_SCOPE));
+	}
+
 	@Activate
 	protected void activate() {
 		_codeGrantsPortalCache = (PortalCache<String, ServerAuthorizationCodeGrant>)
@@ -68,6 +73,12 @@ public class LiferayOAuthDataProvider extends AbstractAuthorizationCodeDataProvi
 
 		ServerAuthorizationCodeGrant authorizationCodeGrant =
 			super.createCodeGrant(reg);
+
+		List<String> approvedScope = reg.getApprovedScope();
+
+		approvedScope.add(OAuthConstants.REFRESH_TOKEN_SCOPE);
+
+		reg.setApprovedScope(approvedScope);
 
 		_codeGrantsPortalCache.put(
 			authorizationCodeGrant.getCode(),
@@ -343,10 +354,21 @@ public class LiferayOAuthDataProvider extends AbstractAuthorizationCodeDataProvi
 	public List<OAuthPermission> convertScopeToPermissions(
 		Client client, List<String> requestedScopes) {
 
+		List<String> invisibleToClientScopes = getInvisibleToClientScopes();
+
 		List<OAuthPermission> permissions = new ArrayList<>();
 
 		for (String requestedScope : requestedScopes) {
-			permissions.add(new OAuthPermission(requestedScope));
+			OAuthPermission oAuthPermission = new OAuthPermission(
+				requestedScope);
+
+			if (invisibleToClientScopes.contains(
+				oAuthPermission.getPermission())) {
+
+				oAuthPermission.setInvisibleToClient(true);
+			}
+
+			permissions.add(oAuthPermission);
 		}
 
 		return permissions;
