@@ -303,6 +303,10 @@ public class LiferayOAuthDataProvider extends AbstractAuthorizationCodeDataProvi
 			_oAuth2ApplicationLocalService.fetchOAuth2Application(
 				CompanyThreadLocal.getCompanyId(), clientId);
 
+		if (oAuth2Application == null) {
+			throw new OAuthServiceException("Invalid client");
+		}
+
 		return populateClient(oAuth2Application);
 	}
 
