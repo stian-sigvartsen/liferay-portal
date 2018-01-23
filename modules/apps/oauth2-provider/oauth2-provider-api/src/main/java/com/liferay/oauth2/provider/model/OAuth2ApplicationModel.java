@@ -56,29 +56,28 @@ public interface OAuth2ApplicationModel extends AuditedModel,
 	 *
 	 * @return the primary key of this o auth2 application
 	 */
-	public String getPrimaryKey();
+	public long getPrimaryKey();
 
 	/**
 	 * Sets the primary key of this o auth2 application.
 	 *
 	 * @param primaryKey the primary key of this o auth2 application
 	 */
-	public void setPrimaryKey(String primaryKey);
+	public void setPrimaryKey(long primaryKey);
 
 	/**
 	 * Returns the o auth2 application ID of this o auth2 application.
 	 *
 	 * @return the o auth2 application ID of this o auth2 application
 	 */
-	@AutoEscape
-	public String getOAuth2ApplicationId();
+	public long getOAuth2ApplicationId();
 
 	/**
 	 * Sets the o auth2 application ID of this o auth2 application.
 	 *
 	 * @param oAuth2ApplicationId the o auth2 application ID of this o auth2 application
 	 */
-	public void setOAuth2ApplicationId(String oAuth2ApplicationId);
+	public void setOAuth2ApplicationId(long oAuth2ApplicationId);
 
 	/**
 	 * Returns the company ID of this o auth2 application.
@@ -178,33 +177,63 @@ public interface OAuth2ApplicationModel extends AuditedModel,
 	public void setModifiedDate(Date modifiedDate);
 
 	/**
-	 * Returns the application secret of this o auth2 application.
+	 * Returns the client ID of this o auth2 application.
 	 *
-	 * @return the application secret of this o auth2 application
+	 * @return the client ID of this o auth2 application
 	 */
 	@AutoEscape
-	public String getApplicationSecret();
+	public String getClientId();
 
 	/**
-	 * Sets the application secret of this o auth2 application.
+	 * Sets the client ID of this o auth2 application.
 	 *
-	 * @param applicationSecret the application secret of this o auth2 application
+	 * @param clientId the client ID of this o auth2 application
 	 */
-	public void setApplicationSecret(String applicationSecret);
+	public void setClientId(String clientId);
 
 	/**
-	 * Returns the confidential of this o auth2 application.
+	 * Returns the client secret of this o auth2 application.
 	 *
-	 * @return the confidential of this o auth2 application
+	 * @return the client secret of this o auth2 application
 	 */
-	public Boolean getConfidential();
+	@AutoEscape
+	public String getClientSecret();
 
 	/**
-	 * Sets the confidential of this o auth2 application.
+	 * Sets the client secret of this o auth2 application.
 	 *
-	 * @param confidential the confidential of this o auth2 application
+	 * @param clientSecret the client secret of this o auth2 application
 	 */
-	public void setConfidential(Boolean confidential);
+	public void setClientSecret(String clientSecret);
+
+	/**
+	 * Returns the redirect uri of this o auth2 application.
+	 *
+	 * @return the redirect uri of this o auth2 application
+	 */
+	@AutoEscape
+	public String getRedirectUri();
+
+	/**
+	 * Sets the redirect uri of this o auth2 application.
+	 *
+	 * @param redirectUri the redirect uri of this o auth2 application
+	 */
+	public void setRedirectUri(String redirectUri);
+
+	/**
+	 * Returns the client confidential of this o auth2 application.
+	 *
+	 * @return the client confidential of this o auth2 application
+	 */
+	public Boolean getClientConfidential();
+
+	/**
+	 * Sets the client confidential of this o auth2 application.
+	 *
+	 * @param clientConfidential the client confidential of this o auth2 application
+	 */
+	public void setClientConfidential(Boolean clientConfidential);
 
 	/**
 	 * Returns the description of this o auth2 application.

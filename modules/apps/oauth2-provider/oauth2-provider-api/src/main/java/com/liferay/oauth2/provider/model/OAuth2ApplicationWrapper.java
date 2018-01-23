@@ -64,8 +64,10 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
-		attributes.put("applicationSecret", getApplicationSecret());
-		attributes.put("confidential", getConfidential());
+		attributes.put("clientId", getClientId());
+		attributes.put("clientSecret", getClientSecret());
+		attributes.put("redirectUri", getRedirectUri());
+		attributes.put("clientConfidential", getClientConfidential());
 		attributes.put("description", getDescription());
 		attributes.put("name", getName());
 		attributes.put("webUrl", getWebUrl());
@@ -75,8 +77,7 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 
 	@Override
 	public void setModelAttributes(Map<String, Object> attributes) {
-		String oAuth2ApplicationId = (String)attributes.get(
-				"oAuth2ApplicationId");
+		Long oAuth2ApplicationId = (Long)attributes.get("oAuth2ApplicationId");
 
 		if (oAuth2ApplicationId != null) {
 			setOAuth2ApplicationId(oAuth2ApplicationId);
@@ -112,16 +113,29 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 			setModifiedDate(modifiedDate);
 		}
 
-		String applicationSecret = (String)attributes.get("applicationSecret");
+		String clientId = (String)attributes.get("clientId");
 
-		if (applicationSecret != null) {
-			setApplicationSecret(applicationSecret);
+		if (clientId != null) {
+			setClientId(clientId);
 		}
 
-		Boolean confidential = (Boolean)attributes.get("confidential");
+		String clientSecret = (String)attributes.get("clientSecret");
 
-		if (confidential != null) {
-			setConfidential(confidential);
+		if (clientSecret != null) {
+			setClientSecret(clientSecret);
+		}
+
+		String redirectUri = (String)attributes.get("redirectUri");
+
+		if (redirectUri != null) {
+			setRedirectUri(redirectUri);
+		}
+
+		Boolean clientConfidential = (Boolean)attributes.get(
+				"clientConfidential");
+
+		if (clientConfidential != null) {
+			setClientConfidential(clientConfidential);
 		}
 
 		String description = (String)attributes.get("description");
@@ -154,13 +168,33 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 	}
 
 	/**
-	* Returns the application secret of this o auth2 application.
+	* Returns the client confidential of this o auth2 application.
 	*
-	* @return the application secret of this o auth2 application
+	* @return the client confidential of this o auth2 application
 	*/
 	@Override
-	public java.lang.String getApplicationSecret() {
-		return _oAuth2Application.getApplicationSecret();
+	public java.lang.Boolean getClientConfidential() {
+		return _oAuth2Application.getClientConfidential();
+	}
+
+	/**
+	* Returns the client ID of this o auth2 application.
+	*
+	* @return the client ID of this o auth2 application
+	*/
+	@Override
+	public java.lang.String getClientId() {
+		return _oAuth2Application.getClientId();
+	}
+
+	/**
+	* Returns the client secret of this o auth2 application.
+	*
+	* @return the client secret of this o auth2 application
+	*/
+	@Override
+	public java.lang.String getClientSecret() {
+		return _oAuth2Application.getClientSecret();
 	}
 
 	/**
@@ -171,16 +205,6 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 	@Override
 	public long getCompanyId() {
 		return _oAuth2Application.getCompanyId();
-	}
-
-	/**
-	* Returns the confidential of this o auth2 application.
-	*
-	* @return the confidential of this o auth2 application
-	*/
-	@Override
-	public java.lang.Boolean getConfidential() {
-		return _oAuth2Application.getConfidential();
 	}
 
 	/**
@@ -234,7 +258,7 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 	* @return the o auth2 application ID of this o auth2 application
 	*/
 	@Override
-	public java.lang.String getOAuth2ApplicationId() {
+	public long getOAuth2ApplicationId() {
 		return _oAuth2Application.getOAuth2ApplicationId();
 	}
 
@@ -244,13 +268,23 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 	* @return the primary key of this o auth2 application
 	*/
 	@Override
-	public java.lang.String getPrimaryKey() {
+	public long getPrimaryKey() {
 		return _oAuth2Application.getPrimaryKey();
 	}
 
 	@Override
 	public Serializable getPrimaryKeyObj() {
 		return _oAuth2Application.getPrimaryKeyObj();
+	}
+
+	/**
+	* Returns the redirect uri of this o auth2 application.
+	*
+	* @return the redirect uri of this o auth2 application
+	*/
+	@Override
+	public java.lang.String getRedirectUri() {
+		return _oAuth2Application.getRedirectUri();
 	}
 
 	/**
@@ -318,19 +352,39 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 		_oAuth2Application.persist();
 	}
 
-	/**
-	* Sets the application secret of this o auth2 application.
-	*
-	* @param applicationSecret the application secret of this o auth2 application
-	*/
-	@Override
-	public void setApplicationSecret(java.lang.String applicationSecret) {
-		_oAuth2Application.setApplicationSecret(applicationSecret);
-	}
-
 	@Override
 	public void setCachedModel(boolean cachedModel) {
 		_oAuth2Application.setCachedModel(cachedModel);
+	}
+
+	/**
+	* Sets the client confidential of this o auth2 application.
+	*
+	* @param clientConfidential the client confidential of this o auth2 application
+	*/
+	@Override
+	public void setClientConfidential(java.lang.Boolean clientConfidential) {
+		_oAuth2Application.setClientConfidential(clientConfidential);
+	}
+
+	/**
+	* Sets the client ID of this o auth2 application.
+	*
+	* @param clientId the client ID of this o auth2 application
+	*/
+	@Override
+	public void setClientId(java.lang.String clientId) {
+		_oAuth2Application.setClientId(clientId);
+	}
+
+	/**
+	* Sets the client secret of this o auth2 application.
+	*
+	* @param clientSecret the client secret of this o auth2 application
+	*/
+	@Override
+	public void setClientSecret(java.lang.String clientSecret) {
+		_oAuth2Application.setClientSecret(clientSecret);
 	}
 
 	/**
@@ -341,16 +395,6 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 	@Override
 	public void setCompanyId(long companyId) {
 		_oAuth2Application.setCompanyId(companyId);
-	}
-
-	/**
-	* Sets the confidential of this o auth2 application.
-	*
-	* @param confidential the confidential of this o auth2 application
-	*/
-	@Override
-	public void setConfidential(java.lang.Boolean confidential) {
-		_oAuth2Application.setConfidential(confidential);
 	}
 
 	/**
@@ -420,7 +464,7 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 	* @param oAuth2ApplicationId the o auth2 application ID of this o auth2 application
 	*/
 	@Override
-	public void setOAuth2ApplicationId(java.lang.String oAuth2ApplicationId) {
+	public void setOAuth2ApplicationId(long oAuth2ApplicationId) {
 		_oAuth2Application.setOAuth2ApplicationId(oAuth2ApplicationId);
 	}
 
@@ -430,13 +474,23 @@ public class OAuth2ApplicationWrapper implements OAuth2Application,
 	* @param primaryKey the primary key of this o auth2 application
 	*/
 	@Override
-	public void setPrimaryKey(java.lang.String primaryKey) {
+	public void setPrimaryKey(long primaryKey) {
 		_oAuth2Application.setPrimaryKey(primaryKey);
 	}
 
 	@Override
 	public void setPrimaryKeyObj(Serializable primaryKeyObj) {
 		_oAuth2Application.setPrimaryKeyObj(primaryKeyObj);
+	}
+
+	/**
+	* Sets the redirect uri of this o auth2 application.
+	*
+	* @param redirectUri the redirect uri of this o auth2 application
+	*/
+	@Override
+	public void setRedirectUri(java.lang.String redirectUri) {
+		_oAuth2Application.setRedirectUri(redirectUri);
 	}
 
 	/**

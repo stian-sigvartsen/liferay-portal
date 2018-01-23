@@ -117,8 +117,7 @@ public class OAuth2TokenUtil {
 	* @param oAuth2ApplicationId the o auth2 application ID
 	* @return the matching o auth2 tokens
 	*/
-	public static List<OAuth2Token> findByA(
-		java.lang.String oAuth2ApplicationId) {
+	public static List<OAuth2Token> findByA(long oAuth2ApplicationId) {
 		return getPersistence().findByA(oAuth2ApplicationId);
 	}
 
@@ -134,8 +133,8 @@ public class OAuth2TokenUtil {
 	* @param end the upper bound of the range of o auth2 tokens (not inclusive)
 	* @return the range of matching o auth2 tokens
 	*/
-	public static List<OAuth2Token> findByA(
-		java.lang.String oAuth2ApplicationId, int start, int end) {
+	public static List<OAuth2Token> findByA(long oAuth2ApplicationId,
+		int start, int end) {
 		return getPersistence().findByA(oAuth2ApplicationId, start, end);
 	}
 
@@ -152,9 +151,8 @@ public class OAuth2TokenUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching o auth2 tokens
 	*/
-	public static List<OAuth2Token> findByA(
-		java.lang.String oAuth2ApplicationId, int start, int end,
-		OrderByComparator<OAuth2Token> orderByComparator) {
+	public static List<OAuth2Token> findByA(long oAuth2ApplicationId,
+		int start, int end, OrderByComparator<OAuth2Token> orderByComparator) {
 		return getPersistence()
 				   .findByA(oAuth2ApplicationId, start, end, orderByComparator);
 	}
@@ -173,9 +171,8 @@ public class OAuth2TokenUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching o auth2 tokens
 	*/
-	public static List<OAuth2Token> findByA(
-		java.lang.String oAuth2ApplicationId, int start, int end,
-		OrderByComparator<OAuth2Token> orderByComparator,
+	public static List<OAuth2Token> findByA(long oAuth2ApplicationId,
+		int start, int end, OrderByComparator<OAuth2Token> orderByComparator,
 		boolean retrieveFromCache) {
 		return getPersistence()
 				   .findByA(oAuth2ApplicationId, start, end, orderByComparator,
@@ -190,8 +187,7 @@ public class OAuth2TokenUtil {
 	* @return the first matching o auth2 token
 	* @throws NoSuchOAuth2TokenException if a matching o auth2 token could not be found
 	*/
-	public static OAuth2Token findByA_First(
-		java.lang.String oAuth2ApplicationId,
+	public static OAuth2Token findByA_First(long oAuth2ApplicationId,
 		OrderByComparator<OAuth2Token> orderByComparator)
 		throws com.liferay.oauth2.provider.exception.NoSuchOAuth2TokenException {
 		return getPersistence()
@@ -205,8 +201,7 @@ public class OAuth2TokenUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching o auth2 token, or <code>null</code> if a matching o auth2 token could not be found
 	*/
-	public static OAuth2Token fetchByA_First(
-		java.lang.String oAuth2ApplicationId,
+	public static OAuth2Token fetchByA_First(long oAuth2ApplicationId,
 		OrderByComparator<OAuth2Token> orderByComparator) {
 		return getPersistence()
 				   .fetchByA_First(oAuth2ApplicationId, orderByComparator);
@@ -220,8 +215,7 @@ public class OAuth2TokenUtil {
 	* @return the last matching o auth2 token
 	* @throws NoSuchOAuth2TokenException if a matching o auth2 token could not be found
 	*/
-	public static OAuth2Token findByA_Last(
-		java.lang.String oAuth2ApplicationId,
+	public static OAuth2Token findByA_Last(long oAuth2ApplicationId,
 		OrderByComparator<OAuth2Token> orderByComparator)
 		throws com.liferay.oauth2.provider.exception.NoSuchOAuth2TokenException {
 		return getPersistence()
@@ -235,8 +229,7 @@ public class OAuth2TokenUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching o auth2 token, or <code>null</code> if a matching o auth2 token could not be found
 	*/
-	public static OAuth2Token fetchByA_Last(
-		java.lang.String oAuth2ApplicationId,
+	public static OAuth2Token fetchByA_Last(long oAuth2ApplicationId,
 		OrderByComparator<OAuth2Token> orderByComparator) {
 		return getPersistence()
 				   .fetchByA_Last(oAuth2ApplicationId, orderByComparator);
@@ -252,7 +245,7 @@ public class OAuth2TokenUtil {
 	* @throws NoSuchOAuth2TokenException if a o auth2 token with the primary key could not be found
 	*/
 	public static OAuth2Token[] findByA_PrevAndNext(
-		java.lang.String oAuth2TokenId, java.lang.String oAuth2ApplicationId,
+		java.lang.String oAuth2TokenId, long oAuth2ApplicationId,
 		OrderByComparator<OAuth2Token> orderByComparator)
 		throws com.liferay.oauth2.provider.exception.NoSuchOAuth2TokenException {
 		return getPersistence()
@@ -265,7 +258,7 @@ public class OAuth2TokenUtil {
 	*
 	* @param oAuth2ApplicationId the o auth2 application ID
 	*/
-	public static void removeByA(java.lang.String oAuth2ApplicationId) {
+	public static void removeByA(long oAuth2ApplicationId) {
 		getPersistence().removeByA(oAuth2ApplicationId);
 	}
 
@@ -275,7 +268,7 @@ public class OAuth2TokenUtil {
 	* @param oAuth2ApplicationId the o auth2 application ID
 	* @return the number of matching o auth2 tokens
 	*/
-	public static int countByA(java.lang.String oAuth2ApplicationId) {
+	public static int countByA(long oAuth2ApplicationId) {
 		return getPersistence().countByA(oAuth2ApplicationId);
 	}
 
@@ -286,8 +279,8 @@ public class OAuth2TokenUtil {
 	* @param userName the user name
 	* @return the matching o auth2 tokens
 	*/
-	public static List<OAuth2Token> findByA_U(
-		java.lang.String oAuth2ApplicationId, java.lang.String userName) {
+	public static List<OAuth2Token> findByA_U(long oAuth2ApplicationId,
+		java.lang.String userName) {
 		return getPersistence().findByA_U(oAuth2ApplicationId, userName);
 	}
 
@@ -304,9 +297,8 @@ public class OAuth2TokenUtil {
 	* @param end the upper bound of the range of o auth2 tokens (not inclusive)
 	* @return the range of matching o auth2 tokens
 	*/
-	public static List<OAuth2Token> findByA_U(
-		java.lang.String oAuth2ApplicationId, java.lang.String userName,
-		int start, int end) {
+	public static List<OAuth2Token> findByA_U(long oAuth2ApplicationId,
+		java.lang.String userName, int start, int end) {
 		return getPersistence()
 				   .findByA_U(oAuth2ApplicationId, userName, start, end);
 	}
@@ -325,9 +317,9 @@ public class OAuth2TokenUtil {
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching o auth2 tokens
 	*/
-	public static List<OAuth2Token> findByA_U(
-		java.lang.String oAuth2ApplicationId, java.lang.String userName,
-		int start, int end, OrderByComparator<OAuth2Token> orderByComparator) {
+	public static List<OAuth2Token> findByA_U(long oAuth2ApplicationId,
+		java.lang.String userName, int start, int end,
+		OrderByComparator<OAuth2Token> orderByComparator) {
 		return getPersistence()
 				   .findByA_U(oAuth2ApplicationId, userName, start, end,
 			orderByComparator);
@@ -348,9 +340,9 @@ public class OAuth2TokenUtil {
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching o auth2 tokens
 	*/
-	public static List<OAuth2Token> findByA_U(
-		java.lang.String oAuth2ApplicationId, java.lang.String userName,
-		int start, int end, OrderByComparator<OAuth2Token> orderByComparator,
+	public static List<OAuth2Token> findByA_U(long oAuth2ApplicationId,
+		java.lang.String userName, int start, int end,
+		OrderByComparator<OAuth2Token> orderByComparator,
 		boolean retrieveFromCache) {
 		return getPersistence()
 				   .findByA_U(oAuth2ApplicationId, userName, start, end,
@@ -366,8 +358,8 @@ public class OAuth2TokenUtil {
 	* @return the first matching o auth2 token
 	* @throws NoSuchOAuth2TokenException if a matching o auth2 token could not be found
 	*/
-	public static OAuth2Token findByA_U_First(
-		java.lang.String oAuth2ApplicationId, java.lang.String userName,
+	public static OAuth2Token findByA_U_First(long oAuth2ApplicationId,
+		java.lang.String userName,
 		OrderByComparator<OAuth2Token> orderByComparator)
 		throws com.liferay.oauth2.provider.exception.NoSuchOAuth2TokenException {
 		return getPersistence()
@@ -383,8 +375,8 @@ public class OAuth2TokenUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching o auth2 token, or <code>null</code> if a matching o auth2 token could not be found
 	*/
-	public static OAuth2Token fetchByA_U_First(
-		java.lang.String oAuth2ApplicationId, java.lang.String userName,
+	public static OAuth2Token fetchByA_U_First(long oAuth2ApplicationId,
+		java.lang.String userName,
 		OrderByComparator<OAuth2Token> orderByComparator) {
 		return getPersistence()
 				   .fetchByA_U_First(oAuth2ApplicationId, userName,
@@ -400,8 +392,8 @@ public class OAuth2TokenUtil {
 	* @return the last matching o auth2 token
 	* @throws NoSuchOAuth2TokenException if a matching o auth2 token could not be found
 	*/
-	public static OAuth2Token findByA_U_Last(
-		java.lang.String oAuth2ApplicationId, java.lang.String userName,
+	public static OAuth2Token findByA_U_Last(long oAuth2ApplicationId,
+		java.lang.String userName,
 		OrderByComparator<OAuth2Token> orderByComparator)
 		throws com.liferay.oauth2.provider.exception.NoSuchOAuth2TokenException {
 		return getPersistence()
@@ -417,8 +409,8 @@ public class OAuth2TokenUtil {
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching o auth2 token, or <code>null</code> if a matching o auth2 token could not be found
 	*/
-	public static OAuth2Token fetchByA_U_Last(
-		java.lang.String oAuth2ApplicationId, java.lang.String userName,
+	public static OAuth2Token fetchByA_U_Last(long oAuth2ApplicationId,
+		java.lang.String userName,
 		OrderByComparator<OAuth2Token> orderByComparator) {
 		return getPersistence()
 				   .fetchByA_U_Last(oAuth2ApplicationId, userName,
@@ -436,7 +428,7 @@ public class OAuth2TokenUtil {
 	* @throws NoSuchOAuth2TokenException if a o auth2 token with the primary key could not be found
 	*/
 	public static OAuth2Token[] findByA_U_PrevAndNext(
-		java.lang.String oAuth2TokenId, java.lang.String oAuth2ApplicationId,
+		java.lang.String oAuth2TokenId, long oAuth2ApplicationId,
 		java.lang.String userName,
 		OrderByComparator<OAuth2Token> orderByComparator)
 		throws com.liferay.oauth2.provider.exception.NoSuchOAuth2TokenException {
@@ -451,7 +443,7 @@ public class OAuth2TokenUtil {
 	* @param oAuth2ApplicationId the o auth2 application ID
 	* @param userName the user name
 	*/
-	public static void removeByA_U(java.lang.String oAuth2ApplicationId,
+	public static void removeByA_U(long oAuth2ApplicationId,
 		java.lang.String userName) {
 		getPersistence().removeByA_U(oAuth2ApplicationId, userName);
 	}
@@ -463,7 +455,7 @@ public class OAuth2TokenUtil {
 	* @param userName the user name
 	* @return the number of matching o auth2 tokens
 	*/
-	public static int countByA_U(java.lang.String oAuth2ApplicationId,
+	public static int countByA_U(long oAuth2ApplicationId,
 		java.lang.String userName) {
 		return getPersistence().countByA_U(oAuth2ApplicationId, userName);
 	}

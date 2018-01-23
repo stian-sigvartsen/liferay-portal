@@ -1,12 +1,14 @@
 create table OAuth2Application (
-	oAuth2ApplicationId VARCHAR(75) not null primary key,
+	oAuth2ApplicationId LONG not null primary key,
 	companyId LONG,
 	userId LONG,
 	userName VARCHAR(75) null,
 	createDate DATE null,
 	modifiedDate DATE null,
-	applicationSecret VARCHAR(75) null,
-	confidential BOOLEAN,
+	clientId VARCHAR(75) null,
+	clientSecret VARCHAR(75) null,
+	redirectUri VARCHAR(75) null,
+	clientConfidential BOOLEAN,
 	description VARCHAR(75) null,
 	name VARCHAR(75) null,
 	webUrl VARCHAR(75) null
@@ -19,7 +21,7 @@ create table OAuth2RefreshToken (
 	userName VARCHAR(75) null,
 	createDate DATE null,
 	lifeTime LONG,
-	oAuth2ApplicationId VARCHAR(75) null
+	oAuth2ApplicationId LONG
 );
 
 create table OAuth2ScopeGrant (
@@ -40,7 +42,7 @@ create table OAuth2Token (
 	userName VARCHAR(75) null,
 	createDate DATE null,
 	lifeTime LONG,
-	oAuth2ApplicationId VARCHAR(75) null,
+	oAuth2ApplicationId LONG,
 	oAuth2TokenType VARCHAR(75) null,
 	oAuth2RefreshTokenId VARCHAR(75) null,
 	scopes VARCHAR(75) null

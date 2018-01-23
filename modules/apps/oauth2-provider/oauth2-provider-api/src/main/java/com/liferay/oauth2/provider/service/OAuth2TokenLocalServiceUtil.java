@@ -181,7 +181,7 @@ public class OAuth2TokenLocalServiceUtil {
 	}
 
 	public static java.util.Collection<com.liferay.oauth2.provider.model.OAuth2Token> findByApplicationAndUserName(
-		java.lang.String applicationId, java.lang.String username) {
+		long applicationId, java.lang.String username) {
 		return getService().findByApplicationAndUserName(applicationId, username);
 	}
 

@@ -171,15 +171,14 @@ public interface OAuth2RefreshTokenModel extends BaseModel<OAuth2RefreshToken>,
 	 *
 	 * @return the o auth2 application ID of this o auth2 refresh token
 	 */
-	@AutoEscape
-	public String getOAuth2ApplicationId();
+	public long getOAuth2ApplicationId();
 
 	/**
 	 * Sets the o auth2 application ID of this o auth2 refresh token.
 	 *
 	 * @param oAuth2ApplicationId the o auth2 application ID of this o auth2 refresh token
 	 */
-	public void setOAuth2ApplicationId(String oAuth2ApplicationId);
+	public void setOAuth2ApplicationId(long oAuth2ApplicationId);
 
 	@Override
 	public boolean isNew();

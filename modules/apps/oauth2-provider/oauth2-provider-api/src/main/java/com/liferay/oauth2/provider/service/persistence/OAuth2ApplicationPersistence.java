@@ -42,6 +42,57 @@ public interface OAuth2ApplicationPersistence extends BasePersistence<OAuth2Appl
 	 */
 
 	/**
+	* Returns the o auth2 application where companyId = &#63; and clientId = &#63; or throws a {@link NoSuchOAuth2ApplicationException} if it could not be found.
+	*
+	* @param companyId the company ID
+	* @param clientId the client ID
+	* @return the matching o auth2 application
+	* @throws NoSuchOAuth2ApplicationException if a matching o auth2 application could not be found
+	*/
+	public OAuth2Application findByC_CI(long companyId,
+		java.lang.String clientId) throws NoSuchOAuth2ApplicationException;
+
+	/**
+	* Returns the o auth2 application where companyId = &#63; and clientId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param companyId the company ID
+	* @param clientId the client ID
+	* @return the matching o auth2 application, or <code>null</code> if a matching o auth2 application could not be found
+	*/
+	public OAuth2Application fetchByC_CI(long companyId,
+		java.lang.String clientId);
+
+	/**
+	* Returns the o auth2 application where companyId = &#63; and clientId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param companyId the company ID
+	* @param clientId the client ID
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the matching o auth2 application, or <code>null</code> if a matching o auth2 application could not be found
+	*/
+	public OAuth2Application fetchByC_CI(long companyId,
+		java.lang.String clientId, boolean retrieveFromCache);
+
+	/**
+	* Removes the o auth2 application where companyId = &#63; and clientId = &#63; from the database.
+	*
+	* @param companyId the company ID
+	* @param clientId the client ID
+	* @return the o auth2 application that was removed
+	*/
+	public OAuth2Application removeByC_CI(long companyId,
+		java.lang.String clientId) throws NoSuchOAuth2ApplicationException;
+
+	/**
+	* Returns the number of o auth2 applications where companyId = &#63; and clientId = &#63;.
+	*
+	* @param companyId the company ID
+	* @param clientId the client ID
+	* @return the number of matching o auth2 applications
+	*/
+	public int countByC_CI(long companyId, java.lang.String clientId);
+
+	/**
 	* Caches the o auth2 application in the entity cache if it is enabled.
 	*
 	* @param oAuth2Application the o auth2 application
@@ -62,7 +113,7 @@ public interface OAuth2ApplicationPersistence extends BasePersistence<OAuth2Appl
 	* @param oAuth2ApplicationId the primary key for the new o auth2 application
 	* @return the new o auth2 application
 	*/
-	public OAuth2Application create(java.lang.String oAuth2ApplicationId);
+	public OAuth2Application create(long oAuth2ApplicationId);
 
 	/**
 	* Removes the o auth2 application with the primary key from the database. Also notifies the appropriate model listeners.
@@ -71,7 +122,7 @@ public interface OAuth2ApplicationPersistence extends BasePersistence<OAuth2Appl
 	* @return the o auth2 application that was removed
 	* @throws NoSuchOAuth2ApplicationException if a o auth2 application with the primary key could not be found
 	*/
-	public OAuth2Application remove(java.lang.String oAuth2ApplicationId)
+	public OAuth2Application remove(long oAuth2ApplicationId)
 		throws NoSuchOAuth2ApplicationException;
 
 	public OAuth2Application updateImpl(OAuth2Application oAuth2Application);
@@ -83,8 +134,7 @@ public interface OAuth2ApplicationPersistence extends BasePersistence<OAuth2Appl
 	* @return the o auth2 application
 	* @throws NoSuchOAuth2ApplicationException if a o auth2 application with the primary key could not be found
 	*/
-	public OAuth2Application findByPrimaryKey(
-		java.lang.String oAuth2ApplicationId)
+	public OAuth2Application findByPrimaryKey(long oAuth2ApplicationId)
 		throws NoSuchOAuth2ApplicationException;
 
 	/**
@@ -93,8 +143,7 @@ public interface OAuth2ApplicationPersistence extends BasePersistence<OAuth2Appl
 	* @param oAuth2ApplicationId the primary key of the o auth2 application
 	* @return the o auth2 application, or <code>null</code> if a o auth2 application with the primary key could not be found
 	*/
-	public OAuth2Application fetchByPrimaryKey(
-		java.lang.String oAuth2ApplicationId);
+	public OAuth2Application fetchByPrimaryKey(long oAuth2ApplicationId);
 
 	@Override
 	public java.util.Map<java.io.Serializable, OAuth2Application> fetchByPrimaryKeys(

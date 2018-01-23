@@ -116,13 +116,7 @@ public class OAuth2RefreshTokenCacheModel implements CacheModel<OAuth2RefreshTok
 		}
 
 		oAuth2RefreshTokenImpl.setLifeTime(lifeTime);
-
-		if (oAuth2ApplicationId == null) {
-			oAuth2RefreshTokenImpl.setOAuth2ApplicationId("");
-		}
-		else {
-			oAuth2RefreshTokenImpl.setOAuth2ApplicationId(oAuth2ApplicationId);
-		}
+		oAuth2RefreshTokenImpl.setOAuth2ApplicationId(oAuth2ApplicationId);
 
 		oAuth2RefreshTokenImpl.resetOriginalValues();
 
@@ -140,7 +134,8 @@ public class OAuth2RefreshTokenCacheModel implements CacheModel<OAuth2RefreshTok
 		createDate = objectInput.readLong();
 
 		lifeTime = objectInput.readLong();
-		oAuth2ApplicationId = objectInput.readUTF();
+
+		oAuth2ApplicationId = objectInput.readLong();
 	}
 
 	@Override
@@ -168,12 +163,7 @@ public class OAuth2RefreshTokenCacheModel implements CacheModel<OAuth2RefreshTok
 
 		objectOutput.writeLong(lifeTime);
 
-		if (oAuth2ApplicationId == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(oAuth2ApplicationId);
-		}
+		objectOutput.writeLong(oAuth2ApplicationId);
 	}
 
 	public String oAuth2RefreshTokenId;
@@ -182,5 +172,5 @@ public class OAuth2RefreshTokenCacheModel implements CacheModel<OAuth2RefreshTok
 	public String userName;
 	public long createDate;
 	public long lifeTime;
-	public String oAuth2ApplicationId;
+	public long oAuth2ApplicationId;
 }

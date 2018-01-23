@@ -167,7 +167,7 @@ public interface OAuth2TokenLocalService extends BaseLocalService,
 	public OAuth2Token fetchOAuth2Token(java.lang.String oAuth2TokenId);
 
 	public Collection<OAuth2Token> findByApplicationAndUserName(
-		java.lang.String applicationId, java.lang.String username);
+		long applicationId, java.lang.String username);
 
 	public Collection<OAuth2Token> findByRefreshToken(
 		java.lang.String refreshToken);

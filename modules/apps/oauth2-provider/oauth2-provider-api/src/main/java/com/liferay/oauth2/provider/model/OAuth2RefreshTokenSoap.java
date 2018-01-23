@@ -143,11 +143,11 @@ public class OAuth2RefreshTokenSoap implements Serializable {
 		_lifeTime = lifeTime;
 	}
 
-	public String getOAuth2ApplicationId() {
+	public long getOAuth2ApplicationId() {
 		return _oAuth2ApplicationId;
 	}
 
-	public void setOAuth2ApplicationId(String oAuth2ApplicationId) {
+	public void setOAuth2ApplicationId(long oAuth2ApplicationId) {
 		_oAuth2ApplicationId = oAuth2ApplicationId;
 	}
 
@@ -157,5 +157,5 @@ public class OAuth2RefreshTokenSoap implements Serializable {
 	private String _userName;
 	private Date _createDate;
 	private long _lifeTime;
-	private String _oAuth2ApplicationId;
+	private long _oAuth2ApplicationId;
 }

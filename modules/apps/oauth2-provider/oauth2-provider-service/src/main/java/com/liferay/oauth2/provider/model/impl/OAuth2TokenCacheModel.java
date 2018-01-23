@@ -121,13 +121,7 @@ public class OAuth2TokenCacheModel implements CacheModel<OAuth2Token>,
 		}
 
 		oAuth2TokenImpl.setLifeTime(lifeTime);
-
-		if (oAuth2ApplicationId == null) {
-			oAuth2TokenImpl.setOAuth2ApplicationId("");
-		}
-		else {
-			oAuth2TokenImpl.setOAuth2ApplicationId(oAuth2ApplicationId);
-		}
+		oAuth2TokenImpl.setOAuth2ApplicationId(oAuth2ApplicationId);
 
 		if (oAuth2TokenType == null) {
 			oAuth2TokenImpl.setOAuth2TokenType("");
@@ -166,7 +160,8 @@ public class OAuth2TokenCacheModel implements CacheModel<OAuth2Token>,
 		createDate = objectInput.readLong();
 
 		lifeTime = objectInput.readLong();
-		oAuth2ApplicationId = objectInput.readUTF();
+
+		oAuth2ApplicationId = objectInput.readLong();
 		oAuth2TokenType = objectInput.readUTF();
 		oAuth2RefreshTokenId = objectInput.readUTF();
 		scopes = objectInput.readUTF();
@@ -197,12 +192,7 @@ public class OAuth2TokenCacheModel implements CacheModel<OAuth2Token>,
 
 		objectOutput.writeLong(lifeTime);
 
-		if (oAuth2ApplicationId == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(oAuth2ApplicationId);
-		}
+		objectOutput.writeLong(oAuth2ApplicationId);
 
 		if (oAuth2TokenType == null) {
 			objectOutput.writeUTF("");
@@ -232,7 +222,7 @@ public class OAuth2TokenCacheModel implements CacheModel<OAuth2Token>,
 	public String userName;
 	public long createDate;
 	public long lifeTime;
-	public String oAuth2ApplicationId;
+	public long oAuth2ApplicationId;
 	public String oAuth2TokenType;
 	public String oAuth2RefreshTokenId;
 	public String scopes;

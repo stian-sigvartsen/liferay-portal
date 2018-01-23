@@ -66,7 +66,7 @@ public class OAuth2RefreshTokenModelImpl extends BaseModelImpl<OAuth2RefreshToke
 			{ "userName", Types.VARCHAR },
 			{ "createDate", Types.TIMESTAMP },
 			{ "lifeTime", Types.BIGINT },
-			{ "oAuth2ApplicationId", Types.VARCHAR }
+			{ "oAuth2ApplicationId", Types.BIGINT }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
 
@@ -77,10 +77,10 @@ public class OAuth2RefreshTokenModelImpl extends BaseModelImpl<OAuth2RefreshToke
 		TABLE_COLUMNS_MAP.put("userName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("lifeTime", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("oAuth2ApplicationId", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("oAuth2ApplicationId", Types.BIGINT);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table OAuth2RefreshToken (oAuth2RefreshTokenId VARCHAR(75) not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,lifeTime LONG,oAuth2ApplicationId VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table OAuth2RefreshToken (oAuth2RefreshTokenId VARCHAR(75) not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,lifeTime LONG,oAuth2ApplicationId LONG)";
 	public static final String TABLE_SQL_DROP = "drop table OAuth2RefreshToken";
 	public static final String ORDER_BY_JPQL = " ORDER BY oAuth2RefreshToken.oAuth2RefreshTokenId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY OAuth2RefreshToken.oAuth2RefreshTokenId ASC";
@@ -192,8 +192,7 @@ public class OAuth2RefreshTokenModelImpl extends BaseModelImpl<OAuth2RefreshToke
 			setLifeTime(lifeTime);
 		}
 
-		String oAuth2ApplicationId = (String)attributes.get(
-				"oAuth2ApplicationId");
+		Long oAuth2ApplicationId = (Long)attributes.get("oAuth2ApplicationId");
 
 		if (oAuth2ApplicationId != null) {
 			setOAuth2ApplicationId(oAuth2ApplicationId);
@@ -297,28 +296,25 @@ public class OAuth2RefreshTokenModelImpl extends BaseModelImpl<OAuth2RefreshToke
 	}
 
 	@Override
-	public String getOAuth2ApplicationId() {
-		if (_oAuth2ApplicationId == null) {
-			return "";
-		}
-		else {
-			return _oAuth2ApplicationId;
-		}
+	public long getOAuth2ApplicationId() {
+		return _oAuth2ApplicationId;
 	}
 
 	@Override
-	public void setOAuth2ApplicationId(String oAuth2ApplicationId) {
+	public void setOAuth2ApplicationId(long oAuth2ApplicationId) {
 		_columnBitmask |= OAUTH2APPLICATIONID_COLUMN_BITMASK;
 
-		if (_originalOAuth2ApplicationId == null) {
+		if (!_setOriginalOAuth2ApplicationId) {
+			_setOriginalOAuth2ApplicationId = true;
+
 			_originalOAuth2ApplicationId = _oAuth2ApplicationId;
 		}
 
 		_oAuth2ApplicationId = oAuth2ApplicationId;
 	}
 
-	public String getOriginalOAuth2ApplicationId() {
-		return GetterUtil.getString(_originalOAuth2ApplicationId);
+	public long getOriginalOAuth2ApplicationId() {
+		return _originalOAuth2ApplicationId;
 	}
 
 	public long getColumnBitmask() {
@@ -404,6 +400,8 @@ public class OAuth2RefreshTokenModelImpl extends BaseModelImpl<OAuth2RefreshToke
 
 		oAuth2RefreshTokenModelImpl._originalOAuth2ApplicationId = oAuth2RefreshTokenModelImpl._oAuth2ApplicationId;
 
+		oAuth2RefreshTokenModelImpl._setOriginalOAuth2ApplicationId = false;
+
 		oAuth2RefreshTokenModelImpl._columnBitmask = 0;
 	}
 
@@ -444,13 +442,6 @@ public class OAuth2RefreshTokenModelImpl extends BaseModelImpl<OAuth2RefreshToke
 		oAuth2RefreshTokenCacheModel.lifeTime = getLifeTime();
 
 		oAuth2RefreshTokenCacheModel.oAuth2ApplicationId = getOAuth2ApplicationId();
-
-		String oAuth2ApplicationId = oAuth2RefreshTokenCacheModel.oAuth2ApplicationId;
-
-		if ((oAuth2ApplicationId != null) &&
-				(oAuth2ApplicationId.length() == 0)) {
-			oAuth2RefreshTokenCacheModel.oAuth2ApplicationId = null;
-		}
 
 		return oAuth2RefreshTokenCacheModel;
 	}
@@ -531,8 +522,9 @@ public class OAuth2RefreshTokenModelImpl extends BaseModelImpl<OAuth2RefreshToke
 	private String _originalUserName;
 	private Date _createDate;
 	private long _lifeTime;
-	private String _oAuth2ApplicationId;
-	private String _originalOAuth2ApplicationId;
+	private long _oAuth2ApplicationId;
+	private long _originalOAuth2ApplicationId;
+	private boolean _setOriginalOAuth2ApplicationId;
 	private long _columnBitmask;
 	private OAuth2RefreshToken _escapedModel;
 }

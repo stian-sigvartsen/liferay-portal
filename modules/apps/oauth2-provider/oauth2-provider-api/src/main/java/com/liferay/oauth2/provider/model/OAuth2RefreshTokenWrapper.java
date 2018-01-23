@@ -108,8 +108,7 @@ public class OAuth2RefreshTokenWrapper implements OAuth2RefreshToken,
 			setLifeTime(lifeTime);
 		}
 
-		String oAuth2ApplicationId = (String)attributes.get(
-				"oAuth2ApplicationId");
+		Long oAuth2ApplicationId = (Long)attributes.get("oAuth2ApplicationId");
 
 		if (oAuth2ApplicationId != null) {
 			setOAuth2ApplicationId(oAuth2ApplicationId);
@@ -167,7 +166,7 @@ public class OAuth2RefreshTokenWrapper implements OAuth2RefreshToken,
 	* @return the o auth2 application ID of this o auth2 refresh token
 	*/
 	@Override
-	public java.lang.String getOAuth2ApplicationId() {
+	public long getOAuth2ApplicationId() {
 		return _oAuth2RefreshToken.getOAuth2ApplicationId();
 	}
 
@@ -313,7 +312,7 @@ public class OAuth2RefreshTokenWrapper implements OAuth2RefreshToken,
 	* @param oAuth2ApplicationId the o auth2 application ID of this o auth2 refresh token
 	*/
 	@Override
-	public void setOAuth2ApplicationId(java.lang.String oAuth2ApplicationId) {
+	public void setOAuth2ApplicationId(long oAuth2ApplicationId) {
 		_oAuth2RefreshToken.setOAuth2ApplicationId(oAuth2ApplicationId);
 	}
 
