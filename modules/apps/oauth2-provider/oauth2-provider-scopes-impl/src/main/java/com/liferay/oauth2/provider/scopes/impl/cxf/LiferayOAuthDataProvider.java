@@ -14,6 +14,7 @@
 
 package com.liferay.oauth2.provider.scopes.impl.cxf;
 
+import com.liferay.oauth2.provider.exception.NoSuchOAuth2ApplicationException;
 import com.liferay.oauth2.provider.exception.NoSuchOAuth2TokenException;
 import com.liferay.oauth2.provider.model.OAuth2Application;
 import com.liferay.oauth2.provider.model.OAuth2RefreshToken;
@@ -26,6 +27,7 @@ import com.liferay.oauth2.provider.service.OAuth2TokenLocalService;
 import com.liferay.portal.kernel.cache.MultiVMPool;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import org.apache.cxf.rs.security.oauth2.common.Client;
 import org.apache.cxf.rs.security.oauth2.common.OAuthPermission;
@@ -132,9 +134,12 @@ public class LiferayOAuthDataProvider extends AbstractAuthorizationCodeDataProvi
 		OAuth2Token oAuth2Token = _oAuth2TokenLocalService.createOAuth2Token(
 			serverToken.getTokenKey());
 
-		Client client = serverToken.getClient();
-
-		oAuth2Token.setOAuth2ApplicationId(client.getClientId());
+		OAuth2Application oAuth2Application = 
+			resolveOAuth2Application(serverToken.getClient());
+		
+		oAuth2Token.setOAuth2ApplicationId(
+			oAuth2Application.getOAuth2ApplicationId());
+		
 		oAuth2Token.setOAuth2RefreshTokenId(serverToken.getRefreshToken());
 		oAuth2Token.setCreateDate(new Date(serverToken.getIssuedAt()));
 		oAuth2Token.setLifeTime(
@@ -167,6 +172,10 @@ public class LiferayOAuthDataProvider extends AbstractAuthorizationCodeDataProvi
 
 	@Override
 	protected void saveRefreshToken(RefreshToken refreshToken) {
+		
+		OAuth2Application oAuth2Application = 
+			resolveOAuth2Application(refreshToken.getClient());
+		
 		String tokenKey = refreshToken.getTokenKey();
 
 		OAuth2RefreshToken oAuth2RefreshToken =
@@ -178,7 +187,8 @@ public class LiferayOAuthDataProvider extends AbstractAuthorizationCodeDataProvi
 
 		Client client = refreshToken.getClient();
 
-		oAuth2RefreshToken.setOAuth2ApplicationId(client.getClientId());
+		oAuth2RefreshToken.setOAuth2ApplicationId(
+			oAuth2Application.getOAuth2ApplicationId());
 		oAuth2RefreshToken.setUserName(refreshToken.getSubject().getLogin());
 
 		_oAuth2RefreshTokenLocalService.updateOAuth2RefreshToken(
@@ -234,8 +244,12 @@ public class LiferayOAuthDataProvider extends AbstractAuthorizationCodeDataProvi
 
 			Date createDate = oAuth2RefreshToken.getCreateDate();
 
+			OAuth2Application oAuth2Application = 
+				_oAuth2ApplicationLocalService.getOAuth2Application(
+					oAuth2RefreshToken.getOAuth2ApplicationId());
+			
 			return new RefreshToken(
-				getClient(oAuth2RefreshToken.getOAuth2ApplicationId()),
+				populateClient(oAuth2Application),
 				refreshTokenKey, oAuth2RefreshToken.getLifeTime(),
 				createDate.getTime());
 		}
@@ -262,22 +276,10 @@ public class LiferayOAuthDataProvider extends AbstractAuthorizationCodeDataProvi
 	@Override
 	public Client getClient(String clientId) {
 		OAuth2Application oAuth2Application =
-			_oAuth2ApplicationLocalService.fetchOAuth2Application(clientId);
+			_oAuth2ApplicationLocalService.fetchOAuth2Application(
+				CompanyThreadLocal.getCompanyId(), clientId);
 
-		Client client = new Client(
-			oAuth2Application.getOAuth2ApplicationId(),
-			oAuth2Application.getApplicationSecret(),
-			oAuth2Application.getConfidential(),
-			oAuth2Application.getName(),
-			oAuth2Application.getWebUrl());
-
-		client.setApplicationDescription(
-			oAuth2Application.getDescription());
-
-		client.setRedirectUris(
-			Collections.singletonList(oAuth2Application.getWebUrl()));
-
-		return client;
+		return populateClient(oAuth2Application);
 	}
 
 	@Override
@@ -295,16 +297,33 @@ public class LiferayOAuthDataProvider extends AbstractAuthorizationCodeDataProvi
 		}
 	}
 
-	private ServerAccessToken populateToken(OAuth2Token oAuth2Token)
+	protected Client populateClient(OAuth2Application oAuth2Application) {
+		Client client = new Client(
+			oAuth2Application.getClientId(),
+			oAuth2Application.getClientSecret(),
+			oAuth2Application.getClientConfidential(),
+			oAuth2Application.getName(),
+			oAuth2Application.getWebUrl());
+	
+		client.setApplicationDescription(
+			oAuth2Application.getDescription());
+	
+		client.setRedirectUris(
+			Collections.singletonList(oAuth2Application.getRedirectUri()));
+	
+		return client;
+	}
+
+	protected ServerAccessToken populateToken(OAuth2Token oAuth2Token)
 		throws PortalException {
 
 		OAuth2Application oAuth2Application =
-			_oAuth2ApplicationLocalService.getOAuth2Application(
+			_oAuth2ApplicationLocalService.fetchOAuth2Application(
 				oAuth2Token.getOAuth2ApplicationId());
 		Date createDate = oAuth2Token.getCreateDate();
 
 		BearerAccessToken bearerAccessToken = new BearerAccessToken(
-			getClient(oAuth2Application.getOAuth2ApplicationId()),
+			getClient(oAuth2Application.getClientId()),
 			oAuth2Token.getOAuth2TokenId(), oAuth2Token.getLifeTime(),
 			createDate.getTime());
 
@@ -314,14 +333,40 @@ public class LiferayOAuthDataProvider extends AbstractAuthorizationCodeDataProvi
 		return bearerAccessToken;
 	}
 
+	protected OAuth2Application resolveOAuth2Application(Client client) {
+		OAuth2Application oAuth2Application;
+		
+		try {
+			oAuth2Application = 
+				_oAuth2ApplicationLocalService.getOAuth2Application(
+						CompanyThreadLocal.getCompanyId(), 
+						client.getClientId());
+		} 
+		catch (NoSuchOAuth2ApplicationException e) {
+			throw new SystemException(e);
+		}
+		return oAuth2Application;
+	}
+
 	@Override
 	public List<ServerAccessToken> getAccessTokens(
 			Client client, UserSubject subject)
 		throws OAuthServiceException {
 
+		OAuth2Application oAuth2Application;
+		
+		try {
+			oAuth2Application = 
+				_oAuth2ApplicationLocalService.getOAuth2Application(
+					CompanyThreadLocal.getCompanyId(), client.getClientId());
+		} 
+		catch (NoSuchOAuth2ApplicationException e) {
+			throw new OAuthServiceException(e);
+		}
+		
 		Collection<OAuth2Token> oAuth2Tokens =
 			_oAuth2TokenLocalService.findByApplicationAndUserName(
-				client.getClientId(), subject.getLogin());
+				oAuth2Application.getOAuth2ApplicationId(), subject.getLogin());
 
 		List<ServerAccessToken> serverAccessTokens = new ArrayList<>();
 
