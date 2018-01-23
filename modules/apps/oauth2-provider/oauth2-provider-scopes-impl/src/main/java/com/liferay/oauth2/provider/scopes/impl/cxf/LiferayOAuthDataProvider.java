@@ -350,14 +350,21 @@ public class LiferayOAuthDataProvider extends AbstractAuthorizationCodeDataProvi
 				oAuth2Token.getOAuth2ApplicationId());
 		Date createDate = oAuth2Token.getCreateDate();
 
+		Client client = getClient(oAuth2Application.getClientId());
+		
 		BearerAccessToken bearerAccessToken = new BearerAccessToken(
-			getClient(oAuth2Application.getClientId()),
-			oAuth2Token.getOAuth2TokenId(), oAuth2Token.getLifeTime(),
+			client, oAuth2Token.getOAuth2TokenId(), oAuth2Token.getLifeTime(),
 			createDate.getTime());
 
 		bearerAccessToken.setSubject(
 			new UserSubject(oAuth2Token.getUserName()));
 
+		List<OAuthPermission> permissions = 
+			convertScopeToPermissions(
+				client, OAuthUtils.parseScope(oAuth2Token.getScopes()));
+		
+		bearerAccessToken.setScopes(permissions);
+		
 		return bearerAccessToken;
 	}
 

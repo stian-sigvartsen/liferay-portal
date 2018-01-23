@@ -21,6 +21,8 @@ import com.liferay.portal.kernel.security.auth.verifier.AuthVerifier;
 import com.liferay.portal.kernel.security.auth.verifier.AuthVerifierResult;
 import com.liferay.portal.kernel.security.service.access.policy.ServiceAccessPolicyThreadLocal;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
+
+import org.apache.cxf.rs.security.oauth2.common.OAuthPermission;
 import org.apache.cxf.rs.security.oauth2.common.ServerAccessToken;
 import org.apache.cxf.rs.security.oauth2.utils.OAuthUtils;
 import org.osgi.service.component.annotations.Component;
@@ -78,13 +80,10 @@ public class OAuth2AuthVerifier implements AuthVerifier {
 			}
 
 			_scopeContext.setTokenString(token);
-
-			List<String> scopes = OAuthUtils.convertPermissionsToScopeList(
-				accessToken.getScopes());
-
-			for (String scope : scopes) {
+			
+			for (OAuthPermission scope : accessToken.getScopes()) {
 				ServiceAccessPolicyThreadLocal.addActiveServiceAccessPolicyName(
-					"OAUTH_" + scope);
+					"OAUTH_" + scope.getPermission());
 
 			}
 
