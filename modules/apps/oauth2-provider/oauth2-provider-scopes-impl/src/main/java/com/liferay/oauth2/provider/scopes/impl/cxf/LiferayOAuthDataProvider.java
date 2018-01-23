@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
+import org.apache.cxf.rs.security.oauth2.common.AccessTokenRegistration;
 import org.apache.cxf.rs.security.oauth2.common.Client;
 import org.apache.cxf.rs.security.oauth2.common.OAuthPermission;
 import org.apache.cxf.rs.security.oauth2.common.ServerAccessToken;
@@ -76,18 +77,30 @@ public class LiferayOAuthDataProvider extends AbstractAuthorizationCodeDataProvi
 		ServerAuthorizationCodeGrant authorizationCodeGrant =
 			super.createCodeGrant(reg);
 
-		List<String> approvedScope = reg.getApprovedScope();
-
-		approvedScope.add(OAuthConstants.REFRESH_TOKEN_SCOPE);
-
-		reg.setApprovedScope(approvedScope);
-
 		_codeGrantsPortalCache.put(
 			authorizationCodeGrant.getCode(),
 			authorizationCodeGrant,
 			Math.toIntExact(authorizationCodeGrant.getExpiresIn()));
 
 		return authorizationCodeGrant;
+	}
+
+	@Override
+	public ServerAccessToken createAccessToken(AccessTokenRegistration reg)
+		throws OAuthServiceException {
+
+		if (!OAuthConstants.CLIENT_CREDENTIALS_GRANT.equals(
+			reg.getGrantType())) {
+
+			List<String> approvedScope = new ArrayList<>(
+				reg.getApprovedScope());
+
+			approvedScope.add(OAuthConstants.REFRESH_TOKEN_SCOPE);
+
+			reg.setApprovedScope(approvedScope);
+		}
+
+		return super.createAccessToken(reg);
 	}
 
 	@Override
@@ -147,8 +160,13 @@ public class LiferayOAuthDataProvider extends AbstractAuthorizationCodeDataProvi
 				serverToken.getExpiresIn() - serverToken.getIssuedAt());
 		oAuth2Token.setOAuth2TokenType(OAuthConstants.BEARER_TOKEN_TYPE);
 		UserSubject subject = serverToken.getSubject();
-		oAuth2Token.setUserId(Long.parseLong(subject.getId()));
-		oAuth2Token.setUserName(subject.getLogin());
+
+		if (subject != null) {
+			oAuth2Token.setUserId(Long.parseLong(subject.getId()));
+
+			oAuth2Token.setUserName(subject.getLogin());
+		}
+
 		oAuth2Token.setScopes(
 			OAuthUtils.convertPermissionsToScope(serverToken.getScopes()));
 
@@ -185,11 +203,17 @@ public class LiferayOAuthDataProvider extends AbstractAuthorizationCodeDataProvi
 		oAuth2RefreshToken.setLifeTime(
 			refreshToken.getExpiresIn() - refreshToken.getIssuedAt());
 
-		Client client = refreshToken.getClient();
-
 		oAuth2RefreshToken.setOAuth2ApplicationId(
 			oAuth2Application.getOAuth2ApplicationId());
 		oAuth2RefreshToken.setUserName(refreshToken.getSubject().getLogin());
+
+		UserSubject subject = refreshToken.getSubject();
+
+		if (subject != null) {
+			oAuth2RefreshToken.setUserId(Long.parseLong(subject.getId()));
+
+			oAuth2RefreshToken.setUserName(subject.getLogin());
+		}
 
 		_oAuth2RefreshTokenLocalService.updateOAuth2RefreshToken(
 			oAuth2RefreshToken);

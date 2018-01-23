@@ -14,28 +14,22 @@
 
 package com.liferay.oauth2.provider.scopes.impl.cxf;
 
-import com.liferay.oauth2.provider.scopes.impl.cxf.AuthorizationMessageBodyWriter;
-import com.liferay.oauth2.provider.scopes.impl.cxf.LiferayOAuthDataProvider;
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.service.UserLocalService;
-import org.apache.cxf.rs.security.oauth2.common.UserSubject;
-import org.apache.cxf.rs.security.oauth2.grants.code.AuthorizationCodeGrantHandler;
-import org.apache.cxf.rs.security.oauth2.grants.refresh.RefreshTokenGrantHandler;
+import org.apache.cxf.rs.security.oauth2.provider.AccessTokenGrantHandler;
 import org.apache.cxf.rs.security.oauth2.provider.OAuthJSONProvider;
-import org.apache.cxf.rs.security.oauth2.provider.OAuthServiceException;
+import org.apache.cxf.rs.security.oauth2.provider.SubjectCreator;
 import org.apache.cxf.rs.security.oauth2.services.AccessTokenService;
 import org.apache.cxf.rs.security.oauth2.services.AuthorizationCodeGrantService;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
-import javax.ws.rs.core.SecurityContext;
-import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Component(
@@ -53,41 +47,14 @@ public class OAuth2EndpointApplication extends Application {
 		authorizationCodeGrantService.setDataProvider(
 			_liferayOAuthDataProvider);
 
-		authorizationCodeGrantService.setSubjectCreator(
-			(mc, params) -> {
-				SecurityContext securityContext = mc.getSecurityContext();
-
-				Principal userPrincipal = securityContext.getUserPrincipal();
-
-				try {
-					User user = _userLocalService.getUser(
-						Long.parseLong(userPrincipal.getName()));
-
-					return new UserSubject(
-						user.getLogin(), Long.toString(user.getUserId()));
-				}
-				catch (PortalException e) {
-					throw new OAuthServiceException(e);
-				}
-			});
+		authorizationCodeGrantService.setSubjectCreator(_subjectCreator);
 
 		AccessTokenService accessTokenService = new AccessTokenService();
 
 		accessTokenService.setBlockUnsecureRequests(true);
 		accessTokenService.setDataProvider(_liferayOAuthDataProvider);
 
-		AuthorizationCodeGrantHandler authorizationCodeGrantHandler =
-			new AuthorizationCodeGrantHandler();
-		authorizationCodeGrantHandler.setDataProvider(
-			_liferayOAuthDataProvider);
-
-		RefreshTokenGrantHandler refreshTokenGrantHandler =
-			new RefreshTokenGrantHandler();
-		refreshTokenGrantHandler.setDataProvider(_liferayOAuthDataProvider);
-
-		accessTokenService.setGrantHandlers(
-			Arrays.asList(
-				authorizationCodeGrantHandler, refreshTokenGrantHandler));
+		accessTokenService.setGrantHandlers(_accessTokenGrantHandlers);
 
 		return new HashSet<>(
 			Arrays.asList(
@@ -100,12 +67,19 @@ public class OAuth2EndpointApplication extends Application {
 		return Collections.singleton(OAuthJSONProvider.class);
 	}
 
-	@Reference
+	@Reference(
+		cardinality = ReferenceCardinality.AT_LEAST_ONE,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	private List<AccessTokenGrantHandler> _accessTokenGrantHandlers;
+
+	@Reference(policyOption = ReferencePolicyOption.GREEDY)
 	private LiferayOAuthDataProvider _liferayOAuthDataProvider;
 
 	@Reference
-	AuthorizationMessageBodyWriter _authorizationMessageBodyWriter;
+	private AuthorizationMessageBodyWriter _authorizationMessageBodyWriter;
 
-	@Reference
-	UserLocalService _userLocalService;
+	@Reference(policyOption = ReferencePolicyOption.GREEDY)
+	private SubjectCreator _subjectCreator;
+
 }
