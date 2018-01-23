@@ -7,8 +7,7 @@
 
 		<!-- PK fields -->
 
-		<column name="oAuth2ApplicationId" primary="true" type="String" />
-
+		<column name="oAuth2ApplicationId" primary="true" type="long" />
 
 		<!-- Audit fields -->
 
@@ -20,11 +19,19 @@
 
 		<!-- Other fields -->
 
-		<column name="applicationSecret" type="String" />
-		<column name="confidential" type="Boolean" />
+		<column name="clientId" type="String" />
+		<column name="clientSecret" type="String" />
+		<column name="redirectUri" type="String" />
+		<column name="clientConfidential" type="Boolean" />
 		<column name="description" type="String" />
 		<column name="name" type="String" />
 		<column name="webUrl" type="String" />
+		
+		<finder name="C_CI" return-type="OAuth2Application">
+			<finder-column name="companyId" />
+			<finder-column name="clientId" />
+		</finder>
+		
 	</entity>
 	<entity name="OAuth2Token" local-service="true" remote-service="false">
 		<!-- PK fields -->
@@ -41,7 +48,7 @@
 
 		<!-- Other fields -->
 
-		<column name="oAuth2ApplicationId" type="String" />
+		<column name="oAuth2ApplicationId" type="long" />
 		<column name="oAuth2TokenType" type="String" />
 		<column name="oAuth2RefreshTokenId" type="String" />
 		<column name="scopes" type="String" />
@@ -75,7 +82,7 @@
 
 		<!-- Other fields -->
 
-		<column name="oAuth2ApplicationId" type="String" />
+		<column name="oAuth2ApplicationId" type="long" />
 
 		<finder name="A" return-type="Collection">
 			<finder-column name="oAuth2ApplicationId" />
@@ -131,4 +138,6 @@
 
 		<reference entity="OAuth2Token" package-path="com.liferay.oauth2.provider" />
 	</entity>
+	<exceptions>
+		<exception>DuplicateOAuth2ClientId</exception></exceptions>
 </service-builder>

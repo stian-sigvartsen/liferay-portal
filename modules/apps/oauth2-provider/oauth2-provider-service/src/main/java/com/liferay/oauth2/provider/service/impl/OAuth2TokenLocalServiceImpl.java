@@ -42,7 +42,7 @@ public class OAuth2TokenLocalServiceImpl extends OAuth2TokenLocalServiceBaseImpl
 	 */
 
 	public Collection<OAuth2Token> findByApplicationAndUserName(
-		String applicationId, String username) {
+		long applicationId, String username) {
 
 		return oAuth2TokenPersistence.findByA_U(applicationId, username);
 	}
