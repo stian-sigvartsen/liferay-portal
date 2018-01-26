@@ -38,9 +38,7 @@ import java.util.Properties;
 @Component(
 	immediate = true,
 	property = {
-		"auth.verifier.OAuth2AuthVerifier.send.body=true",
-		"auth.verifier.OAuth2AuthVerifier.enabled=true",
-		"auth.verifier.OAuth2AuthVerifier.urls.includes=/*"
+		"auth.verifier.OAuth2AuthVerifier.urls.includes=#N/A#"
 	}
 )
 public class OAuth2AuthVerifier implements AuthVerifier {
