@@ -54,4 +54,8 @@ public interface OAuth2Application extends OAuth2ApplicationModel, PersistedMode
 				return OAuth2Application.class;
 			}
 		};
+
+	public java.util.List<java.lang.String> getScopesList();
+
+	public void setScopesList(java.util.List<java.lang.String> scopesList);
 }

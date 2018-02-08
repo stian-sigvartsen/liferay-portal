@@ -20,7 +20,6 @@ import com.liferay.announcements.uad.constants.AnnouncementsUADConstants;
 import com.liferay.announcements.uad.entity.AnnouncementsFlagUADEntity;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.user.associated.data.aggregator.BaseUADEntityAggregator;
 import com.liferay.user.associated.data.aggregator.UADEntityAggregator;
 import com.liferay.user.associated.data.entity.UADEntity;
 import com.liferay.user.associated.data.util.UADDynamicQueryHelper;
@@ -36,11 +35,11 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {"model.class.name=" + AnnouncementsUADConstants.ANNOUNCEMENTS_FLAG},
+	property = {"model.class.name=" + AnnouncementsUADConstants.CLASS_NAME_ANNOUNCEMENTS_FLAG},
 	service = UADEntityAggregator.class
 )
 public class AnnouncementsFlagUADEntityAggregator
-	extends BaseUADEntityAggregator {
+	extends BaseAnnouncementsUADEntityAggregator {
 
 	@Override
 	public List<UADEntity> getUADEntities(long userId) {
@@ -74,7 +73,7 @@ public class AnnouncementsFlagUADEntityAggregator
 	private DynamicQuery _getDynamicQuery(long userId) {
 		return _uadDynamicQueryHelper.getDynamicQuery(
 			_announcementsFlagLocalService::dynamicQuery,
-			AnnouncementsUADConstants.ANNOUNCEMENTS_FLAG_USER_ID_FIELD_NAMES,
+			AnnouncementsUADConstants.USER_ID_FIELD_NAMES_ANNOUNCEMENTS_FLAG,
 			userId);
 	}
 
