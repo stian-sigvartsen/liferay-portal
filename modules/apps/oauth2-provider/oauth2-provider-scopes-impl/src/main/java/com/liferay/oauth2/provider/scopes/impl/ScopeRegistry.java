@@ -228,6 +228,10 @@ public class ScopeRegistry implements ScopeFinderLocator {
 	public Collection<LiferayOAuth2Scope> locateScopes(
 		long companyId, String scopesAlias) {
 
+		if (1 == 1) {
+			return this._doLocateScopes(companyId, scopesAlias);
+		}		
+
 		return readFromCache("locateScopes" + companyId + scopesAlias,
 			__ -> this._doLocateScopes(companyId, scopesAlias));
 	}
@@ -235,6 +239,10 @@ public class ScopeRegistry implements ScopeFinderLocator {
 	@Override
 	public Collection<LiferayOAuth2Scope> locateScopesForApplication(
 		long companyId, String scopesAlias, String applicationName) {
+
+		if (1 == 1) {
+			return this._doLocateScopesForApplication(companyId, scopesAlias, applicationName);
+		}
 
 		return readFromCache(
 			"locateScopes" + companyId + applicationName + scopesAlias,
