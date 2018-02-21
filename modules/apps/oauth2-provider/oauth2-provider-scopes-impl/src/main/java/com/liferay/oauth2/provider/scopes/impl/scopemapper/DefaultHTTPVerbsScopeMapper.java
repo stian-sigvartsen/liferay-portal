@@ -43,6 +43,7 @@ public class DefaultHTTPVerbsScopeMapper implements ScopeMapper {
 			case "PATCH":
 			case "DELETE":
 				result.add("everything");
+				result.add("everything.writeonly");
 				break;
 			default:
 				result.add(scope);
