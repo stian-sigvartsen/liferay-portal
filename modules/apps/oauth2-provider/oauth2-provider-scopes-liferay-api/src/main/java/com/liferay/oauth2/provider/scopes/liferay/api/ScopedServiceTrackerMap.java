@@ -61,7 +61,7 @@ public class ScopedServiceTrackerMap<T> {
 				bundleContext, clazz,
 				"(&(companyId=*)(" + property + "=*))",
 				(serviceReference, emitter) -> {
-					ServiceReferenceMapper<String, T>
+					ServiceReferenceMapper<Long, T>
 						companyMapper = new PropertyServiceReferenceMapper<>(
 							"companyId");
 					ServiceReferenceMapper<String, T>
@@ -73,15 +73,14 @@ public class ScopedServiceTrackerMap<T> {
 						key1 -> nameMapper.map(
 							serviceReference,
 							key2 -> emitter.emit(
-								String.join("-", key1, key2))));
+								String.join("-", Long.toString(key1), key2))));
 				},
 				new ServiceTrackerMapListenerImpl<>());
 	}
 
 	public T getService(long companyId, String key) {
-		String companyIdString = Long.toString(companyId);
 		List<T> services = _servicesByCompanyAndKey.getService(
-			String.join("-", companyIdString, key));
+			String.join("-", Long.toString(companyId), key));
 
 		if (services != null && !services.isEmpty()) {
 			return services.get(0);
@@ -93,7 +92,7 @@ public class ScopedServiceTrackerMap<T> {
 			return services.get(0);
 		}
 
-		services = _servicesByCompany.getService(companyIdString);
+		services = _servicesByCompany.getService(companyId);
 
 		if (services != null && !services.isEmpty()) {
 			return services.get(0);
@@ -108,16 +107,16 @@ public class ScopedServiceTrackerMap<T> {
 		_servicesByKey.close();
 	}
 
-	private ServiceTrackerMap<String, List<T>> _servicesByCompany;
+	private ServiceTrackerMap<Long, List<T>> _servicesByCompany;
 	private ServiceTrackerMap<String, List<T>> _servicesByCompanyAndKey;
 	private ServiceTrackerMap<String, List<T>> _servicesByKey;
 
-	private class ServiceTrackerMapListenerImpl<T>
-		implements ServiceTrackerMapListener<String, T, List<T>> {
+	private class ServiceTrackerMapListenerImpl<I, T>
+		implements ServiceTrackerMapListener<I, T, List<T>> {
 		@Override
 		public void keyEmitted(
-			ServiceTrackerMap<String, List<T>> serviceTrackerMap,
-			String key,
+			ServiceTrackerMap<I, List<T>> serviceTrackerMap,
+			I key,
 			T service, List<T> content) {
 
 			_onChange.run();
@@ -125,8 +124,8 @@ public class ScopedServiceTrackerMap<T> {
 
 		@Override
 		public void keyRemoved(
-			ServiceTrackerMap<String, List<T>> serviceTrackerMap,
-			String key,
+			ServiceTrackerMap<I, List<T>> serviceTrackerMap,
+			I key,
 			T service, List<T> content) {
 
 			_onChange.run();
