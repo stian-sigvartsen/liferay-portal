@@ -35,8 +35,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -117,31 +119,36 @@ public class ScopeRegistry implements ScopeFinderLocator {
 
 		Collection<String> scopes = scopeFinder.findScopes();
 
-		ScopeMatcher scopeMatcher = scopeMatcherFactory.create(scopesAlias);
-
+		if (scopes.isEmpty()) {
+			return Collections.emptyList();
+		}
+		
 		ScopeMapper scopeMapper = _scopedScopeMapper.getService(
 			companyId, applicationName);
 
-		Stream<String> stream = scopes.stream();
+		ScopeMatcher scopeMatcher = scopeMatcherFactory.create(scopesAlias);
 
-		Set<String> grantedScopes = stream.flatMap(
-			s -> scopeMapper.map(s).stream()
-		).filter(
-			scopeMatcher::match
-		).collect(
-			Collectors.toSet()
-		);
+		Map<String, Boolean> matchCache = new HashMap<>();
+		Collection<LiferayOAuth2Scope> locatedScopes = 
+			new ArrayList<>(scopes.size());
+		Bundle bundle = serviceReference.getBundle();
 
-		Collection<LiferayOAuth2Scope> grants = new ArrayList<>();
-
-		for (String grantedScope : grantedScopes) {
-			Bundle bundle = serviceReference.getBundle();
-
-			grants.add(new LiferayOAuth2ScopeImpl(
-				applicationName, bundle, grantedScope));
+		for (String scope : scopes) {
+			for (String mappedScope : scopeMapper.map(scope)) {
+			
+				boolean matched = 
+					matchCache.computeIfAbsent(
+						mappedScope, (input) -> scopeMatcher.match(input));
+				
+				if (matched) {
+					locatedScopes.add(
+						new LiferayOAuth2ScopeImpl(
+							applicationName, bundle, scope));
+				}
+			}
 		}
 
-		return grants;
+		return locatedScopes;
 	}
 
 	private ScopedServiceTrackerMap<PrefixHandlerFactory>
