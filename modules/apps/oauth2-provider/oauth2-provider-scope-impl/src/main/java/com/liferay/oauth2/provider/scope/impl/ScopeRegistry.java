@@ -14,23 +14,6 @@
 
 package com.liferay.oauth2.provider.scope.impl;
 
-import com.liferay.oauth2.provider.scope.spi.scope.finder.ScopeFinder;
-import com.liferay.oauth2.provider.scope.spi.scope.matcher.ScopeMatcherFactory;
-import com.liferay.oauth2.provider.scope.liferay.api.LiferayOAuth2Scope;
-import com.liferay.oauth2.provider.scope.impl.model.LiferayOAuth2ScopeImpl;
-import com.liferay.oauth2.provider.scope.liferay.api.ScopeFinderLocator;
-import com.liferay.oauth2.provider.scope.liferay.api.ScopeMatcherFactoryLocator;
-import com.liferay.oauth2.provider.scope.liferay.api.ScopedServiceTrackerMap;
-import com.liferay.oauth2.provider.scope.spi.prefix.handler.PrefixHandler;
-import com.liferay.oauth2.provider.scope.spi.scope.matcher.ScopeMatcher;
-import com.liferay.oauth2.provider.scope.spi.scope.mapper.ScopeMapper;
-import com.liferay.oauth2.provider.scope.spi.prefix.handler.PrefixHandlerFactory;
-import com.liferay.oauth2.provider.service.OAuth2ScopeGrantLocalService;
-import com.liferay.osgi.service.tracker.collections.ServiceReferenceServiceTuple;
-import com.liferay.osgi.service.tracker.collections.map.PropertyServiceReferenceMapper;
-import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
-import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -43,11 +26,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapListener;
-import com.liferay.portal.kernel.util.StringPool;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -58,6 +37,25 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
+
+import com.liferay.oauth2.provider.scope.impl.model.LiferayOAuth2ScopeImpl;
+import com.liferay.oauth2.provider.scope.liferay.api.LiferayOAuth2Scope;
+import com.liferay.oauth2.provider.scope.liferay.api.ScopeFinderLocator;
+import com.liferay.oauth2.provider.scope.liferay.api.ScopeMatcherFactoryLocator;
+import com.liferay.oauth2.provider.scope.liferay.api.ScopedServiceTrackerMap;
+import com.liferay.oauth2.provider.scope.spi.prefix.handler.PrefixHandler;
+import com.liferay.oauth2.provider.scope.spi.prefix.handler.PrefixHandlerFactory;
+import com.liferay.oauth2.provider.scope.spi.scope.finder.ScopeFinder;
+import com.liferay.oauth2.provider.scope.spi.scope.mapper.ScopeMapper;
+import com.liferay.oauth2.provider.scope.spi.scope.matcher.ScopeMatcher;
+import com.liferay.oauth2.provider.scope.spi.scope.matcher.ScopeMatcherFactory;
+import com.liferay.oauth2.provider.service.OAuth2ScopeGrantLocalService;
+import com.liferay.osgi.service.tracker.collections.ServiceReferenceServiceTuple;
+import com.liferay.osgi.service.tracker.collections.map.PropertyServiceReferenceMapper;
+import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
+import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
+import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapListener;
+import com.liferay.portal.kernel.util.StringPool;
 
 @Component(immediate = true, service = ScopeFinderLocator.class)
 public class ScopeRegistry implements ScopeFinderLocator {
@@ -231,7 +229,11 @@ public class ScopeRegistry implements ScopeFinderLocator {
 
 		_scopedPrefixHandlerFactories = new ScopedServiceTrackerMap<>(
 			bundleContext, PrefixHandlerFactory.class, "osgi.jaxrs.name",
-			() -> _defaultPrefixHandlerFactory, _invocationCache::clear);
+			() -> (_defaultPrefixHandlerFactory != null ? 
+				_defaultPrefixHandlerFactory : 
+					(propertyAccessor) -> 
+						PrefixHandler.PASSTHROUGH_PREFIXHANDLER),
+			_invocationCache::clear);
 
 		_scopedScopeMapper = new ScopedServiceTrackerMap<>(
 			bundleContext, ScopeMapper.class, "osgi.jaxrs.name",
@@ -249,7 +251,8 @@ public class ScopeRegistry implements ScopeFinderLocator {
 
 	@Reference(
 		target = "(default=true)",
-		policyOption = ReferencePolicyOption.GREEDY
+		policyOption = ReferencePolicyOption.GREEDY,
+		cardinality = ReferenceCardinality.OPTIONAL
 	)
 	private PrefixHandlerFactory _defaultPrefixHandlerFactory;
 
