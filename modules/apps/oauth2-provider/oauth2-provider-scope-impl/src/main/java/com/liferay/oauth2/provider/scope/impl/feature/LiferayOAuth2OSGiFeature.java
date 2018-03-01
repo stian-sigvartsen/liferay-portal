@@ -56,6 +56,7 @@ import javax.ws.rs.core.FeatureContext;
 import javax.ws.rs.ext.Provider;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -203,15 +204,26 @@ public class LiferayOAuth2OSGiFeature implements Feature {
 
 				applicationInfo.setOverridingProps(properties);
 
+				Dictionary<String, Object> serviceProperties = new Hashtable<>();
+				for (String property : serviceReference.getPropertyKeys()) {
+					if (property.startsWith("service.")) {
+						continue;
+					}
+					serviceProperties.put(property, serviceReference.getProperty(property));
+				}
+				
+				serviceProperties.put("osgi.jaxrs.name", applicationClassName);
+				
 				if (oauth2ScopeCheckerType.equals("request.operation")) {
 					processRequestOperationStrategy(
-						bundleContext, endpoint, applicationClassName);
+						bundleContext, endpoint, applicationClassName, 
+						serviceProperties);
 				}
 
 				if (oauth2ScopeCheckerType.equals("annotations"))
 					processAnnotationStrategy(
 						bundleContext, (JAXRSServiceFactoryBean) factory,
-						endpoint, applicationClassName);
+						endpoint, applicationClassName, serviceProperties);
 
 				registerDescriptors(
 					endpoint, bundle, applicationClassName);
@@ -283,7 +295,8 @@ public class LiferayOAuth2OSGiFeature implements Feature {
 
 		protected void processRequestOperationStrategy(
 			BundleContext bundleContext, Endpoint endpoint,
-			String applicationClassName) {
+			String applicationClassName, 
+			Dictionary<String, Object> serviceProperties) {
 
 			ServiceRegistration<ScopeFinder> serviceRegistration =
 				bundleContext.registerService(
@@ -293,16 +306,15 @@ public class LiferayOAuth2OSGiFeature implements Feature {
 							HttpMethod.DELETE, HttpMethod.GET, HttpMethod.HEAD,
 							HttpMethod.OPTIONS, HttpMethod.POST,
 							HttpMethod.PUT)),
-					new Hashtable<String, Object>() {{
-						put("osgi.jaxrs.name", applicationClassName);
-					}});
+					serviceProperties);
 
 			endpoint.addCleanupHook(serviceRegistration::unregister);
 		}
 
 		protected void processAnnotationStrategy(
 			BundleContext bundleContext, JAXRSServiceFactoryBean factory,
-			Endpoint endpoint, String applicationClassName) {
+			Endpoint endpoint, String applicationClassName, 
+			Dictionary<String, Object> serviceProperties) {
 
 			List<Class<?>> resourceClasses = factory.getResourceClasses();
 
@@ -315,21 +327,17 @@ public class LiferayOAuth2OSGiFeature implements Feature {
 					ScopeAnnotationFinder.find(resourceClass, bus));
 			}
 
-			Hashtable<String, Object> properties =
-				new Hashtable<String, Object>() {{
-					put("osgi.jaxrs.name", applicationClassName);
-				}};
 
 			ServiceRegistration<ScopeFinder> scopeFinderRegistration =
 				bundleContext.registerService(
 					ScopeFinder.class, new CollectionScopeFinder(scopes),
-					properties);
+					serviceProperties);
 
 			ServiceRegistration<RequestScopeCheckerFilter>
 				requestScopeCheckerFilterRegistration =
 				bundleContext.registerService(
 					RequestScopeCheckerFilter.class,
-					_annotationRequestScopeChecker, properties);
+					_annotationRequestScopeChecker, serviceProperties);
 
 			endpoint.addCleanupHook(
 				() -> {
