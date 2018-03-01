@@ -27,11 +27,14 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.function.Function;
 
 @Component(
@@ -97,10 +100,40 @@ public class BundleNamespacePrefixHandlerFactory implements
 		}
 		
 		for (String serviceProperty : _serviceProperties) {
-			String propertyValue = 
-				serviceProperties.apply(serviceProperty).toString();
 			
-			parts.add(propertyValue);
+			if (Validator.isBlank(serviceProperty)) {
+				continue;
+			}
+			
+			int modifiersStart = serviceProperty.indexOf(StringPool.SPACE);
+			String modifiersString = StringPool.BLANK;
+			
+			if (modifiersStart > -1) {
+				modifiersString = serviceProperty.substring(modifiersStart);
+				serviceProperty = serviceProperty.substring(0, modifiersStart);
+			}
+				
+			Object applyResult = 
+				serviceProperties.apply(serviceProperty);
+			
+			if (applyResult != null) {
+				parts.add(applyResult.toString());
+				continue;
+			}
+			
+			String propertiesFormat = 
+				modifiersString.replaceAll(StringPool.SPACE, "\n");
+			
+			Properties modifiers = new Properties();
+	        try {
+				modifiers.load(new StringReader(propertiesFormat));
+			} 
+	        catch (IOException e) {}
+	        
+			parts.add(
+				GetterUtil.getString(
+					modifiers.getProperty("default"), 
+					StringPool.BLANK));
 		}
 
 		PrefixHandler prefixHandler = create(parts.toArray(_EMPTY_STRING_ARRAY));
