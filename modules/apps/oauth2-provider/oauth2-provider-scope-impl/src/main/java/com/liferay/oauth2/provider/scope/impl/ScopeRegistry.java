@@ -104,14 +104,6 @@ public class ScopeRegistry implements ScopeFinderLocator {
 		PrefixHandler prefixHandler = prefixHandlerFactory.create(
 			serviceReference::getProperty);
 
-		String prefix = prefixHandler.addPrefix(StringPool.BLANK);
-
-		if (!scopesAlias.startsWith(prefix)) {
-			return Collections.emptyList();
-		}
-
-		scopesAlias = scopesAlias.substring(prefix.length());
-
 		ScopeFinder scopeFinder = _scopedScopeFinders.getService(
 			companyId, applicationName);
 
@@ -136,7 +128,9 @@ public class ScopeRegistry implements ScopeFinderLocator {
 			
 				boolean matched = 
 					matchCache.computeIfAbsent(
-						mappedScope, (input) -> scopeMatcher.match(input));
+						mappedScope, 
+						(input) -> 
+							scopeMatcher.match(prefixHandler.addPrefix(input)));
 				
 				if (matched) {
 					locatedScopes.add(
