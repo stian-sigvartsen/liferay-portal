@@ -31,7 +31,6 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.osgi.framework.ServiceReference;
-import org.osgi.service.component.annotations.Reference;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -46,9 +45,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -286,8 +282,7 @@ public class ScopeRegistryTest extends PowerMockito {
 
 		ScopeFinder service = () -> scopesSet1;
 		
-		Set<String> matchScopes = 
-			new HashSet<>(Arrays.asList(new String[] {"everything.readonly"}));
+		Set<String> matchScopes = Collections.singleton("everything.readonly");
 		
 		ScopeMatcherFactory explicitScopeMatcherFactory = 
 			(scopeAlias) -> 
@@ -386,15 +381,15 @@ public class ScopeRegistryTest extends PowerMockito {
 			ServiceTrackerMap<String, List<ServiceReferenceServiceTuple<?, ScopeFinder>>> 
 				scopeFinderByNameServiceTrackerMap = 
 					Mockito.mock(ServiceTrackerMap.class);
-			
-			setScopeFinderByNameServiceTrackerMap(
+
+			_scopeRegistry.setScopeFinderByNameServiceTrackerMap(
 				scopeFinderByNameServiceTrackerMap);
-			
+
 			ScopedServiceTrackerMap<ScopeFinder> scopedScopeFinder = 
 				Mockito.mock(ScopedServiceTrackerMap.class);
-		
-			setScopedScopeFinder(scopedScopeFinder);
-			
+
+			_scopeRegistry.setScopedScopeFinders(scopedScopeFinder);
+
 			configurator.configure((companyId, applicationName, service) -> {
 				
 				List<ServiceReferenceServiceTuple<?, ScopeFinder>> tuples =
@@ -439,10 +434,11 @@ public class ScopeRegistryTest extends PowerMockito {
 			
 			ScopedServiceTrackerMap<ScopeMapper> scopedScopeMapper = 
 				prepareScopeServiceTrackerMapMock(defaultScopeMapper, configurator);
-			
-			setDefaultScopeMapper(defaultScopeMapper);
-			setScopedScopeMapper(scopedScopeMapper);			
-			
+
+			_scopeRegistry.setDefaultScopeMapper(defaultScopeMapper);
+
+			_scopeRegistry.setScopedScopeMapper(scopedScopeMapper);
+
 			_scopeMappersInitialized = true;
 			return this;
 		}
@@ -454,11 +450,13 @@ public class ScopeRegistryTest extends PowerMockito {
 			ServiceTrackerMap<String, ScopeMatcherFactory> 
 				scopeMatcherFactoriesServiceTrackerMap = 
 					Mockito.mock(ServiceTrackerMap.class);
-			
-			setDefaultScopeMatcherFactory(defaultScopeMatcherFactory);
-			setScopedScopeMatcherFactories(
+
+			_scopeRegistry.setDefaultScopeMatcherFactory(
+				defaultScopeMatcherFactory);
+
+			_scopeRegistry.setScopedScopeMatcherFactories(
 				scopeMatcherFactoriesServiceTrackerMap);
-			
+
 			configurator.configure((companyId, service) -> {
 				when(
 					scopeMatcherFactoriesServiceTrackerMap.getService(companyId)
@@ -478,10 +476,13 @@ public class ScopeRegistryTest extends PowerMockito {
 			
 			ScopedServiceTrackerMap<PrefixHandlerFactory> scopedPrefixHandlerFactories = 
 				prepareScopeServiceTrackerMapMock(defaultPrefixHandlerFactory, configurator);
-			
-			setDefaultPrefixHandlerFactory(defaultPrefixHandlerFactory);
-			setScopedPrefixHandlerFactory(scopedPrefixHandlerFactories);
-			
+
+			_scopeRegistry.setDefaultPrefixHandlerFactory(
+				defaultPrefixHandlerFactory);
+
+			_scopeRegistry.setScopedPrefixHandlerFactories(
+				scopedPrefixHandlerFactories);
+
 			_prefixHandlerFactoriesInitialized = true;
 			return this;
 		}
@@ -543,152 +544,7 @@ public class ScopeRegistryTest extends PowerMockito {
 			});
 			
 			return scopedServiceTrackerMap;
-		}	
-
-		private void setDefaultPrefixHandlerFactory(
-			PrefixHandlerFactory prefixHandlerFactory) 
-			throws IllegalArgumentException, IllegalAccessException {
-			
-			Field field = getProvidedField(PrefixHandlerFactory.class);
-			
-			field.setAccessible(true);
-			field.set(_scopeRegistry, prefixHandlerFactory);		
-		}
-	
-		private void setDefaultScopeMapper(
-			ScopeMapper scopeMapper) 
-			throws IllegalArgumentException, IllegalAccessException {
-			
-			Field field = getProvidedField(ScopeMapper.class);
-			
-			field.setAccessible(true);
-			field.set(_scopeRegistry, scopeMapper);		
-		}
-	
-		private void setDefaultScopeMatcherFactory(
-			ScopeMatcherFactory scopeMatcherFactory) 
-			throws IllegalArgumentException, IllegalAccessException {
-			
-			Field field = getProvidedField(ScopeMatcherFactory.class);
-			
-			field.setAccessible(true);
-			field.set(_scopeRegistry, scopeMatcherFactory);		
 		}
 
-		private Field getProvidedField(Class<?> clazz) {
-			return getProvidedField(clazz, null);
-		}
-	
-		private Field getProvidedField(Class<?> clazz, Class<?>... typeArgs) {
-			
-			Field[] declaredFields = ScopeRegistry.class.getDeclaredFields();
-			
-			for (Field field : declaredFields) {
-				
-				if (!field.getType().equals(clazz)) {
-					continue;
-				}
-				
-				if (field.getAnnotationsByType(Reference.class) != null) {
-					
-					if (typeArgs == null || typeArgs.length == 0) {
-						return field;
-					}
-					
-					ParameterizedType genericType = (ParameterizedType)field.getGenericType();
-					
-					Type[] fieldTypeArgs = genericType.getActualTypeArguments();
-					
-					int i = 0;
-					
-					for (; i < fieldTypeArgs.length; i++) {
-						
-						if (fieldTypeArgs[i] instanceof ParameterizedType) {
-							
-							// Only match type parameters only level deep
-							// Should be sufficient to differentiate all fields
-							
-							ParameterizedType fieldParameterizedTypeArg = 
-								(ParameterizedType)fieldTypeArgs[i];
-
-							if (!fieldParameterizedTypeArg.getRawType().equals(typeArgs[i])) {
-								break;
-							}
-						}
-						else {
-							if (!fieldTypeArgs[i].equals(typeArgs[i])) {
-								break;
-							}
-						}
-					}
-					
-					if (i == fieldTypeArgs.length) {
-						return field;
-					}
-				};
-			}
-			return null;
-		}
-			
-		private void setScopeFinderByNameServiceTrackerMap(
-				ServiceTrackerMap<String, List<ServiceReferenceServiceTuple<?, ScopeFinder>>> 
-				scopeFinderByNameServiceTrackerMap) 
-			throws IllegalArgumentException, IllegalAccessException {
-			
-			Field field = getProvidedField(
-					ServiceTrackerMap.class, String.class, List.class);
-			
-			field.setAccessible(true);
-			field.set(_scopeRegistry, scopeFinderByNameServiceTrackerMap);		
-		}
-		
-		private void setScopedScopeMatcherFactories(
-				ServiceTrackerMap<String, ScopeMatcherFactory> 
-					scopeMatcherFactoriesServiceTrackerMap) 
-			throws IllegalArgumentException, IllegalAccessException {
-			
-			Field field = getProvidedField(
-					ServiceTrackerMap.class, String.class, 
-					ScopeMatcherFactory.class);
-			
-			field.setAccessible(true);
-			field.set(_scopeRegistry, scopeMatcherFactoriesServiceTrackerMap);		
-		}
-	
-		private void setScopedScopeMapper(
-			ScopedServiceTrackerMap<ScopeMapper> scopedServiceTrackerMap) 
-			throws IllegalArgumentException, IllegalAccessException {
-			
-			Field field = getProvidedField(
-					ScopedServiceTrackerMap.class, 
-					ScopeMapper.class);
-			
-			field.setAccessible(true);
-			field.set(_scopeRegistry, scopedServiceTrackerMap);
-		}
-	
-		private void setScopedScopeFinder(
-			ScopedServiceTrackerMap<ScopeFinder> scopedServiceTrackerMap) 
-			throws IllegalArgumentException, IllegalAccessException {
-			
-			Field field = getProvidedField(
-					ScopedServiceTrackerMap.class, 
-					ScopeFinder.class);
-			
-			field.setAccessible(true);
-			field.set(_scopeRegistry, scopedServiceTrackerMap);	
-		}
-	
-		private void setScopedPrefixHandlerFactory(
-			ScopedServiceTrackerMap<PrefixHandlerFactory> scopedServiceTrackerMap) 
-			throws IllegalArgumentException, IllegalAccessException {
-			
-			Field field = getProvidedField(
-					ScopedServiceTrackerMap.class, 
-					PrefixHandlerFactory.class);
-			
-			field.setAccessible(true);
-			field.set(_scopeRegistry, scopedServiceTrackerMap);
-		}
 	}
 }
