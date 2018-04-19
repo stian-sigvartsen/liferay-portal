@@ -898,10 +898,12 @@ public class ServiceBuilder {
 
 						if (entity.isUADEnabled()) {
 							_createUADAggregator(entity);
-							_createUADAnonymizer(entity);
-							_createUADEntityTestHelper(entity);
 							_createUADAggregatorTest(entity);
+							_createUADAnonymizer(entity);
 							_createUADAnonymizerTest(entity);
+							_createUADEntityTestHelper(entity);
+							_createUADExporter(entity);
+							_createUADExporterTest(entity);
 
 							if (ListUtil.isEmpty(
 									entity.
@@ -919,13 +921,15 @@ public class ServiceBuilder {
 						}
 						else {
 							//_removeUADAggregator(entity);
+							//_removeUADAggregatorTest(entity);
 							//_removeUADAnonymizer(entity);
+							//_removeUADAnonymizerTest(entity);
 							//_removeUADEntityDisplay(entity);
 							//_removeUADEntityDisplayHelper(entity);
-							//_removeUADEntityTestHelper(entity);
-							//_removeUADAggregatorTest(entity);
-							//_removeUADAnonymizerTest(entity);
 							//_removeUADEntityDisplayTest(entity);
+							//_removeUADEntityTestHelper(entity);
+							//_removeUADExporter(entity);
+							//_removeUADExporterTest(entity);
 						}
 					}
 					else {
@@ -4129,6 +4133,46 @@ public class ServiceBuilder {
 		}
 	}
 
+	private void _createUADExporter(Entity entity) throws Exception {
+		Map<String, Object> context = _getContext();
+
+		context.put("entity", entity);
+
+		// Content
+
+		String content = _processTemplate(_tplUADExporter, context);
+
+		// Write file
+
+		File file = new File(
+			StringBundler.concat(
+				_uadOutputPath, "/uad/exporter/", entity.getName(),
+				"UADExporter.java"));
+
+		ToolsUtil.writeFile(
+			file, content, _author, _jalopySettings, _modifiedFileNames);
+	}
+
+	private void _createUADExporterTest(Entity entity) throws Exception {
+		Map<String, Object> context = _getContext();
+
+		context.put("entity", entity);
+
+		// Content
+
+		String content = _processTemplate(_tplUADExporterTest, context);
+
+		// Write file
+
+		File file = new File(
+			StringBundler.concat(
+				_uadTestIntegrationOutputPath, "/uad/exporter/test/",
+				entity.getName(), "UADExporterTest.java"));
+
+		ToolsUtil.writeFile(
+			file, content, _author, _jalopySettings, _modifiedFileNames);
+	}
+
 	private void _createUADTestBnd() throws Exception {
 		Map<String, Object> context = _getContext();
 
@@ -6534,6 +6578,20 @@ public class ServiceBuilder {
 				"UADEntityTestHelper.java"));
 	}
 
+	private void _removeUADExporter(Entity entity) {
+		_deleteFile(
+			StringBundler.concat(
+				_uadOutputPath, "/uad/exporter/", entity.getName(),
+				"UADExporter.java"));
+	}
+
+	private void _removeUADExporterTest(Entity entity) {
+		_deleteFile(
+			StringBundler.concat(
+				_uadTestIntegrationOutputPath, "/uad/exporter/test/",
+				entity.getName(), "UADExporterTest.java"));
+	}
+
 	private void _resolveEntity(Entity entity) throws Exception {
 		if (entity.isResolved()) {
 			return;
@@ -6680,6 +6738,8 @@ public class ServiceBuilder {
 		_TPL_ROOT + "uad_entity_display_test.ftl";
 	private String _tplUADEntityTestHelper =
 		_TPL_ROOT + "uad_entity_test_helper.ftl";
+	private String _tplUADExporter = _TPL_ROOT + "uad_exporter.ftl";
+	private String _tplUADExporterTest = _TPL_ROOT + "uad_exporter_test.ftl";
 	private String _tplUADTestBnd = _TPL_ROOT + "uad_test_bnd.ftl";
 	private String _uadDirName;
 	private String _uadOutputPath;

@@ -197,6 +197,12 @@ AUI.add(
 						items.splice(index, 1);
 
 						instance.set('items', items);
+
+						var selected = instance.get('selected');
+
+						if (selected > 0) {
+							instance.set('selected', selected - 1);
+						}
 					},
 
 					_setState: function(index, state) {
@@ -219,6 +225,16 @@ AUI.add(
 						contentBox.empty();
 
 						contentBox.append(instance._getItemsNodeList(val));
+
+						instance._updateLastPageItem();
+					},
+
+					_updateLastPageItem: function() {
+						var instance = this;
+
+						var contentBox = instance.get('contentBox');
+
+						contentBox.one('li:last-child').removeClass('multi-step-item-expand');
 					},
 
 					_valueItemsNodeList: function() {

@@ -23,8 +23,10 @@ import com.liferay.dynamic.data.mapping.util.DDMNavigationHelper;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemList;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.SafeConsumer;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.ViewTypeItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.ViewTypeItemList;
 import com.liferay.journal.configuration.JournalServiceConfiguration;
 import com.liferay.journal.constants.JournalPortletKeys;
@@ -145,7 +147,7 @@ public class JournalDisplayContext {
 			_request);
 	}
 
-	public DropdownItemList getActionItemsDropdownItemList() {
+	public List<DropdownItem> getActionDropdownItems() {
 		return new DropdownItemList(_request) {
 			{
 				ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
@@ -602,28 +604,28 @@ public class JournalDisplayContext {
 		return _displayViews;
 	}
 
-	public DropdownItemList getFilterItemsDropdownItemList() {
+	public List<DropdownItem> getFilterDropdownItems() {
 		return new DropdownItemList(_request) {
 			{
 				addGroup(
 					dropdownGroupItem -> {
-						dropdownGroupItem.setDropdownItemList(
-							_getFilterNavigationDropdownItemList());
+						dropdownGroupItem.setDropdownItems(
+							_getFilterNavigationDropdownItems());
 						dropdownGroupItem.setLabel("filter-by-navigation");
 					});
 
 				addGroup(
 					dropdownGroupItem -> {
-						dropdownGroupItem.setDropdownItemList(
-							_getFilterStatusDropdownItemList());
+						dropdownGroupItem.setDropdownItems(
+							_getFilterStatusDropdownItems());
 						dropdownGroupItem.setLabel("filter-by-status");
 					});
 
 				if (!isNavigationRecent()) {
 					addGroup(
 						dropdownGroupItem -> {
-							dropdownGroupItem.setDropdownItemList(
-								_getOrderByDropdownItemList());
+							dropdownGroupItem.setDropdownItems(
+								_getOrderByDropdownItems());
 							dropdownGroupItem.setLabel("order-by");
 						});
 				}
@@ -714,7 +716,7 @@ public class JournalDisplayContext {
 		return sb.toString();
 	}
 
-	public NavigationItemList getInfoPanelNavigationItems() {
+	public List<NavigationItem> getInfoPanelNavigationItems() {
 		return new NavigationItemList(_request) {
 			{
 				add(
@@ -797,7 +799,7 @@ public class JournalDisplayContext {
 		return _navigation;
 	}
 
-	public NavigationItemList getNavigationBarItems(String currentItem) {
+	public List<NavigationItem> getNavigationBarItems(String currentItem) {
 		return new NavigationItemList(_request) {
 			{
 				add(
@@ -1330,7 +1332,7 @@ public class JournalDisplayContext {
 		return articleSearch.getTotal();
 	}
 
-	public ViewTypeItemList getViewTypesItemList() {
+	public List<ViewTypeItem> getViewTypeItems() {
 		return new ViewTypeItemList(
 			_request, getPortletURL(), getDisplayStyle()) {
 
@@ -1427,6 +1429,31 @@ public class JournalDisplayContext {
 
 	public boolean isSearch() {
 		if (Validator.isNotNull(getKeywords())) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public boolean isShowAddButton() throws PortalException {
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		Group group = themeDisplay.getScopeGroup();
+
+		if (group.isStaged() && !group.isStagingGroup() &&
+			group.isStagedPortlet(JournalPortletKeys.JOURNAL)) {
+
+			return false;
+		}
+
+		if (JournalFolderPermission.contains(
+			themeDisplay.getPermissionChecker(), themeDisplay.getScopeGroupId(),
+			getFolderId(), ActionKeys.ADD_FOLDER) ||
+		JournalFolderPermission.contains(
+			themeDisplay.getPermissionChecker(), themeDisplay.getScopeGroupId(),
+			getFolderId(), ActionKeys.ADD_ARTICLE)) {
+
 			return true;
 		}
 
@@ -1589,7 +1616,7 @@ public class JournalDisplayContext {
 		};
 	}
 
-	private DropdownItemList _getFilterNavigationDropdownItemList() {
+	private List<DropdownItem> _getFilterNavigationDropdownItems() {
 		return new DropdownItemList(_request) {
 			{
 				add(
@@ -1616,7 +1643,7 @@ public class JournalDisplayContext {
 		};
 	}
 
-	private DropdownItemList _getFilterStatusDropdownItemList() {
+	private List<DropdownItem> _getFilterStatusDropdownItems() {
 		return new DropdownItemList(_request) {
 			{
 				for (int status : _getStatuses()) {
@@ -1674,7 +1701,7 @@ public class JournalDisplayContext {
 		};
 	}
 
-	private DropdownItemList _getOrderByDropdownItemList() {
+	private List<DropdownItem> _getOrderByDropdownItems() {
 		return new DropdownItemList(_request) {
 			{
 				for (String orderColumn : getOrderColumns()) {
