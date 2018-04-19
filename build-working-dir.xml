@@ -149,7 +149,14 @@
 
 			<!-- sql/portal-data-release.sql -->
 
+			<local name="replace.portal.data.release.sql" />
+
+			<condition property="replace.portal.data.release.sql">
+				<available file="sql/portal-data-release.sql" />
+			</condition>
+
 			<replace-regex
+				if:set="replace.portal.data.release.sql"
 				replace.regex.file="sql/portal-data-release.sql"
 				replace.regex.pattern="${portal.data.release[@{from.branch.name}]}"
 				replace.regex.replacement="${portal.data.release[@{to.branch.name}]}"
