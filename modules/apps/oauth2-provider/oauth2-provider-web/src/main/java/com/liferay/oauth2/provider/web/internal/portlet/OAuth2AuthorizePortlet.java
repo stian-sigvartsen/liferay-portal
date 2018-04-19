@@ -134,7 +134,8 @@ public class OAuth2AuthorizePortlet extends MVCPortlet {
 				buildApplicationScopeDescriptor(locale));
 
 			locateLiferayOAuth2Scopes(
-				companyId, allowedScopeAliases, authorizationModel, requestedScopeAliases);
+				companyId, allowedScopeAliases, authorizationModel,
+				requestedScopeAliases);
 
 			context.setAuthorizationModel(authorizationModel);
 

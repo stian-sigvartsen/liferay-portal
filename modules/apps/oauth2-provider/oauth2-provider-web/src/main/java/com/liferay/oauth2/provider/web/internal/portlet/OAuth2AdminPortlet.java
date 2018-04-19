@@ -145,7 +145,7 @@ public class OAuth2AdminPortlet extends MVCPortlet {
 		String[] oAuth2Features = StringUtil.split(
 			portletPreferences.getValue("oAuth2Features", StringPool.BLANK));
 
-		List<String> featuresList = new ArrayList<>(oAuth2Features.length);
+		List<String> featuresList = new ArrayList<>();
 
 		for (String feature : oAuth2Features) {
 			if (ParamUtil.getBoolean(request, "feature-" + feature, false)) {
@@ -166,8 +166,7 @@ public class OAuth2AdminPortlet extends MVCPortlet {
 			oAuth2AdminPortletDisplayContext.getOAuth2Grants(
 				portletPreferences);
 
-		List<GrantType> allowedGrantTypes = new ArrayList<>(
-			oAuth2Grants.size());
+		List<GrantType> allowedGrantTypes = new ArrayList<>();
 
 		for (GrantType grantType : oAuth2Grants) {
 			if (ParamUtil.getBoolean(request, "grant-" + grantType.name())) {
@@ -185,7 +184,7 @@ public class OAuth2AdminPortlet extends MVCPortlet {
 		List<String> scopesList = Collections.emptyList();
 		long iconFileEntryId = 0;
 
-		OAuth2Application oAuth2Application = null;
+		OAuth2Application oAuth2Application;
 
 		try {
 			if (oAuth2ApplicationId == 0) {
