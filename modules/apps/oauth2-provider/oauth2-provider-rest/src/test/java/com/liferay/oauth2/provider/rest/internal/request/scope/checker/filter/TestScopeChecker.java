@@ -12,31 +12,27 @@
  * details.
  */
 
-package com.liferay.portal.kernel.io;
+package com.liferay.oauth2.provider.rest.internal.request.scope.checker.filter;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import com.liferay.oauth2.provider.scope.ScopeChecker;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
- * @author Shuyang Zhou
+ * @author Carlos Sierra Andrés
  */
-public class AutoDeleteFileInputStream extends FileInputStream {
+public class TestScopeChecker implements ScopeChecker {
 
-	public AutoDeleteFileInputStream(File file) throws FileNotFoundException {
-		super(file);
-
-		_file = file;
+	public TestScopeChecker(String... allowedScopes) {
+		_allowedScopes = Arrays.asList(allowedScopes);
 	}
 
 	@Override
-	public void close() throws IOException {
-		if (_file.exists() && !_file.delete()) {
-			_file.deleteOnExit();
-		}
+	public boolean checkScope(String scope) {
+		return _allowedScopes.contains(scope);
 	}
 
-	private final File _file;
+	private final Collection<String> _allowedScopes;
 
 }
