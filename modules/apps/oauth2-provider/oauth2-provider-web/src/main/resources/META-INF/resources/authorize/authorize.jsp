@@ -57,7 +57,7 @@ String replyTo = PortalUtil.escapeRedirect(oAuth2Parameters.get("reply_to"));
 
 					<div>
 						<ul>
-							<li><%= HtmlUtil.escape(appName) %></li>
+							<li><%= HtmlUtil.escape(authorizationModel.getApplicationDescription(appName)) %></li>
 							<ul>
 
 								<%
