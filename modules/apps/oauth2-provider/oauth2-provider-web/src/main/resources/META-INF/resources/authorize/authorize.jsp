@@ -82,7 +82,7 @@ String replyTo = PortalUtil.escapeRedirect(oAuth2Parameters.get("reply_to"));
 		</div>
 
 		<div class="closed container-fluid-1280">
-			<aui:form action="<%= replyTo %>" method="GET" name="fm">
+			<aui:form action="<%= replyTo %>" method="POST" name="fm">
 
 				<%
 				for (String paramName : oAuth2Parameters.keySet()) {
