@@ -57,13 +57,14 @@ public class TestUtils {
 			}
 
 			if (value.getClass().isArray()) {
-				if (otherValue.getClass().isArray()) {
+				try {
 					if (!Arrays.equals((Object[])value, (Object[])otherValue)) {
 						return false;
 					}
 				}
-
-				return false;
+				catch (Exception e) {
+					return false;
+				}
 			}
 			else if (!value.equals(otherValue)) {
 				return false;
@@ -100,7 +101,7 @@ public class TestUtils {
 						Dictionary<String, ?> incomingProperties)
 						throws ConfigurationException {
 
-						if (Validator.isNotNull(incomingProperties)) {
+						if (Validator.isNull(incomingProperties)) {
 							return;
 						}
 
