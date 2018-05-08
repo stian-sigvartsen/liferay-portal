@@ -14,15 +14,15 @@
  */
 --%>
 
-<div aria-orientation="vertical" class="panel-group" id="globalAccordion" role="tablist">
+<div aria-orientation="vertical" class="panel-group" id="<portlet:namespace />globalAccordion" role="tablist">
 
 	<%
 	for (Map.Entry<AuthorizationModel, AssignScopesModel.Relations> scopeAliasAuthorizationModelEntry : assignScopesModel.getGlobalAuthorizationModelsRelations().entrySet()) {
 		String scopeAlias = scopeAliasAuthorizationModelEntry.getValue().getScopeAliases().stream().findAny().get();
 		%>
 
-		<div class="panel panel-secondary" id="<%= HtmlUtil.escapeAttribute(scopeAlias) %>">
-			<div class="collapse-icon collapsed panel-header panel-header-link" id="globalAccordionHeading<%= scopeAlias %>">
+		<div class="panel panel-secondary" id="<portlet:namespace /><%= HtmlUtil.escapeAttribute(scopeAlias) %>">
+			<div class="collapse-icon collapsed panel-header panel-header-link" id="<portlet:namespace />globalAccordionHeading<%= scopeAlias %>">
 				<div class="custom-checkbox custom-control" style="display: inline-block;">
 					<label>
 						<input onChange="<portlet:namespace />recalculateDependants(this)" value="<%= scopeAlias %>" <%= assignedScopes.contains(scopeAlias) ? "checked " : "" %>class="custom-control-input" name="<portlet:namespace />scope" type="checkbox">
@@ -32,7 +32,7 @@
 					</label>
 				</div>
 
-				<a aria-controls="globalAccordion<%= scopeAlias %>" aria-expanded="false" class="" data-parent="#globalAccordion" data-toggle="collapse" href="#globalAccordion<%= scopeAlias %>" role="tab">
+				<a aria-controls="<portlet:namespace />globalAccordion<%= scopeAlias %>" aria-expanded="false" class="" data-parent="#<portlet:namespace />globalAccordion" data-toggle="collapse" href="#<portlet:namespace />globalAccordion<%= scopeAlias %>" role="tab">
 					<span>(details)</span>
 					<span class="collapse-icon-closed">
 						<svg aria-hidden="true" class="lexicon-icon lexicon-icon-angle-right">
@@ -47,7 +47,7 @@
 				</a>
 			</div>
 
-			<div aria-labelledby="globalAccordionHeading<%= scopeAlias %>" class="collapse panel-collapse" id="globalAccordion<%= scopeAlias %>" role="tabpanel">
+			<div aria-labelledby="<portlet:namespace />globalAccordionHeading<%= scopeAlias %>" class="collapse panel-collapse" id="<portlet:namespace />globalAccordion<%= scopeAlias %>" role="tabpanel">
 				<%
 				AuthorizationModel authorizationModel = scopeAliasAuthorizationModelEntry.getKey();
 	
