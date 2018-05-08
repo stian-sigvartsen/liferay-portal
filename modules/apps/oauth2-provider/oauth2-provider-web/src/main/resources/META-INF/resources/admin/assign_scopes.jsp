@@ -90,7 +90,7 @@ if (oAuth2Application.getOAuth2ApplicationScopeAliasesId() > 0) {
 			zIndex: Liferay.zIndex.OVERLAY,
 			modal: true,
 			width: 1000,
-			bodyContent: '<div id="modalBody"/>',
+			bodyContent: '<div id="<portlet:namespace />modalBody"/>',
 			headerContent: 'Choose one of the following global scopes that include this resource scope...'
 		}
 	).render();
@@ -116,12 +116,12 @@ if (oAuth2Application.getOAuth2ApplicationScopeAliasesId() > 0) {
 
 			var scopeAliases = currentTarget.attr("data-slave").split(" ");
 
-			$('#globalAccordion .panel').hide();
+			$('#<portlet:namespace />globalAccordion .panel').hide();
 			for (var i = 0; i < scopeAliases.length; i++) {
-				$('#globalAccordion #' + $.escapeSelector(scopeAliases[i]) + '.panel').show();
+				$('#<portlet:namespace />globalAccordion #<portlet:namespace />' + $.escapeSelector(scopeAliases[i]) + '.panel').show();
 			}
 
-			$('#globalAccordion').appendTo('#modalBody');
+			$('#<portlet:namespace />globalAccordion').appendTo('#<portlet:namespace />modalBody');
 
 			var boundingBox = modal.get('boundingBox');
 
@@ -129,8 +129,8 @@ if (oAuth2Application.getOAuth2ApplicationScopeAliasesId() > 0) {
 				'clickoutside',
 				function() {
 					modal.hide();
-					$('#globalAccordion .panel').show();
-					$('#globalAccordion').appendTo('#navGlobalScopes');
+					$('#<portlet:namespace />globalAccordion .panel').show();
+					$('#<portlet:namespace />globalAccordion').appendTo('#<portlet:namespace />navGlobalScopes');
 				},
 				modal);
 

@@ -31,7 +31,7 @@
 			<div class="autofit-col">
 				<div class="custom-checkbox custom-control">
 					<label>
-						<input aria-labelledby="label<%= HtmlUtil.escape(masterScopeAliasesStr) %>" class="custom-control-input"<%= assignedScopes.contains(scopeAlias) ? " checked " : "" %>data-slave="<%= masterScopeAliasesStr %>"<% if (scopeAlias.length() > 0 ) { %> name="<portlet:namespace/>scope" value="<%= HtmlUtil.escapeAttribute(scopeAlias) %>" <% } %>type="checkbox">
+						<input aria-labelledby="<portlet:namespace />label<%= HtmlUtil.escape(masterScopeAliasesStr) %>" class="custom-control-input"<%= assignedScopes.contains(scopeAlias) ? " checked " : "" %>data-slave="<%= masterScopeAliasesStr %>"<% if (scopeAlias.length() > 0 ) { %> name="<portlet:namespace />scope" value="<%= HtmlUtil.escapeAttribute(scopeAlias) %>" <% } %>type="checkbox">
 						<span class="custom-control-label"></span>
 					</label>
 				</div>
