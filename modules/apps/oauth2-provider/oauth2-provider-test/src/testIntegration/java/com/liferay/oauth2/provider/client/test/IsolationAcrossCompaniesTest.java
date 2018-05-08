@@ -65,7 +65,7 @@ public class IsolationAcrossCompaniesTest extends BaseClientTest {
 
 		Response response = builder.get();
 
-		Assert.assertEquals(403, response.getStatus());
+		Assert.assertEquals(400, response.getStatus());
 	}
 
 	public static class IsolationAccrossCompaniesTestPreparator
