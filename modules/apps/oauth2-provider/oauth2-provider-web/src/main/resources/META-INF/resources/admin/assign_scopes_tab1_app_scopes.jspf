@@ -14,56 +14,57 @@
  */
 --%>
 
-											<ul class="list-group">
+<ul class="list-group">
+	<%
+	Map<AuthorizationModel, AssignScopesModel.Relations> applicationAuthorizationModelsAssignModel = assignScopesModel.buildAssignmentModelForApplication(applicationName);
+	
+	for (Map.Entry<AuthorizationModel, AssignScopesModel.Relations> scopeAliasAuthorizationModelEntry : applicationAuthorizationModelsAssignModel.entrySet()) {
+		String scopeAlias = scopeAliasAuthorizationModelEntry.getValue().getScopeAliases().stream().collect(Collectors.joining(","));
+	
+		Set<String> masterScopeAliases = scopeAliasAuthorizationModelEntry.getValue().getMasterAuthorizationModelsScopeAliases();
+		AuthorizationModel authorizationModel = scopeAliasAuthorizationModelEntry.getKey();
+	
+		String masterScopeAliasesStr = String.join(" ", masterScopeAliases);
+		%>
+	
+		<li class="list-group-item list-group-item-flex">
+			<div class="autofit-col">
+				<div class="custom-checkbox custom-control">
+					<label>
+						<input aria-labelledby="label<%= HtmlUtil.escape(masterScopeAliasesStr) %>" class="custom-control-input"<%= assignedScopes.contains(scopeAlias) ? " checked " : "" %>data-slave="<%= masterScopeAliasesStr %>"<% if (scopeAlias.length() > 0 ) { %> name="<portlet:namespace/>scope" value="<%= HtmlUtil.escapeAttribute(scopeAlias) %>" <% } %>type="checkbox">
+						<span class="custom-control-label"></span>
+					</label>
+				</div>
+			</div>
 
-					<%
-					Map<AuthorizationModel, AssignScopesModel.Relations> applicationAuthorizationModelsAssignModel = assignScopesModel.buildAssignmentModelForApplication(applicationName);
+			<div class="autofit-col autofit-col-expand">
+				<h4 class="list-group-title text-truncate">
 
-					for (Map.Entry<AuthorizationModel, AssignScopesModel.Relations> scopeAliasAuthorizationModelEntry : applicationAuthorizationModelsAssignModel.entrySet()) {
-						String scopeAlias = scopeAliasAuthorizationModelEntry.getValue().getScopeAliases().stream().collect(Collectors.joining(","));
+				<%
+				String applicationScopeDescription = authorizationModel.getApplicationScopeDescription(applicationName).stream().collect(Collectors.joining(", "));
+				%>
+					
+				<%= HtmlUtil.escape(applicationScopeDescription) %>
 
-						Set<String> masterScopeAliases = scopeAliasAuthorizationModelEntry.getValue().getMasterAuthorizationModelsScopeAliases();
-						AuthorizationModel authorizationModel = scopeAliasAuthorizationModelEntry.getKey();
-
-						String masterScopeAliasesStr = String.join(" ", masterScopeAliases);
+				</h4>
+				<p class="list-group-subtitle text-truncate"><%= HtmlUtil.escapeAttribute(scopeAlias) %></p>
+				
+				<%
+				if (masterScopeAliasesStr.length() > 0) {
+					if (scopeAlias.length() > 0) { 
 						%>
-
-											<li class="list-group-item list-group-item-flex">
-												<div class="autofit-col">
-													<div class="custom-checkbox custom-control">
-														<label>
-															<input aria-labelledby="label<%= HtmlUtil.escape(masterScopeAliasesStr) %>" class="custom-control-input"<%= assignedScopes.contains(scopeAlias) ? " checked " : "" %>data-slave="<%= masterScopeAliasesStr %>"<% if (scopeAlias.length() > 0 ) { %> name="<portlet:namespace/>scope" value="<%= HtmlUtil.escapeAttribute(scopeAlias) %>" <% } %>type="checkbox">
-															<span class="custom-control-label"></span>
-														</label>
-													</div>
-												</div>
-
-												<div class="autofit-col autofit-col-expand">
-													<h4 class="list-group-title text-truncate">
-
+						<span><a href ="#1" data-slave="<%= masterScopeAliasesStr %>">CAN be assigned via a global scope</a></span>
 						<%
-						String applicationScopeDescription = authorizationModel.getApplicationScopeDescription(applicationName).stream().collect(Collectors.joining(", "));
+					} else {
 						%>
-
-													<%= HtmlUtil.escape(applicationScopeDescription) %>
-
-													</h4>
-
-													<p class="list-group-subtitle text-truncate"><%= HtmlUtil.escapeAttribute(scopeAlias) %></p>
-
-						<%
-						if (masterScopeAliasesStr.length() > 0) {
-							if (scopeAlias.length() > 0) {%>
-													<span><a href ="#1" data-slave="<%= masterScopeAliasesStr %>">CAN be assigned via a global scope</a></span>
-							<%} else {%>
-													<span><a href ="#1" data-slave="<%= masterScopeAliasesStr %>">MUST be assigned via a global scope</a></span>
-							<%}
-						} %>
-												</div>
-											</li>
-
+						<span><a href ="#1" data-slave="<%= masterScopeAliasesStr %>">MUST be assigned via a global scope</a></span>
 						<%
 					}
-					%>
-
-											</ul>
+				}
+				%>
+			</div>
+		</li>
+		<%
+	}
+	%>
+</ul>
