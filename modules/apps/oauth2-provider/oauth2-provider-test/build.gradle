@@ -14,7 +14,7 @@ dependencies {
 	compileOnly project(":apps:oauth2-provider:oauth2-provider-scope-api")
 	compileOnly project(":apps:oauth2-provider:oauth2-provider-scope-spi")
 
-	testIntegrationCompile group: "com.liferay.arquillian", name: "com.liferay.arquillian.arquillian-container-liferay", version: "1.0.4"
+	testIntegrationCompile group: "com.liferay.arquillian", name: "com.liferay.arquillian.arquillian-container-liferay", version: "1.0.7"
 	testIntegrationCompile group: "com.liferay.arquillian", name: "com.liferay.arquillian.arquillian-deployment-generator-bnd", version: "1.0.4"
 	testIntegrationCompile group: "org.apache.cxf", name: "cxf-rt-rs-client", version: "3.1.9"
 	testIntegrationCompile group: "org.apache.cxf", name: "cxf-rt-rs-extension-providers", version: "3.1.9"
