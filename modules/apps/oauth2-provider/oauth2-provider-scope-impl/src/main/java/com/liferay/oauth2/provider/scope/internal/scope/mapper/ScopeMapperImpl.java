@@ -52,7 +52,7 @@ public class ScopeMapperImpl implements ScopeMapper {
 			result.addAll(mappings);
 		}
 
-		if (_passthrough) {
+		if (_passthrough || mappings == null) {
 			result.add(scope);
 		}
 
