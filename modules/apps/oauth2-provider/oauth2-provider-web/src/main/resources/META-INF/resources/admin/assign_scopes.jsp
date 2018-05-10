@@ -58,7 +58,7 @@ if (oAuth2Application.getOAuth2ApplicationScopeAliasesId() > 0) {
 	}
 </style>
 
-<div class="container-fluid-1280">
+<div class="container-fluid container-fluid-max-xl container-view">
 	<div class="row">
 		<div class="col-lg-12">
 			<portlet:actionURL name="/admin/assign_scopes" var="updateScopesURL" />
@@ -66,14 +66,14 @@ if (oAuth2Application.getOAuth2ApplicationScopeAliasesId() > 0) {
 			<aui:form action="<%= updateScopesURL %>" name="fm">
 				<aui:input name="oAuth2ApplicationId" type="hidden" value="<%= oAuth2ApplicationId %>" />
 
-				<aui:fieldset-group markupView="lexicon">
+				<div class="sheet">
 					<%@ include file="/admin/assign_scopes_tabs.jspf" %>
 
 					<aui:button-row>
 						<aui:button cssClass="btn-lg" type="submit" />
 						<aui:button cssClass="btn-lg" href="<%= portletDisplay.getURLBack() %>" type="cancel" />
 					</aui:button-row>
-				</aui:fieldset-group>
+				</div>
 			</aui:form>
 		</div>
 	</div>
