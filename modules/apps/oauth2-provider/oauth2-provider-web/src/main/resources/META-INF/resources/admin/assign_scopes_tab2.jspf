@@ -22,7 +22,7 @@
 		%>
 
 		<div class="panel panel-secondary" id="<portlet:namespace /><%= HtmlUtil.escapeAttribute(scopeAlias) %>">
-			<div class="collapse-icon collapsed panel-header panel-header-link" id="<portlet:namespace />globalAccordionHeading<%= scopeAlias %>">
+			<div class="collapse-icon panel-header panel-header-link" id="<portlet:namespace />globalAccordionHeading<%= scopeAlias %>">
 				<div class="custom-checkbox custom-control" style="display: inline-block;">
 					<label>
 						<input onChange="<portlet:namespace />recalculateDependants(this)" value="<%= scopeAlias %>" <%= assignedScopes.contains(scopeAlias) ? "checked " : "" %>class="custom-control-input" name="<portlet:namespace />scope" type="checkbox">
@@ -32,17 +32,13 @@
 					</label>
 				</div>
 
-				<a aria-controls="<portlet:namespace />globalAccordion<%= scopeAlias %>" aria-expanded="false" class="" data-parent="#<portlet:namespace />globalAccordion" data-toggle="collapse" href="#<portlet:namespace />globalAccordion<%= scopeAlias %>" role="tab">
+				<a aria-controls="<portlet:namespace />globalAccordion<%= scopeAlias %>" aria-expanded="false" class="collapsed" data-parent="#<portlet:namespace />globalAccordion" data-toggle="collapse" href="#<portlet:namespace />globalAccordion<%= scopeAlias %>" role="tab">
 					<span>(details)</span>
 					<span class="collapse-icon-closed">
-						<svg aria-hidden="true" class="lexicon-icon lexicon-icon-angle-right">
-							<use xlink:href="https://clayui.com/vendor/lexicon/icons.svg#angle-right" />
-						</svg>
+						<clay:icon symbol="angle-right" />
 					</span>
 					<span class="collapse-icon-open">
-						<svg aria-hidden="true" class="lexicon-icon lexicon-icon-angle-down">
-							<use xlink:href="https://clayui.com/vendor/lexicon/icons.svg#angle-down" />
-						</svg>
+						<clay:icon symbol="angle-down" />
 					</span>
 				</a>
 			</div>

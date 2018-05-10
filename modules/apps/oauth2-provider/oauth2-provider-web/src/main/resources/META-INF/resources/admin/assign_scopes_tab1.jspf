@@ -38,14 +38,10 @@
 			<a aria-controls="<portlet:namespace />appsAccordion<%= applicationNameHtmlId %>" aria-expanded="false" class="collapse-icon collapsed panel-header panel-header-link" data-parent="#<portlet:namespace />appsAccordion" data-toggle="collapse" href="#<portlet:namespace />appsAccordion<%= applicationNameHtmlId %>" id="<portlet:namespace />appsAccordionHeading<%= applicationNameHtmlId %>" role="tab">
 				<span class="panel-title"><%= HtmlUtil.escape(applicationDescription) %></span>
 				<span class="collapse-icon-closed">
-					<svg aria-hidden="true" class="lexicon-icon lexicon-icon-angle-right">
-						<use xlink:href="/vendor/lexicon/icons.svg#angle-right" />
-					</svg>
+					<clay:icon symbol="angle-right" />
 				</span>
 				<span class="collapse-icon-open">
-					<svg aria-hidden="true" class="lexicon-icon lexicon-icon-angle-down">
-						<use xlink:href="/vendor/lexicon/icons.svg#angle-down" />
-					</svg>
+					<clay:icon symbol="angle-down" />
 				</span>
 			</a>
 
