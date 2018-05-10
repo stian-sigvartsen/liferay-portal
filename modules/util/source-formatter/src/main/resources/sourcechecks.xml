@@ -297,9 +297,7 @@
 		<check name="PropertiesDefinitionKeysCheck" />
 		<check name="PropertiesDependenciesFileCheck" />
 		<check name="PropertiesImportedFilesContentCheck" />
-		<check name="PropertiesLanguageKeysCheck">
-			<property name="enabled" value="false" />
-		</check>
+		<check name="PropertiesLanguageKeysCheck" />
 		<check name="PropertiesLiferayPluginPackageFileCheck" />
 		<check name="PropertiesLongLinesCheck" />
 		<check name="PropertiesPortalFileCheck" />
@@ -349,6 +347,7 @@
 		<check name="XMLPoshiFileCheck" />
 		<check name="XMLProjectElementCheck" />
 		<check name="XMLResourceActionsFileCheck" />
+		<check name="XMLServiceEntityNameCheck" />
 		<check name="XMLServiceFileCheck" />
 		<check name="XMLSolrSchemaFileCheck" />
 		<check name="XMLSuppressionsFileCheck" />

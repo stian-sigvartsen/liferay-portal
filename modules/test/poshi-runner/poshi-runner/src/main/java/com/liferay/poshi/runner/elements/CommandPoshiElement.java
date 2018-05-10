@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
+import org.dom4j.Attribute;
 import org.dom4j.Element;
 import org.dom4j.Node;
 
@@ -136,12 +137,24 @@ public class CommandPoshiElement extends PoshiElement {
 		this(_ELEMENT_NAME, element);
 	}
 
+	protected CommandPoshiElement(
+		List<Attribute> attributes, List<Node> nodes) {
+
+		this(_ELEMENT_NAME, attributes, nodes);
+	}
+
 	protected CommandPoshiElement(String readableSyntax) {
 		this(_ELEMENT_NAME, readableSyntax);
 	}
 
 	protected CommandPoshiElement(String name, Element element) {
 		super(name, element);
+	}
+
+	protected CommandPoshiElement(
+		String elementName, List<Attribute> attributes, List<Node> nodes) {
+
+		super(elementName, attributes, nodes);
 	}
 
 	protected CommandPoshiElement(String name, String readableSyntax) {
@@ -185,6 +198,14 @@ public class CommandPoshiElement extends PoshiElement {
 						item = item + "\t);";
 					}
 				}
+
+				sb.append(item);
+
+				continue;
+			}
+
+			if (isMultilineReadableSyntaxComment(item)) {
+				item = item.replaceFirst("\t", pad + "\t");
 
 				sb.append(item);
 
@@ -263,7 +284,7 @@ public class CommandPoshiElement extends PoshiElement {
 	}
 
 	protected boolean isCDATAVar(String readableSyntax) {
-		if (readableSyntax.contains("escapeText(")) {
+		if (readableSyntax.contains("\'\'\'")) {
 			return true;
 		}
 

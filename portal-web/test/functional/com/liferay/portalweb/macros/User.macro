@@ -16,9 +16,9 @@
 	<command name="activateCP">
 		<execute function="Click" locator1="Dropdown#FILTER" />
 
-		<var name="key_filterValue" value="Inactive" />
-
-		<execute function="AssertClick" locator1="Dropdown#FILTER_VALUES" value1="Inactive" />
+		<execute function="Click" locator1="MenuItem#ANY_MENU_ITEM" value1="Inactive">
+			<var name="key_menuItem" value="Inactive" />
+		</execute>
 
 		<execute macro="LexiconEntry#gotoEntryMenuItem">
 			<var name="menuItem" value="Activate" />
@@ -964,9 +964,7 @@
 
 				<execute macro="Button#clickSave" />
 
-				<execute macro="Alert#viewRequestFailedToComplete" />
-
-				<execute function="AssertTextEquals#assertPartialText" locator1="Message#ERROR_2" value1="The password cannot be blank. Please enter a password." />
+				<execute macro="Alert#viewRequiredField" />
 
 				<execute macro="User#logoutPG" />
 
@@ -2116,9 +2114,9 @@
 
 		<execute function="Click" locator1="Dropdown#FILTER" />
 
-		<var name="key_filterValue" value="Active" />
-
-		<execute function="AssertClick" locator1="Dropdown#FILTER_VALUES" value1="Active" />
+		<execute function="Click" locator1="MenuItem#ANY_MENU_ITEM" value1="Active">
+			<var name="key_menuItem" value="Active" />
+		</execute>
 
 		<if>
 			<condition function="IsElementPresent" locator1="ContentRow#ENTRY_CONTENT_ROW_1" />
@@ -2135,9 +2133,9 @@
 
 		<execute function="Click" locator1="Dropdown#FILTER" />
 
-		<var name="key_filterValue" value="Inactive" />
-
-		<execute function="AssertClick" locator1="Dropdown#FILTER_VALUES" value1="Inactive" />
+		<execute function="Click" locator1="MenuItem#ANY_MENU_ITEM" value1="Inactive">
+			<var name="key_menuItem" value="Inactive" />
+		</execute>
 
 		<if>
 			<condition function="IsElementPresent" locator1="ContentRow#ENTRY_CONTENT_ROW_1" />
@@ -2162,9 +2160,9 @@
 
 		<execute function="Click" locator1="Dropdown#FILTER" />
 
-		<var name="key_filterValue" value="Active" />
-
-		<execute function="AssertClick" locator1="Dropdown#FILTER_VALUES" value1="Active" />
+		<execute function="Click" locator1="MenuItem#ANY_MENU_ITEM" value1="Active">
+			<var name="key_menuItem" value="Active" />
+		</execute>
 
 		<execute macro="User#searchCP">
 			<var name="searchTerm" value="${userScreenName}" />
@@ -2185,9 +2183,9 @@
 
 		<execute function="Click" locator1="Dropdown#FILTER" />
 
-		<var name="key_filterValue" value="Inactive" />
-
-		<execute function="AssertClick" locator1="Dropdown#FILTER_VALUES" value1="Inactive" />
+		<execute function="Click" locator1="MenuItem#ANY_MENU_ITEM" value1="Inactive">
+			<var name="key_menuItem" value="Inactive" />
+		</execute>
 
 		<if>
 			<condition function="IsElementPresent" locator1="ContentRow#ENTRY_CONTENT_ROW_1" />

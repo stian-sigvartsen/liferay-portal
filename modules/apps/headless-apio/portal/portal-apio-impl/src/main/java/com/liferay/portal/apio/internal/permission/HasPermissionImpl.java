@@ -15,11 +15,6 @@
 package com.liferay.portal.apio.internal.permission;
 
 import static com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory.openSingleValueMap;
-import static com.liferay.portal.kernel.security.permission.ActionKeys.ADD_ARTICLE;
-import static com.liferay.portal.kernel.security.permission.ActionKeys.ADD_ENTRY;
-import static com.liferay.portal.kernel.security.permission.ActionKeys.ADD_USER;
-import static com.liferay.portal.kernel.security.permission.ActionKeys.DELETE;
-import static com.liferay.portal.kernel.security.permission.ActionKeys.UPDATE;
 
 import com.liferay.apio.architect.credentials.Credentials;
 import com.liferay.apio.architect.functional.Try;
@@ -27,6 +22,7 @@ import com.liferay.journal.model.JournalFolder;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.portal.apio.permission.HasPermission;
 import com.liferay.portal.kernel.model.ClassedModel;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
@@ -54,17 +50,17 @@ public class HasPermissionImpl implements HasPermission {
 		Class<?> clazz) {
 
 		return (credentials, groupId) -> {
-			Try<String> stringTry = Try.success(clazz.getName());
-
 			Try<PermissionChecker> permissionCheckerTry =
 				getPermissionCheckerTry(credentials);
 
-			return stringTry.map(
+			return Try.success(
+				clazz.getName()
+			).map(
 				_portletResourcePermissions::getService
 			).flatMap(
 				portletResourcePermission -> permissionCheckerTry.map(
 					permissionChecker -> portletResourcePermission.contains(
-						permissionChecker, groupId, ADD_ENTRY))
+						permissionChecker, groupId, ActionKeys.ADD_ENTRY))
 			).orElse(
 				false
 			);
@@ -75,17 +71,17 @@ public class HasPermissionImpl implements HasPermission {
 	public Boolean forAddingRootJournalArticle(
 		Credentials credentials, Long groupId) {
 
-		Try<String> stringTry = Try.success(JournalFolder.class.getName());
-
 		Try<PermissionChecker> permissionCheckerTry = getPermissionCheckerTry(
 			credentials);
 
-		return stringTry.map(
+		return Try.success(
+			JournalFolder.class.getName()
+		).map(
 			_modelResourcePermissions::getService
 		).flatMap(
 			modelResourcePermission -> permissionCheckerTry.map(
 				permissionChecker -> modelResourcePermission.contains(
-					permissionChecker, 0, ADD_ARTICLE))
+					permissionChecker, 0, ActionKeys.ADD_ARTICLE))
 		).orElse(
 			false
 		);
@@ -98,7 +94,7 @@ public class HasPermissionImpl implements HasPermission {
 
 		return permissionCheckerTry.map(
 			permissionChecker -> PortalPermissionUtil.contains(
-				permissionChecker, ADD_USER)
+				permissionChecker, ActionKeys.ADD_USER)
 		).orElse(
 			false
 		);
@@ -109,17 +105,17 @@ public class HasPermissionImpl implements HasPermission {
 		Class<? extends ClassedModel> clazz) {
 
 		return (credentials, identifier) -> {
-			Try<String> stringTry = Try.success(clazz.getName());
-
 			Try<PermissionChecker> permissionCheckerTry =
 				getPermissionCheckerTry(credentials);
 
-			return stringTry.map(
+			return Try.success(
+				clazz.getName()
+			).map(
 				_modelResourcePermissions::getService
 			).flatMap(
 				modelResourcePermission -> permissionCheckerTry.map(
 					permissionChecker -> modelResourcePermission.contains(
-						permissionChecker, identifier, DELETE))
+						permissionChecker, identifier, ActionKeys.DELETE))
 			).orElse(
 				false
 			);
@@ -133,7 +129,7 @@ public class HasPermissionImpl implements HasPermission {
 
 		return permissionCheckerTry.map(
 			permissionChecker -> LayoutPermissionUtil.contains(
-				permissionChecker, plid, DELETE)
+				permissionChecker, plid, ActionKeys.DELETE)
 		).orElse(
 			false
 		);
@@ -144,17 +140,17 @@ public class HasPermissionImpl implements HasPermission {
 		Class<? extends ClassedModel> clazz) {
 
 		return (credentials, identifier) -> {
-			Try<String> stringTry = Try.success(clazz.getName());
-
 			Try<PermissionChecker> permissionCheckerTry =
 				getPermissionCheckerTry(credentials);
 
-			return stringTry.map(
+			return Try.success(
+				clazz.getName()
+			).map(
 				_modelResourcePermissions::getService
 			).flatMap(
 				modelResourcePermission -> permissionCheckerTry.map(
 					permissionChecker -> modelResourcePermission.contains(
-						permissionChecker, identifier, UPDATE))
+						permissionChecker, identifier, ActionKeys.UPDATE))
 			).orElse(
 				false
 			);
@@ -165,9 +161,9 @@ public class HasPermissionImpl implements HasPermission {
 	public Try<PermissionChecker> getPermissionCheckerTry(
 		Credentials credentials) {
 
-		Try<String> stringTry = Try.success(credentials.get());
-
-		return stringTry.map(
+		return Try.success(
+			credentials.get()
+		).map(
 			Long::valueOf
 		).map(
 			_userService::getUserById

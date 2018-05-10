@@ -62,6 +62,7 @@ import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.LayoutSetPrototype;
 import com.liferay.portal.kernel.model.LayoutTemplate;
 import com.liferay.portal.kernel.model.LayoutTypePortlet;
+import com.liferay.portal.kernel.model.ModelHintsUtil;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.ResourceAction;
@@ -1932,7 +1933,9 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	 *
 	 * @return the non-system groups having <code>null</code> or empty friendly
 	 *         URLs
+	 * @deprecated As of 7.0.0, with no direct replacement
 	 */
+	@Deprecated
 	@Override
 	public List<Group> getNullFriendlyURLGroups() {
 		return groupFinder.findByNullFriendlyURL();
@@ -4834,9 +4837,13 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			long groupId, long companyId, String groupKey, boolean site)
 		throws PortalException {
 
+		int groupKeyMaxLength = ModelHintsUtil.getMaxLength(
+			Group.class.getName(), "groupKey");
+
 		if (Validator.isNull(groupKey) || Validator.isNumber(groupKey) ||
 			groupKey.contains(StringPool.STAR) ||
-			groupKey.contains(ORGANIZATION_NAME_SUFFIX)) {
+			groupKey.contains(ORGANIZATION_NAME_SUFFIX) ||
+			(groupKey.length() > groupKeyMaxLength)) {
 
 			throw new GroupKeyException();
 		}

@@ -225,7 +225,7 @@ public class TopLevelBuild extends BaseBuild {
 		return JenkinsResultsParserUtil.combine(
 			"https://", jenkinsMaster.getName(), ".liferay.com/",
 			"userContent/jobs/", getJobName(), "/builds/",
-			Integer.toString(getBuildNumber()), "/jenkins-report.html");
+			String.valueOf(getBuildNumber()), "/jenkins-report.html");
 	}
 
 	@Override
@@ -732,7 +732,7 @@ public class TopLevelBuild extends BaseBuild {
 		return Dom4JUtil.getNewElement(
 			"div", null,
 			Dom4JUtil.getNewElement(
-				"h4", null, Integer.toString(failCount), " Failed Jobs:"),
+				"h4", null, String.valueOf(failCount), " Failed Jobs:"),
 			jobSummaryListElement);
 	}
 
@@ -750,11 +750,11 @@ public class TopLevelBuild extends BaseBuild {
 		return Dom4JUtil.getNewElement(
 			"div", null, Dom4JUtil.getNewElement("h6", null, "Job Results:"),
 			Dom4JUtil.getNewElement(
-				"p", null, Integer.toString(successCount),
+				"p", null, String.valueOf(successCount),
 				JenkinsResultsParserUtil.getNounForm(
 					successCount, " Jobs", " Job"),
 				" Passed.", Dom4JUtil.getNewElement("br"),
-				Integer.toString(failCount),
+				String.valueOf(failCount),
 				JenkinsResultsParserUtil.getNounForm(
 					failCount, " Jobs", " Job"),
 				" Failed."));
@@ -776,7 +776,7 @@ public class TopLevelBuild extends BaseBuild {
 		return JenkinsResultsParserUtil.combine(
 			TEMP_MAP_BASE_URL, topLevelBuildJenkinsMaster.getName(), "/",
 			topLevelBuild.getJobName(), "/",
-			Integer.toString(topLevelBuild.getBuildNumber()), "/",
+			String.valueOf(topLevelBuild.getBuildNumber()), "/",
 			topLevelBuild.getJobName(), "/git.", repositoryType, ".properties");
 	}
 
@@ -880,7 +880,7 @@ public class TopLevelBuild extends BaseBuild {
 			"table", null,
 			Dom4JUtil.getNewElement(
 				"caption", null, captionText,
-				Integer.toString(getDownstreamBuildCount(result, status))),
+				String.valueOf(getDownstreamBuildCount(result, status))),
 			getJenkinsReportTableColumnHeadersElement(),
 			tableRowElements.toArray(new Element[tableRowElements.size()]));
 	}
@@ -922,7 +922,7 @@ public class TopLevelBuild extends BaseBuild {
 				JenkinsResultsParserUtil.toDurationString(getTotalDuration())),
 			Dom4JUtil.getNewElement(
 				"p", null, "Total number of Jenkins slaves used: ",
-				Integer.toString(getTotalSlavesUsedCount())),
+				String.valueOf(getTotalSlavesUsedCount())),
 			Dom4JUtil.getNewElement(
 				"p", null, "Average delay time for invoked build to start: ",
 				JenkinsResultsParserUtil.toDurationString(
@@ -1128,21 +1128,12 @@ public class TopLevelBuild extends BaseBuild {
 			sb.append(":x: ");
 		}
 
-		sb.append("ci:test");
-
-		String ciTestSuite = getParameterValue("CI_TEST_SUITE");
-
-		if ((ciTestSuite != null) && !ciTestSuite.isEmpty() &&
-			!ciTestSuite.equals("default")) {
-
-			sb.append(":");
-			sb.append(ciTestSuite);
-		}
+		sb.append(getTestSuiteName());
 
 		sb.append(" - ");
-		sb.append(Integer.toString(successCount));
+		sb.append(String.valueOf(successCount));
 		sb.append(" out of ");
-		sb.append(Integer.toString(getDownstreamBuildCountByResult(null) + 1));
+		sb.append(String.valueOf(getDownstreamBuildCountByResult(null) + 1));
 		sb.append(" jobs passed in ");
 		sb.append(JenkinsResultsParserUtil.toDurationString(getDuration()));
 
@@ -1159,7 +1150,7 @@ public class TopLevelBuild extends BaseBuild {
 
 		return JenkinsResultsParserUtil.combine(
 			TEMP_MAP_BASE_URL, jenkinsMaster.getName(), "/", getJobName(), "/",
-			Integer.toString(getBuildNumber()), "/", getJobName(), "/",
+			String.valueOf(getBuildNumber()), "/", getJobName(), "/",
 			"start.properties");
 	}
 
@@ -1173,7 +1164,7 @@ public class TopLevelBuild extends BaseBuild {
 
 		return JenkinsResultsParserUtil.combine(
 			TEMP_MAP_BASE_URL, jenkinsMaster.getName(), "/", getJobName(), "/",
-			Integer.toString(getBuildNumber()), "/", getJobName(), "/",
+			String.valueOf(getBuildNumber()), "/", getJobName(), "/",
 			"stop.properties");
 	}
 
@@ -1193,7 +1184,7 @@ public class TopLevelBuild extends BaseBuild {
 			Dom4JUtil.getNewElement(
 				"summary", null,
 				Dom4JUtil.getNewElement(
-					"strong", null, Integer.toString(successCount),
+					"strong", null, String.valueOf(successCount),
 					" Successful Jobs:")),
 			jobSummaryListElement);
 	}
@@ -1231,6 +1222,21 @@ public class TopLevelBuild extends BaseBuild {
 		}
 
 		return testCount;
+	}
+
+	protected String getTestSuiteName() {
+		String testSuiteName = "ci:test";
+
+		String ciTestSuite = getParameterValue("CI_TEST_SUITE");
+
+		if ((ciTestSuite != null) && !ciTestSuite.isEmpty() &&
+			!ciTestSuite.equals("default")) {
+
+			testSuiteName = JenkinsResultsParserUtil.combine(
+				testSuiteName, ":", ciTestSuite);
+		}
+
+		return testSuiteName;
 	}
 
 	protected Element getTopGitHubMessageElement() {
@@ -1271,8 +1277,8 @@ public class TopLevelBuild extends BaseBuild {
 		}
 
 		Dom4JUtil.addToElement(
-			detailsElement, Integer.toString(successCount), " out of ",
-			Integer.toString(getDownstreamBuildCountByResult(null) + 1),
+			detailsElement, String.valueOf(successCount), " out of ",
+			String.valueOf(getDownstreamBuildCountByResult(null) + 1),
 			" jobs PASSED");
 
 		if (!result.equals("SUCCESS")) {

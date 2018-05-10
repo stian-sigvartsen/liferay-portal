@@ -1,9 +1,12 @@
-<definition component-name="portal-acceptance">
+<definition component-name="portal-acceptance" ignore="true">
 	<property name="portal.release" value="true" />
 	<property name="portal.upstream" value="true" />
 	<property name="testray.main.component.name" value="Smoke" />
 
 	<!-- This is a comment -->
+
+	<!--This is a multiline
+		comment.-->
 
 	<var name="userPassword" value="password" />
 	<var name="userScreenName" value="joeblogs" />
@@ -22,6 +25,9 @@
 
 	<command name="AddUser" priority="5">
 		<!-- This is a comment -->
+
+		<!--This is a multiline
+			comment.-->
 
 		<property name="portal.release" value="false" />
 
@@ -50,6 +56,10 @@
 
 			<execute function="AssertTextEquals" locator1="Breadcrumb#BREADCRUMB_ENTRY" value1="${breadcrumbNameUppercase}" />
 
+			<for list="${breadcrumbListVisible}" param="breadcrumbName">
+				<execute function="AssertTextEquals" locator1="Breadcrumb#BREADCRUMB_ENTRY" value1="${breadcrumbNameUppercase}" />
+			</for>
+
 			<if>
 				<isset var="duplicate" />
 				<then>
@@ -61,6 +71,12 @@
 
 					<!-- This is a comment -->
 				</then>
+				<elseif>
+					<isset var="duplicate" />
+					<then>
+						<echo message="Please enter a unique ID." />
+					</then>
+				</elseif>
 				<else>
 					<execute macro="Alert#viewSuccessMessage" />
 
@@ -69,6 +85,10 @@
 			</if>
 
 			<!-- This is a comment -->
+		</for>
+
+		<for list="Breadcrumb: 1, Breadcrumb: 2" param="breadcrumbName">
+			<execute function="AssertTextEquals" locator1="Breadcrumb#BREADCRUMB_ENTRY" value1="${breadcrumbNameUppercase}" />
 		</for>
 
 		<execute macro="User#addCP">
@@ -190,6 +210,8 @@
 
 		<var name="testCDATA"><![CDATA['alert(0)'"alert(0)"><img src=x onerror=alert(0)><script>alert(0)</script>]]></var>
 
+		<var name="testCDATA"><![CDATA[']]></var>
+
 		<var name="wikiPageContent"><![CDATA[<p id='demo'>PASS</p>
 
 <script type='text/javascript'>
@@ -220,6 +242,15 @@
 		<take-screenshot />
 
 		<while>
+			<condition function="IsElementPresent" locator1="AssetCategorization#TAGS_REMOVE_ICON_GENERIC">
+				<var name="key_userScreenName" value="ldapusercn" />
+			</condition>
+			<then>
+				<execute function="Click" locator1="AssetCategorization#TAGS_REMOVE_ICON_GENERIC" />
+			</then>
+		</while>
+
+		<while max-iterations="16">
 			<condition function="IsElementPresent" locator1="AssetCategorization#TAGS_REMOVE_ICON_GENERIC" />
 			<then>
 				<execute function="Click" locator1="AssetCategorization#TAGS_REMOVE_ICON_GENERIC" />

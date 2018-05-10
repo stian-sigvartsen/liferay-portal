@@ -1827,15 +1827,26 @@ delay 1
 
 tell application "System Events"
 	tell process "Safari"
+		click menu item "Preferences…" of menu "Safari" of ¬
+			menu bar item "Safari" of menu bar 1
+		set frontmost to true
+		tell window 1
+			click button "Advanced" of toolbar 1
+			delay 1
+			set checkValue to (value of checkbox "Show Develop menu in menu bar" of group 1 of group 1)
+			if checkValue is not equal to 1 then
+				click checkbox "Show Develop menu in menu bar" of group 1 of group 1
+			end if
+		end tell
 		tell menu bar item "Develop" of menu bar 1
 			click
 			delay 1
-				set checkValue to (value of attribute "AXMenuItemMarkChar" of menu item "Allow Remote Automation" of menu 1)
-				if checkValue is not equal to "✓" then
-					click menu item "Allow Remote Automation" of menu 1
-				else
-					key code 53
-				end if
+			set checkValue to (value of attribute "AXMenuItemMarkChar" of menu item "Allow Remote Automation" of menu 1)
+			if checkValue is not equal to "✓" then
+				click menu item "Allow Remote Automation" of menu 1
+			else
+				key code 53
+			end if
 		end tell
 	end tell
 end tell
@@ -1853,6 +1864,23 @@ tell application "Safari" to quit
 				<else>
 					<fail message="Operating system is not supported." />
 				</else>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="prepare-search-engine">
+		<attribute name="search.engine" />
+
+		<sequential>
+			<echo>Preparing search engine: @{search.engine}</echo>
+
+			<if>
+				<equals arg1="@{search.engine}" arg2="solr" />
+				<then>
+					<ant antfile="build-test-solr.xml" inheritAll="false" target="deploy-solr" />
+
+					<ant antfile="build-test-solr.xml" inheritAll="false" target="start-solr" />
+				</then>
 			</if>
 		</sequential>
 	</macrodef>
@@ -2037,7 +2065,7 @@ tell application "Safari" to quit
 								<arg value="-Dportal.build=true" />
 							</gradle-execute>
 
-							<gradle-execute dir="${project.dir}/modules/apps/foundation/petra" task="deploy">
+							<gradle-execute dir="${project.dir}/modules/apps/petra" task="deploy">
 								<arg value="-Dportal.build=true" />
 							</gradle-execute>
 						</then>
@@ -3868,6 +3896,17 @@ org.apache.catalina.startup.ClassLoaderFactory.level=INFO]]>
 		</sequential>
 	</macrodef>
 
+	<macrodef name="stop-search-engine">
+		<sequential>
+			<if>
+				<equals arg1="${search.engine}" arg2="solr" />
+				<then>
+					<ant antfile="build-test-solr.xml" target="stop-solr-core" />
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
 	<macrodef name="uninstall-patches">
 		<attribute name="patching.tool.dir" />
 
@@ -4079,6 +4118,12 @@ war.path=${app.server.weblogic.portal.dir}/</echo>
 							<property name="portal.version.url.path" value="6.2.5-ga6" />
 						</then>
 					</elseif>
+					<elseif>
+						<equals arg1="${portal.version}" arg2="7.0.4" />
+						<then>
+							<property name="portal.version.url.path" value="7.0.4-ga5" />
+						</then>
+					</elseif>
 					<else>
 						<property name="portal.version.url.path" value="${portal.version}" />
 					</else>
@@ -4090,6 +4135,7 @@ war.path=${app.server.weblogic.portal.dir}/</echo>
 						<equals arg1="${portal.version}" arg2="6.1.2" />
 						<equals arg1="${portal.version}" arg2="6.2.3" />
 						<equals arg1="${portal.version}" arg2="6.2.5" />
+						<equals arg1="${portal.version}" arg2="7.0.4" />
 					</or>
 					<then>
 						<propertycopy from="sql.legacy.base.url[ce]" name="sql.legacy.base.url" />
@@ -5097,6 +5143,8 @@ go]]></replacevalue>
 														<include name="${module.war.name}*" />
 													</fileset>
 												</delete>
+
+												<echo file="@{module.dir.path}/.lfrbuild-portal" />
 											</sequential>
 										</for>
 
@@ -5108,6 +5156,19 @@ go]]></replacevalue>
 											<property name="app.name" value="${osgi.app.name}" />
 											<property name="osgi.dir" value="${liferay.home}/osgi" />
 										</ant>
+
+										<for param="module.dir.path">
+											<path>
+												<dirset
+													dir="@{app.dir}"
+												>
+													<include name="*" />
+												</dirset>
+											</path>
+											<sequential>
+												<delete file="@{module.dir.path}/.lfrbuild-portal" />
+											</sequential>
+										</for>
 
 										<gradle-execute dir="@{app.dir}" task="clean" />
 									</else>
@@ -5989,7 +6050,7 @@ osb.lcs.portlet.oauth.consumer.secret=${osb.lcs.portlet.oauth.consumer.secret}</
 	</root>
 </log4j:configuration>]]></echo>
 
-		<echo file="${liferay.home}/osgi/log4j/com.liferay.portal.osgi.web.wab.generator-log4j-ext.xml"><![CDATA[<?xml version="1.0"?>
+		<echo file="${liferay.home}/osgi/log4j/com.liferay.portal.osgi.web.wab.generator.impl-log4j-ext.xml"><![CDATA[<?xml version="1.0"?>
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
@@ -6030,7 +6091,14 @@ osb.lcs.portlet.oauth.consumer.secret=${osb.lcs.portlet.oauth.consumer.secret}</
 	<target name="prepare-osgi-module-configurations">
 		<get-testcase-property property.name="osgi.module.configurations" />
 
-		<prepare-blacklist-configuration />
+		<if>
+			<not>
+				<available file="${liferay.home}/osgi/configs/com.liferay.portal.bundle.blacklist.internal.BundleBlacklistConfiguration.config" />
+			</not>
+			<then>
+				<prepare-blacklist-configuration />
+			</then>
+		</if>
 
 		<if>
 			<not>

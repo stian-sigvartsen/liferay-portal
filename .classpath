@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry excluding="**/.svn/**|.svn/" kind="src" path="definitions"/>
-	<classpathentry excluding="**/.svn/**|.svn/" kind="src" path="modules/apps/foundation/petra/petra-content/src/main/java"/>
-	<classpathentry excluding="**/.svn/**|.svn/" kind="src" path="modules/apps/foundation/petra/petra-encryptor/src/main/java"/>
-	<classpathentry excluding="**/.svn/**|.svn/" kind="src" path="modules/apps/foundation/petra/petra-log4j/src/main/java"/>
-	<classpathentry excluding="**/.svn/**|.svn/" kind="src" path="modules/apps/foundation/petra/petra-mail/src/main/java"/>
-	<classpathentry excluding="**/.svn/**|.svn/" kind="src" path="modules/apps/foundation/petra/petra-xml/src/main/java"/>
+	<classpathentry excluding="**/.svn/**|.svn/" kind="src" path="modules/apps/petra/petra-content/src/main/java"/>
+	<classpathentry excluding="**/.svn/**|.svn/" kind="src" path="modules/apps/petra/petra-encryptor/src/main/java"/>
+	<classpathentry excluding="**/.svn/**|.svn/" kind="src" path="modules/apps/petra/petra-log4j/src/main/java"/>
+	<classpathentry excluding="**/.svn/**|.svn/" kind="src" path="modules/apps/petra/petra-mail/src/main/java"/>
+	<classpathentry excluding="**/.svn/**|.svn/" kind="src" path="modules/apps/petra/petra-xml/src/main/java"/>
 	<classpathentry excluding="**/.svn/**|.svn/" kind="src" path="modules/core/petra/petra-concurrent/src/main/java"/>
 	<classpathentry excluding="**/.svn/**|.svn/" kind="src" path="modules/core/petra/petra-executor/src/main/java"/>
 	<classpathentry excluding="**/.svn/**|.svn/" kind="src" path="modules/core/petra/petra-function/src/main/java"/>
@@ -316,6 +316,7 @@
 	<classpathentry kind="lib" path="tmp/lib-pre/com.liferay.portal.kernel.blogs.compat.jar"/>
 	<classpathentry kind="lib" path="tmp/lib-pre/com.liferay.portal.kernel.concurrent.compat.jar"/>
 	<classpathentry kind="lib" path="tmp/lib-pre/com.liferay.portal.kernel.document.library.compat.jar"/>
+	<classpathentry kind="lib" path="tmp/lib-pre/com.liferay.portal.kernel.io.compat.jar"/>
 	<classpathentry kind="lib" path="tmp/lib-pre/com.liferay.portal.kernel.memory.compat.jar"/>
 	<classpathentry kind="lib" path="tmp/lib-pre/com.liferay.portal.kernel.message.boards.compat.jar"/>
 	<classpathentry kind="lib" path="tmp/lib-pre/com.liferay.portal.kernel.nio.compat.jar"/>

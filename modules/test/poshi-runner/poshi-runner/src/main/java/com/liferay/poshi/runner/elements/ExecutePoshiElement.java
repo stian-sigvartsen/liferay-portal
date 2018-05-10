@@ -21,7 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
+import org.dom4j.Attribute;
 import org.dom4j.Element;
+import org.dom4j.Node;
 
 /**
  * @author Kenji Heigel
@@ -122,6 +124,10 @@ public class ExecutePoshiElement extends PoshiElement {
 				continue;
 			}
 
+			if (assignment.endsWith(",")) {
+				assignment = assignment.substring(0, assignment.length() - 1);
+			}
+
 			assignment = "var " + assignment + ";";
 
 			add(PoshiNodeFactory.newPoshiNode(this, assignment));
@@ -194,12 +200,24 @@ public class ExecutePoshiElement extends PoshiElement {
 		super("execute", element);
 	}
 
+	protected ExecutePoshiElement(
+		List<Attribute> attributes, List<Node> nodes) {
+
+		this(_ELEMENT_NAME, attributes, nodes);
+	}
+
 	protected ExecutePoshiElement(String readableSyntax) {
 		super("execute", readableSyntax);
 	}
 
 	protected ExecutePoshiElement(String name, Element element) {
 		super(name, element);
+	}
+
+	protected ExecutePoshiElement(
+		String elementName, List<Attribute> attributes, List<Node> nodes) {
+
+		super(elementName, attributes, nodes);
 	}
 
 	protected ExecutePoshiElement(String name, String readableSyntax) {

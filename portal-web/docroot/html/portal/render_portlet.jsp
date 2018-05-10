@@ -122,10 +122,8 @@ else if (modePreview) {
 else if (modePrint) {
 	portletMode = LiferayPortletMode.PRINT;
 }
-else if (layoutTypePortlet instanceof LayoutTypePortletImpl) {
-	LayoutTypePortletImpl layoutTypePortletImpl = (LayoutTypePortletImpl)layoutTypePortlet;
-
-	String customPortletMode = layoutTypePortletImpl.getAddedCustomPortletMode();
+else {
+	String customPortletMode = layoutTypePortlet.getAddedCustomPortletMode();
 
 	if (customPortletMode != null) {
 		portletMode = new PortletMode(customPortletMode);
@@ -795,13 +793,8 @@ else if (portletDisplay.isModePrint()) {
 	urlBack = urlPrint.toString();
 }
 else if (portletDisplay.isStateMax()) {
-	if (portletDisplay.getId().startsWith("WSRP_")) {
-		urlBack = portletDisplay.getURLBack();
-	}
-	else {
-		urlBack = ParamUtil.getString(renderRequestImpl, "returnToFullPageURL");
-		urlBack = PortalUtil.escapeRedirect(urlBack);
-	}
+	urlBack = ParamUtil.getString(renderRequestImpl, "returnToFullPageURL");
+	urlBack = PortalUtil.escapeRedirect(urlBack);
 
 	if (Validator.isNull(urlBack)) {
 		urlBack = urlMax.toString();
