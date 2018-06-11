@@ -1182,6 +1182,11 @@ public class LayoutStagedModelDataHandler
 			Layout importedLayout)
 		throws Exception {
 
+		_fragmentEntryLinkLocalService.
+			deleteLayoutPageTemplateEntryFragmentEntryLinks(
+				portletDataContext.getScopeGroupId(),
+				_portal.getClassNameId(Layout.class), importedLayout.getPlid());
+
 		List<Element> fragmentEntryLinkElements =
 			portletDataContext.getReferenceDataElements(
 				layout, FragmentEntryLink.class);
@@ -1453,11 +1458,6 @@ public class LayoutStagedModelDataHandler
 				linkedToLayoutUuid));
 	}
 
-	@Override
-	protected void importReferenceStagedModels(
-		PortletDataContext portletDataContext, Layout layout) {
-	}
-
 	protected void importTheme(
 			PortletDataContext portletDataContext, Layout layout,
 			Layout importedLayout)
@@ -1472,14 +1472,14 @@ public class LayoutStagedModelDataHandler
 		}
 
 		if (importThemeSettings) {
+			importedLayout.setThemeId(layout.getThemeId());
 			importedLayout.setColorSchemeId(layout.getColorSchemeId());
 			importedLayout.setCss(layout.getCss());
-			importedLayout.setThemeId(layout.getThemeId());
 		}
 		else {
+			importedLayout.setThemeId(StringPool.BLANK);
 			importedLayout.setColorSchemeId(StringPool.BLANK);
 			importedLayout.setCss(StringPool.BLANK);
-			importedLayout.setThemeId(StringPool.BLANK);
 		}
 	}
 
@@ -1509,6 +1509,11 @@ public class LayoutStagedModelDataHandler
 			companyId, groupId, userId, Layout.class.getName(),
 			importedLayout.getPlid(), false, addGroupPermissions,
 			addGuestPermissions);
+	}
+
+	@Override
+	protected boolean isSkipImportReferenceStagedModels() {
+		return true;
 	}
 
 	protected void mergePortlets(

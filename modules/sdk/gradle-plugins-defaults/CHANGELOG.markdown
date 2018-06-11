@@ -3579,8 +3579,8 @@ version 2.2.4.
 ## 5.4.4 - 2018-05-16
 
 ### Added
-- [LPS-80944]: The `com.liferay.spring.boot.defaults` plugin now automatically
-adds the local Maven and [Liferay CDN] repositories to the project.
+- [LPS-80944]: Configure the `com.liferay.spring.boot.defaults` plugin to
+automatically add local Maven and [Liferay CDN] repositories to the project.
 
 ## 5.4.5 - 2018-05-16
 
@@ -3707,6 +3707,8 @@ Java project.
 ## 5.4.25 - 2018-06-04
 
 ### Changed
+- [LPS-81795]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.27.
 - [LPS-81895]: Update the [Liferay Gradle Plugins Lang Merger] dependency to
 version 1.1.0.
 
@@ -3715,6 +3717,47 @@ version 1.1.0.
 ### Fixed
 - [LPS-67694]: Fix error when `-PsnapshotIfStale` is set and the latest snapshot
 of a module includes transitive dependencies.
+
+## 5.4.27 - 2018-06-04
+
+### Changed
+- [LPS-81336]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.28.
+
+## 5.4.28 - 2018-06-05
+
+### Changed
+- [LPS-81336]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.29.
+
+## 5.4.29 - 2018-06-05
+
+### Changed
+- [LPS-82001]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.30.
+
+## 5.4.30 - 2018-06-06
+
+### Changed
+- [LPS-82001]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.31.
+
+## 5.4.31 - 2018-06-07
+
+### Changed
+- [LPS-81900]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.32.
+
+### Fixed
+- [LPS-80332]: Fix `suite.bnd` inclusion when running in sub-repositories.
+
+## 5.4.32 - 2018-06-08
+
+### Changed
+- [LPS-75530]: Update the [Liferay Gradle Plugins JSDoc] dependency to version
+2.0.7.
+- [LPS-82130]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.33.
 
 [Find Security Bugs]: https://github.com/liferay/liferay-portal/tree/master/modules/third-party/com-h3xstream-findsecbugs
 [Gradle License Report]: https://github.com/jk1/Gradle-License-Report
@@ -4125,11 +4168,15 @@ of a module includes transitive dependencies.
 [LPS-80944]: https://issues.liferay.com/browse/LPS-80944
 [LPS-80950]: https://issues.liferay.com/browse/LPS-80950
 [LPS-81106]: https://issues.liferay.com/browse/LPS-81106
+[LPS-81336]: https://issues.liferay.com/browse/LPS-81336
 [LPS-81404]: https://issues.liferay.com/browse/LPS-81404
 [LPS-81555]: https://issues.liferay.com/browse/LPS-81555
 [LPS-81635]: https://issues.liferay.com/browse/LPS-81635
 [LPS-81795]: https://issues.liferay.com/browse/LPS-81795
 [LPS-81895]: https://issues.liferay.com/browse/LPS-81895
+[LPS-81900]: https://issues.liferay.com/browse/LPS-81900
+[LPS-82001]: https://issues.liferay.com/browse/LPS-82001
+[LPS-82130]: https://issues.liferay.com/browse/LPS-82130
 [LRDOCS-2594]: https://issues.liferay.com/browse/LRDOCS-2594
 [LRDOCS-2841]: https://issues.liferay.com/browse/LRDOCS-2841
 [LRDOCS-2981]: https://issues.liferay.com/browse/LRDOCS-2981
