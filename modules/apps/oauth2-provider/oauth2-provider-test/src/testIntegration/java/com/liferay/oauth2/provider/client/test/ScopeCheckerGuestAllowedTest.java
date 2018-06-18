@@ -59,13 +59,11 @@ public class ScopeCheckerGuestAllowedTest extends BaseClientTestCase {
 
 	@Test
 	public void test() throws Exception {
-		testApplication(
-			"/annotated-guest-allowed/", "everything.read", 403);
+		testApplication("/annotated-guest-allowed/", "everything.read", 403);
 
 		testApplication("/annotated-guest-allowed/no-scope", "no-scope", 200);
 
-		testApplication(
-			"/annotated-guest-default/", "everything.read", 403);
+		testApplication("/annotated-guest-default/", "everything.read", 403);
 
 		testApplication("/annotated-guest-default/no-scope", "no-scope", 403);
 
