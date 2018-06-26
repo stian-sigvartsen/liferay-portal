@@ -301,6 +301,81 @@ public class ListServiceTrackerMapTest {
 	}
 
 	@Test
+	public void testMissingVsSpecifiedServiceRanking() {
+		try (ServiceTrackerMap<String, List<TrackedOne>> serviceTrackerMap =
+				createServiceTrackerMap(_bundleContext)) {
+
+			Dictionary<String, Object> properties1 = new Hashtable<>();
+			Dictionary<String, Object> properties2 = new Hashtable<>();
+
+			properties1.put("target", "aTarget");
+
+			properties2.put("target", "aTarget");
+			properties2.put("service.ranking", Integer.MAX_VALUE);
+
+			TrackedOne service1 = new TrackedOne();
+			TrackedOne service2 = new TrackedOne();
+
+			ServiceRegistration<TrackedOne> serviceRegistration1 =
+				_bundleContext.registerService(
+					TrackedOne.class, service1, properties1);
+
+			ServiceRegistration<TrackedOne> serviceRegistration2 =
+				_bundleContext.registerService(
+					TrackedOne.class, service2, properties2);
+
+			long serviceId1 =
+				(long)serviceRegistration1.getReference().getProperty(
+					"service.id");
+
+			long serviceId2 =
+				(long)serviceRegistration2.getReference().getProperty(
+					"service.id");
+
+			Assert.assertTrue(serviceId1 < serviceId2);
+
+			List<TrackedOne> services = serviceTrackerMap.getService("aTarget");
+
+			Assert.assertEquals(service2, services.get(0));
+			Assert.assertEquals(service1, services.get(1));
+
+			serviceRegistration2.unregister();
+
+			services = serviceTrackerMap.getService("aTarget");
+
+			Assert.assertEquals(service1, services.get(0));
+
+			serviceRegistration1.unregister();
+
+			// Ensure that ordering is not being done by ascending service.id
+			// (service registration order), which is what the OSGi Compendium
+			// spec specifies for services with same service.ranking
+
+			serviceRegistration2 = _bundleContext.registerService(
+				TrackedOne.class, service2, properties2);
+
+			serviceRegistration1 = _bundleContext.registerService(
+				TrackedOne.class, service1, properties1);
+
+			serviceId1 = (long)serviceRegistration1.getReference().getProperty(
+				"service.id");
+
+			serviceId2 = (long)serviceRegistration2.getReference().getProperty(
+				"service.id");
+
+			Assert.assertTrue(serviceId1 > serviceId2);
+
+			services = serviceTrackerMap.getService("aTarget");
+
+			Assert.assertEquals(service2, services.get(0));
+			Assert.assertEquals(service1, services.get(1));
+
+			serviceRegistration1.unregister();
+			serviceRegistration2.unregister();
+		}
+	}
+
+	@Test
 	public void testOperationBalancesOutGetServiceAndUngetService() {
 		BundleContextWrapper bundleContextWrapper = wrapContext();
 
