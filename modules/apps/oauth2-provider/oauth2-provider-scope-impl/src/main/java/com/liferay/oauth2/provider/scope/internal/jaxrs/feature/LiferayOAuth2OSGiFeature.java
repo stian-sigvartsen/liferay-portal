@@ -221,8 +221,6 @@ public class LiferayOAuth2OSGiFeature implements Feature {
 
 		properties.put(
 			OAuth2ProviderScopeConstants.OSGI_JAXRS_NAME, osgiJAXRSName);
-		
-		properties.put("service.ranking", -1);
 
 		_serviceRegistrations.add(
 			_bundleContext.registerService(
@@ -232,19 +230,6 @@ public class LiferayOAuth2OSGiFeature implements Feature {
 				},
 				new ApplicationDescriptorsImpl(serviceTracker, osgiJAXRSName),
 				properties));
-		
-//		_serviceRegistrations.add(
-//			_bundleContext.registerService(
-//				ScopeDescriptor.class,
-//				new ApplicationDescriptorsImpl(serviceTracker, osgiJAXRSName),
-//				properties));
-//
-//		_serviceRegistrations.add(
-//			_bundleContext.registerService(
-//				ApplicationDescriptor.class,
-//				new ApplicationDescriptorsImpl(serviceTracker, osgiJAXRSName),
-//				properties));
-		
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
