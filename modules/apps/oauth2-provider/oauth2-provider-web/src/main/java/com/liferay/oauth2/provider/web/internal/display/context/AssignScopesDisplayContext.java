@@ -26,10 +26,10 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -77,18 +77,8 @@ public class AssignScopesDisplayContext
 				scopeLocator.getLiferayOAuth2Scopes(
 					themeDisplay.getCompanyId(), scopeAlias));
 
-			_assignableScopesRelations.compute(
-				assignableScopes,
-				(key, existingValue) -> {
-					if (existingValue != null) {
-						existingValue._scopeAlias.add(scopeAlias);
-
-						return existingValue;
-					}
-					else {
-						return new Relations(Collections.singleton(scopeAlias));
-					}
-				});
+			_assignableScopesRelations.put(
+				assignableScopes, new Relations(scopeAlias));
 
 			Set<String> applicationNames =
 				assignableScopes.getApplicationNames();
@@ -265,11 +255,11 @@ public class AssignScopesDisplayContext
 	public class Relations {
 
 		public Relations() {
-			_scopeAlias = new HashSet<>();
+			_scopeAlias = StringPool.BLANK;
 		}
 
-		public Relations(Set<String> scopeAlias) {
-			_scopeAlias = new HashSet<>(scopeAlias);
+		public Relations(String scopeAlias) {
+			_scopeAlias = scopeAlias;
 		}
 
 		@Override
@@ -300,14 +290,14 @@ public class AssignScopesDisplayContext
 
 			return stream.map(
 				_assignableScopesRelations::get
-			).flatMap(
-				relations -> relations.getScopeAliases().stream()
+			).map(
+				Relations::getScopeAlias
 			).collect(
 				Collectors.toSet()
 			);
 		}
 
-		public Set<String> getScopeAliases() {
+		public String getScopeAlias() {
 			return _scopeAlias;
 		}
 
@@ -317,7 +307,7 @@ public class AssignScopesDisplayContext
 		}
 
 		private Set<AssignableScopes> _globalAssignableScopes = new HashSet<>();
-		private final Set<String> _scopeAlias;
+		private final String _scopeAlias;
 
 	}
 
@@ -357,14 +347,14 @@ public class AssignScopesDisplayContext
 
 			Relations relations = assignableScopesRelationsEntry.getValue();
 
-			Set<String> scopeAliases = relations.getScopeAliases();
+			String scopeAlias = relations.getScopeAlias();
 
 			AssignableScopes assignableScopes =
 				assignableScopesRelationsEntry.getKey();
 
 			// Preserve assignable scopes that are assigned an alias
 
-			if ((scopeAliases != null) && !scopeAliases.isEmpty()) {
+			if (!Validator.isBlank(scopeAlias)) {
 				combinedAssignableScopesRelations.put(
 					assignableScopes, relations);
 
