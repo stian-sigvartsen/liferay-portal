@@ -273,7 +273,7 @@ public abstract class BaseTestPreparatorBundleActivator
 					Collections.singletonList("token_introspection"),
 					"http://localhost:8080", 0, "test application",
 					"http://localhost:8080",
-					Collections.singletonList("http://localhost:8080"),
+					Collections.singletonList("http://redirecturi:8080"),
 					availableScopes, new ServiceContext());
 
 			autoCloseables.add(
