@@ -115,7 +115,7 @@ public class SecurityTest extends BaseClientTestCase {
 	}
 	*/
 	
-	@Test
+	//@Test
 	public void testGrantFlowHacks() throws Exception {
 		String tokenString = getToken(
 			"oauthTestApplicationCode", null,
@@ -135,7 +135,7 @@ public class SecurityTest extends BaseClientTestCase {
 
 	}
 	
-	@Test
+	//@Test
 	public void testCSRFStateParam() {
 		
 		String clientId = "oauthTestApplicationCode";
@@ -163,6 +163,36 @@ public class SecurityTest extends BaseClientTestCase {
 			location.getQuery());
 		
 		Assert.assertEquals(state, parameterMap.get("state"));
+	}
+	
+	//@Test
+	public void testAuthorizationCodeFlow() throws URISyntaxException {
+		
+		String tokenString = getToken(
+			"oauthTestApplicationCode", null,
+			getAuthorizationCode("test@liferay.com", "test", null),
+			this::parseTokenString);
+
+		Assert.assertNotNull(tokenString);
+	}
+
+	@Test
+	public void testAuthorizationCodeFlowCode() throws URISyntaxException {
+		
+		String redirectUri = "http://redirecturi:8080";
+		String scope = null;
+		String state = null;
+		
+		String code = getCode(
+			"test@liferay.com", "test",
+			"oauthTestApplicationCode", null,
+			getAuthorizationCodeResponseFunction(redirectUri, scope, state),
+				//getAuthorizationCodeWebTargetFunction(clientId, redirectUri, scope, state)),
+			this::parseAuthorizationCodeString);
+
+		Assert.assertNotNull(code);
+		
+		System.out.println("CODE: " + code);
 	}
 
 	public static class SecurityTestPreparatorBundleActivator
@@ -353,23 +383,23 @@ public class SecurityTest extends BaseClientTestCase {
 	}
 	
 	// Method for receiving a callback URI and completing the rest of the grant flow
-	protected String getAuthorizationCodeNEW2(
-		String login, String password, String hostname,
-		Function<URI, Response> callbackURIFunction) {
-
-		URI location = callbackURIFunction.apply(authorizationRequestWebTarget);
-		
-		URI location = getAuthorizationCodeCallbackRequestURL(login, password, hostname, authorizeRequestFunction);
-		
-		Map<String, String[]> parameterMap = HttpUtil.getParameterMap(
-			location.getQuery());
-
-		if (parameterMap.containsKey("error")) {
-			return parameterMap.get("error")[0];
-		}
-
-		return parameterMap.get("code")[0];
-	}
+//	protected String getAuthorizationCodeNEW2(
+//		String login, String password, String hostname,
+//		Function<URI, Response> callbackURIFunction) {
+//
+//		URI location = callbackURIFunction.apply(authorizationRequestWebTarget);
+//		
+//		URI location = getAuthorizationCodeCallbackRequestURL(login, password, hostname, authorizeRequestFunction);
+//		
+//		Map<String, String[]> parameterMap = HttpUtil.getParameterMap(
+//			location.getQuery());
+//
+//		if (parameterMap.containsKey("error")) {
+//			return parameterMap.get("error")[0];
+//		}
+//
+//		return parameterMap.get("code")[0];
+//	}
 
 	protected BiFunction<String, Invocation.Builder, Response>
 		getAuthorizationCodeNEW(String user, String password, String hostname) {
@@ -409,6 +439,48 @@ public class SecurityTest extends BaseClientTestCase {
 			return invocationBuilder.post(Entity.form(formData));
 		};
 	}
+	
+//	protected Function<String, Response>
+//		getAuthorizationCodeResponseFunction() {
+//
+//		return (clientId) -> {
+//			Invocation.Builder invocationBuilder = getInvocationBuilder(
+//				hostname,
+//				authorizeRequestFunction.apply(getAuthorizeWebTarget()));
+//
+//			Cookie authenticatedCookie = getAuthenticatedCookie(
+//				login, password, hostname);
+//
+//			Response response = invocationBuilder.accept(
+//				"text/html"
+//			).cookie(
+//				authenticatedCookie
+//			).get();
+//			
+//			return response;
+//		};
+//	}
+	
+	/*
+	 * 	protected String getAuthorizationCode(
+		String login, String password, String hostname,
+		Function<WebTarget, WebTarget> authorizeRequestFunction) {
+
+		try {
+			Invocation.Builder invocationBuilder = getInvocationBuilder(
+				hostname,
+				authorizeRequestFunction.apply(getAuthorizeWebTarget()));
+
+			Cookie authenticatedCookie = getAuthenticatedCookie(
+				login, password, hostname);
+
+			Response response = invocationBuilder.accept(
+				"text/html"
+			).cookie(
+				authenticatedCookie
+			).get();
+
+	 */
 	
 	protected URI getAuthorizationCodeCallbackRequestURL(
 		String login, String password, String hostname,
@@ -480,4 +552,208 @@ public class SecurityTest extends BaseClientTestCase {
 		}
 		
 	}
+	
+//	protected <T> T getCodeResponse(
+//			String clientId, String hostname,
+//			BiFunction<String, Invocation.Builder, Response>
+//				credentialsBiFunction,
+//			Function<Response, T> tokenParser)
+//		throws URISyntaxException {
+//
+//		return tokenParser.apply(
+//			credentialsBiFunction.apply(
+//				clientId, getCodeInvocationBuilder(hostname)));
+//	}
+	
+//	protected Invocation.Builder getCodeInvocationBuilder(String hostname)
+//		throws URISyntaxException {
+//
+//		return getInvocationBuilder(hostname, getAuthorizeWebTarget());
+//	}
+
+	protected <T> T getCode(
+			String login, String password,
+			String clientId, String hostname,
+			BiFunction<String, Function<WebTarget, Invocation.Builder>, Response> credentialsBiFunction, 
+			Function<Response, T> codeParser)
+		throws URISyntaxException {
+
+		return codeParser.apply(
+			credentialsBiFunction.apply(
+				clientId, getCodeAuthenticatedInvocationBuilderFunction(login, password, hostname)));
+	}
+	
+	//--
+	
+//	protected BiFunction<String, WebTarget, Response>
+//		getAuthorizationCodeGrantExecutor(String login, String password, String hostname, String redirectURI, String scope) {
+//	
+//		return (clientId, webTarget) -> {
+//			
+//			Invocation.Builder invocationBuilder = getInvocationBuilder(
+//				hostname,
+//				authorizeRequestFunction.apply(getAuthorizeWebTarget()));
+//
+//			Cookie authenticatedCookie = getAuthenticatedCookie(
+//				login, password, hostname);
+//
+//			Response response = invocationBuilder.accept(
+//				"text/html"
+//			).cookie(
+//				authenticatedCookie
+//			).get();
+//			
+//			return response;
+//		};
+//	}
+	
+	protected Function<WebTarget, Invocation.Builder> getCodeAuthenticatedInvocationBuilderFunction(String login, String password, String hostname)
+		throws URISyntaxException {
+	
+		Cookie authenticatedCookie = getAuthenticatedCookie(
+			login, password, hostname);
+
+		return (webtarget) -> {
+
+			Invocation.Builder invocationBuilder = getInvocationBuilder(hostname, webtarget);
+	
+			invocationBuilder = invocationBuilder.accept(
+				"text/html"
+			).cookie(
+				authenticatedCookie
+			);
+			
+			return invocationBuilder;
+		};
+	}
+
+	protected Function<WebTarget, WebTarget>
+		getAuthorizationCodeWebTargetFunction(String clientId, String redirectUri, String scope, String state) {
+	
+		return webTarget -> {
+			webTarget = webTarget.queryParam(
+				"client_id", clientId
+			).queryParam(
+				"response_type", "code"
+			);
+
+			if (redirectUri != null) {
+				webTarget = webTarget.queryParam("redirect_uri", redirectUri);
+			}
+
+			if (scope != null) {
+				webTarget = webTarget.queryParam("scope", scope);
+			}
+
+			return webTarget;
+		};
+	}
+	
+	
+	protected BiFunction<String, Function<WebTarget, Invocation.Builder>, Response>
+		getAuthorizationCodeResponseFunction(
+			String redirectUri, String scope, String state) {
+			//Function<WebTarget, WebTarget> authorizeRequestFunction) {
+
+		return (clientId, builderFunction) -> {
+		
+			try {
+				
+				WebTarget authorizeWebTarget = getAuthorizeWebTarget();
+				
+				authorizeWebTarget = authorizeWebTarget.queryParam(
+					"client_id", clientId
+				).queryParam(
+					"response_type", "code"
+				);
+
+				if (redirectUri != null) {
+					authorizeWebTarget = authorizeWebTarget.queryParam("redirect_uri", redirectUri);
+				}
+									
+				if (scope != null) {
+					authorizeWebTarget = authorizeWebTarget.queryParam("scope", scope);
+				}
+					
+				if (state != null) {
+					authorizeWebTarget = authorizeWebTarget.queryParam("state", state);
+				}
+
+				/*
+				webTarget -> {
+					webTarget = webTarget.queryParam(
+						"client_id", clientId
+					).queryParam(
+						"response_type", "code"
+					);
+
+					if (scope != null) {
+						webTarget = webTarget.queryParam("scope", scope);
+					}
+
+					return webTarget;
+				}
+				*/
+				
+				//authorizeWebTarget = authorizeRequestFunction.apply(authorizeWebTarget);
+				
+				Invocation.Builder invocationBuilder = builderFunction.apply(authorizeWebTarget);
+	
+				Response response = invocationBuilder.get();
+	
+				URI location = response.getLocation();
+	
+				if (location == null) {
+					return response;
+				}
+	
+				Map<String, String[]> parameterMap = HttpUtil.getParameterMap(
+					location.getQuery());
+	
+				if (parameterMap.containsKey("error")) {
+					return response;
+				}
+	
+				MultivaluedMap<String, String> formData =
+					new MultivaluedHashMap<>();
+	
+				formData.add("oauthDecision", "allow");
+	
+				for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
+					String key = entry.getKey();
+	
+					if (!StringUtil.startsWith(key, "oauth2_")) {
+						continue;
+					}
+	
+					formData.add(
+						key.substring("oauth2_".length()), entry.getValue()[0]);
+				}
+	
+				invocationBuilder = builderFunction.apply(getAuthorizeDecisionWebTarget());
+	
+				response = invocationBuilder.post(Entity.form(formData));
+	
+				return response;
+			}
+			catch (URISyntaxException urise) {
+				throw new RuntimeException(urise);
+			}
+		};
+	}
+	
+	protected String parseAuthorizationCodeString(Response response) {
+		URI location = response.getLocation();
+		
+		if (location == null) {
+			throw new IllegalArgumentException(
+				"Authorization service response missing Location header from " +
+					"which code is extracted");
+		}
+		
+		Map<String, String[]> parameterMap = HttpUtil.getParameterMap(
+			location.getQuery());		
+		
+		return parameterMap.get("code")[0];
+	}	
 }
