@@ -1,0 +1,9 @@
+Bundle-Description: Override default HTTP verb based scope descriptions
+Bundle-SymbolicName: com.example.oauth2.provider.scope.spi.scope.descriptor
+Bundle-Version: 1.0.0
+Provide-Capability:\
+	liferay.resource.bundle;\
+		resource.bundle.aggregate:String="(bundle.symbolic.name=com.example.oauth2.provider.scope.spi.scope.descriptor),(bundle.symbolic.name=com.liferay.oauth2.provider.scope.impl)";\
+		resource.bundle.base.name="content.Language";\
+		service.ranking="1"
+-sources: true
