@@ -178,16 +178,16 @@ public abstract class BaseClientTestCase {
 	}
 
 	protected Cookie getAuthenticatedCookie(
-			String login, String password, String hostname) {
+		String login, String password, String hostname) {
 
 		Invocation.Builder invocationBuilder;
-		
+
 		try {
 			invocationBuilder = getInvocationBuilder(
 				hostname, getLoginWebTarget());
-		} 
-		catch (URISyntaxException e) {
-			throw new RuntimeException(e);
+		}
+		catch (URISyntaxException urise) {
+			throw new RuntimeException(urise);
 		}
 
 		MultivaluedMap<String, String> formData = new MultivaluedHashMap<>();
@@ -219,13 +219,12 @@ public abstract class BaseClientTestCase {
 			String user, String password, String hostname, String scope) {
 
 		return (clientId, invocationBuilder) -> {
-			
 			String authorizationCode;
-			
+
 			authorizationCode = getCode(
-				user, password, hostname, 
+				user, password, hostname,
 				getAuthorizationCodeResponseFunction(webTarget ->
-					webTarget = webTarget.queryParam(
+					webTarget.queryParam(
 						"client_id", clientId
 					).queryParam(
 						"response_type", "code"
@@ -233,7 +232,7 @@ public abstract class BaseClientTestCase {
 						"scope", scope
 					)),
 				this::parseAuthorizationCodeString);
-			
+
 			MultivaluedMap<String, String> formData =
 				new MultivaluedHashMap<>();
 
@@ -266,9 +265,9 @@ public abstract class BaseClientTestCase {
 			final String codeChallenge = base64UrlDigest;
 
 			String authorizationCode = getCode(
-				userName, password, hostname, 
+				userName, password, hostname,
 				getAuthorizationCodeResponseFunction(webTarget ->
-					webTarget = webTarget.queryParam(
+					webTarget.queryParam(
 						"client_id", clientId
 					).queryParam(
 						"code_challenge", codeChallenge
@@ -276,7 +275,7 @@ public abstract class BaseClientTestCase {
 						"response_type", "code"
 					)),
 				this::parseAuthorizationCodeString);
-						
+
 			MultivaluedMap<String, String> formData =
 				new MultivaluedHashMap<>();
 
@@ -286,6 +285,61 @@ public abstract class BaseClientTestCase {
 			formData.add("grant_type", "authorization_code");
 
 			return invocationBuilder.post(Entity.form(formData));
+		};
+	}
+
+	protected Function<Function<WebTarget, Invocation.Builder>, Response>
+		getAuthorizationCodeResponseFunction(
+			Function<WebTarget, WebTarget> authorizeRequestFunction) {
+
+		return (builderFunction) -> {
+			try {
+				Invocation.Builder invocationBuilder = builderFunction.apply(
+					authorizeRequestFunction.apply(getAuthorizeWebTarget()));
+
+				Response response = invocationBuilder.get();
+
+				URI location = response.getLocation();
+
+				if (location == null) {
+					return response;
+				}
+
+				Map<String, String[]> parameterMap = HttpUtil.getParameterMap(
+					location.getQuery());
+
+				if (parameterMap.containsKey("error")) {
+					return response;
+				}
+
+				MultivaluedMap<String, String> formData =
+					new MultivaluedHashMap<>();
+
+				formData.add("oauthDecision", "allow");
+
+				for (Map.Entry<String, String[]> entry :
+						parameterMap.entrySet()) {
+
+					String key = entry.getKey();
+
+					if (!StringUtil.startsWith(key, "oauth2_")) {
+						continue;
+					}
+
+					formData.add(
+						key.substring("oauth2_".length()), entry.getValue()[0]);
+				}
+
+				invocationBuilder = builderFunction.apply(
+					getAuthorizeDecisionWebTarget());
+
+				response = invocationBuilder.post(Entity.form(formData));
+
+				return response;
+			}
+			catch (URISyntaxException urise) {
+				throw new RuntimeException(urise);
+			}
 		};
 	}
 
@@ -319,6 +373,8 @@ public abstract class BaseClientTestCase {
 		};
 	}
 
+	// ## NEW STUFF
+
 	protected Response getClientCredentials(
 		String clientId, Invocation.Builder invocationBuilder) {
 
@@ -329,6 +385,37 @@ public abstract class BaseClientTestCase {
 		formData.add("grant_type", "client_credentials");
 
 		return invocationBuilder.post(Entity.form(formData));
+	}
+
+	protected <T> T getCode(
+		String login, String password, String hostname,
+		Function<Function<WebTarget, Invocation.Builder>, Response> credentialsBiFunction,
+		Function<Response, T> codeParser) {
+
+		return codeParser.apply(
+			credentialsBiFunction.apply(
+				getCodeAuthenticatedInvocationBuilderFunction(
+					login, password, hostname)));
+	}
+
+	protected Function<WebTarget, Invocation.Builder> getCodeAuthenticatedInvocationBuilderFunction(
+		String login, String password, String hostname) {
+
+		Cookie authenticatedCookie = getAuthenticatedCookie(
+			login, password, hostname);
+
+		return (webtarget) -> {
+			Invocation.Builder invocationBuilder = getInvocationBuilder(
+				hostname, webtarget);
+
+			invocationBuilder = invocationBuilder.accept(
+				"text/html"
+			).cookie(
+				authenticatedCookie
+			);
+
+			return invocationBuilder;
+		};
 	}
 
 	protected Invocation.Builder getInvocationBuilder(
@@ -472,8 +559,38 @@ public abstract class BaseClientTestCase {
 		return target;
 	}
 
+	protected String parseAuthorizationCodeString(Response response) {
+		URI location = response.getLocation();
+
+		if (location == null) {
+			throw new IllegalArgumentException(
+				"Authorization service response missing Location header from " +
+					"which code is extracted");
+		}
+
+		Map<String, String[]> parameterMap = HttpUtil.getParameterMap(
+			location.getQuery());
+
+		return parameterMap.get("code")[0];
+	}
+
 	protected String parseError(Response response) {
 		return parseJsonField(response, "error");
+	}
+
+	protected String parseErrorParameter(Response response) {
+		URI location = response.getLocation();
+
+		if (location == null) {
+			throw new IllegalArgumentException(
+				"Authorization service response missing Location header from " +
+					"which code is extracted");
+		}
+
+		Map<String, String[]> parameterMap = HttpUtil.getParameterMap(
+			location.getQuery());
+
+		return parameterMap.get("error")[0];
 	}
 
 	protected String parseJsonField(Response response, String fieldName) {
@@ -504,6 +621,21 @@ public abstract class BaseClientTestCase {
 		return parseJsonField(response, "scope");
 	}
 
+	protected String parseStateString(Response response) {
+		URI location = response.getLocation();
+
+		if (location == null) {
+			throw new IllegalArgumentException(
+				"Authorization service response missing Location header from " +
+					"which code is extracted");
+		}
+
+		Map<String, String[]> parameterMap = HttpUtil.getParameterMap(
+			location.getQuery());
+
+		return parameterMap.get("state")[0];
+	}
+
 	protected String parseTokenString(Response response) {
 		return parseJsonField(response, "access_token");
 	}
@@ -511,135 +643,4 @@ public abstract class BaseClientTestCase {
 	@ArquillianResource
 	private URL _url;
 
-	
-	
-	// ## NEW STUFF
-	
-	protected <T> T getCode(
-			String login, String password, String hostname,
-			Function<Function<WebTarget, Invocation.Builder>, Response> credentialsBiFunction, 
-			Function<Response, T> codeParser) {
-
-		return codeParser.apply(
-			credentialsBiFunction.apply(
-				getCodeAuthenticatedInvocationBuilderFunction(login, password, hostname)));
-	}
-		
-	protected Function<WebTarget, Invocation.Builder> getCodeAuthenticatedInvocationBuilderFunction(String login, String password, String hostname) {
-	
-		Cookie authenticatedCookie = getAuthenticatedCookie(
-			login, password, hostname);
-
-		return (webtarget) -> {
-
-			Invocation.Builder invocationBuilder = getInvocationBuilder(hostname, webtarget);
-	
-			invocationBuilder = invocationBuilder.accept(
-				"text/html"
-			).cookie(
-				authenticatedCookie
-			);
-			
-			return invocationBuilder;
-		};
-	}	
-	
-	protected Function<Function<WebTarget, Invocation.Builder>, Response>
-		getAuthorizationCodeResponseFunction(
-			Function<WebTarget, WebTarget> authorizeRequestFunction) {
-	
-		return (builderFunction) -> {
-		
-			try {
-				
-				Invocation.Builder invocationBuilder = 
-					builderFunction.apply(authorizeRequestFunction.apply(getAuthorizeWebTarget()));
-	
-				Response response = invocationBuilder.get();
-	
-				URI location = response.getLocation();
-	
-				if (location == null) {
-					return response;
-				}
-	
-				Map<String, String[]> parameterMap = HttpUtil.getParameterMap(
-					location.getQuery());
-	
-				if (parameterMap.containsKey("error")) {
-					return response;
-				}
-	
-				MultivaluedMap<String, String> formData =
-					new MultivaluedHashMap<>();
-	
-				formData.add("oauthDecision", "allow");
-	
-				for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
-					String key = entry.getKey();
-	
-					if (!StringUtil.startsWith(key, "oauth2_")) {
-						continue;
-					}
-	
-					formData.add(
-						key.substring("oauth2_".length()), entry.getValue()[0]);
-				}
-	
-				invocationBuilder = builderFunction.apply(getAuthorizeDecisionWebTarget());
-	
-				response = invocationBuilder.post(Entity.form(formData));
-	
-				return response;
-			}
-			catch (URISyntaxException urise) {
-				throw new RuntimeException(urise);
-			}
-		};
-	}
-	
-	protected String parseAuthorizationCodeString(Response response) {
-		URI location = response.getLocation();
-		
-		if (location == null) {
-			throw new IllegalArgumentException(
-				"Authorization service response missing Location header from " +
-					"which code is extracted");
-		}
-		
-		Map<String, String[]> parameterMap = HttpUtil.getParameterMap(
-			location.getQuery());		
-		
-		return parameterMap.get("code")[0];
-	}
-	
-	protected String parseStateString(Response response) {
-		URI location = response.getLocation();
-		
-		if (location == null) {
-			throw new IllegalArgumentException(
-				"Authorization service response missing Location header from " +
-					"which code is extracted");
-		}
-		
-		Map<String, String[]> parameterMap = HttpUtil.getParameterMap(
-			location.getQuery());		
-		
-		return parameterMap.get("state")[0];
-	}
-	
-	protected String parseErrorParameter(Response response) {
-		URI location = response.getLocation();
-		
-		if (location == null) {
-			throw new IllegalArgumentException(
-				"Authorization service response missing Location header from " +
-					"which code is extracted");
-		}
-		
-		Map<String, String[]> parameterMap = HttpUtil.getParameterMap(
-			location.getQuery());		
-		
-		return parameterMap.get("error")[0];
-	}
 }
