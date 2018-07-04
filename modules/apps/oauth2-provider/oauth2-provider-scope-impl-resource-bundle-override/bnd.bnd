@@ -1,0 +1,5 @@
+Bundle-Description: Override default HTTP verb based scope resources
+Portal's OSGi runtime.
+Bundle-SymbolicName: com.example.oauth2.provider.scope.resource.bundle.override
+Bundle-Version: 1.0.0
+-sources: true
