@@ -118,14 +118,19 @@ public class SecurityTest extends BaseClientTestCase {
 	@Test
 	public void testCSRFStateParam() throws URISyntaxException {
 		
-		String redirectUri = "http://redirecturi:8080";
-		String scope = null;
 		String state = "csrf_token";
 		
 		String responseState = getCode(
-			"test@liferay.com", "test",
-			"oauthTestApplicationCode", null,
-			getAuthorizationCodeResponseFunction(redirectUri, scope, state),
+			"test@liferay.com", "test", null,
+			getAuthorizationCodeResponseFunction(webTarget -> webTarget.queryParam(
+					"client_id", "oauthTestApplicationCode"
+				).queryParam(
+					"response_type", "code"
+				).queryParam(
+					"redirect_uri", "http://redirecturi:8080"
+				).queryParam(
+					"state", state
+				)),
 			this::parseStateString);
 
 		Assert.assertNotNull(state);
@@ -146,15 +151,17 @@ public class SecurityTest extends BaseClientTestCase {
 
 	@Test
 	public void testAuthorizationCodeFlowCode() throws URISyntaxException {
-		
-		String redirectUri = "http://redirecturi:8080";
-		String scope = null;
-		String state = null;
-		
+				
 		String code = getCode(
-			"test@liferay.com", "test",
-			"oauthTestApplicationCode", null,
-			getAuthorizationCodeResponseFunction(redirectUri, scope, state),
+			"test@liferay.com", "test", null,
+			getAuthorizationCodeResponseFunction(
+				webTarget -> webTarget.queryParam(
+						"client_id", "oauthTestApplicationCode"
+					).queryParam(
+						"response_type", "code"
+					).queryParam(
+						"redirect_uri", "http://redirecturi:8080"
+					)),
 			this::parseAuthorizationCodeString);
 
 		Assert.assertNotNull(code);
@@ -203,15 +210,14 @@ public class SecurityTest extends BaseClientTestCase {
 	}
 	
 	protected <T> T getCode(
-			String login, String password,
-			String clientId, String hostname,
-			BiFunction<String, Function<WebTarget, Invocation.Builder>, Response> credentialsBiFunction, 
+			String login, String password, String hostname,
+			Function<Function<WebTarget, Invocation.Builder>, Response> credentialsBiFunction, 
 			Function<Response, T> codeParser)
 		throws URISyntaxException {
 
 		return codeParser.apply(
 			credentialsBiFunction.apply(
-				clientId, getCodeAuthenticatedInvocationBuilderFunction(login, password, hostname)));
+				getCodeAuthenticatedInvocationBuilderFunction(login, password, hostname)));
 	}
 		
 	protected Function<WebTarget, Invocation.Builder> getCodeAuthenticatedInvocationBuilderFunction(String login, String password, String hostname)
@@ -257,35 +263,16 @@ public class SecurityTest extends BaseClientTestCase {
 	}
 	
 	
-	protected BiFunction<String, Function<WebTarget, Invocation.Builder>, Response>
+	protected Function<Function<WebTarget, Invocation.Builder>, Response>
 		getAuthorizationCodeResponseFunction(
-			String redirectUri, String scope, String state) {
+			Function<WebTarget, WebTarget> authorizeRequestFunction) {
 
-		return (clientId, builderFunction) -> {
+		return (builderFunction) -> {
 		
 			try {
 				
-				WebTarget authorizeWebTarget = getAuthorizeWebTarget();
-				
-				authorizeWebTarget = authorizeWebTarget.queryParam(
-					"client_id", clientId
-				).queryParam(
-					"response_type", "code"
-				);
-
-				if (redirectUri != null) {
-					authorizeWebTarget = authorizeWebTarget.queryParam("redirect_uri", redirectUri);
-				}
-									
-				if (scope != null) {
-					authorizeWebTarget = authorizeWebTarget.queryParam("scope", scope);
-				}
-					
-				if (state != null) {
-					authorizeWebTarget = authorizeWebTarget.queryParam("state", state);
-				}
-				
-				Invocation.Builder invocationBuilder = builderFunction.apply(authorizeWebTarget);
+				Invocation.Builder invocationBuilder = 
+					builderFunction.apply(authorizeRequestFunction.apply(getAuthorizeWebTarget()));
 	
 				Response response = invocationBuilder.get();
 	
