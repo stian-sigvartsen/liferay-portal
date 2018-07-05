@@ -208,88 +208,28 @@ public abstract class BaseClientTestCase {
 		return cookie.toCookie();
 	}
 
-	protected BiFunction<String, Invocation.Builder, Response>
-		getAuthorizationCode(String user, String password, String hostname) {
+	protected Function<WebTarget, Invocation.Builder> getAuthenticatedInvocationBuilder(
+		String login, String password, String hostname) {
 
-		return getAuthorizationCode(user, password, hostname, (String)null);
-	}
+		Cookie authenticatedCookie = getAuthenticatedCookie(
+			login, password, hostname);
 
-	protected BiFunction<String, Invocation.Builder, Response>
-		getAuthorizationCode(
-			String user, String password, String hostname, String scope) {
+		return (webtarget) -> {
+			Invocation.Builder invocationBuilder = getInvocationBuilder(
+				hostname, webtarget);
 
-		return (clientId, invocationBuilder) -> {
-			String authorizationCode;
+			invocationBuilder = invocationBuilder.accept(
+				"text/html"
+			).cookie(
+				authenticatedCookie
+			);
 
-			authorizationCode = getCode(
-				user, password, hostname,
-				getAuthorizationCodeResponseFunction(webTarget ->
-					webTarget.queryParam(
-						"client_id", clientId
-					).queryParam(
-						"response_type", "code"
-					).queryParam(
-						"scope", scope
-					)),
-				this::parseAuthorizationCodeString);
-
-			MultivaluedMap<String, String> formData =
-				new MultivaluedHashMap<>();
-
-			formData.add("client_id", clientId);
-			formData.add("client_secret", "oauthTestApplicationSecret");
-			formData.add("code", authorizationCode);
-			formData.add("grant_type", "authorization_code");
-
-			return invocationBuilder.post(Entity.form(formData));
-		};
-	}
-
-	protected BiFunction<String, Invocation.Builder, Response>
-		getAuthorizationCodePKCE(
-			String userName, String password, String hostname) {
-
-		return (clientId, invocationBuilder) -> {
-			String codeVerifier = RandomTestUtil.randomString();
-
-			String base64Digest = DigesterUtil.digestBase64(
-				Digester.SHA_256, codeVerifier);
-
-			String base64UrlDigest = StringUtil.replace(
-				base64Digest, new char[] {CharPool.PLUS, CharPool.SLASH},
-				new char[] {CharPool.MINUS, CharPool.UNDERLINE});
-
-			base64UrlDigest = StringUtil.removeChar(
-				base64UrlDigest, CharPool.EQUAL);
-
-			final String codeChallenge = base64UrlDigest;
-
-			String authorizationCode = getCode(
-				userName, password, hostname,
-				getAuthorizationCodeResponseFunction(webTarget ->
-					webTarget.queryParam(
-						"client_id", clientId
-					).queryParam(
-						"code_challenge", codeChallenge
-					).queryParam(
-						"response_type", "code"
-					)),
-				this::parseAuthorizationCodeString);
-
-			MultivaluedMap<String, String> formData =
-				new MultivaluedHashMap<>();
-
-			formData.add("client_id", clientId);
-			formData.add("code", authorizationCode);
-			formData.add("code_verifier", codeVerifier);
-			formData.add("grant_type", "authorization_code");
-
-			return invocationBuilder.post(Entity.form(formData));
+			return invocationBuilder;
 		};
 	}
 
 	protected Function<Function<WebTarget, Invocation.Builder>, Response>
-		getAuthorizationCodeResponseFunction(
+		getAuthorizationCode(
 			Function<WebTarget, WebTarget> authorizeRequestFunction) {
 
 		return (builderFunction) -> {
@@ -343,6 +283,82 @@ public abstract class BaseClientTestCase {
 		};
 	}
 
+	protected BiFunction<String, Invocation.Builder, Response>
+		getAuthorizationCode(String user, String password, String hostname) {
+
+		return getAuthorizationCode(user, password, hostname, (String)null);
+	}
+
+	protected BiFunction<String, Invocation.Builder, Response>
+		getAuthorizationCode(
+			String user, String password, String hostname, String scope) {
+
+		return (clientId, invocationBuilder) -> {
+			String authorizationCode = getCode(
+				user, password, hostname,
+				getAuthorizationCode(webTarget -> webTarget.queryParam(
+					"client_id", clientId
+				).queryParam(
+					"response_type", "code"
+				).queryParam(
+					"scope", scope
+				)),
+			this::parseAuthorizationCodeString);
+
+			MultivaluedMap<String, String> formData =
+				new MultivaluedHashMap<>();
+
+			formData.add("client_id", clientId);
+			formData.add("client_secret", "oauthTestApplicationSecret");
+			formData.add("code", authorizationCode);
+			formData.add("grant_type", "authorization_code");
+
+			return invocationBuilder.post(Entity.form(formData));
+		};
+	}
+
+	protected BiFunction<String, Invocation.Builder, Response>
+		getAuthorizationCodePKCE(
+			String userName, String password, String hostname) {
+
+		return (clientId, invocationBuilder) -> {
+			String codeVerifier = RandomTestUtil.randomString();
+
+			String base64Digest = DigesterUtil.digestBase64(
+				Digester.SHA_256, codeVerifier);
+
+			String base64UrlDigest = StringUtil.replace(
+				base64Digest, new char[] {CharPool.PLUS, CharPool.SLASH},
+				new char[] {CharPool.MINUS, CharPool.UNDERLINE});
+
+			base64UrlDigest = StringUtil.removeChar(
+				base64UrlDigest, CharPool.EQUAL);
+
+			final String codeChallenge = base64UrlDigest;
+
+			String authorizationCode = getCode(
+				userName, password, hostname,
+				getAuthorizationCode(webTarget -> webTarget.queryParam(
+					"client_id", clientId
+				).queryParam(
+					"code_challenge", codeChallenge
+				).queryParam(
+					"response_type", "code"
+				)),
+			this::parseAuthorizationCodeString);
+
+			MultivaluedMap<String, String> formData =
+				new MultivaluedHashMap<>();
+
+			formData.add("client_id", clientId);
+			formData.add("code", authorizationCode);
+			formData.add("code_verifier", codeVerifier);
+			formData.add("grant_type", "authorization_code");
+
+			return invocationBuilder.post(Entity.form(formData));
+		};
+	}
+
 	protected WebTarget getAuthorizeDecisionWebTarget()
 		throws URISyntaxException {
 
@@ -356,6 +372,8 @@ public abstract class BaseClientTestCase {
 
 		return webTarget.path("authorize");
 	}
+
+	// ## NEW STUFF
 
 	protected BiFunction<String, Invocation.Builder, Response>
 		getClientCredentials(String scope) {
@@ -372,8 +390,6 @@ public abstract class BaseClientTestCase {
 			return invocationBuilder.post(Entity.form(formData));
 		};
 	}
-
-	// ## NEW STUFF
 
 	protected Response getClientCredentials(
 		String clientId, Invocation.Builder invocationBuilder) {
@@ -394,28 +410,7 @@ public abstract class BaseClientTestCase {
 
 		return codeParser.apply(
 			credentialsBiFunction.apply(
-				getCodeAuthenticatedInvocationBuilderFunction(
-					login, password, hostname)));
-	}
-
-	protected Function<WebTarget, Invocation.Builder> getCodeAuthenticatedInvocationBuilderFunction(
-		String login, String password, String hostname) {
-
-		Cookie authenticatedCookie = getAuthenticatedCookie(
-			login, password, hostname);
-
-		return (webtarget) -> {
-			Invocation.Builder invocationBuilder = getInvocationBuilder(
-				hostname, webtarget);
-
-			invocationBuilder = invocationBuilder.accept(
-				"text/html"
-			).cookie(
-				authenticatedCookie
-			);
-
-			return invocationBuilder;
-		};
+				getAuthenticatedInvocationBuilder(login, password, hostname)));
 	}
 
 	protected Invocation.Builder getInvocationBuilder(

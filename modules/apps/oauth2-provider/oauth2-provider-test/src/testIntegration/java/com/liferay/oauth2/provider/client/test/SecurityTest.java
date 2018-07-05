@@ -14,34 +14,18 @@
 
 package com.liferay.oauth2.provider.client.test;
 
-import com.google.common.base.Objects;
 import com.liferay.oauth2.provider.constants.GrantType;
 import com.liferay.oauth2.provider.test.internal.TestAnnotatedApplication;
 import com.liferay.oauth2.provider.test.internal.activator.BaseTestPreparatorBundleActivator;
-import com.liferay.petra.string.CharPool;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
-import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.StringUtil;
 
-import java.net.URI;
 import java.net.URISyntaxException;
+
 import java.util.Collections;
 import java.util.Dictionary;
-import java.util.Map;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -65,8 +49,7 @@ public class SecurityTest extends BaseClientTestCase {
 			SecurityTestPreparatorBundleActivator.class);
 	}
 
-	/*
-	@Test
+	/*@Test
 	public void test() throws Exception {
 		WebTarget tokenWebTarget = getTokenWebTarget();
 
@@ -113,16 +96,17 @@ public class SecurityTest extends BaseClientTestCase {
 
 		Assert.assertEquals(403, response.getStatus());
 	}
-	*/
-		
+
+*/
+
 	@Test
 	public void testCSRFStateParam() throws URISyntaxException {
-		
+
 		String state = "csrf_token";
-		
+
 		String responseState = getCode(
 			"test@liferay.com", "test", null,
-			getAuthorizationCodeResponseFunction(webTarget -> webTarget.queryParam(
+			getAuthorizationCode(webTarget -> webTarget.queryParam(
 					"client_id", "oauthTestApplicationCode"
 				).queryParam(
 					"response_type", "code"
@@ -134,13 +118,12 @@ public class SecurityTest extends BaseClientTestCase {
 			this::parseStateString);
 
 		Assert.assertNotNull(state);
-		
+
 		Assert.assertEquals(state, responseState);
 	}
-	
+
 	//@Test
 	public void testAuthorizationCodeFlow() throws URISyntaxException {
-		
 		String tokenString = getToken(
 			"oauthTestApplicationCode", null,
 			getAuthorizationCode("test@liferay.com", "test", null),
@@ -151,10 +134,9 @@ public class SecurityTest extends BaseClientTestCase {
 
 	@Test
 	public void testAuthorizationCodeFlowCode() throws URISyntaxException {
-				
 		String code = getCode(
 			"test@liferay.com", "test", null,
-			getAuthorizationCodeResponseFunction(
+			getAuthorizationCode(
 				webTarget -> webTarget.queryParam(
 						"client_id", "oauthTestApplicationCode"
 					).queryParam(
@@ -165,7 +147,7 @@ public class SecurityTest extends BaseClientTestCase {
 			this::parseAuthorizationCodeString);
 
 		Assert.assertNotNull(code);
-		
+
 		System.out.println("CODE: " + code);
 	}
 
@@ -204,9 +186,8 @@ public class SecurityTest extends BaseClientTestCase {
 				defaultCompanyId, user, "oauthTestApplicationPassword",
 				Collections.singletonList(GrantType.RESOURCE_OWNER_PASSWORD),
 				Collections.singletonList("everything"));
-			
 		}
 
 	}
-	
+
 }
