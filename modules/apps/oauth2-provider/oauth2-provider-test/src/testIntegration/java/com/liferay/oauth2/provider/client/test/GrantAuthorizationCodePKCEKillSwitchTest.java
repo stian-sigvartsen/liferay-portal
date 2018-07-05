@@ -55,8 +55,8 @@ public class GrantAuthorizationCodePKCEKillSwitchTest
 			"unauthorized_client",
 			getCode(
 				"test@liferay.com", "test", null,
-				getAuthorizationCode(webTarget ->
-					webTarget = webTarget.queryParam(
+				getAuthorizationCode(
+					webTarget -> webTarget.queryParam(
 						"client_id", "oauthTestApplicationCodePKCE"
 					).queryParam(
 						"code_challenge", "NotChecked"

@@ -97,8 +97,7 @@ public class SecurityTest extends BaseClientTestCase {
 		Assert.assertEquals(403, response.getStatus());
 	}
 
-*/
-
+	 */
 	@Test
 	public void testCSRFStateParam() throws URISyntaxException {
 
@@ -106,7 +105,8 @@ public class SecurityTest extends BaseClientTestCase {
 
 		String responseState = getCode(
 			"test@liferay.com", "test", null,
-			getAuthorizationCode(webTarget -> webTarget.queryParam(
+			getAuthorizationCode(
+				webTarget -> webTarget.queryParam(
 					"client_id", "oauthTestApplicationCode"
 				).queryParam(
 					"response_type", "code"
@@ -138,12 +138,12 @@ public class SecurityTest extends BaseClientTestCase {
 			"test@liferay.com", "test", null,
 			getAuthorizationCode(
 				webTarget -> webTarget.queryParam(
-						"client_id", "oauthTestApplicationCode"
-					).queryParam(
-						"response_type", "code"
-					).queryParam(
-						"redirect_uri", "http://redirecturi:8080"
-					)),
+					"client_id", "oauthTestApplicationCode"
+				).queryParam(
+					"response_type", "code"
+				).queryParam(
+					"redirect_uri", "http://redirecturi:8080"
+				)),
 			this::parseAuthorizationCodeString);
 
 		Assert.assertNotNull(code);

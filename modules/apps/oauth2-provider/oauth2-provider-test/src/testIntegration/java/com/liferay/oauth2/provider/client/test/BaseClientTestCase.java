@@ -208,13 +208,14 @@ public abstract class BaseClientTestCase {
 		return cookie.toCookie();
 	}
 
-	protected Function<WebTarget, Invocation.Builder> getAuthenticatedInvocationBuilder(
-		String login, String password, String hostname) {
+	protected Function<WebTarget, Invocation.Builder>
+		getAuthenticatedInvocationBuilder(
+			String login, String password, String hostname) {
 
 		Cookie authenticatedCookie = getAuthenticatedCookie(
 			login, password, hostname);
 
-		return (webtarget) -> {
+		return webtarget -> {
 			Invocation.Builder invocationBuilder = getInvocationBuilder(
 				hostname, webtarget);
 
@@ -232,7 +233,7 @@ public abstract class BaseClientTestCase {
 		getAuthorizationCode(
 			Function<WebTarget, WebTarget> authorizeRequestFunction) {
 
-		return (builderFunction) -> {
+		return builderFunction -> {
 			try {
 				Invocation.Builder invocationBuilder = builderFunction.apply(
 					authorizeRequestFunction.apply(getAuthorizeWebTarget()));
@@ -296,14 +297,15 @@ public abstract class BaseClientTestCase {
 		return (clientId, invocationBuilder) -> {
 			String authorizationCode = getCode(
 				user, password, hostname,
-				getAuthorizationCode(webTarget -> webTarget.queryParam(
-					"client_id", clientId
-				).queryParam(
-					"response_type", "code"
-				).queryParam(
-					"scope", scope
-				)),
-			this::parseAuthorizationCodeString);
+				getAuthorizationCode(
+					webTarget -> webTarget.queryParam(
+						"client_id", clientId
+					).queryParam(
+						"response_type", "code"
+					).queryParam(
+						"scope", scope
+					)),
+				this::parseAuthorizationCodeString);
 
 			MultivaluedMap<String, String> formData =
 				new MultivaluedHashMap<>();
@@ -338,14 +340,15 @@ public abstract class BaseClientTestCase {
 
 			String authorizationCode = getCode(
 				userName, password, hostname,
-				getAuthorizationCode(webTarget -> webTarget.queryParam(
-					"client_id", clientId
-				).queryParam(
-					"code_challenge", codeChallenge
-				).queryParam(
-					"response_type", "code"
-				)),
-			this::parseAuthorizationCodeString);
+				getAuthorizationCode(
+					webTarget -> webTarget.queryParam(
+						"client_id", clientId
+					).queryParam(
+						"code_challenge", codeChallenge
+					).queryParam(
+						"response_type", "code"
+					)),
+				this::parseAuthorizationCodeString);
 
 			MultivaluedMap<String, String> formData =
 				new MultivaluedHashMap<>();
@@ -405,7 +408,8 @@ public abstract class BaseClientTestCase {
 
 	protected <T> T getCode(
 		String login, String password, String hostname,
-		Function<Function<WebTarget, Invocation.Builder>, Response> credentialsBiFunction,
+		Function<Function<WebTarget, Invocation.Builder>, Response>
+			credentialsBiFunction,
 		Function<Response, T> codeParser) {
 
 		return codeParser.apply(

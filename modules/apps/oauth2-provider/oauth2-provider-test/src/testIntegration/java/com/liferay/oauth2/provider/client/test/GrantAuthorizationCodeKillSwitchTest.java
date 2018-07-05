@@ -54,8 +54,8 @@ public class GrantAuthorizationCodeKillSwitchTest extends BaseClientTestCase {
 			"unauthorized_client",
 			getCode(
 				"test@liferay.com", "test", null,
-				getAuthorizationCode(webTarget ->
-					webTarget = webTarget.queryParam(
+				getAuthorizationCode(
+					webTarget -> webTarget.queryParam(
 						"client_id", "oauthTestApplicationCode"
 					).queryParam(
 						"response_type", "code"
