@@ -1,0 +1,9 @@
+Bundle-Description: Override default HTTP verb based scope resources Portal's OSGi runtime.
+Bundle-SymbolicName: com.example.oauth2.provider.scope.impl.language.extender
+Bundle-Version: 1.0.0
+Provide-Capability:\
+	liferay.resource.bundle;\
+		bundle.symbolic.name="com.liferay.oauth2.provider.scope.impl";\
+		resource.bundle.base.name="content.Language";\
+		service.ranking:Long="1"
+-sources: true
