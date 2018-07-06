@@ -20,16 +20,18 @@ import static com.liferay.apio.architect.impl.internal.message.json.ld.JSONLDCon
 import static com.liferay.apio.architect.impl.internal.message.json.ld.JSONLDConstants.FIELD_NAME_MEMBER;
 import static com.liferay.apio.architect.impl.internal.message.json.ld.JSONLDConstants.FIELD_NAME_NUMBER_OF_ITEMS;
 import static com.liferay.apio.architect.impl.internal.message.json.ld.JSONLDConstants.FIELD_NAME_PROPERTY;
-import static com.liferay.apio.architect.impl.internal.message.json.ld.JSONLDConstants.FIELD_NAME_REQUIRED;
 import static com.liferay.apio.architect.impl.internal.message.json.ld.JSONLDConstants.FIELD_NAME_TITLE;
 import static com.liferay.apio.architect.impl.internal.message.json.ld.JSONLDConstants.FIELD_NAME_TOTAL_ITEMS;
 import static com.liferay.apio.architect.impl.internal.message.json.ld.JSONLDConstants.FIELD_NAME_TYPE;
+import static com.liferay.apio.architect.impl.internal.message.json.ld.JSONLDConstants.FIELD_NAME_VOCAB;
 import static com.liferay.apio.architect.impl.internal.message.json.ld.JSONLDConstants.MEDIA_TYPE;
 import static com.liferay.apio.architect.impl.internal.message.json.ld.JSONLDConstants.TYPE_API_DOCUMENTATION;
 import static com.liferay.apio.architect.impl.internal.message.json.ld.JSONLDConstants.TYPE_CLASS;
 import static com.liferay.apio.architect.impl.internal.message.json.ld.JSONLDConstants.TYPE_COLLECTION;
 import static com.liferay.apio.architect.impl.internal.message.json.ld.JSONLDConstants.TYPE_OPERATION;
+import static com.liferay.apio.architect.impl.internal.message.json.ld.JSONLDConstants.TYPE_SUPPORTED_PROPERTY;
 import static com.liferay.apio.architect.impl.internal.message.json.ld.JSONLDConstants.URL_HYDRA_PROFILE;
+import static com.liferay.apio.architect.impl.internal.message.json.ld.JSONLDConstants.URL_SCHEMA_ORG;
 import static com.liferay.apio.architect.operation.HTTPMethod.DELETE;
 import static com.liferay.apio.architect.operation.HTTPMethod.GET;
 
@@ -39,10 +41,7 @@ import com.liferay.apio.architect.impl.internal.message.json.JSONObjectBuilder;
 import com.liferay.apio.architect.operation.HTTPMethod;
 import com.liferay.apio.architect.operation.Operation;
 
-import java.util.Arrays;
 import java.util.stream.Stream;
-
-import javax.ws.rs.core.HttpHeaders;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -55,6 +54,7 @@ import org.osgi.service.component.annotations.Component;
  * </p>
  *
  * @author Alejandro Hernández
+ * @author Zoltán Takács
  */
 @Component
 public class JSONLDDocumentationMessageMapper
@@ -99,42 +99,27 @@ public class JSONLDDocumentationMessageMapper
 			operation.getHttpMethod().toString()
 		);
 
-		String returnValue = _getReturnValue(type, operation);
-
 		jsonObjectBuilder.field(
 			"returns"
 		).stringValue(
-			returnValue
+			_getReturnValue(type, operation)
 		);
 	}
 
 	@Override
 	public void mapProperty(
-		JSONObjectBuilder jsonObjectBuilder, String fieldName,
-		boolean required) {
+		JSONObjectBuilder jsonObjectBuilder, String fieldName) {
 
 		jsonObjectBuilder.field(
-			FIELD_NAME_TITLE
+			FIELD_NAME_TYPE
+		).stringValue(
+			TYPE_SUPPORTED_PROPERTY
+		);
+
+		jsonObjectBuilder.field(
+			FIELD_NAME_PROPERTY
 		).stringValue(
 			fieldName
-		);
-
-		jsonObjectBuilder.field(
-			FIELD_NAME_REQUIRED
-		).booleanValue(
-			required
-		);
-
-		jsonObjectBuilder.field(
-			"readonly"
-		).booleanValue(
-			false
-		);
-
-		jsonObjectBuilder.field(
-			"writeonly"
-		).booleanValue(
-			false
 		);
 	}
 
@@ -145,13 +130,15 @@ public class JSONLDDocumentationMessageMapper
 		jsonObjectBuilder.field(
 			FIELD_NAME_ID
 		).stringValue(
-			"http://schema.org/" + resourceType
+			resourceType
 		);
+
 		jsonObjectBuilder.field(
 			FIELD_NAME_TYPE
 		).stringValue(
 			TYPE_CLASS
 		);
+
 		jsonObjectBuilder.field(
 			FIELD_NAME_TITLE
 		).stringValue(
@@ -168,11 +155,6 @@ public class JSONLDDocumentationMessageMapper
 		).stringValue(
 			"vocab:" + resourceType + "Collection"
 		);
-		jsonObjectBuilder.field(
-			FIELD_NAME_TYPE
-		).stringValue(
-			TYPE_CLASS
-		);
 
 		jsonObjectBuilder.field(
 			FIELD_NAME_TYPE
@@ -183,7 +165,7 @@ public class JSONLDDocumentationMessageMapper
 		jsonObjectBuilder.field(
 			"subClassOf"
 		).stringValue(
-			"http://www.w3.org/ns/hydra/core#Collection"
+			TYPE_COLLECTION
 		);
 
 		jsonObjectBuilder.field(
@@ -198,27 +180,20 @@ public class JSONLDDocumentationMessageMapper
 			resourceType + "Collection"
 		);
 
-		String[] collectionProperties = {
+		Stream.of(
 			FIELD_NAME_TOTAL_ITEMS, FIELD_NAME_MEMBER,
 			FIELD_NAME_NUMBER_OF_ITEMS
-		};
-
-		Stream<String> collectionStream = Arrays.stream(collectionProperties);
-
-		collectionStream.forEach(
+		).forEach(
 			fieldName -> {
 				JSONObjectBuilder propertyJsonObjectBuilder =
 					new JSONObjectBuilder();
 
-				onStartProperty(
-					jsonObjectBuilder, propertyJsonObjectBuilder, fieldName);
-
-				mapProperty(propertyJsonObjectBuilder, fieldName, false);
+				mapProperty(propertyJsonObjectBuilder, fieldName);
 
 				onFinishProperty(
 					jsonObjectBuilder, propertyJsonObjectBuilder, fieldName);
-
-			});
+			}
+		);
 	}
 
 	@Override
@@ -227,6 +202,66 @@ public class JSONLDDocumentationMessageMapper
 			FIELD_NAME_TITLE
 		).stringValue(
 			title
+		);
+	}
+
+	@Override
+	public void onFinish(
+		JSONObjectBuilder jsonObjectBuilder, Documentation documentation) {
+
+		jsonObjectBuilder.field(
+			FIELD_NAME_CONTEXT
+		).arrayValue(
+			arrayBuilder -> arrayBuilder.add(
+				builder -> builder.field(
+					FIELD_NAME_VOCAB
+				).stringValue(
+					URL_SCHEMA_ORG
+				)
+			),
+			arrayBuilder -> arrayBuilder.addString(URL_HYDRA_PROFILE),
+			arrayBuilder -> arrayBuilder.add(
+				builder -> builder.field(
+					"expects"
+				).fields(
+					nestedBuilder -> nestedBuilder.field(
+						FIELD_NAME_TYPE
+					).stringValue(
+						FIELD_NAME_ID
+					),
+					nestedBuilder -> nestedBuilder.field(
+						FIELD_NAME_ID
+					).stringValue(
+						"hydra:expects"
+					)
+				),
+				builder -> builder.field(
+					"returns"
+				).fields(
+					nestedBuilder -> nestedBuilder.field(
+						FIELD_NAME_ID
+					).stringValue(
+						"hydra:returns"
+					),
+					nestedBuilder -> nestedBuilder.field(
+						FIELD_NAME_TYPE
+					).stringValue(
+						FIELD_NAME_ID
+					)
+				)
+			)
+		);
+
+		jsonObjectBuilder.field(
+			FIELD_NAME_ID
+		).stringValue(
+			"/doc"
+		);
+
+		jsonObjectBuilder.field(
+			FIELD_NAME_TYPE
+		).stringValue(
+			TYPE_API_DOCUMENTATION
 		);
 	}
 
@@ -269,132 +304,6 @@ public class JSONLDDocumentationMessageMapper
 		);
 	}
 
-	@Override
-	public void onStart(
-		JSONObjectBuilder jsonObjectBuilder, Documentation documentation,
-		HttpHeaders httpHeaders) {
-
-		JSONObjectBuilder.FieldStep contextBuilder =
-			jsonObjectBuilder.nestedField(FIELD_NAME_CONTEXT);
-
-		contextBuilder.field(
-			"hydra"
-		).stringValue(
-			URL_HYDRA_PROFILE
-		);
-
-		contextBuilder.field(
-			TYPE_API_DOCUMENTATION
-		).stringValue(
-			"hydra:ApiDocumentation"
-		);
-
-		jsonObjectBuilder.field(
-			FIELD_NAME_ID
-		).stringValue(
-			"http://api.example.com/doc/"
-		);
-
-		jsonObjectBuilder.field(
-			FIELD_NAME_TYPE
-		).stringValue(
-			TYPE_API_DOCUMENTATION
-		);
-
-		JSONObjectBuilder.FieldStep propertyBuilder =
-			contextBuilder.nestedField("property");
-
-		propertyBuilder.field(
-			FIELD_NAME_ID
-		).stringValue(
-			FIELD_NAME_PROPERTY
-		);
-
-		propertyBuilder.field(
-			FIELD_NAME_TYPE
-		).stringValue(
-			FIELD_NAME_ID
-		);
-
-		contextBuilder.field(
-			"readonly"
-		).stringValue(
-			"hydra:readonly"
-		);
-
-		contextBuilder.field(
-			"writeonly"
-		).stringValue(
-			"hydra:writeonly"
-		);
-
-		contextBuilder.field(
-			"supportedClass"
-		).stringValue(
-			"hydra:supportedClass"
-		);
-
-		contextBuilder.field(
-			"supportedProperty"
-		).stringValue(
-			"hydra:supportedProperty"
-		);
-
-		contextBuilder.field(
-			"supportedOperation"
-		).stringValue(
-			"hydra:supportedOperation"
-		);
-
-		contextBuilder.field(
-			"method"
-		).stringValue(
-			"hydra:method"
-		);
-
-		JSONObjectBuilder.FieldStep expectBuilder = contextBuilder.nestedField(
-			"expects");
-
-		expectBuilder.field(
-			FIELD_NAME_ID
-		).stringValue(
-			"hydra:expects"
-		);
-
-		expectBuilder.field(
-			FIELD_NAME_TYPE
-		).stringValue(
-			FIELD_NAME_ID
-		);
-
-		JSONObjectBuilder.FieldStep returnsBuilder = contextBuilder.nestedField(
-			"returns");
-
-		returnsBuilder.field(
-			FIELD_NAME_ID
-		).stringValue(
-			"hydra:returns"
-		);
-
-		returnsBuilder.field(
-			FIELD_NAME_TYPE
-		).stringValue(
-			FIELD_NAME_ID
-		);
-
-		contextBuilder.field(
-			"statusCodes"
-		).stringValue(
-			"hydra:statusCodes"
-		);
-
-		contextBuilder.field(
-			"code"
-		).stringValue(
-			"hydra:statusCodes"
-		);
-	}
-
 	private String _getReturnValue(String resourceName, Operation operation) {
 		String value = null;
 
@@ -404,10 +313,10 @@ public class JSONLDDocumentationMessageMapper
 			value = "http://www.w3.org/2002/07/owl#Nothing";
 		}
 		else if (operation.isCollection() && httpMethod.equals(GET)) {
-			value = URL_HYDRA_PROFILE + TYPE_COLLECTION;
+			value = TYPE_COLLECTION;
 		}
 		else {
-			value = "http://schema.org/" + resourceName;
+			value = resourceName;
 		}
 
 		return value;

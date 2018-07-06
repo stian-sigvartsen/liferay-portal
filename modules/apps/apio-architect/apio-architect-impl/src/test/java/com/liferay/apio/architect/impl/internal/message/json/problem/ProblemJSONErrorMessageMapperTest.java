@@ -18,11 +18,7 @@ import com.liferay.apio.architect.test.util.json.MessageMapperTesterBuilder;
 
 import java.nio.file.Paths;
 
-import javax.ws.rs.core.HttpHeaders;
-
 import org.junit.Test;
-
-import org.mockito.Mockito;
 
 /**
  * @author Alejandro Hernández
@@ -32,9 +28,7 @@ public class ProblemJSONErrorMessageMapperTest {
 	@Test
 	public void testProblemJSONErrorMessageMapper() {
 		MessageMapperTesterBuilder.path(
-			Paths.get("apio-architect-impl/src/test/resources/problem")
-		).httpHeaders(
-			Mockito.mock(HttpHeaders.class)
+			Paths.get("src", "test", "resources", "problem")
 		).mediaType(
 			"application/problem+json"
 		).validateErrorMessageMapper(

@@ -174,18 +174,19 @@ public class LanguageExtension implements Extension {
 		ClassLoader classLoader, String baseName,
 		boolean excludePortalResource) {
 
-		CacheResourceBundleLoader cacheResourceBundleLoader =
-			new CacheResourceBundleLoader(
-				ResourceBundleUtil.getResourceBundleLoader(
-					baseName, classLoader));
+		ResourceBundleLoader resourceBundleLoader =
+			ResourceBundleUtil.getResourceBundleLoader(baseName, classLoader);
 
 		if (excludePortalResource) {
-			return cacheResourceBundleLoader;
+			return new CacheResourceBundleLoader(resourceBundleLoader);
 		}
 		else {
-			return new AggregateResourceBundleLoader(
-				cacheResourceBundleLoader,
-				ResourceBundleLoaderUtil.getPortalResourceBundleLoader());
+			AggregateResourceBundleLoader aggregateResourceBundleLoader =
+				new AggregateResourceBundleLoader(
+					resourceBundleLoader,
+					ResourceBundleLoaderUtil.getPortalResourceBundleLoader());
+
+			return new CacheResourceBundleLoader(aggregateResourceBundleLoader);
 		}
 	}
 
@@ -260,7 +261,7 @@ public class LanguageExtension implements Extension {
 		}
 
 		/**
-		 * @deprecated As of 2.0.0, replaced by {@link
+		 * @deprecated As of Judson (7.1.x), replaced by {@link
 		 *             #loadResourceBundle(Locale)}
 		 */
 		@Deprecated

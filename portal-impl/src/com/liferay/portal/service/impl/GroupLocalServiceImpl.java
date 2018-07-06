@@ -503,9 +503,9 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	 *             names for the group, and whether the group is for staging.
 	 * @return     the group
 	 * @throws     PortalException if a portal exception occured
-	 * @deprecated As of 7.0.0, replaced by {@link #addGroup(long, long, String,
-	 *             long, long, Map, Map, int, boolean, int, String, boolean,
-	 *             boolean, ServiceContext)}
+	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link #addGroup(long,
+	 *             long, String, long, long, Map, Map, int, boolean, int,
+	 *             String, boolean, boolean, ServiceContext)}
 	 */
 	@Deprecated
 	@Override
@@ -1568,7 +1568,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link
+	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
 	 *             Group#getDescriptiveName(Locale)}
 	 */
 	@Deprecated
@@ -1580,7 +1580,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link
+	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
 	 *             Group#getDescriptiveName(Locale)}
 	 */
 	@Deprecated
@@ -1946,9 +1946,9 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	 * Returns all non-system groups having <code>null</code> or empty friendly
 	 * URLs.
 	 *
-	 * @return the non-system groups having <code>null</code> or empty friendly
-	 *         URLs
-	 * @deprecated As of 7.0.0, with no direct replacement
+	 * @return     the non-system groups having <code>null</code> or empty
+	 *             friendly URLs
+	 * @deprecated As of Judson (7.1.x), with no direct replacement
 	 */
 	@Deprecated
 	@Override
@@ -3752,9 +3752,9 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	 *             names for the group.
 	 * @return     the group
 	 * @throws     PortalException if a portal exception occurred
-	 * @deprecated As of 7.0.0, replaced by {@link #updateGroup(long, long, Map,
-	 *             Map, int, boolean, int, String, boolean, boolean,
-	 *             ServiceContext)}
+	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
+	 *             #updateGroup(long, long, Map, Map, int, boolean, int, String,
+	 *             boolean, boolean, ServiceContext)}
 	 */
 	@Deprecated
 	@Override
@@ -4499,7 +4499,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 							friendlyURL.substring(end + 1));
 
 						if (!(friendlyURL.contains("group") &&
-						 (groupId == suffix))) {
+							  (groupId == suffix))) {
 
 							friendlyURL = friendlyURL.substring(0, end);
 						}

@@ -51,7 +51,6 @@
 			</fail>
 
 			<local name="checkout.private.apps.dirs.git" />
-			<local name="checkout.private.apps.releng.dir" />
 
 			<property name="checkout.private.apps.dirs.git" value="@{checkout.private.apps.dirs}" />
 
@@ -60,16 +59,6 @@
 					var checkoutPrivateAppsDirs = project.getProperty("checkout.private.apps.dirs.git");
 
 					project.setProperty("checkout.private.apps.dirs.git", checkoutPrivateAppsDirs.replace(",", " "));
-
-					var checkoutPrivateAppsDirsArray = checkoutPrivateAppsDirs.split(",");
-
-					for (i = 0; i < checkoutPrivateAppsDirsArray.length; i++) {
-						var checkoutPrivateAppsDir = checkoutPrivateAppsDirsArray[i];
-
-						if (checkoutPrivateAppsDir.contains("/.releng/")) {
-							project.setProperty("checkout.private.apps.releng.dir", checkoutPrivateAppsDir);
-						}
-					}
 				]]>
 			</script>
 
@@ -93,30 +82,6 @@
 				<arg value="--delete" />
 				<arg value="git-tag-portal-private-apps" />
 			</exec>
-
-			<local name="app.portal.build" />
-
-			<property name="app.portal.build" value="${lp.version[@{checkout.private.branch.name}]}" />
-
-			<script language="javascript">
-				<![CDATA[
-					var appPortalBuild = project.getProperty("app.portal.build");
-
-					project.setProperty("app.portal.build", appPortalBuild.replace(/\./g, ""));
-				]]>
-			</script>
-
-			<replaceregexp
-				byline="true"
-				if:set="checkout.private.apps.releng.dir"
-				match="app.portal.build=.*"
-				replace="app.portal.build=${app.portal.build}"
-			>
-				<fileset
-					dir="${checkout.private.apps.releng.dir}"
-					includes="**/app.properties"
-				/>
-			</replaceregexp>
 		</sequential>
 	</macrodef>
 

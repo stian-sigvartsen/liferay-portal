@@ -65,7 +65,7 @@ public class IfPoshiElement extends PoshiElement {
 				continue;
 			}
 
-			add(PoshiNodeFactory.newPoshiNode(this, poshiScriptSnippet));
+			add(PoshiNodeFactory.newPoshiNode(this, poshiScriptSnippet.trim()));
 		}
 	}
 
@@ -77,9 +77,7 @@ public class IfPoshiElement extends PoshiElement {
 
 		PoshiElement thenElement = (PoshiElement)element("then");
 
-		String thenPoshiScript = thenElement.toPoshiScript();
-
-		sb.append(createPoshiScriptSnippet(thenPoshiScript));
+		sb.append(createPoshiScriptBlock(thenElement.getPoshiNodes()));
 
 		for (PoshiElement elseIfElement : toPoshiElements(elements("elseif"))) {
 			sb.append(elseIfElement.toPoshiScript());
@@ -163,6 +161,14 @@ public class IfPoshiElement extends PoshiElement {
 		PoshiElement parentPoshiElement, String poshiScript) {
 
 		if (IfPoshiElement.class.equals(parentPoshiElement.getClass())) {
+			return false;
+		}
+
+		if (!(parentPoshiElement instanceof CommandPoshiElement) &&
+			!(parentPoshiElement instanceof ForPoshiElement) &&
+			!(parentPoshiElement instanceof TaskPoshiElement) &&
+			!(parentPoshiElement instanceof ThenPoshiElement)) {
+
 			return false;
 		}
 

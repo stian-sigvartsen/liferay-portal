@@ -20,11 +20,7 @@ import com.liferay.apio.architect.test.util.json.MessageMapperTesterBuilder;
 
 import java.nio.file.Paths;
 
-import javax.ws.rs.core.HttpHeaders;
-
 import org.junit.Test;
-
-import org.mockito.Mockito;
 
 /**
  * @author Javier Gamarra
@@ -35,9 +31,7 @@ public class PlainJSONMessageMapperTest {
 	@Test
 	public void testPlainJSONMessageMappers() {
 		MessageMapperTesterBuilder.path(
-			Paths.get("apio-architect-impl/src/test/resources/plain")
-		).httpHeaders(
-			Mockito.mock(HttpHeaders.class)
+			Paths.get("src", "test", "resources", "plain")
 		).mediaType(
 			APPLICATION_JSON
 		).validatePageMessageMapper(

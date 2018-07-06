@@ -27,11 +27,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.ws.rs.core.HttpHeaders;
-
 import org.junit.Test;
-
-import org.mockito.Mockito;
 
 /**
  * @author Javier Gamarra
@@ -60,9 +56,7 @@ public class HALMessageMapperTest implements RepresentableManager {
 		pageMessageMapper.representableManager = this;
 
 		MessageMapperTesterBuilder.path(
-			Paths.get("apio-architect-impl/src/test/resources/hal")
-		).httpHeaders(
-			Mockito.mock(HttpHeaders.class)
+			Paths.get("src", "test", "resources", "hal")
 		).mediaType(
 			"application/hal+json"
 		).validatePageMessageMapper(

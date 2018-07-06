@@ -485,9 +485,15 @@ public class ExportImportConfigurationParameterMapFactoryImpl
 				PortletDataHandlerBoolean portletDataHandlerBoolean =
 					(PortletDataHandlerBoolean)exportControl;
 
-				boolean controlValue = MapUtil.getBoolean(
-					parameterMap,
-					portletDataHandlerBoolean.getNamespacedControlName(), true);
+				boolean controlValue =
+					portletDataHandlerBoolean.getDefaultState();
+
+				if (!portletDataHandlerBoolean.isDisabled()) {
+					controlValue = MapUtil.getBoolean(
+						parameterMap,
+						portletDataHandlerBoolean.getNamespacedControlName(),
+						true);
+				}
 
 				if ((portletDataAll || controlValue) &&
 					(portletDataHandlerBoolean.getClassName() != null)) {
@@ -551,10 +557,14 @@ public class ExportImportConfigurationParameterMapFactoryImpl
 	}
 
 	/**
-	 * 1. Removes PORTLET_DATA_portletId and PORTLET_DATA_ALL parameters in parameterMap and replaces them with PORTLET_DATA_changesetPortletId.
-	 * 2. It also adds model specific parameters to be able to decide in changeset portlet data handler whether a model needs to be exported or not.
-	 * For example: <"com.liferay.journal.model.JournalArticle", [true]>
-	 * 3. It adds originalPortletId parameter in case of portlet publication
+	 * 1. Removes PORTLET_DATA_portletId and PORTLET_DATA_ALL parameters in
+	 * parameterMap and replaces them with PORTLET_DATA_changesetPortletId. 2.
+	 * It also adds model specific parameters to be able to decide in changeset
+	 * portlet data handler whether a model needs to be exported or not. For
+	 * example: <"com.liferay.journal.model.JournalArticle",
+	 * [<code>true</code>]> 3. It adds originalPortletId parameter in case of
+	 * portlet publication
+	 *
 	 * @param parameterMap
 	 */
 	private void _replaceParameterMap(Map<String, String[]> parameterMap) {

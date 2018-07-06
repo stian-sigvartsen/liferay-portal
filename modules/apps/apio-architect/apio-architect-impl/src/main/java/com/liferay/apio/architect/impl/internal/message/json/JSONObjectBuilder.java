@@ -60,7 +60,7 @@ import java.util.stream.Stream;
  * <pre>
  * {@code
  * jsonObjectBuilder
- *      .nestedField("object", "inner","another")
+ *      .nestedField("object", "inner", "another")
  *      .value("Hello World!");
  * }
  * </pre><pre>
@@ -250,6 +250,28 @@ public class JSONObjectBuilder {
 		}
 
 		/**
+		 * Adds several JSON object, created by the provided consumers, to the
+		 * JSON array.
+		 *
+		 * @param  consumer the consumer that creates the new JSON object
+		 * @param  consumers the list of consumers that creates new JSON objects
+		 * @review
+		 */
+		@SafeVarargs
+		public final void add(
+			Consumer<JSONObjectBuilder> consumer,
+			Consumer<JSONObjectBuilder>... consumers) {
+
+			add(consumer);
+
+			for (Consumer<JSONObjectBuilder> jsonObjectBuilderConsumer :
+					consumers) {
+
+				add(jsonObjectBuilderConsumer);
+			}
+		}
+
+		/**
 		 * Adds the JSON object, created by the provided JSON object builder, to
 		 * the JSON array.
 		 *
@@ -370,9 +392,32 @@ public class JSONObjectBuilder {
 		}
 
 		/**
-		 * Adds a new boolean value to the JSON array.
+		 * Creates a JSON array inside the field and populates it with the
+		 * provided consumers.
 		 *
-		 * @param value the boolean value to add to the JSON array
+		 * @param consumer the consumer that creates the first JSON object of
+		 *        the array
+		 * @param consumers the list of consumers that creates the rest of JSON
+		 *        objects of the array
+		 */
+		@SafeVarargs
+		public final void arrayValue(
+			Consumer<ArrayValueStep> consumer,
+			Consumer<ArrayValueStep>... consumers) {
+
+			ArrayValueStep arrayValueStep = arrayValue();
+
+			consumer.accept(arrayValueStep);
+
+			for (Consumer<ArrayValueStep> arrayValueStepConsumer : consumers) {
+				arrayValueStepConsumer.accept(arrayValueStep);
+			}
+		}
+
+		/**
+		 * Adds a new boolean value to the JSON object.
+		 *
+		 * @param value the boolean value to add to the JSON object
 		 */
 		public void booleanValue(Boolean value) {
 			_jsonObject.addProperty(_name, value);
@@ -398,6 +443,25 @@ public class JSONObjectBuilder {
 			_jsonObject.add(_name, jsonObject);
 
 			return new FieldStep(name, jsonObject);
+		}
+
+		/**
+		 * Creates a new JSON object inside the field and populates it with the
+		 * provided consumers.
+		 *
+		 * @param consumer the consumer that first populates the JSON Object
+		 * @param consumers the rest of the list of consumers that populates the
+		 *        JSON Object
+		 */
+		@SafeVarargs
+		public final void fields(
+			Consumer<FieldStep> consumer, Consumer<FieldStep>... consumers) {
+
+			consumer.accept(this);
+
+			for (Consumer<FieldStep> fieldStepConsumer : consumers) {
+				fieldStepConsumer.accept(this);
+			}
 		}
 
 		/**
@@ -508,18 +572,31 @@ public class JSONObjectBuilder {
 		}
 
 		/**
-		 * Adds a new number to the JSON array.
+		 * Adds a new number to the JSON object.
 		 *
-		 * @param value the number to add to the JSON array
+		 * @param value the number to add to the JSON object
 		 */
 		public void numberValue(Number value) {
 			_jsonObject.addProperty(_name, value);
 		}
 
 		/**
-		 * Adds a new string to the JSON array.
+		 * Adds the JSON object created by another {@link JSONObjectBuilder}.
 		 *
-		 * @param value the string to add to the JSON array
+		 * @param  jsonObjectBuilder the {@link JSONObjectBuilder} whose JSON
+		 *         object is going to be added
+		 * @review
+		 */
+		public void objectValue(JSONObjectBuilder jsonObjectBuilder) {
+			JsonObject jsonObject = jsonObjectBuilder._jsonObject;
+
+			_jsonObject.add(_name, jsonObject);
+		}
+
+		/**
+		 * Adds a new string to the JSON object.
+		 *
+		 * @param value the string to add to the JSON object
 		 */
 		public void stringValue(String value) {
 			_jsonObject.addProperty(_name, value);

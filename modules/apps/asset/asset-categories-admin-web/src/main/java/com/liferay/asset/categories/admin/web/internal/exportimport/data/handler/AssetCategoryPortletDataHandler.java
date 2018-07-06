@@ -73,6 +73,7 @@ public class AssetCategoryPortletDataHandler extends BasePortletDataHandler {
 				AssetVocabulary.class.getName()));
 		setPublishToLiveByDefault(true);
 		setRank(110);
+		setStagingControls(getExportControls());
 	}
 
 	@Override
@@ -191,7 +192,7 @@ public class AssetCategoryPortletDataHandler extends BasePortletDataHandler {
 	}
 
 	/**
-	 * @deprecated As of 1.0.0
+	 * @deprecated As of Judson (7.1.x)
 	 */
 	@Deprecated
 	protected ActionableDynamicQuery getCategoryActionableDynamicQuery(
@@ -209,7 +210,7 @@ public class AssetCategoryPortletDataHandler extends BasePortletDataHandler {
 	}
 
 	/**
-	 * @deprecated As of 1.0.0
+	 * @deprecated As of Judson (7.1.x)
 	 */
 	@Deprecated
 	protected ActionableDynamicQuery getVocabularyActionableDynamicQuery(

@@ -16,7 +16,6 @@ package com.liferay.poshi.runner;
 
 import com.liferay.poshi.runner.exception.PoshiRunnerWarningException;
 import com.liferay.poshi.runner.logger.CommandLoggerHandler;
-import com.liferay.poshi.runner.logger.LoggerUtil;
 import com.liferay.poshi.runner.logger.SummaryLoggerHandler;
 import com.liferay.poshi.runner.logger.XMLLoggerHandler;
 import com.liferay.poshi.runner.selenium.LiferaySelenium;
@@ -60,8 +59,6 @@ public class PoshiRunnerExecutor {
 		throws Exception {
 
 		PoshiRunnerStackTraceUtil.setCurrentElement(element);
-
-		XMLLoggerHandler.updateStatus(element, "pending");
 
 		boolean conditionalValue = false;
 
@@ -154,8 +151,6 @@ public class PoshiRunnerExecutor {
 	}
 
 	public static void parseElement(Element element) throws Exception {
-		LoggerUtil.pauseLoggerCheck();
-
 		List<Element> childElements = element.elements();
 
 		for (Element childElement : childElements) {
@@ -231,10 +226,6 @@ public class PoshiRunnerExecutor {
 
 		PoshiRunnerStackTraceUtil.setCurrentElement(element);
 
-		if (updateLoggerStatus) {
-			XMLLoggerHandler.updateStatus(element, "pending");
-		}
-
 		Object varValue = _getVarValue(element);
 
 		if (varValue instanceof String) {
@@ -291,10 +282,6 @@ public class PoshiRunnerExecutor {
 		throws Exception {
 
 		PoshiRunnerStackTraceUtil.setCurrentElement(element);
-
-		if (updateLoggerStatus) {
-			XMLLoggerHandler.updateStatus(element, "pending");
-		}
 
 		String varName = element.attributeValue("name");
 
@@ -357,8 +344,6 @@ public class PoshiRunnerExecutor {
 
 	public static void runForElement(Element element) throws Exception {
 		PoshiRunnerStackTraceUtil.setCurrentElement(element);
-
-		XMLLoggerHandler.updateStatus(element, "pending");
 
 		String paramName = (String)PoshiRunnerVariablesUtil.replaceCommandVars(
 			element.attributeValue("param"));
@@ -578,8 +563,6 @@ public class PoshiRunnerExecutor {
 
 		PoshiRunnerStackTraceUtil.setCurrentElement(executeElement);
 
-		XMLLoggerHandler.updateStatus(executeElement, "pending");
-
 		List<Element> executeArgElements = executeElement.elements("arg");
 
 		Binding binding = new Binding();
@@ -630,8 +613,6 @@ public class PoshiRunnerExecutor {
 	public static void runIfElement(Element element) throws Exception {
 		PoshiRunnerStackTraceUtil.setCurrentElement(element);
 
-		XMLLoggerHandler.updateStatus(element, "pending");
-
 		List<Element> ifChildElements = element.elements();
 
 		Element ifConditionElement = ifChildElements.get(0);
@@ -647,8 +628,6 @@ public class PoshiRunnerExecutor {
 
 			PoshiRunnerStackTraceUtil.setCurrentElement(ifThenElement);
 
-			XMLLoggerHandler.updateStatus(ifThenElement, "pending");
-
 			parseElement(ifThenElement);
 
 			XMLLoggerHandler.updateStatus(ifThenElement, "pass");
@@ -658,8 +637,6 @@ public class PoshiRunnerExecutor {
 
 			for (Element elseIfElement : elseIfElements) {
 				PoshiRunnerStackTraceUtil.setCurrentElement(elseIfElement);
-
-				XMLLoggerHandler.updateStatus(elseIfElement, "pending");
 
 				List<Element> elseIfChildElements = elseIfElement.elements();
 
@@ -674,8 +651,6 @@ public class PoshiRunnerExecutor {
 
 					PoshiRunnerStackTraceUtil.setCurrentElement(
 						elseIfThenElement);
-
-					XMLLoggerHandler.updateStatus(elseIfThenElement, "pending");
 
 					parseElement(elseIfThenElement);
 
@@ -698,8 +673,6 @@ public class PoshiRunnerExecutor {
 			Element elseElement = element.element("else");
 
 			PoshiRunnerStackTraceUtil.setCurrentElement(elseElement);
-
-			XMLLoggerHandler.updateStatus(elseElement, "pending");
 
 			parseElement(elseElement);
 
@@ -732,8 +705,6 @@ public class PoshiRunnerExecutor {
 
 		PoshiRunnerStackTraceUtil.setCurrentElement(executeElement);
 
-		XMLLoggerHandler.updateStatus(executeElement, "pending");
-
 		String namespacedClassCommandName = executeElement.attributeValue(
 			macroType);
 
@@ -751,10 +722,8 @@ public class PoshiRunnerExecutor {
 		String namespace = PoshiRunnerStackTraceUtil.getCurrentNamespace(
 			namespacedClassCommandName);
 
-		Element rootElement = PoshiRunnerContext.getMacroRootElement(
-			className, namespace);
-
-		List<Element> rootVarElements = rootElement.elements("var");
+		List<Element> rootVarElements = PoshiRunnerContext.getRootVarElements(
+			"macro", className, namespace);
 
 		for (Element rootVarElement : rootVarElements) {
 			runRootVarElement(rootVarElement, true);
@@ -820,8 +789,6 @@ public class PoshiRunnerExecutor {
 
 		PoshiRunnerStackTraceUtil.setCurrentElement(executeElement);
 
-		XMLLoggerHandler.updateStatus(executeElement, "pending");
-
 		List<String> args = new ArrayList<>();
 
 		List<Element> argElements = executeElement.elements("arg");
@@ -876,10 +843,6 @@ public class PoshiRunnerExecutor {
 		throws Exception {
 
 		PoshiRunnerStackTraceUtil.setCurrentElement(element);
-
-		if (updateLoggerStatus) {
-			XMLLoggerHandler.updateStatus(element, "pending");
-		}
 
 		Object varValue = _getVarValue(element);
 
@@ -1047,8 +1010,6 @@ public class PoshiRunnerExecutor {
 	public static void runTaskElement(Element element) throws Exception {
 		PoshiRunnerStackTraceUtil.setCurrentElement(element);
 
-		XMLLoggerHandler.updateStatus(element, "pending");
-
 		try {
 			SummaryLoggerHandler.startSummary(element);
 
@@ -1082,8 +1043,6 @@ public class PoshiRunnerExecutor {
 
 		PoshiRunnerStackTraceUtil.setCurrentElement(executeElement);
 
-		XMLLoggerHandler.updateStatus(executeElement, "pending");
-
 		String namespacedClassCommandName = executeElement.attributeValue(
 			"test-case");
 
@@ -1096,10 +1055,8 @@ public class PoshiRunnerExecutor {
 			PoshiRunnerGetterUtil.getNamespaceFromNamespacedClassCommandName(
 				namespacedClassCommandName);
 
-		Element rootElement = PoshiRunnerContext.getTestCaseRootElement(
-			className, namespace);
-
-		List<Element> rootVarElements = rootElement.elements("var");
+		List<Element> rootVarElements = PoshiRunnerContext.getRootVarElements(
+			"test-case", className, namespace);
 
 		for (Element rootVarElement : rootVarElements) {
 			runRootVarElement(rootVarElement, true);
@@ -1118,8 +1075,6 @@ public class PoshiRunnerExecutor {
 	public static void runToggleElement(Element element) throws Exception {
 		PoshiRunnerStackTraceUtil.setCurrentElement(element);
 
-		XMLLoggerHandler.updateStatus(element, "pending");
-
 		String toggleName = element.attributeValue("name");
 
 		boolean toggleRun = false;
@@ -1129,8 +1084,6 @@ public class PoshiRunnerExecutor {
 
 			if (onElement != null) {
 				PoshiRunnerStackTraceUtil.setCurrentElement(onElement);
-
-				XMLLoggerHandler.updateStatus(onElement, "pending");
 
 				parseElement(onElement);
 
@@ -1144,8 +1097,6 @@ public class PoshiRunnerExecutor {
 
 			if (offElement != null) {
 				PoshiRunnerStackTraceUtil.setCurrentElement(offElement);
-
-				XMLLoggerHandler.updateStatus(offElement, "pending");
 
 				parseElement(offElement);
 
@@ -1165,8 +1116,6 @@ public class PoshiRunnerExecutor {
 
 	public static void runWhileElement(Element element) throws Exception {
 		PoshiRunnerStackTraceUtil.setCurrentElement(element);
-
-		XMLLoggerHandler.updateStatus(element, "pending");
 
 		int maxIterations = 15;
 
@@ -1191,8 +1140,6 @@ public class PoshiRunnerExecutor {
 			conditionRun = true;
 
 			PoshiRunnerStackTraceUtil.setCurrentElement(thenElement);
-
-			XMLLoggerHandler.updateStatus(thenElement, "pending");
 
 			parseElement(thenElement);
 
