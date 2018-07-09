@@ -134,9 +134,19 @@
 	</command>
 
 	<command name="changeCurrentTheme">
-		<execute macro="Portlet#gotoPortletOptions">
-			<var name="portletOption" value="Configure" />
+		<execute function="Click#waitForMenuToggleJSClick" locator1="SitePages#LIST_GROUP_ITEM_ELLIPSIS_ICON">
+			<var name="key_pageName" value="${pageName}" />
 		</execute>
+
+		<execute function="Click" locator1="MenuItem#ANY_MENU_ITEM" value1="Configure">
+			<var name="key_menuItem" value="Configure" />
+		</execute>
+
+		<execute macro="Navigator#gotoNavTab">
+			<var name="navTab" value="Look and Feel" />
+		</execute>
+
+		<execute function="Click" locator1="SitePagesEditPage#REGULAR_UNIQUE_LOOK_AND_FEEL" />
 
 		<execute function="Click" locator1="SitePagesEditPage#CHANGE_CURRENT_THEME_BUTTON" />
 
@@ -181,12 +191,13 @@
 			<var name="portlet" value="Pages" />
 		</execute>
 
-		<execute macro="Portlet#gotoPortletOptions">
-			<var name="portletOption" value="Configure" />
+		<execute macro="SitePages#gotoPageMenuItem">
+			<var name="menuItem" value="Configure" />
+			<var name="pageName" value="${pageName}" />
 		</execute>
 
-		<execute macro="Panel#expandPanel">
-			<var name="panel" value="Logo" />
+		<execute macro="Navigator#gotoNavTab">
+			<var name="navTab" value="Advanced" />
 		</execute>
 
 		<execute macro="Page#uploadFileForLogo">
@@ -374,6 +385,20 @@
 		<var name="key_page" value="${pageName}" />
 
 		<execute function="AssertTextEquals" locator1="SitePages#PAGE_TREE_PAGE_LINK" value1="${pageName}" />
+	</command>
+
+	<command name="getGroupIdFromHtmlSource" returns="groupId">
+		<var method="TestPropsUtil#get('portal.url')" name="portalURL" />
+
+		<var method="selenium#getAttribute('//li[@class=\'control-menu-nav-item\']/a[contains(@data-qa-id,\'editLayout\')]@href')" name="pageURL" />
+
+		<var method="StringUtil#stripBetween('${pageURL}', '${portalURL}', 'GroupPagesPortlet_groupId=')" name="partialPageURL" />
+
+		<var method="StringUtil#extractFirst('${partialPageURL}', '&amp;')" name="groupId" />
+
+		<echo>## * Group ID: ${groupId}</echo>
+
+		<return name="groupId" value="${groupId}" />
 	</command>
 
 	<command name="gotoChildPagePG">
@@ -624,7 +649,7 @@
 	</command>
 
 	<command name="viewChildPageDropdown">
-		<execute function="ClickNoError" locator1="Home#${viewChildPageDropdown}" />
+		<execute function="ClickNoError#clickNoMouseOver" locator1="Home#${viewChildPageDropdown}" />
 
 		<if>
 			<isset var="javaScriptPage" />
@@ -647,8 +672,12 @@
 			<var name="portlet" value="Pages" />
 		</execute>
 
-		<execute macro="Portlet#gotoPortletOptions">
-			<var name="portletOption" value="Configure" />
+		<execute function="Click#waitForMenuToggleJSClick" locator1="SitePages#LIST_GROUP_ITEM_ELLIPSIS_ICON">
+			<var name="key_pageName" value="${pageName}" />
+		</execute>
+
+		<execute function="Click" locator1="MenuItem#ANY_MENU_ITEM" value1="Configure">
+			<var name="key_menuItem" value="Configure" />
 		</execute>
 
 		<execute function="AssertTextPresent" locator1="SitePagesEditPage#VIEW_THEME" value1="${themeName}" />

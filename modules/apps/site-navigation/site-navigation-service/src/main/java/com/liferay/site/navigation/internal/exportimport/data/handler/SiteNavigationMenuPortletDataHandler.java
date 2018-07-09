@@ -67,6 +67,16 @@ public class SiteNavigationMenuPortletDataHandler
 	}
 
 	@Override
+	public boolean isConfigurationEnabled() {
+		return false;
+	}
+
+	@Override
+	public boolean isPublishToLiveByDefault() {
+		return true;
+	}
+
+	@Override
 	public boolean validateSchemaVersion(String schemaVersion) {
 		return _portletDataHandlerHelper.validateSchemaVersion(
 			schemaVersion, getSchemaVersion());
@@ -84,7 +94,7 @@ public class SiteNavigationMenuPortletDataHandler
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "navigation-menu-items", true, false, null,
 				SiteNavigationMenuItem.class.getName()));
-		setImportControls(getExportControls());
+		setStagingControls(getExportControls());
 	}
 
 	@Override

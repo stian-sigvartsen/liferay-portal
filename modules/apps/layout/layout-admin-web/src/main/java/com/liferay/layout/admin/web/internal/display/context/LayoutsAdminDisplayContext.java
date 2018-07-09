@@ -446,7 +446,9 @@ public class LayoutsAdminDisplayContext {
 						});
 				}
 
-				if (!stagingGroupHelper.isLocalStagingGroup(group)) {
+				if (!(stagingGroupHelper.isLocalLiveGroup(group) ||
+					  stagingGroupHelper.isRemoteLiveGroup(group))) {
+
 					add(
 						navigationItem -> {
 							navigationItem.setActive(
@@ -459,7 +461,8 @@ public class LayoutsAdminDisplayContext {
 				}
 
 				if (!group.isCompany() &&
-					!stagingGroupHelper.isLocalStagingGroup(group)) {
+					!(stagingGroupHelper.isLocalLiveGroup(group) ||
+					  stagingGroupHelper.isRemoteLiveGroup(group))) {
 
 					add(
 						navigationItem -> {
@@ -544,7 +547,6 @@ public class LayoutsAdminDisplayContext {
 	public PortletURL getPortletURL() {
 		PortletURL portletURL = _liferayPortletResponse.createRenderURL();
 
-		portletURL.setParameter("mvcRenderCommandName", "/layout/view");
 		portletURL.setParameter("tabs1", getTabs1());
 		portletURL.setParameter("navigation", getNavigation());
 
@@ -565,7 +567,6 @@ public class LayoutsAdminDisplayContext {
 	public PortletURL getRedirectURL() {
 		PortletURL portletURL = _liferayPortletResponse.createRenderURL();
 
-		portletURL.setParameter("mvcRenderCommandName", "/layout/view");
 		portletURL.setParameter("redirect", getRedirect());
 		portletURL.setParameter("groupId", String.valueOf(getSelGroupId()));
 
@@ -944,13 +945,14 @@ public class LayoutsAdminDisplayContext {
 
 		if (isShowConfigureAction(layout)) {
 			jsonObject.put("editLayoutURL", getEditLayoutURL(layout));
-		}
 
-		if (layout.getParentLayoutId() ==
-				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) {
+			if (layout.getParentLayoutId() ==
+					LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) {
 
-			jsonObject.put(
-				"markAsHomePageLayoutURL", getMarkAsHomePageLayoutURL(layout));
+				jsonObject.put(
+					"markAsHomePageLayoutURL",
+					getMarkAsHomePageLayoutURL(layout));
+			}
 		}
 
 		if (isShowOrphanPortletsAction(layout)) {

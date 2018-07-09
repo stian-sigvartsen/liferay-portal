@@ -260,7 +260,7 @@ public class LayoutServiceSoap {
 	}
 
 	/**
-	* @deprecated As of 7.0.0, replaced by {@link
+	* @deprecated As of Wilberforce (7.0.x), replaced by {@link
 	com.liferay.exportimport.kernel.service.ExportImportService#exportLayoutsAsFileInBackground(
 	ExportImportConfiguration)}
 	*/
@@ -282,7 +282,7 @@ public class LayoutServiceSoap {
 	}
 
 	/**
-	* @deprecated As of 7.0.0, replaced by {@link
+	* @deprecated As of Wilberforce (7.0.x), replaced by {@link
 	com.liferay.exportimport.kernel.service.ExportImportService#exportLayoutsAsFileInBackground(
 	long)}
 	*/
@@ -314,6 +314,25 @@ public class LayoutServiceSoap {
 			java.util.List<com.liferay.portal.kernel.model.Layout> returnValue = LayoutServiceUtil.getAncestorLayouts(plid);
 
 			return com.liferay.portal.kernel.model.LayoutSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	/**
+	* Returns the control panel layout's plid.
+	*
+	* @return the control panel layout's plid
+	* @throws PortalException if a portal exception is occured
+	*/
+	public static long getControlPanelLayoutPlid() throws RemoteException {
+		try {
+			long returnValue = LayoutServiceUtil.getControlPanelLayoutPlid();
+
+			return returnValue;
 		}
 		catch (Exception e) {
 			_log.error(e, e);

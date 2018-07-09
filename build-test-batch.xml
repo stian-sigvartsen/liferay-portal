@@ -960,6 +960,7 @@ app.server.type=@{app.server.type}]]></echo>
 		<attribute default="false" name="test.portal.log.assert" />
 		<attribute default="" name="test.portal.bundle.dependencies.zip.url" />
 		<attribute default="" name="test.portal.bundle.osgi.zip.url" />
+		<attribute default="" name="test.portal.bundle.tools.zip.url" />
 		<attribute default="" name="test.portal.bundle.version" />
 		<attribute default="" name="test.portal.bundle.war.url" />
 		<attribute default="" name="test.portal.bundle.zip.url" />
@@ -1052,6 +1053,7 @@ app.server.type=@{app.server.type}]]></echo>
 								<param name="test.build.fix.pack.zip.url" value="@{test.build.fix.pack.zip.url}" />
 								<param name="test.build.portal.dependencies.zip.url" value="@{test.portal.bundle.dependencies.zip.url}" />
 								<param name="test.build.portal.osgi.zip.url" value="@{test.portal.bundle.osgi.zip.url}" />
+								<param name="test.build.portal.tools.zip.url" value="@{test.portal.bundle.tools.zip.url}" />
 								<param name="test.build.portal.war.url" value="@{test.portal.bundle.war.url}" />
 								<param name="test.class" value="${test.class}" />
 								<param name="test.fix.pack.base.url" value="@{test.fix.pack.base.url}" />
@@ -2003,6 +2005,7 @@ app.server.type=@{app.server.type}]]></echo>
 		<attribute default="" name="test.license.xml.url" />
 		<attribute default="" name="test.portal.bundle.dependencies.zip.url" />
 		<attribute default="" name="test.portal.bundle.osgi.zip.url" />
+		<attribute default="" name="test.portal.bundle.tools.zip.url" />
 		<attribute default="" name="test.portal.bundle.war.url" />
 		<attribute default="" name="test.portal.bundle.zip.url" />
 		<attribute default="" name="test.sql.zip.url" />
@@ -2088,6 +2091,7 @@ app.server.type=@{app.server.type}]]></echo>
 								<param name="test.build.fix.pack.zip.url" value="@{test.build.fix.pack.zip.url}" />
 								<param name="test.build.portal.dependencies.zip.url" value="@{test.portal.bundle.dependencies.zip.url}" />
 								<param name="test.build.portal.osgi.zip.url" value="@{test.portal.bundle.osgi.zip.url}" />
+								<param name="test.build.portal.tools.zip.url" value="@{test.portal.bundle.tools.zip.url}" />
 								<param name="test.build.portal.war.url" value="@{test.portal.bundle.war.url}" />
 								<param name="test.fix.pack.base.url" value="@{test.fix.pack.base.url}" />
 							</antcall>
@@ -2679,6 +2683,7 @@ app.server.type=@{app.server.type}]]></echo>
 			test.portal.bundle.version="${test.portal.bundle.version}"
 			test.portal.bundle.dependencies.zip.url="${test.portal.bundle.dependencies.zip.url}"
 			test.portal.bundle.osgi.zip.url="${test.portal.bundle.osgi.zip.url}"
+			test.portal.bundle.tools.zip.url="${test.portal.bundle.tools.zip.url}"
 			test.portal.bundle.war.url="${test.portal.bundle.war.url}"
 			test.portal.lpkg.name="${test.portal.lpkg.name}"
 			test.sql.zip.url="${test.sql.zip.url}"
@@ -2698,6 +2703,7 @@ app.server.type=@{app.server.type}]]></echo>
 			test.portal.bundle.version="${test.portal.bundle.version}"
 			test.portal.bundle.dependencies.zip.url="${test.portal.bundle.dependencies.zip.url}"
 			test.portal.bundle.osgi.zip.url="${test.portal.bundle.osgi.zip.url}"
+			test.portal.bundle.tools.zip.url="${test.portal.bundle.tools.zip.url}"
 			test.portal.bundle.war.url="${test.portal.bundle.war.url}"
 			test.portal.lpkg.name="${test.portal.lpkg.name}"
 			test.sql.zip.url="${test.sql.zip.url}"
@@ -2739,6 +2745,7 @@ app.server.type=@{app.server.type}]]></echo>
 			test.plugins.war.zip.url="${test.plugins.war.zip.url}"
 			test.portal.bundle.dependencies.zip.url="${test.portal.bundle.dependencies.zip.url}"
 			test.portal.bundle.osgi.zip.url="${test.portal.bundle.osgi.zip.url}"
+			test.portal.bundle.tools.zip.url="${test.portal.bundle.tools.zip.url}"
 			test.portal.bundle.war.url="${test.portal.bundle.war.url}"
 			test.portal.lpkg.name="${test.portal.lpkg.name}"
 			test.sql.zip.url="${test.sql.zip.url}"
@@ -2757,6 +2764,7 @@ app.server.type=@{app.server.type}]]></echo>
 			test.plugins.war.zip.url="${test.plugins.war.zip.url}"
 			test.portal.bundle.dependencies.zip.url="${test.portal.bundle.dependencies.zip.url}"
 			test.portal.bundle.osgi.zip.url="${test.portal.bundle.osgi.zip.url}"
+			test.portal.bundle.tools.zip.url="${test.portal.bundle.tools.zip.url}"
 			test.portal.bundle.war.url="${test.portal.bundle.war.url}"
 			test.portal.lpkg.name="${test.portal.lpkg.name}"
 			test.sql.zip.url="${test.sql.zip.url}"
@@ -2946,6 +2954,7 @@ app.server.type=@{app.server.type}]]></echo>
 			test.plugins.war.zip.url="${test.plugins.war.zip.url}"
 			test.portal.bundle.dependencies.zip.url="${test.portal.bundle.dependencies.zip.url}"
 			test.portal.bundle.osgi.zip.url="${test.portal.bundle.osgi.zip.url}"
+			test.portal.bundle.tools.zip.url="${test.portal.bundle.tools.zip.url}"
 			test.portal.bundle.war.url="${test.portal.bundle.war.url}"
 			test.portal.lpkg.name="${test.portal.lpkg.name}"
 			test.sql.zip.url="${test.sql.zip.url}"
@@ -2964,6 +2973,7 @@ app.server.type=@{app.server.type}]]></echo>
 			test.plugins.war.zip.url="${test.plugins.war.zip.url}"
 			test.portal.bundle.dependencies.zip.url="${test.portal.bundle.dependencies.zip.url}"
 			test.portal.bundle.osgi.zip.url="${test.portal.bundle.osgi.zip.url}"
+			test.portal.bundle.tools.zip.url="${test.portal.bundle.tools.zip.url}"
 			test.portal.bundle.war.url="${test.portal.bundle.war.url}"
 			test.portal.lpkg.name="${test.portal.lpkg.name}"
 			test.sql.zip.url="${test.sql.zip.url}"
@@ -2981,6 +2991,7 @@ app.server.type=@{app.server.type}]]></echo>
 			test.plugins.war.zip.url="${test.plugins.war.zip.url}"
 			test.portal.bundle.dependencies.zip.url="${test.portal.bundle.dependencies.zip.url}"
 			test.portal.bundle.osgi.zip.url="${test.portal.bundle.osgi.zip.url}"
+			test.portal.bundle.tools.zip.url="${test.portal.bundle.tools.zip.url}"
 			test.portal.bundle.war.url="${test.portal.bundle.war.url}"
 			test.portal.lpkg.name="${test.portal.lpkg.name}"
 			test.sql.zip.url="${test.sql.zip.url}"
@@ -3054,11 +3065,11 @@ app.server.type=@{app.server.type}]]></echo>
 	</target>
 
 	<target name="functional-smoke-tcserver32-mysql56-jdk8">
-		<run-functional-test app.server.type="tcserver" database.type="mysql" test.portal.log.assert="false" />
+		<run-functional-test app.server.type="tcserver" database.type="mysql" test.portal.log.assert="true" />
 	</target>
 
 	<target name="functional-smoke-tcserver40-mysql57-jdk8">
-		<run-functional-test app.server.type="tcserver" database.type="mysql" database.version="5.7" test.portal.log.assert="false" />
+		<run-functional-test app.server.type="tcserver" database.type="mysql" database.version="5.7" test.portal.log.assert="true" />
 	</target>
 
 	<target name="functional-smoke-tomcat80-db2105-jdk8">
@@ -3516,6 +3527,7 @@ app.server.type=@{app.server.type}]]></echo>
 							<param name="test.build.fix.pack.zip.url" value="${test.build.fix.pack.zip.url}" />
 							<param name="test.build.portal.dependencies.zip.url" value="${test.portal.bundle.dependencies.zip.url}" />
 							<param name="test.build.portal.osgi.zip.url" value="${test.portal.bundle.osgi.zip.url}" />
+							<param name="test.build.portal.tools.zip.url" value="${test.portal.bundle.tools.zip.url}" />
 							<param name="test.build.portal.war.url" value="${test.portal.bundle.war.url}" />
 							<param name="test.fix.pack.base.url" value="${test.fix.pack.base.url}" />
 						</antcall>
@@ -3701,6 +3713,7 @@ app.server.type=@{app.server.type}]]></echo>
 			test.license.xml.url="${test.license.xml.url}"
 			test.portal.bundle.dependencies.zip.url="${test.portal.bundle.dependencies.zip.url}"
 			test.portal.bundle.osgi.zip.url="${test.portal.bundle.osgi.zip.url}"
+			test.portal.bundle.tools.zip.url="${test.portal.bundle.tools.zip.url}"
 			test.portal.bundle.war.url="${test.portal.bundle.war.url}"
 			test.portal.bundle.zip.url="${test.portal.bundle.zip.url}"
 			test.sql.zip.url="${test.sql.zip.url}"
@@ -3717,6 +3730,7 @@ app.server.type=@{app.server.type}]]></echo>
 			test.license.xml.url="${test.license.xml.url}"
 			test.portal.bundle.dependencies.zip.url="${test.portal.bundle.dependencies.zip.url}"
 			test.portal.bundle.osgi.zip.url="${test.portal.bundle.osgi.zip.url}"
+			test.portal.bundle.tools.zip.url="${test.portal.bundle.tools.zip.url}"
 			test.portal.bundle.war.url="${test.portal.bundle.war.url}"
 			test.portal.bundle.zip.url="${test.portal.bundle.zip.url}"
 			test.sql.zip.url="${test.sql.zip.url}"
@@ -3733,6 +3747,7 @@ app.server.type=@{app.server.type}]]></echo>
 			test.license.xml.url="${test.license.xml.url}"
 			test.portal.bundle.dependencies.zip.url="${test.portal.bundle.dependencies.zip.url}"
 			test.portal.bundle.osgi.zip.url="${test.portal.bundle.osgi.zip.url}"
+			test.portal.bundle.tools.zip.url="${test.portal.bundle.tools.zip.url}"
 			test.portal.bundle.war.url="${test.portal.bundle.war.url}"
 			test.portal.bundle.zip.url="${test.portal.bundle.zip.url}"
 			test.sql.zip.url="${test.sql.zip.url}"
@@ -3750,6 +3765,7 @@ app.server.type=@{app.server.type}]]></echo>
 			test.license.xml.url="${test.license.xml.url}"
 			test.portal.bundle.dependencies.zip.url="${test.portal.bundle.dependencies.zip.url}"
 			test.portal.bundle.osgi.zip.url="${test.portal.bundle.osgi.zip.url}"
+			test.portal.bundle.tools.zip.url="${test.portal.bundle.tools.zip.url}"
 			test.portal.bundle.war.url="${test.portal.bundle.war.url}"
 			test.portal.bundle.zip.url="${test.portal.bundle.zip.url}"
 			test.sql.zip.url="${test.sql.zip.url}"
@@ -3766,6 +3782,7 @@ app.server.type=@{app.server.type}]]></echo>
 			test.license.xml.url="${test.license.xml.url}"
 			test.portal.bundle.dependencies.zip.url="${test.portal.bundle.dependencies.zip.url}"
 			test.portal.bundle.osgi.zip.url="${test.portal.bundle.osgi.zip.url}"
+			test.portal.bundle.tools.zip.url="${test.portal.bundle.tools.zip.url}"
 			test.portal.bundle.war.url="${test.portal.bundle.war.url}"
 			test.portal.bundle.zip.url="${test.portal.bundle.zip.url}"
 			test.sql.zip.url="${test.sql.zip.url}"
@@ -3782,6 +3799,7 @@ app.server.type=@{app.server.type}]]></echo>
 			test.license.xml.url="${test.license.xml.url}"
 			test.portal.bundle.dependencies.zip.url="${test.portal.bundle.dependencies.zip.url}"
 			test.portal.bundle.osgi.zip.url="${test.portal.bundle.osgi.zip.url}"
+			test.portal.bundle.tools.zip.url="${test.portal.bundle.tools.zip.url}"
 			test.portal.bundle.war.url="${test.portal.bundle.war.url}"
 			test.portal.bundle.zip.url="${test.portal.bundle.zip.url}"
 			test.sql.zip.url="${test.sql.zip.url}"
@@ -3798,6 +3816,7 @@ app.server.type=@{app.server.type}]]></echo>
 			test.license.xml.url="${test.license.xml.url}"
 			test.portal.bundle.dependencies.zip.url="${test.portal.bundle.dependencies.zip.url}"
 			test.portal.bundle.osgi.zip.url="${test.portal.bundle.osgi.zip.url}"
+			test.portal.bundle.tools.zip.url="${test.portal.bundle.tools.zip.url}"
 			test.portal.bundle.war.url="${test.portal.bundle.war.url}"
 			test.portal.bundle.zip.url="${test.portal.bundle.zip.url}"
 			test.sql.zip.url="${test.sql.zip.url}"
@@ -3852,7 +3871,7 @@ app.server.type=@{app.server.type}]]></echo>
 					<sequential>
 						<echo>Executing Gradle tasks: @{modules.baseline.task.group}.</echo>
 
-						<gradle-execute dir="modules" task="@{modules.baseline.task.group}">
+						<gradle-execute dir="modules" forcedcacheenabled="false" task="@{modules.baseline.task.group}">
 							<arg value="--continue" />
 							<arg value="--parallel" />
 						</gradle-execute>
@@ -3893,15 +3912,27 @@ app.server.type=@{app.server.type}]]></echo>
 			<test-set-up>
 				<fail message="Please set the property ${modules.test.class.group}" unless="modules.test.class.group" />
 
-				<echo>unzip -p liferay-portal-source.zip modules/core/portal-bootstrap/build/system.packages.extra.mf > modules/core/portal-bootstrap/system.packages.extra.mf</echo>
+				<if>
+					<isset property="env.DIST_PATH" />
+					<then>
+						<antcall inheritAll="false" target="compile" />
 
-				<execute>
-					<![CDATA[
-						mkdir -p modules/core/portal-bootstrap
+						<antcall inheritAll="false" target="install-portal-snapshots" />
 
-						unzip -p liferay-portal-source.zip modules/core/portal-bootstrap/build/system.packages.extra.mf > modules/core/portal-bootstrap/system.packages.extra.mf
-					]]>
-				</execute>
+						<echo>unzip -p liferay-portal-source.zip modules/core/portal-bootstrap/build/system.packages.extra.mf > modules/core/portal-bootstrap/system.packages.extra.mf</echo>
+
+						<execute>
+							<![CDATA[
+								mkdir -p modules/core/portal-bootstrap
+
+								unzip -p liferay-portal-source.zip modules/core/portal-bootstrap/build/system.packages.extra.mf > modules/core/portal-bootstrap/system.packages.extra.mf
+							]]>
+						</execute>
+					</then>
+					<else>
+						<prepare-test-build />
+					</else>
+				</if>
 
 				<echo>Deleting stale baseline log files.</echo>
 
@@ -4479,47 +4510,6 @@ ${output.content}</echo>
 				<echo file="build.${user.name}.properties">baseline.jar.report.level=persist</echo>
 
 				<prepare-test-build />
-
-				<if>
-					<isset property="modules.base.dir.names.with.changes" />
-					<then>
-						<for list="${modules.base.dir.names.with.changes}" param="module.base.dir.name">
-							<sequential>
-								<var name="module.baseline.task.name" unset="true" />
-								<var name="modules.base.dir.name" unset="true" />
-
-								<propertyregex
-									input="@{module.base.dir.name}"
-									override="true"
-									property="modules.base.dir.name"
-									regexp="(.*/modules)(/.*)"
-									replace="\1"
-								/>
-
-								<propertyregex
-									input="@{module.base.dir.name}"
-									override="true"
-									property="module.baseline.task.name"
-									regexp="(.*/modules)(/.*)"
-									replace="\2"
-								/>
-
-								<antelope:stringutil property="module.baseline.task.name" string="${module.baseline.task.name}">
-									<antelope:replace regex="/" replacement=":" />
-								</antelope:stringutil>
-
-								<var name="module.baseline.task.name" value="${module.baseline.task.name}:baseline" />
-
-								<echo>Executing ${module.baseline.task.name} on ${modules.base.dir.name}.</echo>
-
-								<gradle-execute dir="${modules.base.dir.name}" forcedcacheenabled="false" task="${module.baseline.task.name}" />
-
-								<var name="module.baseline.task.name" unset="true" />
-								<var name="modules.base.dir.name" unset="true" />
-							</sequential>
-						</for>
-					</then>
-				</if>
 			</test-set-up>
 		</run-batch-test>
 	</target>
@@ -4535,6 +4525,11 @@ ${output.content}</echo>
 						</gradle-execute>
 					</then>
 				</if>
+
+				<exec executable="git">
+					<arg value="add" />
+					<arg value="--all" />
+				</exec>
 
 				<record action="start" name="${project.dir}/build.services.output.txt" />
 
@@ -4663,7 +4658,7 @@ information. Make sure to commit in all build services results.
 		<run-batch-test>
 			<test-action>
 				<if>
-					<istrue value="${liferay.releng.public}" />
+					<available file="modules/util/source-formatter" />
 					<then>
 						<gradle-execute dir="modules/util/source-formatter" task="deploy">
 							<arg value="clean" />

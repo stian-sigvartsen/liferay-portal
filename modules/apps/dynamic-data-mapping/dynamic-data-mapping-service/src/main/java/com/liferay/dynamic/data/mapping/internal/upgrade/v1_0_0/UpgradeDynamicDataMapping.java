@@ -1545,6 +1545,12 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 			_CLASS_NAME_DDM_STRUCTURE);
 
 		_structureModelResourceNames.put(
+			"com.liferay.dynamic.data.lists.model.DDLRecordSet",
+			resourceActions.getCompositeModelName(
+				"com.liferay.dynamic.data.lists.model.DDLRecordSet",
+				_CLASS_NAME_DDM_STRUCTURE));
+
+		_structureModelResourceNames.put(
 			"com.liferay.portlet.dynamicdatalists.model.DDLRecordSet",
 			resourceActions.getCompositeModelName(
 				"com.liferay.dynamic.data.lists.model.DDLRecordSet",
@@ -1555,6 +1561,12 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 			resourceActions.getCompositeModelName(
 				"com.liferay.journal.model.JournalArticle",
 				_CLASS_NAME_DDM_STRUCTURE));
+
+		_templateModelResourceNames.put(
+			"com.liferay.dynamic.data.lists.model.DDLRecordSet",
+			resourceActions.getCompositeModelName(
+				"com.liferay.dynamic.data.lists.model.DDLRecordSet",
+				_CLASS_NAME_DDM_TEMPLATE));
 
 		_templateModelResourceNames.put(
 			"com.liferay.portlet.display.template.PortletDisplayTemplate",
@@ -1958,6 +1970,19 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 
 			List<Node> nodes = dynamicContentXPath.selectNodes(
 				dynamicElementElement);
+
+			if (nodes.isEmpty()) {
+				dynamicContentXPath = SAXReaderUtil.createXPath(
+					"dynamic-content");
+
+				nodes = dynamicContentXPath.selectNodes(dynamicElementElement);
+
+				Element element = (Element)nodes.get(index);
+
+				element.addAttribute("language-id", languageId);
+
+				return element;
+			}
 
 			return (Element)nodes.get(index);
 		}
