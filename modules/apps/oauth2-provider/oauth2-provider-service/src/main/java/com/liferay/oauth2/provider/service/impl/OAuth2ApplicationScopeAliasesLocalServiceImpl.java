@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import org.osgi.framework.Bundle;
@@ -151,21 +152,26 @@ public class OAuth2ApplicationScopeAliasesLocalServiceImpl
 			return false;
 		}
 
-		for (LiferayOAuth2Scope liferayOAuth2Scope : liferayOAuth2Scopes) {
-			String applicationName = liferayOAuth2Scope.getApplicationName();
+		for (OAuth2ScopeGrant oAuth2ScopeGrant : oAuth2ScopeGrants) {
+			boolean found = liferayOAuth2Scopes.removeIf(
+				liferayOAuth2Scope -> {
+					Bundle bundle = liferayOAuth2Scope.getBundle();
 
-			Bundle bundle = liferayOAuth2Scope.getBundle();
+					if (Objects.equals(
+							liferayOAuth2Scope.getApplicationName(),
+							oAuth2ScopeGrant.getApplicationName()) &&
+						Objects.equals(
+							bundle.getSymbolicName(),
+							oAuth2ScopeGrant.getBundleSymbolicName()) &&
+						Objects.equals(
+							liferayOAuth2Scope.getScope(),
+							oAuth2ScopeGrant.getScope())) {
 
-			String bundleSymbolicName = bundle.getSymbolicName();
+						return true;
+					}
 
-			String scope = liferayOAuth2Scope.getScope();
-
-			boolean found = oAuth2ScopeGrants.removeIf(
-				oAuth2ScopeGrant -> applicationName.equals(
-					oAuth2ScopeGrant.getApplicationName()) &&
-					bundleSymbolicName.equals(
-						oAuth2ScopeGrant.getBundleSymbolicName()) &&
-					scope.equals(oAuth2ScopeGrant.getScope()));
+					return false;
+				});
 
 			if (!found) {
 				return false;
