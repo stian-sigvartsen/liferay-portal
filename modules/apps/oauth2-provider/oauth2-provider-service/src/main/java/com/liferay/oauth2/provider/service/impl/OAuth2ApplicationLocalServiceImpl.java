@@ -69,6 +69,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Brian Wing Shun Chan
@@ -349,6 +351,17 @@ public class OAuth2ApplicationLocalServiceImpl
 
 		OAuth2Application oAuth2Application =
 			oAuth2ApplicationPersistence.findByPrimaryKey(oAuth2ApplicationId);
+
+		if (scopeAliasesList != null) {
+			Stream<String> stream = scopeAliasesList.stream();
+
+			scopeAliasesList = stream.filter(
+				Validator::isNotNull
+			).sorted(
+			).collect(
+				Collectors.toList()
+			);
+		}
 
 		if ((scopeAliasesList == null) || scopeAliasesList.isEmpty()) {
 			oAuth2Application.setModifiedDate(new Date());
