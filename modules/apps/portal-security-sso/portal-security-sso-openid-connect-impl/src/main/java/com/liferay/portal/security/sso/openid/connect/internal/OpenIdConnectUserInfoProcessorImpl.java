@@ -17,6 +17,7 @@ package com.liferay.portal.security.sso.openid.connect.internal;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.UserEmailAddressException;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.CompanyLocalService;
@@ -26,6 +27,7 @@ import com.liferay.portal.kernel.util.PwdGenerator;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectServiceException;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectUserInfoProcessor;
+import com.liferay.portal.security.sso.openid.connect.StrangersNotAllowedException;
 
 import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 
@@ -61,6 +63,8 @@ public class OpenIdConnectUserInfoProcessorImpl
 		if (user != null) {
 			return user.getUserId();
 		}
+
+		checkAddUser(companyId, emailAddress);
 
 		if (Validator.isNull(firstName) || Validator.isNull(lastName) ||
 			Validator.isNull(emailAddress)) {
@@ -122,6 +126,23 @@ public class OpenIdConnectUserInfoProcessorImpl
 		user = _userLocalService.updatePasswordReset(user.getUserId(), false);
 
 		return user.getUserId();
+	}
+
+	protected void checkAddUser(long companyId, String emailAddress)
+		throws PortalException {
+
+		Company company = _companyLocalService.getCompany(companyId);
+
+		if (!company.isStrangers()) {
+			throw new StrangersNotAllowedException(companyId);
+		}
+
+		if (!company.isStrangersWithMx() &&
+			company.hasCompanyMx(emailAddress)) {
+
+			throw new UserEmailAddressException.MustNotUseCompanyMx(
+				emailAddress);
+		}
 	}
 
 	@Reference
