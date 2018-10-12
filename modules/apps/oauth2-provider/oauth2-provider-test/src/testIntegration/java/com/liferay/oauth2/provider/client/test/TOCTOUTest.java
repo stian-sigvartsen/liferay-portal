@@ -55,7 +55,7 @@ public class TOCTOUTest extends BaseClientTestCase {
 
 	@Deployment
 	public static Archive<?> getDeployment() throws Exception {
-		return BaseClientTestCase.getDeployment(
+		return BaseClientTestCase.getArchive(
 			SecurityTestPreparatorBundleActivator.class);
 	}
 
