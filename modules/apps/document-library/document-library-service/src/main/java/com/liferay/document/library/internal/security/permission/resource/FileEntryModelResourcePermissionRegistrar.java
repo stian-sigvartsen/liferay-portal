@@ -18,11 +18,13 @@ import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermissionFactory;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermissionLogic;
 import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermission;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portlet.documentlibrary.constants.DLConstants;
 
 import java.util.Dictionary;
+import java.util.function.Consumer;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -48,16 +50,23 @@ public class FileEntryModelResourcePermissionRegistrar {
 			ModelResourcePermissionFactory.create(
 				FileEntry.class, FileEntry::getFileEntryId,
 				_dlAppLocalService::getFileEntry, _portletResourcePermission,
-				(modelResourcePermission, consumer) -> consumer.accept(
-					(permissionChecker, name, fileEntry, actionId) ->
-						fileEntry.containsPermission(
-							permissionChecker, actionId))),
+				this::configureModelResourcePermissionLogics),
 			properties);
 	}
 
 	@Deactivate
 	public void deactivate() {
 		_serviceRegistration.unregister();
+	}
+	
+	public void configureModelResourcePermissionLogics(
+		ModelResourcePermission<FileEntry> modelResourcePermission,
+		Consumer<ModelResourcePermissionLogic<FileEntry>> consumer) {
+		
+		consumer.accept(
+			(permissionChecker, name, fileEntry, actionId) ->
+				fileEntry.containsPermission(
+					permissionChecker, actionId));
 	}
 
 	@Reference
