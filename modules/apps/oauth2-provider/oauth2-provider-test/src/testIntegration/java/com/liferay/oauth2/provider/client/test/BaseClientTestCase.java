@@ -56,6 +56,7 @@ import org.codehaus.jettison.json.JSONObject;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.Archive;
 
+import org.junit.Assert;
 import org.junit.BeforeClass;
 
 import org.osgi.framework.BundleActivator;
@@ -107,9 +108,16 @@ public abstract class BaseClientTestCase {
 
 		String pAuthToken = parsePAuthToken(response);
 
+		Assert.assertTrue(
+			"Failed to parse p_auth token", Validator.isNotNull(pAuthToken));
+
+		System.out.println("*** p_auth: " + pAuthToken);
+
 		Map<String, NewCookie> cookies = response.getCookies();
 
 		NewCookie cookie = cookies.get(CookieKeys.JSESSIONID);
+
+		System.out.println("*** JSESSIONID cookie found? " + (cookie != null));
 
 		invocationBuilder = getInvocationBuilder(hostname, getLoginWebTarget());
 
@@ -581,6 +589,8 @@ public abstract class BaseClientTestCase {
 		String bodyContent = response.readEntity(String.class);
 
 		Matcher matcher = _pAuthTokenPattern.matcher(bodyContent);
+
+		System.out.println("*** bodyContent: " + bodyContent);
 
 		if (matcher.find()) {
 			return matcher.group(2) + matcher.group(3);
