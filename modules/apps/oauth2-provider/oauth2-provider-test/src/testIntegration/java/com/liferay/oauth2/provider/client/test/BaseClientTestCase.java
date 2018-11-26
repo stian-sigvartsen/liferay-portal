@@ -16,6 +16,7 @@ package com.liferay.oauth2.provider.client.test;
 
 import com.liferay.oauth2.provider.test.util.OAuth2ProviderTestUtil;
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.util.CookieKeys;
 import com.liferay.portal.kernel.util.Digester;
@@ -581,9 +582,11 @@ public abstract class BaseClientTestCase {
 
 		Matcher matcher = _pAuthTokenPattern.matcher(bodyContent);
 
-		matcher.find();
+		if (matcher.find()) {
+			return matcher.group(2) + matcher.group(3);
+		}
 
-		return matcher.group(1);
+		return StringPool.BLANK;
 	}
 
 	protected String parseScopeString(Response response) {
@@ -604,7 +607,7 @@ public abstract class BaseClientTestCase {
 	}
 
 	private static final Pattern _pAuthTokenPattern = Pattern.compile(
-		"Liferay.authToken\\s*=\\s*'([^']*)';");
+		"Liferay.authToken\\s*=\\s*('([^']+)'|\"([^\"]+)\");");
 
 	@ArquillianResource
 	private URL _url;
