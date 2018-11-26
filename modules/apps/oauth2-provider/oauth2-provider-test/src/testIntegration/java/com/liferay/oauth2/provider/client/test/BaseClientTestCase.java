@@ -435,7 +435,7 @@ public abstract class BaseClientTestCase {
 	protected WebTarget getPortalWebTarget() {
 		Client client = getClient();
 
-		return client.target(_getPortalURL());
+		return client.target(_getPortalURL()).path("/web/guest");
 	}
 
 	protected BiFunction<String, Invocation.Builder, Response>
@@ -593,7 +593,11 @@ public abstract class BaseClientTestCase {
 		System.out.println("*** bodyContent: " + bodyContent);
 
 		if (matcher.find()) {
-			return matcher.group(2) + matcher.group(3);
+			if (Validator.isNotNull(matcher.group(2))) {
+				return matcher.group(2);
+			}
+
+			return matcher.group(3);
 		}
 
 		return StringPool.BLANK;
