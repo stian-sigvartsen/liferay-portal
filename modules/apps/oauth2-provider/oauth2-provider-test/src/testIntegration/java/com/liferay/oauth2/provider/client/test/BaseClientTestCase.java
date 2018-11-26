@@ -435,7 +435,13 @@ public abstract class BaseClientTestCase {
 	protected WebTarget getPortalWebTarget() {
 		Client client = getClient();
 
-		return client.target(_getPortalURL()).path("/web/guest");
+		WebTarget webTarget = client.target(_getPortalURL());
+
+		webTarget = webTarget.path("web");
+
+		webTarget = webTarget.path("guest");
+
+		return webTarget;
 	}
 
 	protected BiFunction<String, Invocation.Builder, Response>
