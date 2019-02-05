@@ -61,8 +61,6 @@ public class ScopeMapperImpl implements ScopeMapper {
 
 	@Activate
 	protected void activate(Map<String, Object> properties) {
-		_mappingsByScope.clear();
-
 		ConfigurableScopeMapperConfiguration
 			configurableScopeMapperConfiguration =
 				ConfigurableUtil.createConfigurable(
