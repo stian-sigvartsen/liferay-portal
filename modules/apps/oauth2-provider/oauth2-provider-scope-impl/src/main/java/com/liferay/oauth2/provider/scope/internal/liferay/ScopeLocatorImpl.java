@@ -35,7 +35,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 import org.osgi.framework.Bundle;
@@ -100,26 +102,51 @@ public class ScopeLocatorImpl implements ScopeLocator {
 
 		Collection<LiferayOAuth2Scope> locatedScopes = new HashSet<>(
 			scopes.size());
-		Map<String, Boolean> matchCache = new HashMap<>();
+
+		Map<String, Boolean> processedMappedScopes = new HashMap<>();
 		PrefixHandler prefixHandler = prefixHandlerFactory.create(
 			serviceReference::getProperty);
 		ScopeMapper scopeMapper = _scopedScopeMapper.getService(
 			companyId, applicationName);
 		ScopeMatcherFactory scopeMatcherFactory = getScopeMatcherFactory(
 			companyId);
+		Queue<String> matchedScopesUnmapped = new LinkedList<>();
 
 		for (String scope : scopes) {
 			for (String mappedScope : scopeMapper.map(scope)) {
-				boolean matched = matchCache.computeIfAbsent(
+				processedMappedScopes.computeIfAbsent(
 					mappedScope,
-					input -> scopeMatchesScopesAlias(
-						input, scopeMatcherFactory, prefixHandler,
-						scopesAlias));
+					input -> {
+						if (scopeMatchesScopesAlias(
+								input, scopeMatcherFactory, prefixHandler,
+								scopesAlias)) {
 
-				if (matched) {
-					locatedScopes.add(
-						new LiferayOAuth2ScopeImpl(
-							applicationName, bundle, scope));
+							matchedScopesUnmapped.add(scope);
+						}
+
+						return true;
+					});
+			}
+		}
+
+		String matchedScopeUnmapped;
+		while ((matchedScopeUnmapped = matchedScopesUnmapped.poll()) != null) {
+			locatedScopes.add(
+				new LiferayOAuth2ScopeImpl(
+					applicationName, bundle, matchedScopeUnmapped));
+
+			ScopeMatcher scopeMatcher = scopeMatcherFactory.create(
+				matchedScopeUnmapped);
+
+			for (String scope : scopes) {
+				if (scope.equals(matchedScopeUnmapped) ||
+					matchedScopesUnmapped.contains(scope)) {
+
+					continue;
+				}
+
+				if (scopeMatcher.match(scope)) {
+					matchedScopesUnmapped.offer(scope);
 				}
 			}
 		}
