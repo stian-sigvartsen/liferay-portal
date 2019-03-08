@@ -21,4 +21,10 @@ public class OAuth2JSONWSConstants {
 
 	public static final String APPLICATION_NAME = "liferay-json-web-services";
 
+	public static final String OAUTH2_REMOVE_SAP_ENTRY_OAUTH2_PREFIX =
+		"oauth2.remove.sap.entry.oauth2.prefix";
+
+	public static final String OAUTH2_SAP_ENTRY_OAUTH2_PREFIX =
+		"oauth2.sap.entry.oauth2.prefix";
+
 }

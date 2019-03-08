@@ -61,6 +61,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -79,6 +80,7 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true,
 	property = {
+		"oauth2.sap.entry.oauth2.prefix=AC_OAUTH2_",
 		"osgi.jaxrs.name=liferay-json-web-services-analytics",
 		"sap.scope.finder=true"
 	},
@@ -131,13 +133,13 @@ public class OAuth2ProviderShortcutPortalInstanceLifecycleListener
 
 	@Override
 	public void portalInstanceRegistered(Company company) throws Exception {
-		if (_hasOAuth2Application(company.getCompanyId())) {
-			return;
-		}
-
 		User user = _userLocalService.getDefaultUser(company.getCompanyId());
 
 		_addSAPEntries(company.getCompanyId(), user.getUserId());
+
+		if (_hasOAuth2Application(company.getCompanyId())) {
+			return;
+		}
 
 		OAuth2Application oAuth2Application =
 			_oAuth2ApplicationLocalService.addOAuth2Application(
@@ -171,7 +173,7 @@ public class OAuth2ProviderShortcutPortalInstanceLifecycleListener
 
 		_scopeAliasesList = stream.map(
 			sapEntryObjectArray -> StringUtil.replaceFirst(
-				sapEntryObjectArray[0], "OAUTH2_", StringPool.BLANK)
+				sapEntryObjectArray[0], "AC_OAUTH2_", StringPool.BLANK)
 		).collect(
 			Collectors.toList()
 		);
@@ -195,7 +197,12 @@ public class OAuth2ProviderShortcutPortalInstanceLifecycleListener
 			SAPEntry sapEntry = _sapEntryLocalService.fetchSAPEntry(
 				companyId, sapEntryName);
 
+			String scope = StringUtil.replaceFirst(
+				sapEntryName, "AC_OAUTH2_", StringPool.BLANK);
+
 			if (sapEntry != null) {
+				_sapEntries.put(scope, sapEntry);
+
 				continue;
 			}
 
@@ -203,9 +210,11 @@ public class OAuth2ProviderShortcutPortalInstanceLifecycleListener
 				ResourceBundleUtil.getLocalizationMap(
 					resourceBundleLoader, sapEntryName);
 
-			_sapEntryLocalService.addSAPEntry(
+			sapEntry = _sapEntryLocalService.addSAPEntry(
 				userId, sapEntryObjectArray[1], false, true, sapEntryName,
 				titleMap, new ServiceContext());
+
+			_sapEntries.put(scope, sapEntry);
 		}
 	}
 
@@ -234,7 +243,7 @@ public class OAuth2ProviderShortcutPortalInstanceLifecycleListener
 
 	private static final String[][] _SAP_ENTRY_OBJECT_ARRAYS = {
 		{
-			"OAUTH2_analytics.read",
+			"AC_OAUTH2_analytics.read",
 			StringBundler.concat(
 				"com.liferay.portal.security.audit.storage.service.",
 				"AuditEventService#getAuditEvents\n",
@@ -270,7 +279,7 @@ public class OAuth2ProviderShortcutPortalInstanceLifecycleListener
 				UserGroupService.class.getName(), "#getUserUserGroups")
 		},
 		{
-			"OAUTH2_analytics.write",
+			"AC_OAUTH2_analytics.write",
 			CompanyService.class.getName() + "#updatePreferences"
 		}
 	};
@@ -285,6 +294,8 @@ public class OAuth2ProviderShortcutPortalInstanceLifecycleListener
 
 	@Reference
 	private Portal _portal;
+
+	private final Map<String, SAPEntry> _sapEntries = new HashMap<>();
 
 	@Reference
 	private SAPEntryLocalService _sapEntryLocalService;

@@ -16,6 +16,7 @@ package com.liferay.oauth2.provider.jsonws.internal.configuration;
 
 import aQute.bnd.annotation.metatype.Meta;
 
+import com.liferay.oauth2.provider.jsonws.internal.constants.OAuth2JSONWSConstants;
 import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
 
 /**
@@ -48,9 +49,16 @@ public interface OAuth2JSONWSConfiguration {
 	public boolean createOAuth2SAPEntriesOnStartup();
 
 	@Meta.AD(
+		deflt = "liferay-json-web-services",
+		description = "osgi-jaxrs-name-description", id = "osgi.jaxrs.name",
+		name = "osgi-jaxrs-name", required = false
+	)
+	public String osgiJAXRSName();
+
+	@Meta.AD(
 		deflt = "true",
 		description = "oauth2-remove-sap-entry-oauth2-prefix-description",
-		id = "oauth2.remove.sap.entry.oauth2.prefix",
+		id = OAuth2JSONWSConstants.OAUTH2_REMOVE_SAP_ENTRY_OAUTH2_PREFIX,
 		name = "oauth2-remove-sap-entry-oauth2-prefix", required = false
 	)
 	public boolean removeSAPEntryOAuth2Prefix();
@@ -58,7 +66,7 @@ public interface OAuth2JSONWSConfiguration {
 	@Meta.AD(
 		deflt = "OAUTH2_",
 		description = "oauth2-sap-entry-oauth2-prefix-description",
-		id = "oauth2.sap.entry.oauth2.prefix",
+		id = OAuth2JSONWSConstants.OAUTH2_SAP_ENTRY_OAUTH2_PREFIX,
 		name = "oauth2-sap-entry-oauth2-prefix", required = false
 	)
 	public String sapEntryOAuth2Prefix();

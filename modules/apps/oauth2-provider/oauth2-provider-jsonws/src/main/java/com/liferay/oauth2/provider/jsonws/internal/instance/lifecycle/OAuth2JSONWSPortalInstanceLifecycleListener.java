@@ -35,6 +35,12 @@ public class OAuth2JSONWSPortalInstanceLifecycleListener
 			company.getCompanyId());
 	}
 
+	@Override
+	public void portalInstanceUnregistered(Company company) throws Exception {
+		_sapEntryScopeDescriptorFinderRegistrator.unregister(
+			company.getCompanyId());
+	}
+
 	@Reference
 	private SAPEntryScopeDescriptorFinderRegistrator
 		_sapEntryScopeDescriptorFinderRegistrator;
