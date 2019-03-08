@@ -69,7 +69,7 @@ public class SAPEntryScopeDescriptorFinderRegistrator {
 			SAPEntryScopeDescriptorFinder sapEntryScopeDescriptorFinder =
 				new SAPEntryScopeDescriptorFinder(sapEntryScopes);
 
-			_scopeDescriptorRegistrations.compute(
+			_scopeDescriptorServiceRegistrations.compute(
 				companyId,
 				(key, serviceRegistration) -> {
 					if (serviceRegistration != null) {
@@ -90,7 +90,7 @@ public class SAPEntryScopeDescriptorFinderRegistrator {
 				"osgi.jaxrs.name", OAuth2JSONWSConstants.APPLICATION_NAME);
 			properties.put("sap.scope.finder", Boolean.TRUE);
 
-			_scopeFinderRegistrations.compute(
+			_scopeFinderServiceRegistrations.compute(
 				companyId,
 				(key, serviceRegistration) -> {
 					if (serviceRegistration != null) {
@@ -130,7 +130,7 @@ public class SAPEntryScopeDescriptorFinderRegistrator {
 		_sapEntryOAuth2Prefix =
 			oAuth2JSONWSConfiguration.sapEntryOAuth2Prefix();
 
-		for (long companyId : _scopeFinderRegistrations.keySet()) {
+		for (long companyId : _scopeFinderServiceRegistrations.keySet()) {
 			register(companyId);
 		}
 	}
@@ -149,7 +149,7 @@ public class SAPEntryScopeDescriptorFinderRegistrator {
 				serviceReference.getProperty("osgi.jaxrs.name")));
 
 		for (Map.Entry<Long, ServiceRegistration> entry :
-				_scopeDescriptorRegistrations.entrySet()) {
+				_scopeDescriptorServiceRegistrations.entrySet()) {
 
 			ServiceRegistration serviceRegistration = entry.getValue();
 
@@ -161,20 +161,20 @@ public class SAPEntryScopeDescriptorFinderRegistrator {
 	@Deactivate
 	protected void deactivate() {
 		for (ServiceRegistration serviceRegistration :
-				_scopeFinderRegistrations.values()) {
+				_scopeFinderServiceRegistrations.values()) {
 
 			serviceRegistration.unregister();
 		}
 
-		_scopeFinderRegistrations.clear();
+		_scopeFinderServiceRegistrations.clear();
 
 		for (ServiceRegistration serviceRegistration :
-				_scopeDescriptorRegistrations.values()) {
+				_scopeDescriptorServiceRegistrations.values()) {
 
 			serviceRegistration.unregister();
 		}
 
-		_scopeDescriptorRegistrations.clear();
+		_scopeDescriptorServiceRegistrations.clear();
 	}
 
 	protected boolean isOAuth2ExportedSAPEntry(SAPEntry sapEntry) {
@@ -206,7 +206,7 @@ public class SAPEntryScopeDescriptorFinderRegistrator {
 				serviceReference.getProperty("osgi.jaxrs.name")));
 
 		for (Map.Entry<Long, ServiceRegistration> entry :
-				_scopeDescriptorRegistrations.entrySet()) {
+				_scopeDescriptorServiceRegistrations.entrySet()) {
 
 			ServiceRegistration serviceRegistration = entry.getValue();
 
@@ -252,9 +252,9 @@ public class SAPEntryScopeDescriptorFinderRegistrator {
 	private SAPEntryLocalService _sapEntryLocalService;
 
 	private String _sapEntryOAuth2Prefix = "OAUTH2_";
-	private final Map<Long, ServiceRegistration> _scopeDescriptorRegistrations =
-		new ConcurrentHashMap<>();
-	private final Map<Long, ServiceRegistration> _scopeFinderRegistrations =
-		new ConcurrentHashMap<>();
+	private final Map<Long, ServiceRegistration>
+		_scopeDescriptorServiceRegistrations = new ConcurrentHashMap<>();
+	private final Map<Long, ServiceRegistration>
+		_scopeFinderServiceRegistrations = new ConcurrentHashMap<>();
 
 }
