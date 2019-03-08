@@ -26,6 +26,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 	category = "oauth2", scope = ExtendedObjectClassDefinition.Scope.SYSTEM
 )
 @Meta.OCD(
+	factory = true,
 	id = "com.liferay.oauth2.provider.jsonws.internal.configuration.OAuth2JSONWSConfiguration",
 	localization = "content/Language", name = "oauth2-jsonws-configuration-name"
 )

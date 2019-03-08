@@ -36,8 +36,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.cm.ConfigurationException;
+import org.osgi.service.cm.ManagedServiceFactory;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -50,10 +53,29 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
  * @author Tomas Polesovsky
  */
 @Component(
-	configurationPid = "com.liferay.oauth2.provider.jsonws.internal.configuration.OAuth2JSONWSConfiguration",
-	immediate = true, service = SAPEntryScopeDescriptorFinderRegistrator.class
+	immediate = true,
+	property = Constants.SERVICE_PID + "=com.liferay.oauth2.provider.jsonws.internal.configuration.OAuth2JSONWSConfiguration",
+	service = {
+		ManagedServiceFactory.class,
+		SAPEntryScopeDescriptorFinderRegistrator.class
+	}
 )
-public class SAPEntryScopeDescriptorFinderRegistrator {
+public class SAPEntryScopeDescriptorFinderRegistrator
+	implements ManagedServiceFactory {
+
+	@Override
+	public void deleted(String pid) {
+		ServiceRegistration<ScopeFinder> serviceRegistration =
+			_serviceRegistrations.remove(pid);
+
+		serviceRegistration.unregister();
+	}
+
+	@Override
+	public String getName() {
+		return SAPEntryScopeDescriptorFinderRegistrator.class.getName() +
+			" Factory";
+	}
 
 	public List<SAPEntryScope> getRegisteredSAPEntryScopes(long companyId) {
 		List<SAPEntryScope> registeredSAPEntryScopes =
@@ -87,11 +109,9 @@ public class SAPEntryScopeDescriptorFinderRegistrator {
 		}
 	}
 
-	@Activate
-	protected void activate(
-		BundleContext bundleContext, Map<String, Object> properties) {
-
-		_bundleContext = bundleContext;
+	@Override
+	public void updated(String pid, Dictionary<String, ?> properties)
+		throws ConfigurationException {
 
 		Dictionary<String, Object> scopeFinderProperties =
 			new HashMapDictionary<>();
@@ -108,9 +128,23 @@ public class SAPEntryScopeDescriptorFinderRegistrator {
 				OAuth2JSONWSConstants.OAUTH2_SAP_ENTRY_OAUTH2_PREFIX));
 		scopeFinderProperties.put("sap.scope.finder", Boolean.TRUE);
 
-		_serviceRegistration = _bundleContext.registerService(
-			ScopeFinder.class, () -> Collections.emptySet(),
-			scopeFinderProperties);
+		ServiceRegistration<ScopeFinder> serviceRegistration =
+			_serviceRegistrations.put(
+				pid,
+				_bundleContext.registerService(
+					ScopeFinder.class, () -> Collections.emptySet(),
+					scopeFinderProperties));
+
+		if (serviceRegistration != null) {
+			serviceRegistration.unregister();
+		}
+	}
+
+	@Activate
+	protected void activate(
+		BundleContext bundleContext, Map<String, Object> properties) {
+
+		_bundleContext = bundleContext;
 	}
 
 	@Reference(
@@ -135,7 +169,11 @@ public class SAPEntryScopeDescriptorFinderRegistrator {
 
 	@Deactivate
 	protected void deactivate() {
-		_serviceRegistration.unregister();
+		for (ServiceRegistration<ScopeFinder> serviceRegistration :
+				_serviceRegistrations.values()) {
+
+			serviceRegistration.unregister();
+		}
 
 		for (long companyId : _companyIdsManagedServiceRegistrations.keySet()) {
 			unregister(companyId);
@@ -308,7 +346,8 @@ public class SAPEntryScopeDescriptorFinderRegistrator {
 		new ConcurrentHashMap<>();
 	private final List<ServiceReference<ScopeFinder>>
 		_sapScopeFinderServiceReferences = new LinkedList<>();
-	private ServiceRegistration<ScopeFinder> _serviceRegistration;
+	private final Map<String, ServiceRegistration<ScopeFinder>>
+		_serviceRegistrations = new ConcurrentHashMap<>();
 
 	private static class ManagedServiceRegistration {
 
