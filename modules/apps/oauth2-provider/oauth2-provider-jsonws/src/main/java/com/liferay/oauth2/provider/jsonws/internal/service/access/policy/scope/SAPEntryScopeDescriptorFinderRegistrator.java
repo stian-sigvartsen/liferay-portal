@@ -69,6 +69,20 @@ public class SAPEntryScopeDescriptorFinderRegistrator {
 			SAPEntryScopeDescriptorFinder sapEntryScopeDescriptorFinder =
 				new SAPEntryScopeDescriptorFinder(sapEntryScopes);
 
+			_scopeDescriptorRegistrations.compute(
+				companyId,
+				(key, serviceRegistration) -> {
+					if (serviceRegistration != null) {
+						serviceRegistration.unregister();
+					}
+
+					serviceRegistration = _bundleContext.registerService(
+						ScopeDescriptor.class, sapEntryScopeDescriptorFinder,
+						_buildScopeDescriptorProperties(companyId));
+
+					return serviceRegistration;
+				});
+
 			Dictionary<String, Object> properties = new HashMapDictionary<>();
 
 			properties.put("companyId", String.valueOf(companyId));
@@ -88,20 +102,6 @@ public class SAPEntryScopeDescriptorFinderRegistrator {
 						properties);
 
 					_registeredSAPEntryScopes.put(companyId, sapEntryScopes);
-
-					return serviceRegistration;
-				});
-
-			_scopeDescriptorRegistrations.compute(
-				companyId,
-				(key, serviceRegistration) -> {
-					if (serviceRegistration != null) {
-						serviceRegistration.unregister();
-					}
-
-					serviceRegistration = _bundleContext.registerService(
-						ScopeDescriptor.class, sapEntryScopeDescriptorFinder,
-						_buildScopeDescriptorProperties(companyId));
 
 					return serviceRegistration;
 				});
