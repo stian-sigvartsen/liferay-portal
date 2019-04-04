@@ -18,7 +18,6 @@ import com.liferay.oauth2.provider.configuration.OAuth2ProviderConfiguration;
 import com.liferay.oauth2.provider.constants.GrantType;
 import com.liferay.oauth2.provider.constants.OAuth2ProviderConstants;
 import com.liferay.oauth2.provider.model.OAuth2Application;
-import com.liferay.oauth2.provider.model.OAuth2ApplicationScopeAliases;
 import com.liferay.oauth2.provider.model.OAuth2Authorization;
 import com.liferay.oauth2.provider.rest.internal.endpoint.authorize.configuration.OAuth2AuthorizationFlowConfiguration;
 import com.liferay.oauth2.provider.rest.internal.endpoint.constants.OAuth2ProviderRESTEndpointConstants;
@@ -400,16 +399,13 @@ public class LiferayOAuthDataProvider
 
 			refreshToken.setAccessTokens(accessTokens);
 
-			OAuth2ApplicationScopeAliases oAuth2ApplicationScopeAliases =
-				_oAuth2ApplicationScopeAliasesLocalService.
-					getOAuth2ApplicationScopeAliases(
-						oAuth2Authorization.
-							getOAuth2ApplicationScopeAliasesId());
-
 			refreshToken.setScopes(
 				convertScopeToPermissions(
 					refreshToken.getClient(),
-					oAuth2ApplicationScopeAliases.getScopeAliasesList()));
+					_oAuth2ApplicationScopeAliasesLocalService.
+						getScopeAliasesList(
+							oAuth2Authorization.
+								getOAuth2ApplicationScopeAliasesId())));
 
 			Map<String, String> extraProperties =
 				refreshToken.getExtraProperties();
@@ -796,13 +792,10 @@ public class LiferayOAuthDataProvider
 				oAuth2Authorization.getUserId(),
 				oAuth2Authorization.getUserName()));
 
-		OAuth2ApplicationScopeAliases oAuth2ApplicationScopeAliases =
-			_oAuth2ApplicationScopeAliasesLocalService.
-				getOAuth2ApplicationScopeAliases(
-					oAuth2Authorization.getOAuth2ApplicationScopeAliasesId());
-
 		List<OAuthPermission> oAuth2Permissions = convertScopeToPermissions(
-			client, oAuth2ApplicationScopeAliases.getScopeAliasesList());
+			client,
+			_oAuth2ApplicationScopeAliasesLocalService.getScopeAliasesList(
+				oAuth2Authorization.getOAuth2ApplicationScopeAliasesId()));
 
 		serverAccessToken.setScopes(oAuth2Permissions);
 
@@ -881,22 +874,9 @@ public class LiferayOAuthDataProvider
 		client.setApplicationDescription(oAuth2Application.getDescription());
 
 		if (oAuth2Application.getOAuth2ApplicationScopeAliasesId() > 0) {
-			try {
-				OAuth2ApplicationScopeAliases oAuth2ApplicationScopeAliases =
-					_oAuth2ApplicationScopeAliasesLocalService.
-						getOAuth2ApplicationScopeAliases(
-							oAuth2Application.
-								getOAuth2ApplicationScopeAliasesId());
-
-				client.setRegisteredScopes(
-					oAuth2ApplicationScopeAliases.getScopeAliasesList());
-			}
-			catch (PortalException pe) {
-				_log.error(
-					"Unable to find associated application scope aliases", pe);
-
-				throw new OAuthServiceException(pe);
-			}
+			client.setRegisteredScopes(
+				_oAuth2ApplicationScopeAliasesLocalService.getScopeAliasesList(
+					oAuth2Application.getOAuth2ApplicationScopeAliasesId()));
 		}
 
 		client.setRedirectUris(oAuth2Application.getRedirectURIsList());

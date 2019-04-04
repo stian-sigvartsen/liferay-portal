@@ -16,7 +16,6 @@ package com.liferay.oauth2.provider.rest.internal.security.auth.verifier;
 
 import com.liferay.oauth2.provider.constants.OAuth2ProviderConstants;
 import com.liferay.oauth2.provider.model.OAuth2Application;
-import com.liferay.oauth2.provider.model.OAuth2ApplicationScopeAliases;
 import com.liferay.oauth2.provider.model.OAuth2Authorization;
 import com.liferay.oauth2.provider.rest.spi.bearer.token.provider.BearerTokenProvider;
 import com.liferay.oauth2.provider.rest.spi.bearer.token.provider.BearerTokenProviderAccessor;
@@ -180,13 +179,9 @@ public class OAuth2RESTAuthVerifier implements AuthVerifier {
 			oAuth2Authorization.getOAuth2ApplicationScopeAliasesId();
 
 		if (oAuth2ApplicationScopeAliasesId > 0) {
-			OAuth2ApplicationScopeAliases oAuth2ApplicationScopeAliases =
-				_oAuth2ApplicationScopeAliasesLocalService.
-					getOAuth2ApplicationScopeAliases(
-						oAuth2ApplicationScopeAliasesId);
-
 			scopeAliasesList =
-				oAuth2ApplicationScopeAliases.getScopeAliasesList();
+				_oAuth2ApplicationScopeAliasesLocalService.getScopeAliasesList(
+					oAuth2ApplicationScopeAliasesId);
 		}
 
 		BearerTokenProvider.AccessToken accessToken =

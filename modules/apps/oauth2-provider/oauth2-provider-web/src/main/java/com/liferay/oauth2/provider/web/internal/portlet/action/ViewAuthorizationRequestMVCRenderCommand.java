@@ -17,8 +17,8 @@ package com.liferay.oauth2.provider.web.internal.portlet.action;
 import com.liferay.document.library.util.DLURLHelper;
 import com.liferay.oauth2.provider.model.OAuth2Application;
 import com.liferay.oauth2.provider.model.OAuth2ApplicationScopeAliases;
+import com.liferay.oauth2.provider.model.OAuth2ScopeGrant;
 import com.liferay.oauth2.provider.scope.liferay.ApplicationDescriptorLocator;
-import com.liferay.oauth2.provider.scope.liferay.LiferayOAuth2Scope;
 import com.liferay.oauth2.provider.scope.liferay.ScopeDescriptorLocator;
 import com.liferay.oauth2.provider.scope.liferay.ScopeLocator;
 import com.liferay.oauth2.provider.service.OAuth2ApplicationScopeAliasesLocalService;
@@ -29,6 +29,7 @@ import com.liferay.oauth2.provider.web.internal.constants.OAuth2ProviderPortletK
 import com.liferay.oauth2.provider.web.internal.constants.OAuth2ProviderWebKeys;
 import com.liferay.oauth2.provider.web.internal.display.context.OAuth2AuthorizePortletDisplayContext;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.servlet.SessionErrors;
@@ -39,12 +40,15 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
@@ -172,29 +176,27 @@ public class ViewAuthorizationRequestMVCRenderCommand
 		OAuth2ApplicationScopeAliases oAuth2ApplicationScopeAliases,
 		String[] requestedScopeAliases) {
 
-		Collection<LiferayOAuth2Scope> liferayOAuth2Scopes = new HashSet<>();
+		Set<String> requestedScopeAliasesSet = new HashSet<>(
+			Arrays.asList(requestedScopeAliases));
 
-		List<String> scopeAliasesList =
-			oAuth2ApplicationScopeAliases.getScopeAliasesList();
-
-		for (String requestedScopeAlias : requestedScopeAliases) {
-			if (!scopeAliasesList.contains(requestedScopeAlias)) {
-				continue;
-			}
-
-			liferayOAuth2Scopes.addAll(
-				_scopeFinderLocator.getLiferayOAuth2Scopes(
-					oAuth2ApplicationScopeAliases.getCompanyId(),
-					requestedScopeAlias));
-		}
-
-		liferayOAuth2Scopes =
-			_oAuth2ScopeGrantLocalService.getFilteredLiferayOAuth2Scopes(
+		Collection<OAuth2ScopeGrant> oAuth2ScopeGrants =
+			_oAuth2ScopeGrantLocalService.getOAuth2ScopeGrants(
 				oAuth2ApplicationScopeAliases.
 					getOAuth2ApplicationScopeAliasesId(),
-				liferayOAuth2Scopes);
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 
-		assignableScopes.addLiferayOAuth2Scopes(liferayOAuth2Scopes);
+		Stream<OAuth2ScopeGrant> stream = oAuth2ScopeGrants.stream();
+
+		stream.filter(
+			oa2sg -> !Collections.disjoint(
+				oa2sg.getScopeAliasesList(), requestedScopeAliasesSet)
+		).map(
+			oa2sg -> _scopeFinderLocator.getLiferayOAuth2Scope(
+				oa2sg.getCompanyId(), oa2sg.getApplicationName(),
+				oa2sg.getScope())
+		).forEach(
+			assignableScopes::addLiferayOAuth2Scope
+		);
 	}
 
 	@Reference
