@@ -400,25 +400,9 @@ public class OAuth2ApplicationLocalServiceImpl
 
 		OAuth2ApplicationScopeAliases oAuth2ApplicationScopeAliases =
 			_oAuth2ApplicationScopeAliasesLocalService.
-				fetchOAuth2ApplicationScopeAliases(
+				addOAuth2ApplicationScopeAliases(
+					oAuth2Application.getCompanyId(), userId, userName,
 					oAuth2ApplicationId, scopeAliasesList);
-
-		if (oAuth2ApplicationScopeAliases != null) {
-			oAuth2ApplicationScopeAliases.setUserId(userId);
-			oAuth2ApplicationScopeAliases.setUserName(userName);
-
-			oAuth2ApplicationScopeAliases =
-				_oAuth2ApplicationScopeAliasesLocalService.
-					updateOAuth2ApplicationScopeAliases(
-						oAuth2ApplicationScopeAliases);
-		}
-		else {
-			oAuth2ApplicationScopeAliases =
-				_oAuth2ApplicationScopeAliasesLocalService.
-					addOAuth2ApplicationScopeAliases(
-						oAuth2Application.getCompanyId(), userId, userName,
-						oAuth2ApplicationId, scopeAliasesList);
-		}
 
 		if (oAuth2Application.getOAuth2ApplicationScopeAliasesId() !=
 				oAuth2ApplicationScopeAliases.
