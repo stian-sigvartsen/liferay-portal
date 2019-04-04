@@ -185,10 +185,6 @@ public interface OAuth2ApplicationScopeAliasesLocalService
 		long oAuth2ApplicationScopeAliasesId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public OAuth2ApplicationScopeAliases fetchOAuth2ApplicationScopeAliases(
-		long oAuth2ApplicationId, List<String> scopeAliasesList);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -246,6 +242,10 @@ public interface OAuth2ApplicationScopeAliasesLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<String> getScopeAliasesList(
+		long oAuth2ApplicationScopeAliasesId);
 
 	/**
 	 * Updates the o auth2 application scope aliases in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
