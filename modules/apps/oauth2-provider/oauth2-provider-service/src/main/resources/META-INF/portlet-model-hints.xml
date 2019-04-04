@@ -40,10 +40,6 @@
 		<field name="userName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="oAuth2ApplicationId" type="long" />
-		<field name="scopeAliases" type="String">
-			<hint-collection name="CLOB" />
-		</field>
-		<field name="scopeAliasesHash" type="long" />
 	</model>
 	<model name="com.liferay.oauth2.provider.model.OAuth2Authorization">
 		<field name="oAuth2AuthorizationId" type="long" />
@@ -79,6 +75,9 @@
 		</field>
 		<field name="scope" type="String">
 			<hint name="max-length">240</hint>
+		</field>
+		<field name="scopeAliases" type="String">
+			<hint-collection name="CLOB" />
 		</field>
 	</model>
 </model-hints>

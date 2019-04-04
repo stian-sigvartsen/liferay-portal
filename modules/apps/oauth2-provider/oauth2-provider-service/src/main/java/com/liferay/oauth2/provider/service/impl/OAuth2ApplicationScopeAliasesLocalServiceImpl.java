@@ -29,12 +29,15 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.osgi.framework.Bundle;
 import org.osgi.service.component.annotations.Component;
@@ -136,6 +139,27 @@ public class OAuth2ApplicationScopeAliasesLocalServiceImpl
 		return oAuth2ApplicationScopeAliasesPersistence.
 			findByOAuth2ApplicationId(
 				oAuth2ApplicationId, start, end, orderByComparator);
+	}
+
+	@Override
+	public List<String> getScopeAliasesList(
+		long oAuth2ApplicationScopeAliasesId) {
+
+		Collection<OAuth2ScopeGrant> oAuth2ScopeGrants =
+			_oAuth2ScopeGrantLocalService.getOAuth2ScopeGrants(
+				oAuth2ApplicationScopeAliasesId, QueryUtil.ALL_POS,
+				QueryUtil.ALL_POS, null);
+
+		Stream<OAuth2ScopeGrant> stream = oAuth2ScopeGrants.stream();
+
+		Set<String> scopeAliases = stream.flatMap(
+			oa2sg -> oa2sg.getScopeAliasesList(
+			).stream()
+		).collect(
+			Collectors.toSet()
+		);
+
+		return new ArrayList<>(scopeAliases);
 	}
 
 	@Override
