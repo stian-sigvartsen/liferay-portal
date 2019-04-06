@@ -62,7 +62,6 @@
 
 							for (AssignScopesDisplayContext.Relations globalRelations : globalRelationsCollection) {
 								globalScopeAliases.addAll(globalRelations.getScopeAliases());
-								assignedScopeAliases.addAll(globalRelations.getAssignedScopeAliases());
 							}
 
 							String globalScopeAliasesString = StringUtil.merge(globalScopeAliases, StringPool.SPACE);
