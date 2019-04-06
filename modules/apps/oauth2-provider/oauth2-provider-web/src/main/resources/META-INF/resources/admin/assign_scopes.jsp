@@ -23,11 +23,7 @@ OAuth2Application oAuth2Application = oAuth2AdminPortletDisplayContext.getOAuth2
 
 AssignScopesDisplayContext assignScopesDisplayContext = (AssignScopesDisplayContext)oAuth2AdminPortletDisplayContext;
 
-List<String> assignedScopes = Collections.emptyList();
-
-if (oAuth2Application.getOAuth2ApplicationScopeAliasesId() > 0) {
-	assignedScopes = OAuth2ApplicationScopeAliasesLocalServiceUtil.getScopeAliasesList(oAuth2Application.getOAuth2ApplicationScopeAliasesId());
-}
+Set<String> allAssignedScopes = new HashSet<>();
 %>
 
 <div class="container-fluid container-fluid-max-xl container-view">
@@ -121,7 +117,14 @@ if (oAuth2Application.getOAuth2ApplicationScopeAliasesId() > 0) {
 
 			$('#<portlet:namespace />globalAccordion .panel').hide();
 			for (var i = 0; i < scopeAliases.length; i++) {
-				$('#<portlet:namespace />globalAccordion #<portlet:namespace />' + $.escapeSelector(scopeAliases[i]) + '.panel').show();
+
+				A.all('#<portlet:namespace />globalAccordion .panel[data-master]').filter(
+					function() {
+						var masterScopeAliases = this.attr("data-master");
+						return $.inArray(scopeAliases[i], masterScopeAliases.split(" ")) >= 0;
+					}).each(function() {
+						this.show();
+					});
 			}
 
 			$('#<portlet:namespace />globalAccordion').appendTo('#<portlet:namespace />modalBody');
@@ -217,7 +220,7 @@ if (oAuth2Application.getOAuth2ApplicationScopeAliasesId() > 0) {
 	}
 
 	<%
-	for (String assignedScope : assignedScopes) {
+	for (String assignedScope : allAssignedScopes) {
 		%>
 
 			<portlet:namespace />changeScopeAliasStickyStatus('<%= HtmlUtil.escapeJS(assignedScope) %>', true);
