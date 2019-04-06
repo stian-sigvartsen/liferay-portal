@@ -26,9 +26,7 @@ AssignScopesDisplayContext assignScopesDisplayContext = (AssignScopesDisplayCont
 List<String> assignedScopes = Collections.emptyList();
 
 if (oAuth2Application.getOAuth2ApplicationScopeAliasesId() > 0) {
-	OAuth2ApplicationScopeAliases oAuth2ApplicationScopeAliases = OAuth2ApplicationScopeAliasesLocalServiceUtil.getOAuth2ApplicationScopeAliases(oAuth2Application.getOAuth2ApplicationScopeAliasesId());
-
-	assignedScopes = oAuth2ApplicationScopeAliases.getScopeAliasesList();
+	assignedScopes = OAuth2ApplicationScopeAliasesLocalServiceUtil.getScopeAliasesList(oAuth2Application.getOAuth2ApplicationScopeAliasesId());
 }
 %>
 
