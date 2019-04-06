@@ -65,10 +65,22 @@ public class AssignableScopes {
 			_scopeDescriptorLocator);
 	}
 
+	public void addLiferayOAuth2Scope(LiferayOAuth2Scope liferayOAuth2Scope) {
+		if (liferayOAuth2Scope != null) {
+			_liferayOAuth2Scopes.add(liferayOAuth2Scope);
+		}
+	}
+
 	public void addLiferayOAuth2Scopes(
 		Collection<LiferayOAuth2Scope> liferayOAuth2Scopes) {
 
-		_liferayOAuth2Scopes.addAll(liferayOAuth2Scopes);
+		if (liferayOAuth2Scopes == null) {
+			return;
+		}
+
+		Stream<LiferayOAuth2Scope> stream = liferayOAuth2Scopes.stream();
+
+		stream.forEach(this::addLiferayOAuth2Scope);
 	}
 
 	public boolean contains(AssignableScopes assignableScopes) {
