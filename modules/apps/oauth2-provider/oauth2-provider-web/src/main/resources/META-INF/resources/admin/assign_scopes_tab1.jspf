@@ -54,15 +54,7 @@
 							Set<String> assignedScopeAliases = relations.getAssignedScopeAliases();
 							Set<String> scopeAliases = relations.getScopeAliases();
 
-							Map<AssignableScopes, AssignScopesDisplayContext.Relations> globalAssignableScopesRelations = relations.getGlobalAssignableScopesRelations();
-
-							Collection<AssignScopesDisplayContext.Relations> globalRelationsCollection = globalAssignableScopesRelations.values();
-
-							Set<String> globalScopeAliases = new HashSet<>();
-
-							for (AssignScopesDisplayContext.Relations globalRelations : globalRelationsCollection) {
-								globalScopeAliases.addAll(globalRelations.getScopeAliases());
-							}
+							Set<String> globalScopeAliases = relations.getGlobalScopeAliases();
 
 							String globalScopeAliasesString = StringUtil.merge(globalScopeAliases, StringPool.SPACE);
 

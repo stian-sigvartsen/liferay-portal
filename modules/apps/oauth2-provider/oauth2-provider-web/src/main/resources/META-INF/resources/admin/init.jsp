@@ -47,7 +47,6 @@ page import="com.liferay.portal.kernel.util.StringPool" %><%@
 page import="com.liferay.portal.kernel.util.StringUtil" %>
 
 <%@ page import="java.util.ArrayList" %><%@
-page import="java.util.Collection" %><%@
 page import="java.util.Collections" %><%@
 page import="java.util.Date" %><%@
 page import="java.util.HashMap" %><%@

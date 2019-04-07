@@ -358,10 +358,20 @@ public class AssignScopesDisplayContext
 			return _assignedScopeAliases;
 		}
 
-		public Map<AssignableScopes, Relations>
-			getGlobalAssignableScopesRelations() {
+		public Set<String> getGlobalScopeAliases() {
+			Stream<AssignableScopes> stream = _globalAssignableScopes.stream();
 
-			return getAssignableScopesRelations(_globalAssignableScopes);
+			return stream.map(
+				_assignableScopesRelations::get
+			).flatMap(
+				relations -> {
+					Set<String> scopeAliases = relations.getScopeAliases();
+
+					return scopeAliases.stream();
+				}
+			).collect(
+				Collectors.toSet()
+			);
 		}
 
 		public Set<String> getScopeAliases() {
