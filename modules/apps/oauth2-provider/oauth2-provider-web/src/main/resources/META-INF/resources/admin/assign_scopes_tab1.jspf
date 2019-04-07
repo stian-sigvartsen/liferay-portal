@@ -64,7 +64,7 @@
 
 							String id = "scopeAlias" + StringUtil.randomId();
 
-							allAssignedScopes.addAll(assignedScopeAliases);
+							allAssignedScopeAliases.addAll(assignedScopeAliases);
 						%>
 
 							<li class="list-group-item list-group-item-flex<c:if test="<%= scopeAliases.isEmpty() && globalScopeAliases.isEmpty() %>"> removed-scope</c:if>">

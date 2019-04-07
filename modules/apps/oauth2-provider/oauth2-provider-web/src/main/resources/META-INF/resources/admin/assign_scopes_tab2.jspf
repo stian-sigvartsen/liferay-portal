@@ -22,7 +22,7 @@
 
 		Set<String> assignedScopeAliases = relations.getAssignedScopeAliases();
 
-		allAssignedScopes.addAll(assignedScopeAliases);
+		allAssignedScopeAliases.addAll(assignedScopeAliases);
 
 		Set<String> scopeAliases = relations.getScopeAliases();
 

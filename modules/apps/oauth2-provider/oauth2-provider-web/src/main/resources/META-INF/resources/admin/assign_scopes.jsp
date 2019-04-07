@@ -23,7 +23,7 @@ OAuth2Application oAuth2Application = oAuth2AdminPortletDisplayContext.getOAuth2
 
 AssignScopesDisplayContext assignScopesDisplayContext = (AssignScopesDisplayContext)oAuth2AdminPortletDisplayContext;
 
-Set<String> allAssignedScopes = new HashSet<>();
+Set<String> allAssignedScopeAliases = new HashSet<>();
 %>
 
 <div class="container-fluid container-fluid-max-xl container-view">
@@ -220,10 +220,10 @@ Set<String> allAssignedScopes = new HashSet<>();
 	}
 
 	<%
-	for (String assignedScope : allAssignedScopes) {
+	for (String assignedScopeAlias : allAssignedScopeAliases) {
 		%>
 
-			<portlet:namespace />changeScopeAliasStickyStatus('<%= HtmlUtil.escapeJS(assignedScope) %>', true);
+		<portlet:namespace />changeScopeAliasStickyStatus('<%= HtmlUtil.escapeJS(assignedScopeAlias) %>', true);
 
 		<%
 		}
