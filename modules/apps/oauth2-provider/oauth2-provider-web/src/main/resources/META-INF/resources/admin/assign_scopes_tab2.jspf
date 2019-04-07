@@ -22,8 +22,6 @@
 
 		Set<String> assignedScopeAliases = relations.getAssignedScopeAliases();
 
-		allAssignedScopeAliases.addAll(assignedScopeAliases);
-
 		Set<String> scopeAliases = relations.getScopeAliases();
 
 		Set<String> relatedScopeAliases = new HashSet<>(scopeAliases);
