@@ -62,15 +62,16 @@ public class AssignScopesDisplayContext
 	extends OAuth2AdminPortletDisplayContext {
 
 	public AssignScopesDisplayContext(
-		OAuth2ApplicationService oAuth2ApplicationService,
-		OAuth2ProviderConfiguration oAuth2ProviderConfiguration,
-		PortletRequest portletRequest, ThemeDisplay themeDisplay,
-		ApplicationDescriptorLocator applicationDescriptorLocator,
-		OAuth2ApplicationScopeAliasesLocalService
-			oAuth2ApplicationScopeAliasesLocalService,
-		OAuth2ScopeGrantLocalService oAuth2ScopeGrantLocalService,
-		ScopeDescriptorLocator scopeDescriptorLocator,
-		ScopeLocator scopeLocator, DLURLHelper dlurlHelper) {
+			OAuth2ApplicationService oAuth2ApplicationService,
+			OAuth2ProviderConfiguration oAuth2ProviderConfiguration,
+			PortletRequest portletRequest, ThemeDisplay themeDisplay,
+			ApplicationDescriptorLocator applicationDescriptorLocator,
+			OAuth2ApplicationScopeAliasesLocalService
+				oAuth2ApplicationScopeAliasesLocalService,
+			OAuth2ScopeGrantLocalService oAuth2ScopeGrantLocalService,
+			ScopeDescriptorLocator scopeDescriptorLocator,
+			ScopeLocator scopeLocator, DLURLHelper dlurlHelper)
+		throws PortalException {
 
 		super(
 			oAuth2ApplicationService, oAuth2ApplicationScopeAliasesLocalService,
@@ -80,16 +81,7 @@ public class AssignScopesDisplayContext
 		_applicationDescriptorLocator = applicationDescriptorLocator;
 		_locale = themeDisplay.getLocale();
 
-		OAuth2Application oAuth2Application;
-
-		try {
-			oAuth2Application = getOAuth2Application();
-		}
-		catch (PortalException pe) {
-			pe.printStackTrace();
-
-			return;
-		}
+		OAuth2Application oAuth2Application = getOAuth2Application();
 
 		long oAuth2ApplicationScopeAliasesId =
 			oAuth2Application.getOAuth2ApplicationScopeAliasesId();
