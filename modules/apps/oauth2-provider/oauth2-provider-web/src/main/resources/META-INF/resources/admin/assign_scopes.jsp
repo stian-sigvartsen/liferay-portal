@@ -153,12 +153,19 @@ Set<String> allAssignedScopeAliases = new HashSet<>();
 		var checkbox = A.one(checkboxElement);
 
 		var value = checkbox.val();
+		if (!value) {
+			return;
+		}
 
-		<portlet:namespace />changeScopeAliasStickyStatus(value, checkbox.attr('checked'));
+		var processedScopeAliases = value.split(" ");
+
+		var scopeAlias = processedScopeAliases[0];
+
+		<portlet:namespace />changeScopeAliasStickyStatus(scopeAlias, checkbox.attr('checked'));
 
 		return A.all('input[data-slave]').filter(
 			function() {
-				return $.inArray(value, this.attr("data-slave").split(" ")) >= 0
+				return $.inArray(scopeAlias, this.attr("data-slave").split(" ")) >= 0
 			}).each(function() {
 
 				var slave = this;
@@ -167,14 +174,25 @@ Set<String> allAssignedScopeAliases = new HashSet<>();
 
 				var logicalOR = checkbox.attr('checked');
 
-				for (var i = 0; i < scopeAliases.length; i++) {
-					logicalOR = logicalOR || $('input[value="' + scopeAliases[i] + '"]:checked').length > 0;
+				for (var i = 0; i < scopeAliases.length && !logicalOR; i++) {
 
-					if (logicalOR) {
-						slave.attr('checked', true);
-						slave.attr('disabled', true);
-						return;
+					if ($.inArray(scopeAliases[i], processedScopeAliases)) {
+						continue;
 					}
+
+					A.all('input[data-master]:checked').filter(
+						function() {
+							return $.inArray(scopeAliases[i], this.attr("data-master").split(" ")) >= 0
+						}).each(function() {
+							logicalOR = true;
+							processedScopeAliases.concat(this.attr("data-master").split(" "));
+						});
+				}
+
+				if (logicalOR) {
+					slave.attr('checked', true);
+					slave.attr('disabled', true);
+					return;
 				}
 
 				var index = <portlet:namespace />getArrayIndexOfStickyScopeAlias(slave.val());
