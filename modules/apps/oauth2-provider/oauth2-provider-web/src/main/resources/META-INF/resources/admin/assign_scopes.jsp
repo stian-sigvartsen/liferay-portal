@@ -77,6 +77,7 @@ AssignScopesDisplayContext assignScopesDisplayContext = (AssignScopesDisplayCont
 		'node',
 		'aui-modal',
 		'event-outside',
+		'node-event-simulate',
 		function(A) {
 			if (A.all('#<portlet:namespace />navGlobalScopes .panel').size() > 0) {
 				A.one('#<portlet:namespace />navScopeTypes').toggleClass('hidden', false);
@@ -295,6 +296,15 @@ AssignScopesDisplayContext assignScopesDisplayContext = (AssignScopesDisplayCont
 					document.<portlet:namespace/>fm.submit();
 				}
 			);
+
+			A.all('#<portlet:namespace />appsAccordion .panel').filter(
+				function() {
+					return this.one('input:checked');
+				}
+			).each(
+				function() {
+					this.one('a').simulate('click');
+				});
 		}
 	);
 </aui:script>
