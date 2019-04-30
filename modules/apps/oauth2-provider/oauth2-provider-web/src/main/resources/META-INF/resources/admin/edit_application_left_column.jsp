@@ -42,7 +42,7 @@ User currentUser = PortalUtil.getUser(request);
 		<aui:input helpMessage="privacy-policy-url-help" name="privacyPolicyURL" />
 	</c:if>
 
-	<aui:select name="clientProfile">
+	<aui:select name="clientProfile" onChange='<%= renderResponse.getNamespace() + "showUserSelection();" %>'>
 
 		<%
 		ClientProfile[] clientProfiles = oAuth2AdminPortletDisplayContext.getSortedClientProfiles();
@@ -57,6 +57,12 @@ User currentUser = PortalUtil.getUser(request);
 		%>
 
 	</aui:select>
+
+	<aui:script>
+		function <portlet:namespace />showUserSelection() {
+			Liferay.Util.toggleBoxes('<portlet:namespace /><%= clientCredentialsCheckboxName %>', '<portlet:namespace />userSelection');
+		}
+	</aui:script>
 
 	<h3 class="sheet-subtitle"><liferay-ui:message key="allowed-grant-types" /></h3>
 
@@ -206,39 +212,39 @@ User currentUser = PortalUtil.getUser(request);
 	</div>
 
 	<c:if test="<%= oAuth2Application != null %>">
-		<aui:fieldset label="supported-features">
-			<aui:field-wrapper>
+		<h3 class="sheet-subtitle"><liferay-ui:message key="supported-features" /></h3>
 
-				<%
-				List<String> oAuth2ApplicationFeaturesList = new ArrayList<>();
+		<aui:field-wrapper>
 
-				if (oAuth2Application != null) {
-					oAuth2ApplicationFeaturesList = oAuth2Application.getFeaturesList();
+			<%
+			List<String> oAuth2ApplicationFeaturesList = new ArrayList<>();
+
+			if (oAuth2Application != null) {
+				oAuth2ApplicationFeaturesList = oAuth2Application.getFeaturesList();
+			}
+
+			String[] oAuth2Features = oAuth2AdminPortletDisplayContext.getOAuth2Features(portletPreferences);
+
+			for (String oAuth2Feature : oAuth2Features) {
+				boolean checked = false;
+
+				if ((oAuth2Application != null) && oAuth2ApplicationFeaturesList.contains(oAuth2Feature)) {
+					checked = true;
 				}
 
-				String[] oAuth2Features = oAuth2AdminPortletDisplayContext.getOAuth2Features(portletPreferences);
+				String name = "feature-" + oAuth2Feature;
 
-				for (String oAuth2Feature : oAuth2Features) {
-					boolean checked = false;
+				checked = ParamUtil.getBoolean(request, name, checked);
+			%>
 
-					if ((oAuth2Application != null) && oAuth2ApplicationFeaturesList.contains(oAuth2Feature)) {
-						checked = true;
-					}
+				<div class="supportedFeature">
+					<aui:input checked="<%= checked %>" label="<%= HtmlUtil.escape(oAuth2Feature) %>" name="<%= name %>" type="checkbox" />
+				</div>
 
-					String name = "feature-" + oAuth2Feature;
+			<%
+			}
+			%>
 
-					checked = ParamUtil.getBoolean(request, name, checked);
-				%>
-
-					<div class="supportedFeature">
-						<aui:input checked="<%= checked %>" label="<%= HtmlUtil.escape(oAuth2Feature) %>" name="<%= name %>" type="checkbox" />
-					</div>
-
-				<%
-				}
-				%>
-
-			</aui:field-wrapper>
-		</aui:fieldset>
+		</aui:field-wrapper>
 	</c:if>
 </aui:fieldset>

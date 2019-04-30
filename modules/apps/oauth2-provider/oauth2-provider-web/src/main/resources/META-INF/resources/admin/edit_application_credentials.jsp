@@ -103,26 +103,25 @@ String clientSecret = (oAuth2Application == null) ? "" : oAuth2Application.getCl
 						</div>
 
 						<div class="col-lg-3">
-							<aui:fieldset label="icon">
+							<h3 class="sheet-subtitle"><liferay-ui:message key="icon" /></h3>
 
-								<%
-								String thumbnailURL = oAuth2AdminPortletDisplayContext.getThumbnailURL(oAuth2Application);
-								%>
+							<%
+							String thumbnailURL = oAuth2AdminPortletDisplayContext.getThumbnailURL(oAuth2Application);
+							%>
 
-								<c:choose>
-									<c:when test="<%= oAuth2AdminPortletDisplayContext.hasUpdatePermission(oAuth2Application) %>">
-										<liferay-ui:logo-selector
-											currentLogoURL="<%= thumbnailURL %>"
-											defaultLogo="<%= oAuth2Application.getIconFileEntryId() == 0 %>"
-											defaultLogoURL="<%= oAuth2AdminPortletDisplayContext.getDefaultIconURL() %>"
-											tempImageFileName="<%= String.valueOf(oAuth2Application.getClientId()) %>"
-										/>
-									</c:when>
-									<c:otherwise>
-										<img alt="<liferay-ui:message escapeAttribute="<%= true %>" key="portrait" />" src="<%= HtmlUtil.escapeAttribute(thumbnailURL) %>" />
-									</c:otherwise>
-								</c:choose>
-							</aui:fieldset>
+							<c:choose>
+								<c:when test="<%= oAuth2AdminPortletDisplayContext.hasUpdatePermission(oAuth2Application) %>">
+									<liferay-ui:logo-selector
+										currentLogoURL="<%= thumbnailURL %>"
+										defaultLogo="<%= oAuth2Application.getIconFileEntryId() == 0 %>"
+										defaultLogoURL="<%= oAuth2AdminPortletDisplayContext.getDefaultIconURL() %>"
+										tempImageFileName="<%= String.valueOf(oAuth2Application.getClientId()) %>"
+									/>
+								</c:when>
+								<c:otherwise>
+									<img alt="<liferay-ui:message escapeAttribute="<%= true %>" key="portrait" />" src="<%= HtmlUtil.escapeAttribute(thumbnailURL) %>" />
+								</c:otherwise>
+							</c:choose>
 						</div>
 					</c:when>
 					<c:otherwise>
