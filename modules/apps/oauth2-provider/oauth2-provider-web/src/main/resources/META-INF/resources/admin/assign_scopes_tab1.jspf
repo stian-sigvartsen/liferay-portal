@@ -29,7 +29,7 @@
 			<a 
 				aria-controls="<portlet:namespace />appsAccordion<%= applicationNameHtmlId %>" 
 				aria-expanded="false" 
-				class="collapse-icon panel-header panel-header-link" 
+				class="collapse-icon collapsed panel-header panel-header-link" 
 				data-parent="#<portlet:namespace />appsAccordion" 
 				data-toggle="collapse" 
 				href="#<portlet:namespace />appsAccordion<%= applicationNameHtmlId %>" 
