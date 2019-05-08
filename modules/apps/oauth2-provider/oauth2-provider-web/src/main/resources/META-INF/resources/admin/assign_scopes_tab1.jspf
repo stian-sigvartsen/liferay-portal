@@ -23,6 +23,8 @@
 		String applicationName = applicationNameDescriptionEntry.getKey();
 
 		String applicationNameHtmlId = HtmlUtil.getAUICompatibleId(applicationName);
+
+		boolean anyAssignedScopes = false;
 	%>
 
 		<liferay-util:buffer
@@ -155,9 +157,11 @@
 
 									<%
 									Set<String> relatedScopeAliases = new HashSet<>(scopeAliases);
+									Set<String> assignedGlobalScopeAliases = relations.getAssignedGlobalScopeAliases();
 
 									relatedScopeAliases.addAll(assignedScopeAliases);
 									relatedScopeAliases.addAll(globalScopeAliases);
+									relatedScopeAliases.addAll(assignedGlobalScopeAliases);
 
 									List<String> relatedScopeAliasesList = new ArrayList<>(relatedScopeAliases);
 
@@ -174,6 +178,8 @@
 
 									<%
 									}
+
+									anyAssignedScopes = anyAssignedScopes || !assignedScopeAliases.isEmpty() || !assignedGlobalScopeAliases.isEmpty();
 									%>
 
 								</div>
@@ -190,7 +196,7 @@
 		</liferay-util:buffer>
 
 		<div class="panel panel-secondary">
-			<a aria-controls="<portlet:namespace />appsAccordion<%= applicationNameHtmlId %>" aria-expanded="false" class="collapse-icon collapsed panel-header panel-header-link" data-parent="#<portlet:namespace />appsAccordion" data-toggle="collapse" href="#<portlet:namespace />appsAccordion<%= applicationNameHtmlId %>" id="<portlet:namespace />appsAccordionHeading<%= applicationNameHtmlId %>" role="tab">
+			<a aria-controls="<portlet:namespace />appsAccordion<%= applicationNameHtmlId %>" aria-expanded="<%= anyAssignedScopes %>" class="collapse-icon<c:if test="<%= !anyAssignedScopes %>"> collapsed</c:if> panel-header panel-header-link" data-parent="#<portlet:namespace />appsAccordion" data-toggle="collapse" href="#<portlet:namespace />appsAccordion<%= applicationNameHtmlId %>" id="<portlet:namespace />appsAccordionHeading<%= applicationNameHtmlId %>" role="tab">
 				<span class="panel-title"><%= HtmlUtil.escape(applicationNameDescriptionEntry.getValue()) %></span>
 
 				<span class="collapse-icon-closed">
@@ -205,7 +211,7 @@
 				</span>
 			</a>
 
-			<div aria-labelledby="<portlet:namespace />appsAccordionHeading<%= applicationNameHtmlId %>" class="collapse panel-collapse" id="<portlet:namespace />appsAccordion<%= applicationNameHtmlId %>" role="tabpanel">
+			<div aria-labelledby="<portlet:namespace />appsAccordionHeading<%= applicationNameHtmlId %>" class="collapse panel-collapse<c:if test="<%= anyAssignedScopes %>"> show</c:if>" id="<portlet:namespace />appsAccordion<%= applicationNameHtmlId %>" role="tabpanel">
 				<%= panelBody %>
 			</div>
 		</div>
