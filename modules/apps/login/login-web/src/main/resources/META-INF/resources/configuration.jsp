@@ -69,11 +69,46 @@ String emailFromAddress = ParamUtil.getString(request, "preferences--emailFromAd
 					<liferay-frontend:email-notification-settings
 						emailBody='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailPasswordChangedBody", "preferences", ContentUtil.get(PortalClassLoaderUtil.getClassLoader(), PropsValues.ADMIN_EMAIL_PASSWORD_CHANGED_BODY)) %>'
 						emailDefinitionTerms="<%= LoginUtil.getEmailDefinitionTerms(renderRequest, emailFromAddress, emailFromName, false) %>"
-						emailParam="emailPasswordSent"
+						emailParam="emailPasswordChanged"
 						emailSubject='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailPasswordChangedSubject", "preferences", ContentUtil.get(PortalClassLoaderUtil.getClassLoader(), PropsValues.ADMIN_EMAIL_PASSWORD_CHANGED_SUBJECT)) %>'
 						showEmailEnabled="<%= false %>"
 					/>
 				</liferay-frontend:fieldset>
+
+				<%
+				String emailPasswordSentSubject = LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailPasswordSentSubject", "preferences", null);
+				%>
+
+				<c:if test="<%= Validator.isNotNull(emailPasswordSentSubject) %>">
+					<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="legacy-template-no-longer-used" markupView="lexicon">
+						<aui:input checked="<%= false %>" label="discard" name="discardLegacyKey" type="checkbox" value="emailPasswordSentSubject,emailPasswordSentBody" />
+
+						<div class="alert alert-info">
+							<liferay-ui:message key="sending-of-passwords-by-email-is-no-longer-supported-the-template-below-is-not-used-and-can-be-discarded" />
+						</div>
+
+						<aui:field-wrapper label="subject">
+							<liferay-ui:input-localized
+								fieldPrefix="settings"
+								fieldPrefixSeparator="--"
+								name="emailPasswordSentSubject"
+								readonly="<%= true %>"
+								xml="<%= emailPasswordSentSubject %>"
+							/>
+						</aui:field-wrapper>
+
+						<aui:field-wrapper label="body">
+							<liferay-ui:input-localized
+								fieldPrefix="settings"
+								fieldPrefixSeparator="--"
+								name="emailPasswordSentBody"
+								readonly="<%= true %>"
+								type="textarea"
+								xml='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailPasswordSentBody", "preferences", null) %>'
+							/>
+						</aui:field-wrapper>
+					</aui:fieldset>
+				</c:if>
 			</liferay-ui:section>
 
 			<liferay-ui:section>

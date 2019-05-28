@@ -41,3 +41,38 @@ String sectionName = "password-changed-notification";
 <aui:fieldset cssClass="definition-of-terms email-verification terms" label="definition-of-terms">
 	<%@ include file="/email.notifications/definition_of_terms.jspf" %>
 </aui:fieldset>
+
+<%
+String emailPasswordSentSubject = LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailPasswordSentSubject", "preferences", null);
+%>
+
+<c:if test="<%= Validator.isNotNull(emailPasswordSentSubject) %>">
+	<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="legacy-template-no-longer-used" markupView="lexicon">
+		<aui:input checked="<%= false %>" label="discard" name="discardLegacyKey" type="checkbox" value="emailPasswordSentSubject,emailPasswordSentBody" />
+
+		<div class="alert alert-info">
+			<liferay-ui:message key="sending-of-passwords-by-email-is-no-longer-supported-the-template-below-is-not-used-and-can-be-discarded" />
+		</div>
+
+		<aui:field-wrapper label="subject">
+			<liferay-ui:input-localized
+				fieldPrefix="settings"
+				fieldPrefixSeparator="--"
+				name="emailPasswordSentSubject"
+				readonly="<%= true %>"
+				xml="<%= emailPasswordSentSubject %>"
+			/>
+		</aui:field-wrapper>
+
+		<aui:field-wrapper label="body">
+			<liferay-ui:input-localized
+				fieldPrefix="settings"
+				fieldPrefixSeparator="--"
+				name="emailPasswordSentBody"
+				readonly="<%= true %>"
+				type="textarea"
+				xml='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailPasswordSentBody", "preferences", null) %>'
+			/>
+		</aui:field-wrapper>
+	</aui:fieldset>
+</c:if>
