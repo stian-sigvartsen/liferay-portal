@@ -38,6 +38,12 @@ public interface PropsKeys {
 
 	public static final String ADMIN_EMAIL_FROM_NAME = "admin.email.from.name";
 
+	public static final String ADMIN_EMAIL_PASSWORD_CHANGED_BODY =
+		"admin.email.password.changed.body";
+
+	public static final String ADMIN_EMAIL_PASSWORD_CHANGED_SUBJECT =
+		"admin.email.password.changed.subject";
+
 	public static final String ADMIN_EMAIL_PASSWORD_RESET_BODY =
 		"admin.email.password.reset.body";
 
