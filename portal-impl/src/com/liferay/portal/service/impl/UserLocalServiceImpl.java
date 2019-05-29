@@ -3755,7 +3755,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		PasswordPolicy passwordPolicy = user.getPasswordPolicy();
 
 		String newPassword = StringPool.BLANK;
-		String passwordResetURL = StringPool.BLANK;
 
 		if (company.isSendPasswordResetLink()) {
 			Date expirationDate = null;
@@ -3782,9 +3781,13 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			sb.append("&ticketKey=");
 			sb.append(ticket.getKey());
 
-			passwordResetURL = sb.toString();
+			String passwordResetURL = sb.toString();
+
+			sendPasswordNotification(
+				user, companyId, null, passwordResetURL, fromName, fromAddress,
+				subject, body, serviceContext);
 		}
-		else {
+		else if (company.isSendPassword()) {
 			if (!Objects.equals(
 					PasswordEncryptorUtil.getDefaultPasswordAlgorithmType(),
 					PasswordEncryptorUtil.TYPE_NONE)) {
@@ -3836,11 +3839,11 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			else {
 				newPassword = user.getPassword();
 			}
-		}
 
-		sendPasswordNotification(
-			user, companyId, newPassword, passwordResetURL, fromName,
-			fromAddress, subject, body, serviceContext);
+			sendPasswordNotification(
+				user, companyId, newPassword, null, fromName, fromAddress,
+				subject, body, serviceContext);
+		}
 
 		return company.isSendPassword();
 	}
@@ -6119,10 +6122,15 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			return;
 		}
 
+		boolean customPasswordAllowed = GetterUtil.getBoolean(
+			serviceContext.getAttribute("customPasswordAllowed"));
+		Company company = null;
 		String fromName = PrefsPropsUtil.getString(
 			user.getCompanyId(), PropsKeys.ADMIN_EMAIL_FROM_NAME);
 		String fromAddress = PrefsPropsUtil.getString(
 			user.getCompanyId(), PropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
+		String passwordResetURL = StringPool.BLANK;
+		String portalURL = null;
 
 		PortletPreferences companyPortletPreferences =
 			PrefsPropsUtil.getPreferences(user.getCompanyId(), true);
@@ -6132,17 +6140,43 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 				companyPortletPreferences, "adminEmailUserAddedSubject",
 				PropsKeys.ADMIN_EMAIL_USER_ADDED_SUBJECT);
 
+		try {
+			company = companyLocalService.getCompany(user.getCompanyId());
+
+			portalURL = company.getPortalURL(0);
+		}
+		catch (PortalException pe) {
+			ReflectionUtil.throwException(pe);
+		}
+
 		final Map<Locale, String> localizedBodyMap;
 
-		if (Validator.isNotNull(password)) {
-			localizedBodyMap = LocalizationUtil.getLocalizationMap(
-				companyPortletPreferences, "adminEmailUserAddedBody",
-				PropsKeys.ADMIN_EMAIL_USER_ADDED_BODY);
-		}
-		else {
+		if (customPasswordAllowed) {
 			localizedBodyMap = LocalizationUtil.getLocalizationMap(
 				companyPortletPreferences, "adminEmailUserAddedNoPasswordBody",
 				PropsKeys.ADMIN_EMAIL_USER_ADDED_NO_PASSWORD_BODY);
+		}
+		else {
+			if (company.isSendPassword()) {
+				localizedBodyMap = LocalizationUtil.getLocalizationMap(
+					companyPortletPreferences, "adminEmailUserAddedBody",
+					PropsKeys.ADMIN_EMAIL_USER_ADDED_BODY);
+			}
+			else {
+				Ticket ticket = ticketLocalService.addDistinctTicket(
+					user.getCompanyId(), User.class.getName(), user.getUserId(),
+					TicketConstants.TYPE_PASSWORD, null, null, serviceContext);
+
+				passwordResetURL = StringBundler.concat(
+					serviceContext.getPortalURL(), serviceContext.getPathMain(),
+					"/portal/update_password?p_l_id=", serviceContext.getPlid(),
+					"&ticketKey=", ticket.getKey());
+
+				localizedBodyMap = LocalizationUtil.getLocalizationMap(
+					companyPortletPreferences,
+					"adminEmailUserAddedResetPasswordBody",
+					PropsKeys.ADMIN_EMAIL_USER_ADDED_RESET_PASSWORD_BODY);
+			}
 		}
 
 		String subject = _getLocalizedValue(
@@ -6150,18 +6184,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		String body = _getLocalizedValue(
 			localizedBodyMap, user.getLocale(), LocaleUtil.getDefault());
-
-		String portalURL = null;
-
-		try {
-			Company company = companyLocalService.getCompany(
-				user.getCompanyId());
-
-			portalURL = company.getPortalURL(0);
-		}
-		catch (PortalException pe) {
-			ReflectionUtil.throwException(pe);
-		}
 
 		MailTemplateContextBuilder mailTemplateContextBuilder =
 			MailTemplateFactoryUtil.createMailTemplateContextBuilder();
@@ -6174,6 +6196,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			"[$TO_ADDRESS$]", user.getEmailAddress());
 		mailTemplateContextBuilder.put(
 			"[$TO_NAME$]", HtmlUtil.escape(user.getFullName()));
+		mailTemplateContextBuilder.put(
+			"[$PASSWORD_SETUP_URL$]", passwordResetURL);
 		mailTemplateContextBuilder.put(
 			"[$USER_ID$]", String.valueOf(user.getUserId()));
 		mailTemplateContextBuilder.put(
