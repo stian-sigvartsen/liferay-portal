@@ -6317,6 +6317,18 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		PortletPreferences companyPortletPreferences =
 			PrefsPropsUtil.getPreferences(companyId, true);
 
+		Company company = null;
+		String portalURL = null;
+
+		try {
+			company = companyLocalService.getCompany(user.getCompanyId());
+
+			portalURL = company.getPortalURL(0);
+		}
+		catch (PortalException pe) {
+			ReflectionUtil.throwException(pe);
+		}
+
 		final String bodyProperty;
 		final String prefix;
 		final String subjectProperty;
@@ -6326,10 +6338,15 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			prefix = "adminEmailPasswordReset";
 			subjectProperty = PropsKeys.ADMIN_EMAIL_PASSWORD_RESET_SUBJECT;
 		}
-		else {
+		else if (company.isSendPassword()) {
 			bodyProperty = PropsKeys.ADMIN_EMAIL_PASSWORD_SENT_BODY;
 			prefix = "adminEmailPasswordSent";
 			subjectProperty = PropsKeys.ADMIN_EMAIL_PASSWORD_SENT_SUBJECT;
+		}
+		else {
+			bodyProperty = PropsKeys.ADMIN_EMAIL_PASSWORD_CHANGED_BODY;
+			prefix = "adminEmailPasswordChanged";
+			subjectProperty = PropsKeys.ADMIN_EMAIL_PASSWORD_CHANGED_SUBJECT;
 		}
 
 		String localizedBody = body;
@@ -6353,18 +6370,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 			localizedSubject = _getLocalizedValue(
 				localizedSubjectMap, user.getLocale(), LocaleUtil.getDefault());
-		}
-
-		String portalURL = null;
-
-		try {
-			Company company = companyLocalService.getCompany(
-				user.getCompanyId());
-
-			portalURL = company.getPortalURL(0);
-		}
-		catch (PortalException pe) {
-			ReflectionUtil.throwException(pe);
 		}
 
 		MailTemplateContextBuilder mailTemplateContextBuilder =
