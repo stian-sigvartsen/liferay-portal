@@ -226,6 +226,10 @@ public class ScopeLocatorImpl implements ScopeLocator {
 			serviceReferenceServiceTuple =
 				_scopeFinderByNameServiceTrackerMap.getService(applicationName);
 
+		if (serviceReferenceServiceTuple == null) {
+			return Collections.emptyList();
+		}
+
 		PrefixHandlerFactory prefixHandlerFactory =
 			_prefixHandlerFactoriesScopedServiceTrackerMap.getService(
 				companyId, applicationName);
