@@ -94,7 +94,7 @@ public class OAuth2ProviderShortcutPortalInstanceLifecycleListener
 			"liferay-json-web-services", "com.liferay.oauth2.provider.jsonws",
 			"everything.read",
 			Collections.singletonList(
-				"liferay-json-web-services.everything.read"));
+				"liferay-json-web-services.fragments.everything.read"));
 
 		oAuth2Application.setOAuth2ApplicationScopeAliasesId(
 			oAuth2ApplicationScopeAliases.getOAuth2ApplicationScopeAliasesId());
