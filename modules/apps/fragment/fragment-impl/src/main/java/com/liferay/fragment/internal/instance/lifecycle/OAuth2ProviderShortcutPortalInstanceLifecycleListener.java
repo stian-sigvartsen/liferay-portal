@@ -78,24 +78,25 @@ public class OAuth2ProviderShortcutPortalInstanceLifecycleListener
 			StringPool.BLANK, null, null, null, 0, _applicationName, null,
 			Collections.emptyList(), Collections.emptyList(),
 			new ServiceContext());
-		
-		OAuth2ApplicationScopeAliases oAuth2ApplicationScopeAliases = 
-			_oAuth2ApplicationScopeAliasesLocalService.addOAuth2ApplicationScopeAliases(
-				companyId, user.getUserId(), user.getScreenName(),
-				oAuth2Application.getOAuth2ApplicationId(), 
-				oauth2ApplicationScopeAliasesBuilder -> {
-					oauth2ApplicationScopeAliasesBuilder.forApplication(
-						"liferay-json-web-services"
-					).assignScope(
-						"everything.read", 
-						"liferay-json-web-services.fragments.everything.read"
-					);
-				});		
-		
+
+		OAuth2ApplicationScopeAliases oAuth2ApplicationScopeAliases =
+			_oAuth2ApplicationScopeAliasesLocalService.
+				addOAuth2ApplicationScopeAliases(
+					companyId, user.getUserId(), user.getScreenName(),
+					oAuth2Application.getOAuth2ApplicationId(),
+					builder -> builder.forApplication(
+						"liferay-json-web-services",
+						scopeAssigner -> scopeAssigner.assignScope(
+							"everything.read",
+							"liferay-json-web-services.fragments." +
+								"everything.read")
+					).build());
+
 		oAuth2Application.setOAuth2ApplicationScopeAliasesId(
 			oAuth2ApplicationScopeAliases.getOAuth2ApplicationScopeAliasesId());
-		
-		_oAuth2ApplicationLocalService.updateOAuth2Application(oAuth2Application);
+
+		_oAuth2ApplicationLocalService.updateOAuth2Application(
+			oAuth2Application);
 	}
 
 	@Activate
