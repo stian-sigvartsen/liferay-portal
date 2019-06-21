@@ -17,7 +17,6 @@ package com.liferay.fragment.internal.instance.lifecycle;
 import com.liferay.oauth2.provider.constants.ClientProfile;
 import com.liferay.oauth2.provider.constants.GrantType;
 import com.liferay.oauth2.provider.model.OAuth2Application;
-import com.liferay.oauth2.provider.model.OAuth2ApplicationScopeAliases;
 import com.liferay.oauth2.provider.scope.liferay.ScopeLocator;
 import com.liferay.oauth2.provider.service.OAuth2ApplicationLocalService;
 import com.liferay.oauth2.provider.service.OAuth2ApplicationScopeAliasesLocalService;
@@ -76,31 +75,14 @@ public class OAuth2ProviderShortcutPortalInstanceLifecycleListener
 			},
 			user.getUserId(), _clientId, ClientProfile.NATIVE_APPLICATION.id(),
 			StringPool.BLANK, null, null, null, 0, _applicationName, null,
-			Collections.emptyList(), Collections.emptyList(),
+			Collections.emptyList(),
+			builder -> builder.forApplication(
+				"liferay-json-web-services",
+				scopeAssigner -> scopeAssigner.assignScope(
+					"everything.read",
+					"liferay-json-web-services.fragments.everything.read")
+			).build(),
 			new ServiceContext());
-
-		OAuth2ApplicationScopeAliases oAuth2ApplicationScopeAliases =
-			_oAuth2ApplicationScopeAliasesLocalService.
-				addOAuth2ApplicationScopeAliases(
-					oAuth2Application.getCompanyId(),
-					oAuth2Application.getUserId(),
-					oAuth2Application.getUserName(),
-					oAuth2Application.getOAuth2ApplicationId(),
-					Collections.emptyList());
-
-		_oAuth2ScopeGrantLocalService.createOAuth2ScopeGrant(
-			oAuth2Application.getCompanyId(),
-			oAuth2ApplicationScopeAliases.getOAuth2ApplicationScopeAliasesId(),
-			"liferay-json-web-services", "com.liferay.oauth2.provider.jsonws",
-			"everything.read",
-			Collections.singletonList(
-				"liferay-json-web-services.fragments.everything.read"));
-
-		oAuth2Application.setOAuth2ApplicationScopeAliasesId(
-			oAuth2ApplicationScopeAliases.getOAuth2ApplicationScopeAliasesId());
-
-		_oAuth2ApplicationLocalService.updateOAuth2Application(
-			oAuth2Application);
 	}
 
 	@Activate
