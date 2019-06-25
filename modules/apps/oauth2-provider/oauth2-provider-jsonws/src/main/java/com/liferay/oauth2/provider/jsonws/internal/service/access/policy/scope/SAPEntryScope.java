@@ -28,6 +28,10 @@ public class SAPEntryScope {
 		_scope = scope;
 	}
 
+	public SAPEntry getSapEntry() {
+		return _sapEntry;
+	}
+
 	public String getSapEntryName() {
 		return _sapEntry.getName();
 	}

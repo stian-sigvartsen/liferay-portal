@@ -16,9 +16,9 @@ package com.liferay.oauth2.provider.jsonws.internal.service.access.policy.scope;
 
 import com.liferay.oauth2.provider.scope.spi.scope.descriptor.ScopeDescriptor;
 import com.liferay.oauth2.provider.scope.spi.scope.finder.ScopeFinder;
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.security.service.access.policy.model.SAPEntry;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,20 +35,27 @@ public class SAPEntryScopeDescriptorFinder
 
 	public SAPEntryScopeDescriptorFinder(List<SAPEntryScope> sapEntryScopes) {
 		for (SAPEntryScope sapEntryScope : sapEntryScopes) {
-			_sapEntryScopes.put(sapEntryScope.getScope(), sapEntryScope);
+			SAPEntry sapEntry = sapEntryScope.getSapEntry();
+
+			if (sapEntry.isEnabled()) {
+				_sapEntryScopes.put(sapEntryScope.getScope(), sapEntryScope);
+			}
+
+			_sapEntryScopesDescriptors.put(
+				sapEntryScope.getScope(), sapEntryScope);
 		}
 	}
 
 	@Override
 	public String describeScope(String scope, Locale locale) {
-		SAPEntryScope sapEntryScope = _sapEntryScopes.get(scope);
+		SAPEntryScope sapEntryScope = _sapEntryScopesDescriptors.get(scope);
 
 		if (sapEntryScope == null) {
 			if (_log.isWarnEnabled()) {
 				_log.warn("Unable to get SAP entry scope " + scope);
 			}
 
-			return StringPool.BLANK;
+			return scope;
 		}
 
 		return sapEntryScope.getTitle(locale);
@@ -63,5 +70,7 @@ public class SAPEntryScopeDescriptorFinder
 		SAPEntryScopeDescriptorFinder.class);
 
 	private final Map<String, SAPEntryScope> _sapEntryScopes = new HashMap<>();
+	private final Map<String, SAPEntryScope> _sapEntryScopesDescriptors =
+		new HashMap<>();
 
 }
