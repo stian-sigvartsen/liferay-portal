@@ -359,9 +359,6 @@ public class CompanyImpl extends CompanyBaseImpl {
 			_autoLogin = _getPrefsPropsBoolean(
 				preferences, company, PropsKeys.COMPANY_SECURITY_AUTO_LOGIN,
 				PropsValues.COMPANY_SECURITY_AUTO_LOGIN);
-			_sendPassword = _getPrefsPropsBoolean(
-				preferences, company, PropsKeys.COMPANY_SECURITY_SEND_PASSWORD,
-				PropsValues.COMPANY_SECURITY_SEND_PASSWORD);
 			_siteLogo = _getPrefsPropsBoolean(
 				preferences, company, PropsKeys.COMPANY_SECURITY_SITE_LOGO,
 				PropsValues.COMPANY_SECURITY_SITE_LOGO);
@@ -380,7 +377,7 @@ public class CompanyImpl extends CompanyBaseImpl {
 
 		private final String _authType;
 		private final boolean _autoLogin;
-		private final boolean _sendPassword;
+		private final boolean _sendPassword = false;
 		private final boolean _siteLogo;
 		private final boolean _strangers;
 		private final boolean _strangersVerify;
