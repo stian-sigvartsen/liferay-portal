@@ -170,7 +170,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -3738,7 +3737,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		Company company = companyPersistence.findByPrimaryKey(companyId);
 
-		if (!company.isSendPassword() && !company.isSendPasswordResetLink()) {
+		if (!company.isSendPasswordResetLink()) {
 			throw new SendPasswordException.MustBeEnabled(company);
 		}
 
@@ -3752,98 +3751,37 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		PasswordPolicy passwordPolicy = user.getPasswordPolicy();
 
-		String newPassword = StringPool.BLANK;
+		Date expirationDate = null;
 
-		if (company.isSendPasswordResetLink()) {
-			Date expirationDate = null;
+		if ((passwordPolicy != null) &&
+			(passwordPolicy.getResetTicketMaxAge() > 0)) {
 
-			if ((passwordPolicy != null) &&
-				(passwordPolicy.getResetTicketMaxAge() > 0)) {
-
-				expirationDate = new Date(
-					System.currentTimeMillis() +
-						(passwordPolicy.getResetTicketMaxAge() * 1000));
-			}
-
-			Ticket ticket = ticketLocalService.addDistinctTicket(
-				companyId, User.class.getName(), user.getUserId(),
-				TicketConstants.TYPE_PASSWORD, null, expirationDate,
-				serviceContext);
-
-			StringBundler sb = new StringBundler(6);
-
-			sb.append(serviceContext.getPortalURL());
-			sb.append(serviceContext.getPathMain());
-			sb.append("/portal/update_password?p_l_id=");
-			sb.append(serviceContext.getPlid());
-			sb.append("&ticketKey=");
-			sb.append(ticket.getKey());
-
-			String passwordResetURL = sb.toString();
-
-			sendPasswordNotification(
-				user, companyId, null, passwordResetURL, fromName, fromAddress,
-				subject, body, serviceContext);
-		}
-		else if (company.isSendPassword()) {
-			if (!Objects.equals(
-					PasswordEncryptorUtil.getDefaultPasswordAlgorithmType(),
-					PasswordEncryptorUtil.TYPE_NONE)) {
-
-				if (LDAPSettingsUtil.isPasswordPolicyEnabled(
-						user.getCompanyId())) {
-
-					if (_log.isWarnEnabled()) {
-						StringBundler sb = new StringBundler(5);
-
-						sb.append("When LDAP password policy is enabled, it ");
-						sb.append("is possible that portal generated ");
-						sb.append("passwords will not match the LDAP policy.");
-						sb.append("Using RegExpToolkit to generate new ");
-						sb.append("password.");
-
-						_log.warn(sb.toString());
-					}
-
-					RegExpToolkit regExpToolkit = new RegExpToolkit();
-
-					newPassword = regExpToolkit.generate(null);
-				}
-				else {
-					newPassword = PwdToolkitUtil.generate(passwordPolicy);
-				}
-
-				boolean passwordReset = false;
-
-				if (passwordPolicy.isChangeable() &&
-					passwordPolicy.isChangeRequired()) {
-
-					passwordReset = true;
-				}
-
-				trackPassword(user);
-
-				user.setPassword(PasswordEncryptorUtil.encrypt(newPassword));
-				user.setPasswordUnencrypted(newPassword);
-				user.setPasswordEncrypted(true);
-				user.setPasswordReset(passwordReset);
-				user.setPasswordModified(true);
-				user.setPasswordModifiedDate(new Date());
-
-				userPersistence.update(user);
-
-				user.setPasswordModified(false);
-			}
-			else {
-				newPassword = user.getPassword();
-			}
-
-			sendPasswordNotification(
-				user, companyId, newPassword, null, fromName, fromAddress,
-				subject, body, serviceContext);
+			expirationDate = new Date(
+				System.currentTimeMillis() +
+					(passwordPolicy.getResetTicketMaxAge() * 1000));
 		}
 
-		return company.isSendPassword();
+		Ticket ticket = ticketLocalService.addDistinctTicket(
+			companyId, User.class.getName(), user.getUserId(),
+			TicketConstants.TYPE_PASSWORD, null, expirationDate,
+			serviceContext);
+
+		StringBundler sb = new StringBundler(6);
+
+		sb.append(serviceContext.getPortalURL());
+		sb.append(serviceContext.getPathMain());
+		sb.append("/portal/update_password?p_l_id=");
+		sb.append(serviceContext.getPlid());
+		sb.append("&ticketKey=");
+		sb.append(ticket.getKey());
+
+		String passwordResetURL = sb.toString();
+
+		sendPasswordNotification(
+			user, companyId, null, passwordResetURL, fromName, fromAddress,
+			subject, body, serviceContext);
+
+		return false;
 	}
 
 	/**
@@ -6152,26 +6090,19 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 				PropsKeys.ADMIN_EMAIL_USER_ADDED_NO_PASSWORD_BODY);
 		}
 		else {
-			if (company.isSendPassword()) {
-				localizedBodyMap = LocalizationUtil.getLocalizationMap(
-					companyPortletPreferences, "adminEmailUserAddedBody",
-					PropsKeys.ADMIN_EMAIL_USER_ADDED_BODY);
-			}
-			else {
-				Ticket ticket = ticketLocalService.addDistinctTicket(
-					user.getCompanyId(), User.class.getName(), user.getUserId(),
-					TicketConstants.TYPE_PASSWORD, null, null, serviceContext);
+			Ticket ticket = ticketLocalService.addDistinctTicket(
+				user.getCompanyId(), User.class.getName(), user.getUserId(),
+				TicketConstants.TYPE_PASSWORD, null, null, serviceContext);
 
-				passwordResetURL = StringBundler.concat(
-					serviceContext.getPortalURL(), serviceContext.getPathMain(),
-					"/portal/update_password?p_l_id=", serviceContext.getPlid(),
-					"&ticketKey=", ticket.getKey());
+			passwordResetURL = StringBundler.concat(
+				serviceContext.getPortalURL(), serviceContext.getPathMain(),
+				"/portal/update_password?p_l_id=", serviceContext.getPlid(),
+				"&ticketKey=", ticket.getKey());
 
-				localizedBodyMap = LocalizationUtil.getLocalizationMap(
-					companyPortletPreferences,
-					"adminEmailUserAddedResetPasswordBody",
-					PropsKeys.ADMIN_EMAIL_USER_ADDED_RESET_PASSWORD_BODY);
-			}
+			localizedBodyMap = LocalizationUtil.getLocalizationMap(
+				companyPortletPreferences,
+				"adminEmailUserAddedResetPasswordBody",
+				PropsKeys.ADMIN_EMAIL_USER_ADDED_RESET_PASSWORD_BODY);
 		}
 
 		String subject = _getLocalizedValue(
@@ -6332,11 +6263,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			bodyProperty = PropsKeys.ADMIN_EMAIL_PASSWORD_RESET_BODY;
 			prefix = "adminEmailPasswordReset";
 			subjectProperty = PropsKeys.ADMIN_EMAIL_PASSWORD_RESET_SUBJECT;
-		}
-		else if (company.isSendPassword()) {
-			bodyProperty = PropsKeys.ADMIN_EMAIL_PASSWORD_SENT_BODY;
-			prefix = "adminEmailPasswordSent";
-			subjectProperty = PropsKeys.ADMIN_EMAIL_PASSWORD_SENT_SUBJECT;
 		}
 		else {
 			bodyProperty = PropsKeys.ADMIN_EMAIL_PASSWORD_CHANGED_BODY;
