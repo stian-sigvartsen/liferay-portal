@@ -1755,7 +1755,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		boolean sendEmail = ParamUtil.getBoolean(serviceContext, "sendEmail");
 
 		if (sendEmail) {
-			notifyUser(user, password, serviceContext);
+			notifyUser(user, serviceContext);
 		}
 
 		Company company = companyPersistence.findByPrimaryKey(
@@ -6046,7 +6046,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	}
 
 	protected void notifyUser(
-		User user, String password, ServiceContext serviceContext) {
+		User user, ServiceContext serviceContext) {
 
 		if (!PrefsPropsUtil.getBoolean(
 				user.getCompanyId(),
