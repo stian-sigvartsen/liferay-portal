@@ -1034,7 +1034,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			user.setPasswordReset(false);
 		}
 
-		user.setDigest(StringPool.BLANK);
+		user.setDigest(user.getDigest(password1));
 		user.setScreenName(screenName);
 		user.setEmailAddress(emailAddress);
 		user.setFacebookId(facebookId);
@@ -4982,7 +4982,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		user.setPasswordEncrypted(passwordEncrypted);
 		user.setPasswordReset(passwordReset);
 		user.setPasswordModifiedDate(passwordModifiedDate);
-		user.setDigest(StringPool.BLANK);
+		user.setDigest(user.getDigest(password));
 
 		userPersistence.update(user);
 
@@ -5260,7 +5260,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 			password = newPassword1;
 
-			user.setDigest(StringPool.BLANK);
+			user.setDigest(user.getDigest(password));
 		}
 
 		if (user.getContactId() <= 0) {
