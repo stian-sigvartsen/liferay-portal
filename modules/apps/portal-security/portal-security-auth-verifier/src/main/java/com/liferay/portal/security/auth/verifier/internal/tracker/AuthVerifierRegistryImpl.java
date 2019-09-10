@@ -1,16 +1,5 @@
 package com.liferay.portal.security.auth.verifier.internal.tracker;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.liferay.osgi.util.ServiceTrackerFactory;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -25,6 +14,19 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.security.auth.AuthVerifierPipeline;
 
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+
+import jodd.util.Wildcard;
+
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Activate;
@@ -36,34 +38,9 @@ import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
-import jodd.util.Wildcard;
-
 @Component
 public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 
-	@Activate
-	protected void activate(
-		BundleContext bundleContext, Map<String, Object> properties) {
-
-		_bundleContext = bundleContext;
-		
-		_serviceTracker = ServiceTrackerFactory.open(
-			bundleContext, "(&(objectClass=" + AuthVerifier.class.getName() 
-				+ ")(servlet.context.helper.select.filter=*))",
-			new AuthVerifierTrackerCustomizer());
-		
-		_portalServiceTracker = ServiceTrackerFactory.open(
-			bundleContext, "(&(objectClass=" + AuthVerifier.class.getName() 
-				+ ")(!(servlet.context.helper.select.filter=*)))",
-			new PortalAuthVerifierTrackerCustomizer());
-	}
-	
-	@Deactivate
-	protected void deactivate() {
-		_serviceTracker.close();
-		_portalServiceTracker.close();
-	}
-	
 	public List<AuthVerifierConfiguration> getAuthVerifierConfigurations(
 		AccessControlContext accessControlContext) {
 
@@ -79,15 +56,15 @@ public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 
 		requestURI = requestURI.substring(contextPath.length());
 
-		List<AuthVerifierConfiguration> contextPathAuthVerifierConfigurations = 
+		List<AuthVerifierConfiguration> contextPathAuthVerifierConfigurations =
 			_authVerifierConfigurations.get(contextPath);
-		
+
 		if (contextPathAuthVerifierConfigurations == null) {
 			return authVerifierConfigurations;
 		}
-		
+
 		for (AuthVerifierConfiguration authVerifierConfiguration :
-			contextPathAuthVerifierConfigurations) {
+				contextPathAuthVerifierConfigurations) {
 
 			authVerifierConfiguration = _mergeAuthVerifierConfiguration(
 				authVerifierConfiguration, accessControlContext);
@@ -98,6 +75,108 @@ public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 		}
 
 		return authVerifierConfigurations;
+	}
+
+	@Activate
+	protected void activate(
+		BundleContext bundleContext, Map<String, Object> properties) {
+
+		_bundleContext = bundleContext;
+
+		_serviceTracker = ServiceTrackerFactory.open(
+			bundleContext,
+			"(&(objectClass=" + AuthVerifier.class.getName() +
+				")(servlet.context.helper.select.filter=*))",
+			new AuthVerifierTrackerCustomizer());
+
+		_portalServiceTracker = ServiceTrackerFactory.open(
+			bundleContext,
+			"(&(objectClass=" + AuthVerifier.class.getName() +
+				")(!(servlet.context.helper.select.filter=*)))",
+			new PortalAuthVerifierTrackerCustomizer());
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		_serviceTracker.close();
+		_portalServiceTracker.close();
+	}
+
+	private static Properties _loadProperties(
+		ServiceReference<AuthVerifier> serviceReference,
+		String authVerifierClassName) {
+
+		Properties properties = new Properties();
+
+		String authVerifierPropertyName =
+			AuthVerifierPipeline.getAuthVerifierPropertyName(
+				authVerifierClassName);
+
+		for (String key : serviceReference.getPropertyKeys()) {
+			if (key.startsWith(authVerifierPropertyName)) {
+				//key = key.substring(authVerifierPropertyName.length());
+				properties.setProperty(
+					key.substring(authVerifierPropertyName.length()),
+					String.valueOf(serviceReference.getProperty(key)));
+			}
+			else {
+				properties.setProperty(
+					key, String.valueOf(serviceReference.getProperty(key)));
+			}
+		}
+
+		return properties;
+	}
+
+	private static boolean _validate(
+		AuthVerifierConfiguration authVerifierConfiguration) {
+
+		Properties properties = authVerifierConfiguration.getProperties();
+
+		String[] urlsIncludes = StringUtil.split(
+			properties.getProperty("urls.includes"));
+
+		if (urlsIncludes.length == 0) {
+			if (_log.isWarnEnabled()) {
+				String authVerifierClassName =
+					authVerifierConfiguration.getAuthVerifierClassName();
+
+				_log.warn(
+					"Auth verifier " + authVerifierClassName +
+						" does not have URLs configured");
+			}
+
+			return false;
+		}
+
+		return true;
+	}
+
+	private AuthVerifierConfiguration _buildAuthVerifierConfiguration(
+		ServiceReference<AuthVerifier> serviceReference) {
+
+		AuthVerifier authVerifier = _bundleContext.getService(serviceReference);
+
+		if (authVerifier == null) {
+			return null;
+		}
+
+		Class<?> authVerifierClass = authVerifier.getClass();
+
+		AuthVerifierConfiguration authVerifierConfiguration =
+			new AuthVerifierConfiguration();
+
+		authVerifierConfiguration.setAuthVerifier(authVerifier);
+		authVerifierConfiguration.setAuthVerifierClassName(
+			authVerifierClass.getName());
+		authVerifierConfiguration.setProperties(
+			_loadProperties(serviceReference, authVerifierClass.getName()));
+
+		if (!_validate(authVerifierConfiguration)) {
+			return null;
+		}
+
+		return authVerifierConfiguration;
 	}
 
 	private boolean _isMatchingRequestURI(
@@ -135,7 +214,7 @@ public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 
 		Map<String, Object> settings = accessControlContext.getSettings();
 
-		String authVerifierSettingsKey = 
+		String authVerifierSettingsKey =
 			AuthVerifierPipeline.getAuthVerifierPropertyName(
 				authVerifierConfiguration.getAuthVerifierClassName());
 
@@ -188,186 +267,47 @@ public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 
 		return mergedAuthVerifierConfiguration;
 	}
-	
-	private static Properties _loadProperties(
-		ServiceReference<AuthVerifier> serviceReference,
-		String authVerifierClassName) {
-	
-		Properties properties = new Properties();
-	
-		String authVerifierPropertyName = 
-			AuthVerifierPipeline.getAuthVerifierPropertyName(
-				authVerifierClassName);
-	
-		for (String key : serviceReference.getPropertyKeys()) {
-	
-			if (key.startsWith(authVerifierPropertyName)) {
-				//key = key.substring(authVerifierPropertyName.length());
-				properties.setProperty(
-					key.substring(authVerifierPropertyName.length()), 
-					String.valueOf(serviceReference.getProperty(key)));
-			}
-			else {
-				properties.setProperty(key, String.valueOf(serviceReference.getProperty(key)));
-			}
-		}
-				
-		return properties;
-	}
 
-	private static boolean _validate(
-		AuthVerifierConfiguration authVerifierConfiguration) {
-	
-		Properties properties = authVerifierConfiguration.getProperties();
-	
-		String[] urlsIncludes = StringUtil.split(
-			properties.getProperty("urls.includes"));
-	
-		if (urlsIncludes.length == 0) {
-			if (_log.isWarnEnabled()) {
-				String authVerifierClassName =
-					authVerifierConfiguration.getAuthVerifierClassName();
-	
-				_log.warn(
-					"Auth verifier " + authVerifierClassName +
-						" does not have URLs configured");
-			}
-	
-			return false;
-		}
-	
-		return true;
-	}
-
-	private AuthVerifierConfiguration _buildAuthVerifierConfiguration(
-			ServiceReference<AuthVerifier> serviceReference) {
-		
-		AuthVerifier authVerifier = _bundleContext.getService(serviceReference);
-	
-		if (authVerifier == null) {
-			return null;
-		}
-	
-		Class<?> authVerifierClass = authVerifier.getClass();
-		
-		AuthVerifierConfiguration authVerifierConfiguration =
-			new AuthVerifierConfiguration();
-	
-		authVerifierConfiguration.setAuthVerifier(authVerifier);
-		authVerifierConfiguration.setAuthVerifierClassName(
-			authVerifierClass.getName());
-		authVerifierConfiguration.setProperties(
-			_loadProperties(serviceReference, authVerifierClass.getName()));
-	
-		if (!_validate(authVerifierConfiguration)) {
-			return null;
-		}
-		
-		return authVerifierConfiguration;
-	}
-
-	@Reference
-	private Portal _portal;
-	
-	private BundleContext _bundleContext;
-	
-	private Map<String, List<AuthVerifierConfiguration>> 
-		_authVerifierConfigurations = new HashMap<>();	
-
-	private ServiceTracker<
-		AuthVerifier, 
-		Map.Entry<AuthVerifierConfiguration, ServiceTracker<ServletContextHelper, String>>>
-			_serviceTracker;
-	
-	private ServiceTracker<AuthVerifier, AuthVerifierConfiguration> 
-		_portalServiceTracker;
-	
 	private static final Log _log = LogFactoryUtil.getLog(
 		AuthVerifierRegistryImpl.class);
 
-	private class ServletContextHelperTrackerCustomizer
-		implements ServiceTrackerCustomizer<ServletContextHelper, String> {
+	private final Map<String, List<AuthVerifierConfiguration>>
+		_authVerifierConfigurations = new HashMap<>();
+	private BundleContext _bundleContext;
 
-		public ServletContextHelperTrackerCustomizer(
-			AuthVerifierConfiguration authVerifierConfiguration) {
-			
-			_authVerifierConfiguration = authVerifierConfiguration;
-		}
-		
-		private String _getPathModule(
-			ServiceReference<ServletContextHelper> serviceReference) {
-			
-			return _portal.getPathModule() +
-				GetterUtil.getString(
-					serviceReference.getProperty(
-						"osgi.http.whiteboard.context.path"));
-		}
-		
-		@Override
-		public String addingService(
-			ServiceReference<ServletContextHelper> serviceReference) {
-			
-			String contextPath = _getPathModule(serviceReference);
-			
-			List<AuthVerifierConfiguration> authVerifierConfigurations = 
-				_authVerifierConfigurations.computeIfAbsent(
-					_getPathModule(serviceReference), (cp) -> new ArrayList<AuthVerifierConfiguration>());
-			
-			authVerifierConfigurations.add(_authVerifierConfiguration);
-			
-			return contextPath;
-		}
+	@Reference
+	private Portal _portal;
 
-		@Override
-		public void modifiedService(
-			ServiceReference<ServletContextHelper> serviceReference, 
-			String contextPath) {
-			
-			List<AuthVerifierConfiguration> authVerifierConfigurations = 
-				_authVerifierConfigurations.get(contextPath);
-			
-			authVerifierConfigurations.remove(_authVerifierConfiguration);
-			
-			authVerifierConfigurations = 
-				_authVerifierConfigurations.get(
-					_getPathModule(serviceReference));
-			
-			authVerifierConfigurations.add(_authVerifierConfiguration);
-		}
-
-		@Override
-		public void removedService(
-			ServiceReference<ServletContextHelper> serviceReference, 
-			String contextPath) {
-			
-			List<AuthVerifierConfiguration> authVerifierConfigurations = 
-				_authVerifierConfigurations.get(contextPath);
-			
-			authVerifierConfigurations.remove(_authVerifierConfiguration);			
-		}
-		
-		private AuthVerifierConfiguration _authVerifierConfiguration;
-	}
+	private ServiceTracker<AuthVerifier, AuthVerifierConfiguration>
+		_portalServiceTracker;
+	private ServiceTracker
+		<AuthVerifier,
+		 Map.Entry
+			 <AuthVerifierConfiguration,
+			  ServiceTracker<ServletContextHelper, String>>> _serviceTracker;
 
 	private class AuthVerifierTrackerCustomizer
-		implements ServiceTrackerCustomizer<
-			AuthVerifier, 
-			Map.Entry<AuthVerifierConfiguration, ServiceTracker<ServletContextHelper, String>>> {
-	
+		implements ServiceTrackerCustomizer
+			<AuthVerifier,
+			 Map.Entry
+				 <AuthVerifierConfiguration,
+				  ServiceTracker<ServletContextHelper, String>>> {
+
 		@Override
-		public Map.Entry<AuthVerifierConfiguration, ServiceTracker<ServletContextHelper, String>> 
-				addingService(
-			ServiceReference<AuthVerifier> serviceReference) {
-	
-			AuthVerifierConfiguration authVerifierConfiguration = 
+		public Map.Entry
+			<AuthVerifierConfiguration,
+			 ServiceTracker<ServletContextHelper, String>> addingService(
+				ServiceReference<AuthVerifier> serviceReference) {
+
+			AuthVerifierConfiguration authVerifierConfiguration =
 				_buildAuthVerifierConfiguration(serviceReference);
-	
+
 			//_authVerifierConfigurations.add(0, authVerifierConfiguration);
 
-			ServiceTracker<ServletContextHelper, String> serviceTracker = 
+			ServiceTracker<ServletContextHelper, String> serviceTracker =
 				_openServletContextHelperServiceTracker(
 					serviceReference, authVerifierConfiguration);
-			
+
 			return new AbstractMap.SimpleEntry<>(
 				authVerifierConfiguration, serviceTracker);
 		}
@@ -375,150 +315,220 @@ public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 		@Override
 		public void modifiedService(
 			ServiceReference<AuthVerifier> serviceReference,
-			Map.Entry<
-				AuthVerifierConfiguration, 
-				ServiceTracker<ServletContextHelper, String>> 
-					entry) {
-	
-			ServiceTracker<ServletContextHelper, String> serviceTracker = 
+			Map.Entry
+				<AuthVerifierConfiguration,
+				 ServiceTracker<ServletContextHelper, String>> entry) {
+
+			ServiceTracker<ServletContextHelper, String> serviceTracker =
 				entry.getValue();
-			
+
 			serviceTracker.close();
-						
-			AuthVerifierConfiguration authVerifierConfiguration = 
+
+			AuthVerifierConfiguration authVerifierConfiguration =
 				entry.getKey();
 
-			AuthVerifier authVerifier = _bundleContext.getService(serviceReference);
-			
+			AuthVerifier authVerifier = _bundleContext.getService(
+				serviceReference);
+
 			Class<?> authVerifierClass = authVerifier.getClass();
-			
+
 			authVerifierConfiguration.setProperties(
 				_loadProperties(serviceReference, authVerifierClass.getName()));
-			
+
 			if (!_validate(authVerifierConfiguration)) {
 				return;
 			}
-			
-			serviceTracker = 
-				_openServletContextHelperServiceTracker(
-					serviceReference, authVerifierConfiguration);
-			
+
+			serviceTracker = _openServletContextHelperServiceTracker(
+				serviceReference, authVerifierConfiguration);
+
 			entry.setValue(serviceTracker);
-			
+
 			authVerifierConfiguration.setProperties(
 				_loadProperties(
 					serviceReference,
-					authVerifierConfiguration.getAuthVerifierClassName()));	
+					authVerifierConfiguration.getAuthVerifierClassName()));
 		}
-	
+
 		@Override
 		public void removedService(
 			ServiceReference<AuthVerifier> serviceReference,
-			Map.Entry<
-				AuthVerifierConfiguration, 
-				ServiceTracker<ServletContextHelper, String>> 
-					entry) {
-	
+			Map.Entry
+				<AuthVerifierConfiguration,
+				 ServiceTracker<ServletContextHelper, String>> entry) {
+
 			_bundleContext.ungetService(serviceReference);
-			
-			ServiceTracker<ServletContextHelper, String> serviceTracker = 
+
+			ServiceTracker<ServletContextHelper, String> serviceTracker =
 				entry.getValue();
-			
-			serviceTracker.close();			
+
+			serviceTracker.close();
 		}
-	
-		private ServiceTracker<ServletContextHelper, String> 
+
+		private ServiceTracker<ServletContextHelper, String>
 			_openServletContextHelperServiceTracker(
-				ServiceReference<AuthVerifier> serviceReference, 
+				ServiceReference<AuthVerifier> serviceReference,
 				AuthVerifierConfiguration authVerifierConfiguration) {
-			
-			String servletContextHelperSelectFilter = 
-				GetterUtil.getString(
-					serviceReference.getProperty(
-						"servlet.context.helper.select.filter"));
-	
+
+			String servletContextHelperSelectFilter = GetterUtil.getString(
+				serviceReference.getProperty(
+					"servlet.context.helper.select.filter"));
+
 			String filterString = StringBundler.concat(
-				"(&", servletContextHelperSelectFilter, "(", 
+				"(&", servletContextHelperSelectFilter, "(",
 				HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME, "=*)",
 				"(objectClass=", ServletContextHelper.class.getName(), "))");
-			
-			ServiceTracker<ServletContextHelper, String> 
-				serviceTracker = ServiceTrackerFactory.open(
-					_bundleContext, filterString,
-					new ServletContextHelperTrackerCustomizer(authVerifierConfiguration));
-			
-			return serviceTracker;
+
+			return ServiceTrackerFactory.open(
+				_bundleContext, filterString,
+				new ServletContextHelperTrackerCustomizer(
+					authVerifierConfiguration));
 		}
-	
+
 	}
-	
+
 	private class PortalAuthVerifierTrackerCustomizer
-		implements ServiceTrackerCustomizer<AuthVerifier, AuthVerifierConfiguration> {
-	
+		implements ServiceTrackerCustomizer
+			<AuthVerifier, AuthVerifierConfiguration> {
+
 		@Override
 		public AuthVerifierConfiguration addingService(
 			ServiceReference<AuthVerifier> serviceReference) {
-	
-			AuthVerifierConfiguration authVerifierConfiguration = 
+
+			AuthVerifierConfiguration authVerifierConfiguration =
 				_buildAuthVerifierConfiguration(serviceReference);
 
-			List<AuthVerifierConfiguration> authVerifierConfigurations = 
+			List<AuthVerifierConfiguration> authVerifierConfigurations =
 				_authVerifierConfigurations.computeIfAbsent(
-					StringPool.BLANK, (cp) -> new ArrayList<AuthVerifierConfiguration>());
-			
+					StringPool.BLANK,
+					cp -> new ArrayList<AuthVerifierConfiguration>());
+
 			authVerifierConfigurations.add(authVerifierConfiguration);
-			
+
 			return authVerifierConfiguration;
 		}
-	
+
 		@Override
 		public void modifiedService(
 			ServiceReference<AuthVerifier> serviceReference,
 			AuthVerifierConfiguration authVerifierConfiguration) {
-		
-			List<AuthVerifierConfiguration> authVerifierConfigurations = 
+
+			List<AuthVerifierConfiguration> authVerifierConfigurations =
 				_authVerifierConfigurations.get(StringPool.BLANK);
-			
+
 			if (authVerifierConfigurations == null) {
 				return;
 			}
-			
-			Iterator<AuthVerifierConfiguration> iterator = 
+
+			Iterator<AuthVerifierConfiguration> iterator =
 				authVerifierConfigurations.iterator();
-			
+
 			while (iterator.hasNext()) {
-				AuthVerifierConfiguration authVerifierConfiguration2 = iterator.next();
+				AuthVerifierConfiguration authVerifierConfiguration2 =
+					iterator.next();
+
 				if (authVerifierConfiguration == authVerifierConfiguration2) {
-					
-					AuthVerifier authVerifier = authVerifierConfiguration.getAuthVerifier();
+					AuthVerifier authVerifier =
+						authVerifierConfiguration.getAuthVerifier();
+
 					Class<?> authVerifierClass = authVerifier.getClass();
-					
+
 					authVerifierConfiguration.setProperties(
-						_loadProperties(serviceReference, authVerifierClass.getName()));
+						_loadProperties(
+							serviceReference, authVerifierClass.getName()));
 
 					if (!_validate(authVerifierConfiguration)) {
 						iterator.remove();
+
 						return;
 					}
 				}
 			}
-			
+
 			if (_validate(authVerifierConfiguration)) {
 				authVerifierConfigurations.add(authVerifierConfiguration);
-			}			
+			}
 		}
-	
+
 		@Override
 		public void removedService(
 			ServiceReference<AuthVerifier> serviceReference,
 			AuthVerifierConfiguration authVerifierConfiguration) {
-	
+
 			_bundleContext.ungetService(serviceReference);
-			
-			List<AuthVerifierConfiguration> authVerifierConfigurations = 
+
+			List<AuthVerifierConfiguration> authVerifierConfigurations =
 				_authVerifierConfigurations.get(StringPool.BLANK);
-			
+
 			authVerifierConfigurations.remove(authVerifierConfiguration);
 		}
-	}	
+
+	}
+
+	private class ServletContextHelperTrackerCustomizer
+		implements ServiceTrackerCustomizer<ServletContextHelper, String> {
+
+		public ServletContextHelperTrackerCustomizer(
+			AuthVerifierConfiguration authVerifierConfiguration) {
+
+			_authVerifierConfiguration = authVerifierConfiguration;
+		}
+
+		@Override
+		public String addingService(
+			ServiceReference<ServletContextHelper> serviceReference) {
+
+			String contextPath = _getPathModule(serviceReference);
+
+			List<AuthVerifierConfiguration> authVerifierConfigurations =
+				_authVerifierConfigurations.computeIfAbsent(
+					_getPathModule(serviceReference),
+					cp -> new ArrayList<AuthVerifierConfiguration>());
+
+			authVerifierConfigurations.add(_authVerifierConfiguration);
+
+			return contextPath;
+		}
+
+		@Override
+		public void modifiedService(
+			ServiceReference<ServletContextHelper> serviceReference,
+			String contextPath) {
+
+			List<AuthVerifierConfiguration> authVerifierConfigurations =
+				_authVerifierConfigurations.get(contextPath);
+
+			authVerifierConfigurations.remove(_authVerifierConfiguration);
+
+			authVerifierConfigurations = _authVerifierConfigurations.get(
+				_getPathModule(serviceReference));
+
+			authVerifierConfigurations.add(_authVerifierConfiguration);
+		}
+
+		@Override
+		public void removedService(
+			ServiceReference<ServletContextHelper> serviceReference,
+			String contextPath) {
+
+			List<AuthVerifierConfiguration> authVerifierConfigurations =
+				_authVerifierConfigurations.get(contextPath);
+
+			authVerifierConfigurations.remove(_authVerifierConfiguration);
+		}
+
+		private String _getPathModule(
+			ServiceReference<ServletContextHelper> serviceReference) {
+
+			String contextPath = GetterUtil.getString(
+				serviceReference.getProperty(
+					"osgi.http.whiteboard.context.path"));
+
+			return _portal.getPathModule() + contextPath;
+		}
+
+		private final AuthVerifierConfiguration _authVerifierConfiguration;
+
+	}
+
 }
