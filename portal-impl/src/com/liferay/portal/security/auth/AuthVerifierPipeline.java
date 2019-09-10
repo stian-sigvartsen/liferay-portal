@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.security.auth.AccessControlContext;
 import com.liferay.portal.kernel.security.auth.verifier.AuthVerifier;
 import com.liferay.portal.kernel.security.auth.verifier.AuthVerifierConfiguration;
+import com.liferay.portal.kernel.security.auth.verifier.AuthVerifierRegistryUtil;
 import com.liferay.portal.kernel.security.auth.verifier.AuthVerifierResult;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -105,34 +106,6 @@ public class AuthVerifierPipeline {
 		return authVerifierResult;
 	}
 
-	private List<AuthVerifierConfiguration> _getAuthVerifierConfigurations(
-		AccessControlContext accessControlContext) {
-
-		HttpServletRequest httpServletRequest =
-			accessControlContext.getRequest();
-
-		List<AuthVerifierConfiguration> authVerifierConfigurations =
-			new ArrayList<>();
-
-		String requestURI = httpServletRequest.getRequestURI();
-
-		String contextPath = httpServletRequest.getContextPath();
-
-		requestURI = requestURI.substring(contextPath.length());
-
-		for (AuthVerifierConfiguration authVerifierConfiguration :
-				_authVerifierConfigurations) {
-
-			authVerifierConfiguration = _mergeAuthVerifierConfiguration(
-				authVerifierConfiguration, accessControlContext);
-
-			if (_isMatchingRequestURI(authVerifierConfiguration, requestURI)) {
-				authVerifierConfigurations.add(authVerifierConfiguration);
-			}
-		}
-
-		return authVerifierConfigurations;
-	}
 
 	private boolean _isMatchingRequestURI(
 		AuthVerifierConfiguration authVerifierConfiguration,
@@ -244,12 +217,10 @@ public class AuthVerifierPipeline {
 			throw new IllegalArgumentException(
 				"Access control context is null");
 		}
-
-		List<AuthVerifierConfiguration> authVerifierConfigurations =
-			_getAuthVerifierConfigurations(accessControlContext);
-
+		
 		for (AuthVerifierConfiguration authVerifierConfiguration :
-				authVerifierConfigurations) {
+				AuthVerifierRegistryUtil.getAuthVerifierConfigurations(
+					accessControlContext)) {
 
 			AuthVerifierResult authVerifierResult = null;
 
