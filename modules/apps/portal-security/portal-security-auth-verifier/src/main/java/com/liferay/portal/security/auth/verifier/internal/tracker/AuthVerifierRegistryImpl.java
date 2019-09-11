@@ -94,32 +94,6 @@ public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 		_serviceTracker.close();
 	}
 
-	private static Properties _loadProperties(
-		ServiceReference<AuthVerifier> serviceReference,
-		String authVerifierClassName) {
-
-		Properties properties = new Properties();
-
-		String authVerifierPropertyName =
-			AuthVerifierPipeline.getAuthVerifierPropertyName(
-				authVerifierClassName);
-
-		for (String key : serviceReference.getPropertyKeys()) {
-			if (key.startsWith(authVerifierPropertyName)) {
-				//key = key.substring(authVerifierPropertyName.length());
-				properties.setProperty(
-					key.substring(authVerifierPropertyName.length()),
-					String.valueOf(serviceReference.getProperty(key)));
-			}
-			else {
-				properties.setProperty(
-					key, String.valueOf(serviceReference.getProperty(key)));
-			}
-		}
-
-		return properties;
-	}
-
 	private static boolean _validateAuthVerifierProperties(
 		String authVerifierClassName, Properties properties) {
 
@@ -137,21 +111,6 @@ public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 		}
 
 		return true;
-	}
-
-	private AuthVerifierConfiguration _buildAuthVerifierConfiguration(
-		AuthVerifier authVerifier) {
-
-		Class<?> authVerifierClass = authVerifier.getClass();
-
-		AuthVerifierConfiguration authVerifierConfiguration =
-			new AuthVerifierConfiguration();
-
-		authVerifierConfiguration.setAuthVerifier(authVerifier);
-		authVerifierConfiguration.setAuthVerifierClassName(
-			authVerifierClass.getName());
-
-		return authVerifierConfiguration;
 	}
 
 	private boolean _isMatchingRequestURI(
@@ -243,24 +202,6 @@ public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 		return mergedAuthVerifierConfiguration;
 	}
 
-	private void _updateAuthVerifierConfiguration(
-		AuthVerifierConfiguration authVerifierConfiguration,
-		ServiceReference<AuthVerifier> serviceReference) {
-
-		Properties properties = _loadProperties(
-			serviceReference,
-			authVerifierConfiguration.getAuthVerifierClassName());
-
-		if (!_validateAuthVerifierProperties(
-				authVerifierConfiguration.getAuthVerifierClassName(),
-				properties)) {
-
-			return;
-		}
-
-		authVerifierConfiguration.setProperties(properties);
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		AuthVerifierRegistryImpl.class);
 
@@ -280,53 +221,66 @@ public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 			ServiceReference<AuthVerifier> serviceReference,
 			AuthVerifier authVerifier) {
 
-			AuthVerifierConfiguration authVerifierConfiguration =
-				_buildAuthVerifierConfiguration(authVerifier);
+			Class<?> authVerifierClass = authVerifier.getClass();
 
-			Properties properties = _loadProperties(
-				serviceReference,
-				authVerifierConfiguration.getAuthVerifierClassName());
+			_authVerifierConfiguration = new AuthVerifierConfiguration();
+
+			_authVerifierConfiguration.setAuthVerifier(authVerifier);
+			_authVerifierConfiguration.setAuthVerifierClassName(
+				authVerifierClass.getName());
+
+			publish(serviceReference);
+		}
+
+		public boolean publish(
+			ServiceReference<AuthVerifier> serviceReference) {
+
+			Properties properties = _loadProperties(serviceReference);
 
 			if (!_validateAuthVerifierProperties(
-					authVerifierConfiguration.getAuthVerifierClassName(),
+					_authVerifierConfiguration.getAuthVerifierClassName(),
 					properties)) {
 
-				_authVerifierConfiguration = null;
-				return;
+				unpublish();
+
+				return false;
 			}
 
-			_updateAuthVerifierConfiguration(
-				authVerifierConfiguration, serviceReference);
+			_authVerifierConfiguration.setProperties(properties);
 
-			_authVerifierConfiguration = authVerifierConfiguration;
+			if (_published) {
+				return true;
+			}
 
 			String servletContextHelperSelectFilter = GetterUtil.getString(
 				properties.get("servlet.context.helper.select.filter"));
 
 			if (Validator.isNotNull(servletContextHelperSelectFilter)) {
 				_serviceTracker = _openServletContextHelperServiceTracker(
-					servletContextHelperSelectFilter, this::publish,
-					this::unpublish);
+					servletContextHelperSelectFilter, this::mount,
+					this::unmount);
 			}
 			else {
-				publish(StringPool.BLANK);
+				mount(StringPool.BLANK);
 			}
-		}
 
-		public AuthVerifierConfiguration getAuthVerifierConfiguration() {
-			return _authVerifierConfiguration;
+			return _published = true;
 		}
 
 		public void unpublish() {
+			if (!_published) {
+				return;
+			}
+
 			if (_serviceTracker != null) {
 				_serviceTracker.close();
 			}
 			else {
-				unpublish(StringPool.BLANK);
+				unmount(StringPool.BLANK);
 			}
 		}
 
-		protected void publish(String contextPath) {
+		protected void mount(String contextPath) {
 			List<AuthVerifierConfiguration> authVerifierConfigurations =
 				_authVerifierConfigurations.computeIfAbsent(
 					contextPath,
@@ -335,7 +289,7 @@ public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 			authVerifierConfigurations.add(_authVerifierConfiguration);
 		}
 
-		protected void unpublish(String contextPath) {
+		protected void unmount(String contextPath) {
 			_authVerifierConfigurations.computeIfPresent(
 				contextPath,
 				(cp, list) -> {
@@ -343,6 +297,30 @@ public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 
 					return list;
 				});
+		}
+
+		private Properties _loadProperties(
+			ServiceReference<AuthVerifier> serviceReference) {
+
+			Properties properties = new Properties();
+
+			String authVerifierPropertyName =
+				AuthVerifierPipeline.getAuthVerifierPropertyName(
+					_authVerifierConfiguration.getAuthVerifierClassName());
+
+			for (String key : serviceReference.getPropertyKeys()) {
+				if (key.startsWith(authVerifierPropertyName)) {
+					properties.setProperty(
+						key.substring(authVerifierPropertyName.length()),
+						String.valueOf(serviceReference.getProperty(key)));
+				}
+				else {
+					properties.setProperty(
+						key, String.valueOf(serviceReference.getProperty(key)));
+				}
+			}
+
+			return properties;
 		}
 
 		private ServiceTracker<ServletContextHelper, String>
@@ -362,6 +340,7 @@ public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 		}
 
 		private final AuthVerifierConfiguration _authVerifierConfiguration;
+		private boolean _published;
 		private ServiceTracker<ServletContextHelper, String> _serviceTracker;
 
 	}
@@ -387,10 +366,7 @@ public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 			AuthVerifierConfigurationPublisher
 				authVerifierConfigurationPublisher) {
 
-			_updateAuthVerifierConfiguration(
-				authVerifierConfigurationPublisher.
-					getAuthVerifierConfiguration(),
-				serviceReference);
+			authVerifierConfigurationPublisher.publish(serviceReference);
 		}
 
 		@Override
