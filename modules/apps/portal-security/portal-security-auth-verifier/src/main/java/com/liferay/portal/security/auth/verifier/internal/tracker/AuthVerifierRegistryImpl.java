@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -270,58 +271,12 @@ public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 	@Reference
 	private Portal _portal;
 
-	private ServiceTracker<AuthVerifier, AuthVerifierConfigurationTracker>
+	private ServiceTracker<AuthVerifier, AuthVerifierConfigurationPublisher>
 		_serviceTracker;
 
-	private interface AuthVerifierConfigurationTracker {
+	private class AuthVerifierConfigurationPublisher {
 
-		public void close();
-
-		public AuthVerifierConfiguration getAuthVerifierConfiguration();
-
-	}
-
-	private class AuthVerifierTrackerCustomizer
-		implements ServiceTrackerCustomizer
-			<AuthVerifier, AuthVerifierConfigurationTracker> {
-
-		@Override
-		public AuthVerifierConfigurationTracker addingService(
-			ServiceReference<AuthVerifier> serviceReference) {
-
-			AuthVerifier authVerifier = _bundleContext.getService(
-				serviceReference);
-
-			return new HttpWhiteboardAuthVerifierConfigurationTracker(
-				serviceReference, authVerifier);
-		}
-
-		@Override
-		public void modifiedService(
-			ServiceReference<AuthVerifier> serviceReference,
-			AuthVerifierConfigurationTracker authVerifierConfigurationTracker) {
-
-			_updateAuthVerifierConfiguration(
-				authVerifierConfigurationTracker.getAuthVerifierConfiguration(),
-				serviceReference);
-		}
-
-		@Override
-		public void removedService(
-			ServiceReference<AuthVerifier> serviceReference,
-			AuthVerifierConfigurationTracker authVerifierConfigurationTracker) {
-
-			_bundleContext.ungetService(serviceReference);
-
-			authVerifierConfigurationTracker.close();
-		}
-
-	}
-
-	private class HttpWhiteboardAuthVerifierConfigurationTracker
-		implements AuthVerifierConfigurationTracker {
-
-		public HttpWhiteboardAuthVerifierConfigurationTracker(
+		public AuthVerifierConfigurationPublisher(
 			ServiceReference<AuthVerifier> serviceReference,
 			AuthVerifier authVerifier) {
 
@@ -336,6 +291,7 @@ public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 					authVerifierConfiguration.getAuthVerifierClassName(),
 					properties)) {
 
+				_authVerifierConfiguration = null;
 				return;
 			}
 
@@ -349,31 +305,11 @@ public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 
 			if (Validator.isNotNull(servletContextHelperSelectFilter)) {
 				_serviceTracker = _openServletContextHelperServiceTracker(
-					servletContextHelperSelectFilter,
-					authVerifierConfiguration);
+					servletContextHelperSelectFilter, this::publish,
+					this::unpublish);
 			}
 			else {
-				List<AuthVerifierConfiguration> authVerifierConfigurations =
-					_authVerifierConfigurations.computeIfAbsent(
-						StringPool.BLANK,
-						cp -> new ArrayList<AuthVerifierConfiguration>());
-
-				authVerifierConfigurations.add(authVerifierConfiguration);
-			}
-		}
-
-		public void close() {
-			if (_serviceTracker != null) {
-				_serviceTracker.close();
-			}
-			else {
-				_authVerifierConfigurations.computeIfPresent(
-					StringPool.BLANK,
-					(cp, list) -> {
-						list.remove(_authVerifierConfiguration);
-
-						return list;
-					});
+				publish(StringPool.BLANK);
 			}
 		}
 
@@ -381,10 +317,38 @@ public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 			return _authVerifierConfiguration;
 		}
 
+		public void unpublish() {
+			if (_serviceTracker != null) {
+				_serviceTracker.close();
+			}
+			else {
+				unpublish(StringPool.BLANK);
+			}
+		}
+
+		protected void publish(String contextPath) {
+			List<AuthVerifierConfiguration> authVerifierConfigurations =
+				_authVerifierConfigurations.computeIfAbsent(
+					contextPath,
+					cp -> new ArrayList<AuthVerifierConfiguration>());
+
+			authVerifierConfigurations.add(_authVerifierConfiguration);
+		}
+
+		protected void unpublish(String contextPath) {
+			_authVerifierConfigurations.computeIfPresent(
+				contextPath,
+				(cp, list) -> {
+					list.remove(_authVerifierConfiguration);
+
+					return list;
+				});
+		}
+
 		private ServiceTracker<ServletContextHelper, String>
 			_openServletContextHelperServiceTracker(
 				String servletContextHelperSelectFilter,
-				AuthVerifierConfiguration authVerifierConfiguration) {
+				Consumer<String> publisher, Consumer<String> unpublisher) {
 
 			String filterString = StringBundler.concat(
 				"(&", servletContextHelperSelectFilter, "(",
@@ -394,11 +358,51 @@ public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 			return ServiceTrackerFactory.open(
 				_bundleContext, filterString,
 				new ServletContextHelperTrackerCustomizer(
-					authVerifierConfiguration));
+					publisher, unpublisher));
 		}
 
-		private AuthVerifierConfiguration _authVerifierConfiguration;
+		private final AuthVerifierConfiguration _authVerifierConfiguration;
 		private ServiceTracker<ServletContextHelper, String> _serviceTracker;
+
+	}
+
+	private class AuthVerifierTrackerCustomizer
+		implements ServiceTrackerCustomizer
+			<AuthVerifier, AuthVerifierConfigurationPublisher> {
+
+		@Override
+		public AuthVerifierConfigurationPublisher addingService(
+			ServiceReference<AuthVerifier> serviceReference) {
+
+			AuthVerifier authVerifier = _bundleContext.getService(
+				serviceReference);
+
+			return new AuthVerifierConfigurationPublisher(
+				serviceReference, authVerifier);
+		}
+
+		@Override
+		public void modifiedService(
+			ServiceReference<AuthVerifier> serviceReference,
+			AuthVerifierConfigurationPublisher
+				authVerifierConfigurationPublisher) {
+
+			_updateAuthVerifierConfiguration(
+				authVerifierConfigurationPublisher.
+					getAuthVerifierConfiguration(),
+				serviceReference);
+		}
+
+		@Override
+		public void removedService(
+			ServiceReference<AuthVerifier> serviceReference,
+			AuthVerifierConfigurationPublisher
+				authVerifierConfigurationPublisher) {
+
+			_bundleContext.ungetService(serviceReference);
+
+			authVerifierConfigurationPublisher.unpublish();
+		}
 
 	}
 
@@ -406,9 +410,10 @@ public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 		implements ServiceTrackerCustomizer<ServletContextHelper, String> {
 
 		public ServletContextHelperTrackerCustomizer(
-			AuthVerifierConfiguration authVerifierConfiguration) {
+			Consumer<String> publisher, Consumer<String> unpublisher) {
 
-			_authVerifierConfiguration = authVerifierConfiguration;
+			_publisher = publisher;
+			_unpublisher = unpublisher;
 		}
 
 		@Override
@@ -417,12 +422,7 @@ public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 
 			String contextPath = _getPathModule(serviceReference);
 
-			List<AuthVerifierConfiguration> authVerifierConfigurations =
-				_authVerifierConfigurations.computeIfAbsent(
-					_getPathModule(serviceReference),
-					cp -> new ArrayList<AuthVerifierConfiguration>());
-
-			authVerifierConfigurations.add(_authVerifierConfiguration);
+			_publisher.accept(contextPath);
 
 			return contextPath;
 		}
@@ -432,15 +432,14 @@ public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 			ServiceReference<ServletContextHelper> serviceReference,
 			String contextPath) {
 
-			List<AuthVerifierConfiguration> authVerifierConfigurations =
-				_authVerifierConfigurations.get(contextPath);
+			String newContextPath = _getPathModule(serviceReference);
 
-			authVerifierConfigurations.remove(_authVerifierConfiguration);
+			if (contextPath.equals(newContextPath)) {
+				return;
+			}
 
-			authVerifierConfigurations = _authVerifierConfigurations.get(
-				_getPathModule(serviceReference));
-
-			authVerifierConfigurations.add(_authVerifierConfiguration);
+			_unpublisher.accept(contextPath);
+			_publisher.accept(newContextPath);
 		}
 
 		@Override
@@ -448,10 +447,7 @@ public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 			ServiceReference<ServletContextHelper> serviceReference,
 			String contextPath) {
 
-			List<AuthVerifierConfiguration> authVerifierConfigurations =
-				_authVerifierConfigurations.get(contextPath);
-
-			authVerifierConfigurations.remove(_authVerifierConfiguration);
+			_unpublisher.accept(contextPath);
 		}
 
 		private String _getPathModule(
@@ -464,7 +460,8 @@ public class AuthVerifierRegistryImpl implements AuthVerifierRegistry {
 			return _portal.getPathModule() + contextPath;
 		}
 
-		private final AuthVerifierConfiguration _authVerifierConfiguration;
+		private final Consumer<String> _publisher;
+		private final Consumer<String> _unpublisher;
 
 	}
 
