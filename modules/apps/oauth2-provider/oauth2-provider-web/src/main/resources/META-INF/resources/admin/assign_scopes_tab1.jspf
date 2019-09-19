@@ -63,9 +63,11 @@
 							data.put("slave", globalScopeAliasesString);
 
 							String id = "scopeAlias" + StringUtil.randomId();
+
+							boolean removedScope = scopeAliases.isEmpty() && globalScopeAliases.isEmpty();
 						%>
 
-							<li class="list-group-item list-group-item-flex<c:if test="<%= scopeAliases.isEmpty() && globalScopeAliases.isEmpty() %>"> removed-scope</c:if>">
+							<li class="list-group-item list-group-item-flex<c:if test="<%= removedScope %>"> removed-scope</c:if>">
 								<div class="autofit-col">
 									<c:choose>
 										<c:when test="<%= assignedScopeAliases.isEmpty() && scopeAliases.isEmpty() %>">
@@ -75,6 +77,10 @@
 
 											<%
 											String scopeAliasesString = StringUtil.merge(scopeAliases, StringPool.SPACE);
+
+											if (removedScope) {
+												scopeAliasesString = "removed-scope";
+											}
 											%>
 
 											<aui:input checked="<%= !assignedScopeAliases.isEmpty() %>" data="<%= data %>" id="<%= id %>" label="" name="scopeAliases" onChange='<%= renderResponse.getNamespace() + "recalculateDependants(this)" %>' title="<%= scopeAliasesString %>" type="checkbox" value="<%= scopeAliasesString %>" />
