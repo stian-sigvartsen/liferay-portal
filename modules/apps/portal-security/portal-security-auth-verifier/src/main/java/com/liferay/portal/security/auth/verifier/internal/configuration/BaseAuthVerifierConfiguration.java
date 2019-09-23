@@ -27,6 +27,12 @@ public interface BaseAuthVerifierConfiguration {
 	@Meta.AD(name = "hosts-allowed", required = false)
 	public String hostsAllowed();
 
+	@Meta.AD(
+		id = "servlet.context.helper.select.filter",
+		name = "servlet-context-helper-select-filter", required = false
+	)
+	public String servletContextHelperSelectFilter();
+
 	@Meta.AD(name = "urls-excludes", required = false)
 	public String urlsExcludes();
 

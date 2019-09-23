@@ -143,7 +143,8 @@ public class AuthVerifierFilterTracker {
 	private Dictionary<String, Object> _defaultRegistrationProperties;
 	private int _defaultRemoteAccessFilterServiceRanking;
 	private Dictionary<String, Object> _defaultWhiteboardProperties;
-	private ServiceTracker<?, ?> _serviceTracker;
+	private ServiceTracker<ServletContextHelper, ServiceRegistrations>
+		_serviceTracker;
 
 	private static class RemoteAccessFilter implements Filter {
 
