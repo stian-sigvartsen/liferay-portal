@@ -28,7 +28,7 @@ long mfaUserId = (Long)request.getAttribute("mfaUserId");
 	<portlet:param name="mvcRenderCommandName" value="/mfa_verify/view" />
 </portlet:actionURL>
 
-<aui:form action="<%= verifyActionURL %>" cssClass="container-fluid-1280 sign-in-form" method="post" name="fm">
+<aui:form action="<%= verifyActionURL %>" data-senna-off="true" cssClass="container-fluid-1280 sign-in-form" method="post" name="fm">
 	<aui:input name="redirect" type="hidden" value='<%= ParamUtil.getString(request, "redirect") %>' />
 	<aui:input name="saveLastPath" type="hidden" value="<%= false %>" />
 
