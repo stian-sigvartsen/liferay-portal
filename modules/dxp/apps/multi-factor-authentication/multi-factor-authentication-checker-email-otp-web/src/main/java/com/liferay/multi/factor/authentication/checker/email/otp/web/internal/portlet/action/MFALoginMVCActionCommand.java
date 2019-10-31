@@ -48,6 +48,7 @@ import java.util.Vector;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.ActionURL;
+import javax.portlet.WindowState;
 import javax.portlet.filter.ActionRequestWrapper;
 
 import javax.servlet.http.HttpServletRequest;
@@ -234,6 +235,16 @@ public class MFALoginMVCActionCommand extends BaseMVCActionCommand {
 
 		LiferayPortletURL verifyURL = _mfaPortletURLFactory.createVerifyURL(
 			httpServletRequest, actionURL.toString(), userId);
+		
+		String portletId = 
+			ParamUtil.getString(httpServletRequest, "p_p_id");
+		
+		if (LoginPortletKeys.FAST_LOGIN.equals(portletId)) {
+			verifyURL.setWindowState(actionRequest.getWindowState());	
+		}
+		else {
+			verifyURL.setWindowState(WindowState.MAXIMIZED);
+		}
 
 		actionRequest.setAttribute(WebKeys.REDIRECT, verifyURL.toString());
 	}

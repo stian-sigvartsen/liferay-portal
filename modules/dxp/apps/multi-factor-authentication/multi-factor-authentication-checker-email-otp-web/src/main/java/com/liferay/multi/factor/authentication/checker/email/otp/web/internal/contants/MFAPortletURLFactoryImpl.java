@@ -66,15 +66,6 @@ public class MFAPortletURLFactoryImpl implements MFAPortletURLFactory {
 		liferayPortletURL.setParameter(
 			"saveLastPath", Boolean.FALSE.toString());
 
-		try {
-			liferayPortletURL.setWindowState(WindowState.MAXIMIZED);
-		}
-		catch (WindowStateException wse) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(wse, wse);
-			}
-		}
-
 		return liferayPortletURL;
 	}
 
