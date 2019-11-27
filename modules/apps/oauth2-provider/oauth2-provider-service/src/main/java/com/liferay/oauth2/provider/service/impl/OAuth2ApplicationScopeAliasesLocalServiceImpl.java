@@ -348,7 +348,8 @@ public class OAuth2ApplicationScopeAliasesLocalServiceImpl
 
 	private class OAuth2ScopeBuilderImpl
 		implements OAuth2Scope.Builder,
-				   OAuth2Scope.Builder.ApplicationScopeAssigner {
+				   OAuth2Scope.Builder.ApplicationScopeAssigner,
+				   OAuth2Scope.Builder.ApplicationScope {
 
 		public OAuth2ScopeBuilderImpl(
 			long companyId,
@@ -357,13 +358,15 @@ public class OAuth2ApplicationScopeAliasesLocalServiceImpl
 
 			_companyId = companyId;
 			_liferayOAuth2ScopesScopeAliases = liferayOAuth2ScopesScopeAliases;
+			_scopes = new ArrayList<>();
+			_scopeAliases = new ArrayList<>();
 		}
 
-		public void assignScope(String scope, List<String> scopeAliases) {
-			_liferayOAuth2ScopesScopeAliases.put(
-				_scopeLocator.getLiferayOAuth2Scope(
-					_companyId, _applicationName, scope),
-				scopeAliases);
+		public ApplicationScope assignScope(Collection<String> scopes) {
+			_flush();
+			_scopes.addAll(scopes);
+
+			return this;
 		}
 
 		@Override
@@ -375,12 +378,41 @@ public class OAuth2ApplicationScopeAliasesLocalServiceImpl
 			_applicationName = applicationName;
 
 			applicationScopeAssignerConsumer.accept(this);
+
+			_flush();
+		}
+
+		@Override
+		public void mapToScopeAlias(Collection<String> scopeAliases) {
+			_scopeAliases = scopeAliases;
+		}
+
+		private void _flush() {
+			_scopes.forEach(
+				scope -> _liferayOAuth2ScopesScopeAliases.merge(
+					_scopeLocator.getLiferayOAuth2Scope(
+						_companyId, _applicationName, scope),
+					new ArrayList<>(_scopeAliases),
+					(list1, list2) -> Stream.of(
+						list1, list2
+					).flatMap(
+						Collection::stream
+					).distinct(
+					).collect(
+						Collectors.toList()
+					)));
+
+			_scopes.clear();
+
+			_scopeAliases = _scopes;
 		}
 
 		private String _applicationName;
 		private final long _companyId;
 		private final Map<LiferayOAuth2Scope, List<String>>
 			_liferayOAuth2ScopesScopeAliases;
+		private Collection<String> _scopeAliases;
+		private final Collection<String> _scopes;
 
 	}
 

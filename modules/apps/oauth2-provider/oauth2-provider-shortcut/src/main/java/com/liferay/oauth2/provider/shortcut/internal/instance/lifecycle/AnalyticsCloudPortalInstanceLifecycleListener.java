@@ -68,7 +68,6 @@ import com.liferay.portal.security.service.access.policy.service.SAPEntryLocalSe
 import java.io.InputStream;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Dictionary;
 import java.util.List;
@@ -267,11 +266,10 @@ public class AnalyticsCloudPortalInstanceLifecycleListener
 	private void _buildSegmentsAsahScopes(OAuth2Scope.Builder builder) {
 		builder.forApplication(
 			"Liferay.Segments.Asah.REST",
-			applicationScopeAssigner -> Arrays.stream(
+			applicationScopeAssigner -> applicationScopeAssigner.assignScope(
 				_SEGMENTS_ASAH_DEFAULT_OAUTH2_SCOPE_GRANTS
-			).forEach(
-				scope -> applicationScopeAssigner.assignScope(
-					scope, "Liferay.Segments.Asah.REST.everything")
+			).mapToScopeAlias(
+				"Liferay.Segments.Asah.REST.everything"
 			));
 	}
 

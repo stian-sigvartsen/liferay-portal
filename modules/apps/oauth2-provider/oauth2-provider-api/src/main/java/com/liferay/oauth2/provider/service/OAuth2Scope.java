@@ -14,8 +14,8 @@
 
 package com.liferay.oauth2.provider.service;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.function.Consumer;
 
 /**
@@ -31,16 +31,22 @@ public interface OAuth2Scope {
 			Consumer<ApplicationScopeAssigner>
 				applicationScopeAssignerConsumer);
 
-		public interface ApplicationScopeAssigner {
+		public interface ApplicationScope {
 
-			public default void assignScope(String scope) {
-				assignScope(scope, Collections.singletonList(scope));
+			public void mapToScopeAlias(Collection<String> scopeAliases);
+
+			public default void mapToScopeAlias(String... scopeAlias) {
+				mapToScopeAlias(Arrays.asList(scopeAlias));
 			}
 
-			public void assignScope(String scope, List<String> scopeAliases);
+		}
 
-			public default void assignScope(String scope, String scopeAlias) {
-				assignScope(scope, Collections.singletonList(scopeAlias));
+		public interface ApplicationScopeAssigner {
+
+			public ApplicationScope assignScope(Collection<String> scopes);
+
+			public default ApplicationScope assignScope(String... scope) {
+				return assignScope(Arrays.asList(scope));
 			}
 
 		}
