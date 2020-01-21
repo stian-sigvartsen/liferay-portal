@@ -77,7 +77,7 @@
 						'#<portlet:namespace />messageContainer'
 					);
 					messageContainer.html(
-						'<span class="alert alert-danger"><liferay-ui:message key="failed-to-send-email" /></span>'
+						'<span class="alert alert-danger"><liferay-ui:message key="email-sending-failed" /></span>'
 					);
 
 					sendEmailButton.text(buttonText);
