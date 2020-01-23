@@ -156,7 +156,7 @@ public class DefaultUserResolver implements UserResolver {
 		if (samlSpIdpConnection.isUnknownUsersAreStrangers()) {
 			if (!company.isStrangers()) {
 				throw new SubjectException(
-					"User is not known to the portal and company " + companyId +
+					"User is a stranger and company " + companyId +
 						" does not allow strangers to create accounts");
 			}
 			else if (!company.isStrangersWithMx() &&
