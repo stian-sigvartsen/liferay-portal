@@ -227,9 +227,9 @@ public class WebSsoProfileImpl extends BaseProfile implements WebSsoProfile {
 
 		SamlSpSession samlSpSession = getSamlSpSession(httpServletRequest);
 
-		HttpSession session = httpServletRequest.getSession();
+		HttpSession httpSession = httpServletRequest.getSession();
 
-		String jSessionId = session.getId();
+		String jSessionId = httpSession.getId();
 
 		if ((samlSpSession != null) &&
 			!jSessionId.equals(samlSpSession.getJSessionId())) {
@@ -294,14 +294,14 @@ public class WebSsoProfileImpl extends BaseProfile implements WebSsoProfile {
 			HttpServletResponse httpServletResponse)
 		throws Exception {
 
-		HttpSession session = httpServletRequest.getSession();
+		HttpSession httpSession = httpServletRequest.getSession();
 
 		SamlSsoRequestContext samlSsoRequestContext =
-			(SamlSsoRequestContext)session.getAttribute(
+			(SamlSsoRequestContext)httpSession.getAttribute(
 				SamlWebKeys.SAML_SSO_REQUEST_CONTEXT);
 
 		if (samlSsoRequestContext != null) {
-			session.removeAttribute(SamlWebKeys.SAML_SSO_REQUEST_CONTEXT);
+			httpSession.removeAttribute(SamlWebKeys.SAML_SSO_REQUEST_CONTEXT);
 
 			MessageContext<?> messageContext = getMessageContext(
 				httpServletRequest, httpServletResponse,
@@ -605,10 +605,10 @@ public class WebSsoProfileImpl extends BaseProfile implements WebSsoProfile {
 			sendSuccessResponse(
 				httpServletRequest, httpServletResponse, samlSsoRequestContext);
 
-			HttpSession session = httpServletRequest.getSession(false);
+			HttpSession httpSession = httpServletRequest.getSession(false);
 
-			if (session != null) {
-				session.removeAttribute(SamlWebKeys.FORCE_REAUTHENTICATION);
+			if (httpSession != null) {
+				httpSession.removeAttribute(SamlWebKeys.FORCE_REAUTHENTICATION);
 			}
 		}
 	}
@@ -764,31 +764,31 @@ public class WebSsoProfileImpl extends BaseProfile implements WebSsoProfile {
 			HttpServletRequest originalHttpServletRequest =
 				_portal.getOriginalServletRequest(httpServletRequest);
 
-			HttpSession session = originalHttpServletRequest.getSession();
+			HttpSession httpSession = originalHttpServletRequest.getSession();
 
 			if (portalException instanceof ContactNameException) {
-				session.setAttribute(
+				httpSession.setAttribute(
 					SamlWebKeys.SAML_SSO_ERROR,
 					ContactNameException.class.getSimpleName());
 			}
 			else if (portalException instanceof UserEmailAddressException) {
-				session.setAttribute(
+				httpSession.setAttribute(
 					SamlWebKeys.SAML_SSO_ERROR,
 					UserEmailAddressException.class.getSimpleName());
 			}
 			else if (portalException instanceof UserScreenNameException) {
-				session.setAttribute(
+				httpSession.setAttribute(
 					SamlWebKeys.SAML_SSO_ERROR,
 					UserScreenNameException.class.getSimpleName());
 			}
 			else {
 				Class<?> clazz = portalException.getClass();
 
-				session.setAttribute(
+				httpSession.setAttribute(
 					SamlWebKeys.SAML_SSO_ERROR, clazz.getSimpleName());
 			}
 
-			session.setAttribute(
+			httpSession.setAttribute(
 				SamlWebKeys.SAML_SUBJECT_SCREEN_NAME, nameID.getValue());
 
 			httpServletResponse.sendRedirect(
@@ -797,7 +797,8 @@ public class WebSsoProfileImpl extends BaseProfile implements WebSsoProfile {
 			return;
 		}
 
-		String assertionXml = OpenSamlUtil.marshall(assertion);
+		SamlSpSession samlSpSession = getSamlSpSession(httpServletRequest);
+		HttpSession httpSession = httpServletRequest.getSession();
 
 		List<AuthnStatement> authnStatements = assertion.getAuthnStatements();
 
@@ -805,15 +806,12 @@ public class WebSsoProfileImpl extends BaseProfile implements WebSsoProfile {
 
 		String sessionIndex = authnStatement.getSessionIndex();
 
-		HttpSession session = httpServletRequest.getSession();
-
-		SamlSpSession samlSpSession = getSamlSpSession(httpServletRequest);
-
 		if (samlSpSession != null) {
 			samlSpSessionLocalService.updateSamlSpSession(
 				samlSpSession.getSamlSpSessionId(), issuer.getValue(),
-				samlSpSession.getSamlSpSessionKey(), assertionXml,
-				session.getId(), nameID.getFormat(), nameID.getNameQualifier(),
+				samlSpSession.getSamlSpSessionKey(),
+				OpenSamlUtil.marshall(assertion), httpSession.getId(),
+				nameID.getFormat(), nameID.getNameQualifier(),
 				nameID.getSPNameQualifier(), nameID.getValue(), sessionIndex,
 				serviceContext);
 		}
@@ -821,13 +819,14 @@ public class WebSsoProfileImpl extends BaseProfile implements WebSsoProfile {
 			String samlSpSessionKey = generateIdentifier(30);
 
 			samlSpSession = samlSpSessionLocalService.addSamlSpSession(
-				issuer.getValue(), samlSpSessionKey, assertionXml,
-				session.getId(), nameID.getFormat(), nameID.getNameQualifier(),
+				issuer.getValue(), samlSpSessionKey,
+				OpenSamlUtil.marshall(assertion), httpSession.getId(),
+				nameID.getFormat(), nameID.getNameQualifier(),
 				nameID.getSPNameQualifier(), nameID.getValue(), sessionIndex,
 				serviceContext);
 		}
 
-		session.setAttribute(
+		httpSession.setAttribute(
 			SamlWebKeys.SAML_SP_SESSION_KEY,
 			samlSpSession.getSamlSpSessionKey());
 
@@ -909,9 +908,10 @@ public class WebSsoProfileImpl extends BaseProfile implements WebSsoProfile {
 			samlSelfEntityContext.getEntityId(), assertionConsumerService,
 			singleSignOnService, nameIDPolicy);
 
-		HttpSession session = httpServletRequest.getSession();
+		HttpSession httpSession = httpServletRequest.getSession();
 
-		String error = (String)session.getAttribute(SamlWebKeys.SAML_SSO_ERROR);
+		String error = (String)httpSession.getAttribute(
+			SamlWebKeys.SAML_SSO_ERROR);
 
 		if (Validator.isBlank(error)) {
 			authnRequest.setForceAuthn(samlSpIdpConnection.isForceAuthn());
@@ -1315,14 +1315,14 @@ public class WebSsoProfileImpl extends BaseProfile implements WebSsoProfile {
 		HttpServletResponse httpServletResponse,
 		SamlSsoRequestContext samlSsoRequestContext, boolean forceAuthn) {
 
-		HttpSession session = httpServletRequest.getSession();
+		HttpSession httpSession = httpServletRequest.getSession();
 
 		if (forceAuthn) {
 			logout(httpServletRequest, httpServletResponse);
 
-			session = httpServletRequest.getSession(true);
+			httpSession = httpServletRequest.getSession(true);
 
-			session.setAttribute(
+			httpSession.setAttribute(
 				SamlWebKeys.FORCE_REAUTHENTICATION, Boolean.TRUE);
 		}
 
@@ -1331,7 +1331,7 @@ public class WebSsoProfileImpl extends BaseProfile implements WebSsoProfile {
 
 		samlSsoRequestContext.setSAMLMessageContext(null);
 
-		session.setAttribute(
+		httpSession.setAttribute(
 			SamlWebKeys.SAML_SSO_REQUEST_CONTEXT, samlSsoRequestContext);
 
 		httpServletResponse.addHeader(
