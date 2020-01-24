@@ -58,19 +58,19 @@ create table SamlSpIdpConnection (
 	userName VARCHAR(75) null,
 	createDate DATE null,
 	modifiedDate DATE null,
-	samlIdpEntityId VARCHAR(1024) null,
 	assertionSignatureRequired BOOLEAN,
 	clockSkew LONG,
 	enabled BOOLEAN,
 	forceAuthn BOOLEAN,
 	ldapImportEnabled BOOLEAN,
-	unknownUsersAreStrangers BOOLEAN,
+	metadataUpdatedDate DATE null,
 	metadataUrl VARCHAR(1024) null,
 	metadataXml TEXT null,
-	metadataUpdatedDate DATE null,
 	name VARCHAR(75) null,
 	nameIdFormat VARCHAR(1024) null,
+	samlIdpEntityId VARCHAR(1024) null,
 	signAuthnRequest BOOLEAN,
+	unknownUsersAreStrangers BOOLEAN,
 	userAttributeMappings STRING null
 );
 

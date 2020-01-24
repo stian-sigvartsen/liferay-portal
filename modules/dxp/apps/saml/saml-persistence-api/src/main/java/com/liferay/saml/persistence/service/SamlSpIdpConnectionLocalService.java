@@ -62,6 +62,14 @@ public interface SamlSpIdpConnectionLocalService
 	 *
 	 * Never modify or reference this interface directly. Always use {@link SamlSpIdpConnectionLocalServiceUtil} to access the saml sp idp connection local service. Add custom service methods to <code>com.liferay.saml.persistence.service.impl.SamlSpIdpConnectionLocalServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
+	public SamlSpIdpConnection addSamlSpIdpConnection(
+			boolean assertionSignatureRequired, long clockSkew, boolean enabled,
+			boolean forceAuthn, boolean ldapImportEnabled, String metadataUrl,
+			InputStream metadataXmlInputStream, String name,
+			String nameIdFormat, String samlIdpEntityId,
+			boolean signAuthnRequest, boolean unknownUsersAreStrangers,
+			String userAttributeMappings, ServiceContext serviceContext)
+		throws PortalException;
 
 	/**
 	 * Adds the saml sp idp connection to the database. Also notifies the appropriate model listeners.
@@ -72,15 +80,6 @@ public interface SamlSpIdpConnectionLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public SamlSpIdpConnection addSamlSpIdpConnection(
 		SamlSpIdpConnection samlSpIdpConnection);
-
-	public SamlSpIdpConnection addSamlSpIdpConnection(
-			String samlIdpEntityId, boolean assertionSignatureRequired,
-			long clockSkew, boolean enabled, boolean forceAuthn,
-			boolean ldapImportEnabled, boolean unknownUsersAreStrangers,
-			String metadataUrl, InputStream metadataXmlInputStream, String name,
-			String nameIdFormat, boolean signAuthnRequest,
-			String userAttributeMappings, ServiceContext serviceContext)
-		throws PortalException;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by
@@ -284,15 +283,21 @@ public interface SamlSpIdpConnectionLocalService
 		throws PortalException;
 
 	public SamlSpIdpConnection updateSamlSpIdpConnection(
-			long samlSpIdpConnectionId, String samlIdpEntityId,
-			boolean assertionSignatureRequired, long clockSkew, boolean enabled,
-			boolean forceAuthn, boolean ldapImportEnabled,
-			boolean unknownUsersAreStrangers, String metadataUrl,
+			long samlSpIdpConnectionId, boolean assertionSignatureRequired,
+			long clockSkew, boolean enabled, boolean forceAuthn,
+			boolean ldapImportEnabled, String metadataUrl,
 			InputStream metadataXmlInputStream, String name,
-			String nameIdFormat, boolean signAuthnRequest,
+			String nameIdFormat, String samlIdpEntityId,
+			boolean signAuthnRequest, boolean unknownUsersAreStrangers,
 			String userAttributeMappings, ServiceContext serviceContext)
 		throws PortalException;
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by
+	 {@link #updateSamlSpIdpConnection(long, boolean, long, boolean, boolean,
+	 boolean, String, InputStream, String, String, String, boolean, boolean,
+	 String, ServiceContext)}
+	 */
 	@Deprecated
 	public SamlSpIdpConnection updateSamlSpIdpConnection(
 			long samlSpIdpConnectionId, String samlIdpEntityId,

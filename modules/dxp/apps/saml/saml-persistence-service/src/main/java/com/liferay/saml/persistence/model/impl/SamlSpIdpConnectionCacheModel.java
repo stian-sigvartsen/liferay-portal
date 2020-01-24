@@ -78,8 +78,6 @@ public class SamlSpIdpConnectionCacheModel
 		sb.append(createDate);
 		sb.append(", modifiedDate=");
 		sb.append(modifiedDate);
-		sb.append(", samlIdpEntityId=");
-		sb.append(samlIdpEntityId);
 		sb.append(", assertionSignatureRequired=");
 		sb.append(assertionSignatureRequired);
 		sb.append(", clockSkew=");
@@ -90,20 +88,22 @@ public class SamlSpIdpConnectionCacheModel
 		sb.append(forceAuthn);
 		sb.append(", ldapImportEnabled=");
 		sb.append(ldapImportEnabled);
-		sb.append(", unknownUsersAreStrangers=");
-		sb.append(unknownUsersAreStrangers);
+		sb.append(", metadataUpdatedDate=");
+		sb.append(metadataUpdatedDate);
 		sb.append(", metadataUrl=");
 		sb.append(metadataUrl);
 		sb.append(", metadataXml=");
 		sb.append(metadataXml);
-		sb.append(", metadataUpdatedDate=");
-		sb.append(metadataUpdatedDate);
 		sb.append(", name=");
 		sb.append(name);
 		sb.append(", nameIdFormat=");
 		sb.append(nameIdFormat);
+		sb.append(", samlIdpEntityId=");
+		sb.append(samlIdpEntityId);
 		sb.append(", signAuthnRequest=");
 		sb.append(signAuthnRequest);
+		sb.append(", unknownUsersAreStrangers=");
+		sb.append(unknownUsersAreStrangers);
 		sb.append(", userAttributeMappings=");
 		sb.append(userAttributeMappings);
 		sb.append("}");
@@ -141,21 +141,20 @@ public class SamlSpIdpConnectionCacheModel
 			samlSpIdpConnectionImpl.setModifiedDate(new Date(modifiedDate));
 		}
 
-		if (samlIdpEntityId == null) {
-			samlSpIdpConnectionImpl.setSamlIdpEntityId("");
-		}
-		else {
-			samlSpIdpConnectionImpl.setSamlIdpEntityId(samlIdpEntityId);
-		}
-
 		samlSpIdpConnectionImpl.setAssertionSignatureRequired(
 			assertionSignatureRequired);
 		samlSpIdpConnectionImpl.setClockSkew(clockSkew);
 		samlSpIdpConnectionImpl.setEnabled(enabled);
 		samlSpIdpConnectionImpl.setForceAuthn(forceAuthn);
 		samlSpIdpConnectionImpl.setLdapImportEnabled(ldapImportEnabled);
-		samlSpIdpConnectionImpl.setUnknownUsersAreStrangers(
-			unknownUsersAreStrangers);
+
+		if (metadataUpdatedDate == Long.MIN_VALUE) {
+			samlSpIdpConnectionImpl.setMetadataUpdatedDate(null);
+		}
+		else {
+			samlSpIdpConnectionImpl.setMetadataUpdatedDate(
+				new Date(metadataUpdatedDate));
+		}
 
 		if (metadataUrl == null) {
 			samlSpIdpConnectionImpl.setMetadataUrl("");
@@ -169,14 +168,6 @@ public class SamlSpIdpConnectionCacheModel
 		}
 		else {
 			samlSpIdpConnectionImpl.setMetadataXml(metadataXml);
-		}
-
-		if (metadataUpdatedDate == Long.MIN_VALUE) {
-			samlSpIdpConnectionImpl.setMetadataUpdatedDate(null);
-		}
-		else {
-			samlSpIdpConnectionImpl.setMetadataUpdatedDate(
-				new Date(metadataUpdatedDate));
 		}
 
 		if (name == null) {
@@ -193,7 +184,16 @@ public class SamlSpIdpConnectionCacheModel
 			samlSpIdpConnectionImpl.setNameIdFormat(nameIdFormat);
 		}
 
+		if (samlIdpEntityId == null) {
+			samlSpIdpConnectionImpl.setSamlIdpEntityId("");
+		}
+		else {
+			samlSpIdpConnectionImpl.setSamlIdpEntityId(samlIdpEntityId);
+		}
+
 		samlSpIdpConnectionImpl.setSignAuthnRequest(signAuthnRequest);
+		samlSpIdpConnectionImpl.setUnknownUsersAreStrangers(
+			unknownUsersAreStrangers);
 
 		if (userAttributeMappings == null) {
 			samlSpIdpConnectionImpl.setUserAttributeMappings("");
@@ -218,7 +218,6 @@ public class SamlSpIdpConnectionCacheModel
 		userName = objectInput.readUTF();
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
-		samlIdpEntityId = objectInput.readUTF();
 
 		assertionSignatureRequired = objectInput.readBoolean();
 
@@ -229,15 +228,16 @@ public class SamlSpIdpConnectionCacheModel
 		forceAuthn = objectInput.readBoolean();
 
 		ldapImportEnabled = objectInput.readBoolean();
-
-		unknownUsersAreStrangers = objectInput.readBoolean();
+		metadataUpdatedDate = objectInput.readLong();
 		metadataUrl = objectInput.readUTF();
 		metadataXml = objectInput.readUTF();
-		metadataUpdatedDate = objectInput.readLong();
 		name = objectInput.readUTF();
 		nameIdFormat = objectInput.readUTF();
+		samlIdpEntityId = objectInput.readUTF();
 
 		signAuthnRequest = objectInput.readBoolean();
+
+		unknownUsersAreStrangers = objectInput.readBoolean();
 		userAttributeMappings = objectInput.readUTF();
 	}
 
@@ -259,13 +259,6 @@ public class SamlSpIdpConnectionCacheModel
 		objectOutput.writeLong(createDate);
 		objectOutput.writeLong(modifiedDate);
 
-		if (samlIdpEntityId == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(samlIdpEntityId);
-		}
-
 		objectOutput.writeBoolean(assertionSignatureRequired);
 
 		objectOutput.writeLong(clockSkew);
@@ -275,8 +268,7 @@ public class SamlSpIdpConnectionCacheModel
 		objectOutput.writeBoolean(forceAuthn);
 
 		objectOutput.writeBoolean(ldapImportEnabled);
-
-		objectOutput.writeBoolean(unknownUsersAreStrangers);
+		objectOutput.writeLong(metadataUpdatedDate);
 
 		if (metadataUrl == null) {
 			objectOutput.writeUTF("");
@@ -292,8 +284,6 @@ public class SamlSpIdpConnectionCacheModel
 			objectOutput.writeUTF(metadataXml);
 		}
 
-		objectOutput.writeLong(metadataUpdatedDate);
-
 		if (name == null) {
 			objectOutput.writeUTF("");
 		}
@@ -308,7 +298,16 @@ public class SamlSpIdpConnectionCacheModel
 			objectOutput.writeUTF(nameIdFormat);
 		}
 
+		if (samlIdpEntityId == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(samlIdpEntityId);
+		}
+
 		objectOutput.writeBoolean(signAuthnRequest);
+
+		objectOutput.writeBoolean(unknownUsersAreStrangers);
 
 		if (userAttributeMappings == null) {
 			objectOutput.writeUTF("");
@@ -324,19 +323,19 @@ public class SamlSpIdpConnectionCacheModel
 	public String userName;
 	public long createDate;
 	public long modifiedDate;
-	public String samlIdpEntityId;
 	public boolean assertionSignatureRequired;
 	public long clockSkew;
 	public boolean enabled;
 	public boolean forceAuthn;
 	public boolean ldapImportEnabled;
-	public boolean unknownUsersAreStrangers;
+	public long metadataUpdatedDate;
 	public String metadataUrl;
 	public String metadataXml;
-	public long metadataUpdatedDate;
 	public String name;
 	public String nameIdFormat;
+	public String samlIdpEntityId;
 	public boolean signAuthnRequest;
+	public boolean unknownUsersAreStrangers;
 	public String userAttributeMappings;
 
 }

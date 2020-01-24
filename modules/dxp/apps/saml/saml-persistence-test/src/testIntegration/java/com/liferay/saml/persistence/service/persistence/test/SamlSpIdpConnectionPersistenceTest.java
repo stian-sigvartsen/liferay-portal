@@ -136,9 +136,6 @@ public class SamlSpIdpConnectionPersistenceTest {
 
 		newSamlSpIdpConnection.setModifiedDate(RandomTestUtil.nextDate());
 
-		newSamlSpIdpConnection.setSamlIdpEntityId(
-			RandomTestUtil.randomString());
-
 		newSamlSpIdpConnection.setAssertionSignatureRequired(
 			RandomTestUtil.randomBoolean());
 
@@ -151,21 +148,24 @@ public class SamlSpIdpConnectionPersistenceTest {
 		newSamlSpIdpConnection.setLdapImportEnabled(
 			RandomTestUtil.randomBoolean());
 
-		newSamlSpIdpConnection.setUnknownUsersAreStrangers(
-			RandomTestUtil.randomBoolean());
+		newSamlSpIdpConnection.setMetadataUpdatedDate(
+			RandomTestUtil.nextDate());
 
 		newSamlSpIdpConnection.setMetadataUrl(RandomTestUtil.randomString());
 
 		newSamlSpIdpConnection.setMetadataXml(RandomTestUtil.randomString());
 
-		newSamlSpIdpConnection.setMetadataUpdatedDate(
-			RandomTestUtil.nextDate());
-
 		newSamlSpIdpConnection.setName(RandomTestUtil.randomString());
 
 		newSamlSpIdpConnection.setNameIdFormat(RandomTestUtil.randomString());
 
+		newSamlSpIdpConnection.setSamlIdpEntityId(
+			RandomTestUtil.randomString());
+
 		newSamlSpIdpConnection.setSignAuthnRequest(
+			RandomTestUtil.randomBoolean());
+
+		newSamlSpIdpConnection.setUnknownUsersAreStrangers(
 			RandomTestUtil.randomBoolean());
 
 		newSamlSpIdpConnection.setUserAttributeMappings(
@@ -197,9 +197,6 @@ public class SamlSpIdpConnectionPersistenceTest {
 				existingSamlSpIdpConnection.getModifiedDate()),
 			Time.getShortTimestamp(newSamlSpIdpConnection.getModifiedDate()));
 		Assert.assertEquals(
-			existingSamlSpIdpConnection.getSamlIdpEntityId(),
-			newSamlSpIdpConnection.getSamlIdpEntityId());
-		Assert.assertEquals(
 			existingSamlSpIdpConnection.isAssertionSignatureRequired(),
 			newSamlSpIdpConnection.isAssertionSignatureRequired());
 		Assert.assertEquals(
@@ -215,8 +212,10 @@ public class SamlSpIdpConnectionPersistenceTest {
 			existingSamlSpIdpConnection.isLdapImportEnabled(),
 			newSamlSpIdpConnection.isLdapImportEnabled());
 		Assert.assertEquals(
-			existingSamlSpIdpConnection.isUnknownUsersAreStrangers(),
-			newSamlSpIdpConnection.isUnknownUsersAreStrangers());
+			Time.getShortTimestamp(
+				existingSamlSpIdpConnection.getMetadataUpdatedDate()),
+			Time.getShortTimestamp(
+				newSamlSpIdpConnection.getMetadataUpdatedDate()));
 		Assert.assertEquals(
 			existingSamlSpIdpConnection.getMetadataUrl(),
 			newSamlSpIdpConnection.getMetadataUrl());
@@ -224,19 +223,20 @@ public class SamlSpIdpConnectionPersistenceTest {
 			existingSamlSpIdpConnection.getMetadataXml(),
 			newSamlSpIdpConnection.getMetadataXml());
 		Assert.assertEquals(
-			Time.getShortTimestamp(
-				existingSamlSpIdpConnection.getMetadataUpdatedDate()),
-			Time.getShortTimestamp(
-				newSamlSpIdpConnection.getMetadataUpdatedDate()));
-		Assert.assertEquals(
 			existingSamlSpIdpConnection.getName(),
 			newSamlSpIdpConnection.getName());
 		Assert.assertEquals(
 			existingSamlSpIdpConnection.getNameIdFormat(),
 			newSamlSpIdpConnection.getNameIdFormat());
 		Assert.assertEquals(
+			existingSamlSpIdpConnection.getSamlIdpEntityId(),
+			newSamlSpIdpConnection.getSamlIdpEntityId());
+		Assert.assertEquals(
 			existingSamlSpIdpConnection.isSignAuthnRequest(),
 			newSamlSpIdpConnection.isSignAuthnRequest());
+		Assert.assertEquals(
+			existingSamlSpIdpConnection.isUnknownUsersAreStrangers(),
+			newSamlSpIdpConnection.isUnknownUsersAreStrangers());
 		Assert.assertEquals(
 			existingSamlSpIdpConnection.getUserAttributeMappings(),
 			newSamlSpIdpConnection.getUserAttributeMappings());
@@ -287,12 +287,12 @@ public class SamlSpIdpConnectionPersistenceTest {
 		return OrderByComparatorFactoryUtil.create(
 			"SamlSpIdpConnection", "samlSpIdpConnectionId", true, "companyId",
 			true, "userId", true, "userName", true, "createDate", true,
-			"modifiedDate", true, "samlIdpEntityId", true,
-			"assertionSignatureRequired", true, "clockSkew", true, "enabled",
-			true, "forceAuthn", true, "ldapImportEnabled", true,
-			"unknownUsersAreStrangers", true, "metadataUrl", true,
-			"metadataUpdatedDate", true, "name", true, "nameIdFormat", true,
-			"signAuthnRequest", true, "userAttributeMappings", true);
+			"modifiedDate", true, "assertionSignatureRequired", true,
+			"clockSkew", true, "enabled", true, "forceAuthn", true,
+			"ldapImportEnabled", true, "metadataUpdatedDate", true,
+			"metadataUrl", true, "name", true, "nameIdFormat", true,
+			"samlIdpEntityId", true, "signAuthnRequest", true,
+			"unknownUsersAreStrangers", true, "userAttributeMappings", true);
 	}
 
 	@Test
@@ -558,8 +558,6 @@ public class SamlSpIdpConnectionPersistenceTest {
 
 		samlSpIdpConnection.setModifiedDate(RandomTestUtil.nextDate());
 
-		samlSpIdpConnection.setSamlIdpEntityId(RandomTestUtil.randomString());
-
 		samlSpIdpConnection.setAssertionSignatureRequired(
 			RandomTestUtil.randomBoolean());
 
@@ -572,20 +570,22 @@ public class SamlSpIdpConnectionPersistenceTest {
 		samlSpIdpConnection.setLdapImportEnabled(
 			RandomTestUtil.randomBoolean());
 
-		samlSpIdpConnection.setUnknownUsersAreStrangers(
-			RandomTestUtil.randomBoolean());
+		samlSpIdpConnection.setMetadataUpdatedDate(RandomTestUtil.nextDate());
 
 		samlSpIdpConnection.setMetadataUrl(RandomTestUtil.randomString());
 
 		samlSpIdpConnection.setMetadataXml(RandomTestUtil.randomString());
 
-		samlSpIdpConnection.setMetadataUpdatedDate(RandomTestUtil.nextDate());
-
 		samlSpIdpConnection.setName(RandomTestUtil.randomString());
 
 		samlSpIdpConnection.setNameIdFormat(RandomTestUtil.randomString());
 
+		samlSpIdpConnection.setSamlIdpEntityId(RandomTestUtil.randomString());
+
 		samlSpIdpConnection.setSignAuthnRequest(RandomTestUtil.randomBoolean());
+
+		samlSpIdpConnection.setUnknownUsersAreStrangers(
+			RandomTestUtil.randomBoolean());
 
 		samlSpIdpConnection.setUserAttributeMappings(
 			RandomTestUtil.randomString());

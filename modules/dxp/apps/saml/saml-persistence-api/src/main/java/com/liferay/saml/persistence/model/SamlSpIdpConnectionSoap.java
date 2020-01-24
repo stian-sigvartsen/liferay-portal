@@ -39,21 +39,21 @@ public class SamlSpIdpConnectionSoap implements Serializable {
 		soapModel.setUserName(model.getUserName());
 		soapModel.setCreateDate(model.getCreateDate());
 		soapModel.setModifiedDate(model.getModifiedDate());
-		soapModel.setSamlIdpEntityId(model.getSamlIdpEntityId());
 		soapModel.setAssertionSignatureRequired(
 			model.isAssertionSignatureRequired());
 		soapModel.setClockSkew(model.getClockSkew());
 		soapModel.setEnabled(model.isEnabled());
 		soapModel.setForceAuthn(model.isForceAuthn());
 		soapModel.setLdapImportEnabled(model.isLdapImportEnabled());
-		soapModel.setUnknownUsersAreStrangers(
-			model.isUnknownUsersAreStrangers());
+		soapModel.setMetadataUpdatedDate(model.getMetadataUpdatedDate());
 		soapModel.setMetadataUrl(model.getMetadataUrl());
 		soapModel.setMetadataXml(model.getMetadataXml());
-		soapModel.setMetadataUpdatedDate(model.getMetadataUpdatedDate());
 		soapModel.setName(model.getName());
 		soapModel.setNameIdFormat(model.getNameIdFormat());
+		soapModel.setSamlIdpEntityId(model.getSamlIdpEntityId());
 		soapModel.setSignAuthnRequest(model.isSignAuthnRequest());
+		soapModel.setUnknownUsersAreStrangers(
+			model.isUnknownUsersAreStrangers());
 		soapModel.setUserAttributeMappings(model.getUserAttributeMappings());
 
 		return soapModel;
@@ -165,14 +165,6 @@ public class SamlSpIdpConnectionSoap implements Serializable {
 		_modifiedDate = modifiedDate;
 	}
 
-	public String getSamlIdpEntityId() {
-		return _samlIdpEntityId;
-	}
-
-	public void setSamlIdpEntityId(String samlIdpEntityId) {
-		_samlIdpEntityId = samlIdpEntityId;
-	}
-
 	public boolean getAssertionSignatureRequired() {
 		return _assertionSignatureRequired;
 	}
@@ -231,16 +223,12 @@ public class SamlSpIdpConnectionSoap implements Serializable {
 		_ldapImportEnabled = ldapImportEnabled;
 	}
 
-	public boolean getUnknownUsersAreStrangers() {
-		return _unknownUsersAreStrangers;
+	public Date getMetadataUpdatedDate() {
+		return _metadataUpdatedDate;
 	}
 
-	public boolean isUnknownUsersAreStrangers() {
-		return _unknownUsersAreStrangers;
-	}
-
-	public void setUnknownUsersAreStrangers(boolean unknownUsersAreStrangers) {
-		_unknownUsersAreStrangers = unknownUsersAreStrangers;
+	public void setMetadataUpdatedDate(Date metadataUpdatedDate) {
+		_metadataUpdatedDate = metadataUpdatedDate;
 	}
 
 	public String getMetadataUrl() {
@@ -259,14 +247,6 @@ public class SamlSpIdpConnectionSoap implements Serializable {
 		_metadataXml = metadataXml;
 	}
 
-	public Date getMetadataUpdatedDate() {
-		return _metadataUpdatedDate;
-	}
-
-	public void setMetadataUpdatedDate(Date metadataUpdatedDate) {
-		_metadataUpdatedDate = metadataUpdatedDate;
-	}
-
 	public String getName() {
 		return _name;
 	}
@@ -283,6 +263,14 @@ public class SamlSpIdpConnectionSoap implements Serializable {
 		_nameIdFormat = nameIdFormat;
 	}
 
+	public String getSamlIdpEntityId() {
+		return _samlIdpEntityId;
+	}
+
+	public void setSamlIdpEntityId(String samlIdpEntityId) {
+		_samlIdpEntityId = samlIdpEntityId;
+	}
+
 	public boolean getSignAuthnRequest() {
 		return _signAuthnRequest;
 	}
@@ -293,6 +281,18 @@ public class SamlSpIdpConnectionSoap implements Serializable {
 
 	public void setSignAuthnRequest(boolean signAuthnRequest) {
 		_signAuthnRequest = signAuthnRequest;
+	}
+
+	public boolean getUnknownUsersAreStrangers() {
+		return _unknownUsersAreStrangers;
+	}
+
+	public boolean isUnknownUsersAreStrangers() {
+		return _unknownUsersAreStrangers;
+	}
+
+	public void setUnknownUsersAreStrangers(boolean unknownUsersAreStrangers) {
+		_unknownUsersAreStrangers = unknownUsersAreStrangers;
 	}
 
 	public String getUserAttributeMappings() {
@@ -309,19 +309,19 @@ public class SamlSpIdpConnectionSoap implements Serializable {
 	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;
-	private String _samlIdpEntityId;
 	private boolean _assertionSignatureRequired;
 	private long _clockSkew;
 	private boolean _enabled;
 	private boolean _forceAuthn;
 	private boolean _ldapImportEnabled;
-	private boolean _unknownUsersAreStrangers;
+	private Date _metadataUpdatedDate;
 	private String _metadataUrl;
 	private String _metadataXml;
-	private Date _metadataUpdatedDate;
 	private String _name;
 	private String _nameIdFormat;
+	private String _samlIdpEntityId;
 	private boolean _signAuthnRequest;
+	private boolean _unknownUsersAreStrangers;
 	private String _userAttributeMappings;
 
 }

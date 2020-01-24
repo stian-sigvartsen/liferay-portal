@@ -48,21 +48,21 @@ public class SamlSpIdpConnectionWrapper
 		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
-		attributes.put("samlIdpEntityId", getSamlIdpEntityId());
 		attributes.put(
 			"assertionSignatureRequired", isAssertionSignatureRequired());
 		attributes.put("clockSkew", getClockSkew());
 		attributes.put("enabled", isEnabled());
 		attributes.put("forceAuthn", isForceAuthn());
 		attributes.put("ldapImportEnabled", isLdapImportEnabled());
-		attributes.put(
-			"unknownUsersAreStrangers", isUnknownUsersAreStrangers());
+		attributes.put("metadataUpdatedDate", getMetadataUpdatedDate());
 		attributes.put("metadataUrl", getMetadataUrl());
 		attributes.put("metadataXml", getMetadataXml());
-		attributes.put("metadataUpdatedDate", getMetadataUpdatedDate());
 		attributes.put("name", getName());
 		attributes.put("nameIdFormat", getNameIdFormat());
+		attributes.put("samlIdpEntityId", getSamlIdpEntityId());
 		attributes.put("signAuthnRequest", isSignAuthnRequest());
+		attributes.put(
+			"unknownUsersAreStrangers", isUnknownUsersAreStrangers());
 		attributes.put("userAttributeMappings", getUserAttributeMappings());
 
 		return attributes;
@@ -107,12 +107,6 @@ public class SamlSpIdpConnectionWrapper
 			setModifiedDate(modifiedDate);
 		}
 
-		String samlIdpEntityId = (String)attributes.get("samlIdpEntityId");
-
-		if (samlIdpEntityId != null) {
-			setSamlIdpEntityId(samlIdpEntityId);
-		}
-
 		Boolean assertionSignatureRequired = (Boolean)attributes.get(
 			"assertionSignatureRequired");
 
@@ -145,11 +139,10 @@ public class SamlSpIdpConnectionWrapper
 			setLdapImportEnabled(ldapImportEnabled);
 		}
 
-		Boolean unknownUsersAreStrangers = (Boolean)attributes.get(
-			"unknownUsersAreStrangers");
+		Date metadataUpdatedDate = (Date)attributes.get("metadataUpdatedDate");
 
-		if (unknownUsersAreStrangers != null) {
-			setUnknownUsersAreStrangers(unknownUsersAreStrangers);
+		if (metadataUpdatedDate != null) {
+			setMetadataUpdatedDate(metadataUpdatedDate);
 		}
 
 		String metadataUrl = (String)attributes.get("metadataUrl");
@@ -164,12 +157,6 @@ public class SamlSpIdpConnectionWrapper
 			setMetadataXml(metadataXml);
 		}
 
-		Date metadataUpdatedDate = (Date)attributes.get("metadataUpdatedDate");
-
-		if (metadataUpdatedDate != null) {
-			setMetadataUpdatedDate(metadataUpdatedDate);
-		}
-
 		String name = (String)attributes.get("name");
 
 		if (name != null) {
@@ -182,10 +169,23 @@ public class SamlSpIdpConnectionWrapper
 			setNameIdFormat(nameIdFormat);
 		}
 
+		String samlIdpEntityId = (String)attributes.get("samlIdpEntityId");
+
+		if (samlIdpEntityId != null) {
+			setSamlIdpEntityId(samlIdpEntityId);
+		}
+
 		Boolean signAuthnRequest = (Boolean)attributes.get("signAuthnRequest");
 
 		if (signAuthnRequest != null) {
 			setSignAuthnRequest(signAuthnRequest);
+		}
+
+		Boolean unknownUsersAreStrangers = (Boolean)attributes.get(
+			"unknownUsersAreStrangers");
+
+		if (unknownUsersAreStrangers != null) {
+			setUnknownUsersAreStrangers(unknownUsersAreStrangers);
 		}
 
 		String userAttributeMappings = (String)attributes.get(
