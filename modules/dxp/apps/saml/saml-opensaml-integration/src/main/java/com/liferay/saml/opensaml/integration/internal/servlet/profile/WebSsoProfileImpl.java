@@ -789,7 +789,7 @@ public class WebSsoProfileImpl extends BaseProfile implements WebSsoProfile {
 			}
 
 			httpSession.setAttribute(
-				SamlWebKeys.SAML_SUBJECT_SCREEN_NAME, nameID.getValue());
+				SamlWebKeys.SAML_SUBJECT_NAME_ID, nameID.getValue());
 
 			httpServletResponse.sendRedirect(
 				getAuthRedirectURL(messageContext, httpServletRequest));

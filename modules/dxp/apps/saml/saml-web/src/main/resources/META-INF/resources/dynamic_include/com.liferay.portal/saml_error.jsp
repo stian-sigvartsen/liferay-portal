@@ -17,7 +17,7 @@
 <%@ include file="/dynamic_include/init.jsp" %>
 
 <%
-String samlSubjectScreenName = (String)request.getAttribute(SamlWebKeys.SAML_SUBJECT_SCREEN_NAME);
+String samlSubjectScreenName = (String)request.getAttribute(SamlWebKeys.SAML_SUBJECT_NAME_ID);
 %>
 
 <liferay-util:buffer

@@ -75,17 +75,17 @@ public class SAMLBottomJSPDynamicInclude extends BaseJSPDynamicInclude {
 			SessionMessages.add(httpServletRequest, error);
 		}
 
-		String samlSubjectScreenName = (String)session.getAttribute(
-			SamlWebKeys.SAML_SUBJECT_SCREEN_NAME);
+		String samlSubjectNameId = (String)session.getAttribute(
+			SamlWebKeys.SAML_SUBJECT_NAME_ID);
 
-		if (Validator.isBlank(samlSubjectScreenName)) {
+		if (Validator.isBlank(samlSubjectNameId)) {
 			return;
 		}
 
 		httpServletRequest.setAttribute(
-			SamlWebKeys.SAML_SUBJECT_SCREEN_NAME, samlSubjectScreenName);
+			SamlWebKeys.SAML_SUBJECT_NAME_ID, samlSubjectNameId);
 
-		session.removeAttribute(SamlWebKeys.SAML_SUBJECT_SCREEN_NAME);
+		session.removeAttribute(SamlWebKeys.SAML_SUBJECT_NAME_ID);
 
 		super.include(httpServletRequest, httpServletResponse, key);
 	}
