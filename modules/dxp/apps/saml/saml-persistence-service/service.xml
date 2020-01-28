@@ -147,6 +147,7 @@
 
 		<!-- Other fields -->
 
+		<column name="samlIdpEntityId" type="String" />
 		<column name="assertionSignatureRequired" type="boolean" />
 		<column name="clockSkew" type="long" />
 		<column name="enabled" type="boolean" />
@@ -157,7 +158,6 @@
 		<column name="metadataXml" type="String" />
 		<column name="name" type="String" />
 		<column name="nameIdFormat" type="String" />
-		<column name="samlIdpEntityId" type="String" />
 		<column name="signAuthnRequest" type="boolean" />
 		<column name="unknownUsersAreStrangers" type="boolean" />
 		<column name="userAttributeMappings" type="String" />
