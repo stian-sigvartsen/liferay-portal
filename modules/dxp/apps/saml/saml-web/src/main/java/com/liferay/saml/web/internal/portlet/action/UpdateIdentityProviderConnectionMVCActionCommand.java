@@ -87,17 +87,17 @@ public class UpdateIdentityProviderConnectionMVCActionCommand
 
 		if (samlSpIdpConnectionId <= 0) {
 			_samlSpIdpConnectionLocalService.addSamlSpIdpConnection(
-				assertionSignatureRequired, clockSkew, enabled, forceAuthn,
+				samlIdpEntityId, assertionSignatureRequired, clockSkew, enabled, forceAuthn,
 				ldapImportEnabled, metadataUrl, metadataXmlInputStream, name,
-				nameIdFormat, samlIdpEntityId, signAuthnRequest,
+				nameIdFormat, signAuthnRequest,
 				unknownUsersAreStrangers, userAttributeMappings,
 				serviceContext);
 		}
 		else {
 			_samlSpIdpConnectionLocalService.updateSamlSpIdpConnection(
-				samlSpIdpConnectionId, assertionSignatureRequired, clockSkew,
+				samlSpIdpConnectionId, samlIdpEntityId, assertionSignatureRequired, clockSkew,
 				enabled, forceAuthn, ldapImportEnabled, metadataUrl,
-				metadataXmlInputStream, name, nameIdFormat, samlIdpEntityId,
+				metadataXmlInputStream, name, nameIdFormat,
 				signAuthnRequest, unknownUsersAreStrangers,
 				userAttributeMappings, serviceContext);
 		}

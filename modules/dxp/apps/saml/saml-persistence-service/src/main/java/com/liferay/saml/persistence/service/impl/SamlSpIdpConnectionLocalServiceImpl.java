@@ -49,12 +49,13 @@ public class SamlSpIdpConnectionLocalServiceImpl
 
 	@Override
 	public SamlSpIdpConnection addSamlSpIdpConnection(
-			boolean assertionSignatureRequired, long clockSkew, boolean enabled,
-			boolean forceAuthn, boolean ldapImportEnabled, String metadataUrl,
+			String samlIdpEntityId, boolean assertionSignatureRequired,
+			long clockSkew, boolean enabled, boolean forceAuthn,
+			boolean ldapImportEnabled, String metadataUrl,
 			InputStream metadataXmlInputStream, String name,
-			String nameIdFormat, String samlIdpEntityId,
-			boolean signAuthnRequest, boolean unknownUsersAreStrangers,
-			String userAttributeMappings, ServiceContext serviceContext)
+			String nameIdFormat, boolean signAuthnRequest,
+			boolean unknownUsersAreStrangers, String userAttributeMappings,
+			ServiceContext serviceContext)
 		throws PortalException {
 
 		Date now = new Date();
@@ -128,10 +129,10 @@ public class SamlSpIdpConnectionLocalServiceImpl
 	}
 
 	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by
-	 * {@link #addSamlSpIdpConnection(boolean, long, boolean, boolean, boolean,
-	 * String, InputStream, String, String, String, boolean, boolean, String,
-	 * ServiceContext)}
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #addSamlSpIdpConnection(String, boolean, long, boolean,
+	 *             boolean, boolean, String, InputStream, String, String,
+	 *             boolean, boolean, String, ServiceContext)}
 	 */
 	@Deprecated
 	@Override
@@ -145,10 +146,10 @@ public class SamlSpIdpConnectionLocalServiceImpl
 		throws PortalException {
 
 		return addSamlSpIdpConnection(
-			assertionSignatureRequired, clockSkew, enabled, forceAuthn,
-			ldapImportEnabled, metadataUrl, metadataXmlInputStream, name,
-			nameIdFormat, samlIdpEntityId, signAuthnRequest, false,
-			userAttributeMappings, serviceContext);
+			samlIdpEntityId, assertionSignatureRequired, clockSkew, enabled,
+			forceAuthn, ldapImportEnabled, metadataUrl, metadataXmlInputStream,
+			name, nameIdFormat, signAuthnRequest, false, userAttributeMappings,
+			serviceContext);
 	}
 
 	@Override
@@ -237,13 +238,13 @@ public class SamlSpIdpConnectionLocalServiceImpl
 
 	@Override
 	public SamlSpIdpConnection updateSamlSpIdpConnection(
-			long samlSpIdpConnectionId, boolean assertionSignatureRequired,
-			long clockSkew, boolean enabled, boolean forceAuthn,
-			boolean ldapImportEnabled, String metadataUrl,
+			long samlSpIdpConnectionId, String samlIdpEntityId,
+			boolean assertionSignatureRequired, long clockSkew, boolean enabled,
+			boolean forceAuthn, boolean ldapImportEnabled, String metadataUrl,
 			InputStream metadataXmlInputStream, String name,
-			String nameIdFormat, String samlIdpEntityId,
-			boolean signAuthnRequest, boolean unknownUsersAreStrangers,
-			String userAttributeMappings, ServiceContext serviceContext)
+			String nameIdFormat, boolean signAuthnRequest,
+			boolean unknownUsersAreStrangers, String userAttributeMappings,
+			ServiceContext serviceContext)
 		throws PortalException {
 
 		Date now = new Date();
@@ -322,10 +323,10 @@ public class SamlSpIdpConnectionLocalServiceImpl
 	}
 
 	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by
-	 * {@link #updateSamlSpIdpConnection(long, boolean, long, boolean, boolean,
-	 * boolean, String, InputStream, String, String, String, boolean, boolean,
-	 * String, ServiceContext)}
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #updateSamlSpIdpConnection(long, String, boolean, long,
+	 *             boolean, boolean, boolean, String, InputStream, String,
+	 *             String, boolean, boolean, String, ServiceContext)}
 	 */
 	@Deprecated
 	@Override
@@ -342,10 +343,10 @@ public class SamlSpIdpConnectionLocalServiceImpl
 			samlSpIdpConnectionId);
 
 		return updateSamlSpIdpConnection(
-			samlSpIdpConnectionId, assertionSignatureRequired, clockSkew,
-			enabled, forceAuthn, ldapImportEnabled, metadataUrl,
-			metadataXmlInputStream, name, nameIdFormat, samlIdpEntityId,
-			signAuthnRequest, samlSpIdpConnection.getUnknownUsersAreStrangers(),
+			samlSpIdpConnectionId, samlIdpEntityId, assertionSignatureRequired,
+			clockSkew, enabled, forceAuthn, ldapImportEnabled, metadataUrl,
+			metadataXmlInputStream, name, nameIdFormat, signAuthnRequest,
+			samlSpIdpConnection.getUnknownUsersAreStrangers(),
 			userAttributeMappings, serviceContext);
 	}
 
