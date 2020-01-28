@@ -45,7 +45,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Stian Sigvartsen
  */
 @Component(immediate = true, service = DynamicInclude.class)
-public class SAMLBottomJSPDynamicInclude extends BaseJSPDynamicInclude {
+public class SamlBottomJSPDynamicInclude extends BaseJSPDynamicInclude {
 
 	@Override
 	public void include(
@@ -123,7 +123,7 @@ public class SAMLBottomJSPDynamicInclude extends BaseJSPDynamicInclude {
 	};
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		SAMLBottomJSPDynamicInclude.class);
+		SamlBottomJSPDynamicInclude.class);
 
 	@Reference
 	private Portal _portal;
