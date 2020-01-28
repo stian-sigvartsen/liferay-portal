@@ -80,6 +80,9 @@
 		<field name="userName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
+		<field name="samlIdpEntityId" type="String">
+			<hint-collection name="ENTITY-ID" />
+		</field>
 		<field name="assertionSignatureRequired" type="boolean" />
 		<field name="clockSkew" type="long" />
 		<field name="enabled" type="boolean" />
@@ -94,9 +97,6 @@
 		</field>
 		<field name="name" type="String" />
 		<field name="nameIdFormat" type="String">
-			<hint-collection name="ENTITY-ID" />
-		</field>
-		<field name="samlIdpEntityId" type="String">
 			<hint-collection name="ENTITY-ID" />
 		</field>
 		<field name="signAuthnRequest" type="boolean" />

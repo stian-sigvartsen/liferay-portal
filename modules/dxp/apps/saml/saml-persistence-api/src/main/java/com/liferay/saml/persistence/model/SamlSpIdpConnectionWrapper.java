@@ -48,6 +48,7 @@ public class SamlSpIdpConnectionWrapper
 		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
+		attributes.put("samlIdpEntityId", getSamlIdpEntityId());
 		attributes.put(
 			"assertionSignatureRequired", isAssertionSignatureRequired());
 		attributes.put("clockSkew", getClockSkew());
@@ -59,7 +60,6 @@ public class SamlSpIdpConnectionWrapper
 		attributes.put("metadataXml", getMetadataXml());
 		attributes.put("name", getName());
 		attributes.put("nameIdFormat", getNameIdFormat());
-		attributes.put("samlIdpEntityId", getSamlIdpEntityId());
 		attributes.put("signAuthnRequest", isSignAuthnRequest());
 		attributes.put(
 			"unknownUsersAreStrangers", isUnknownUsersAreStrangers());
@@ -105,6 +105,12 @@ public class SamlSpIdpConnectionWrapper
 
 		if (modifiedDate != null) {
 			setModifiedDate(modifiedDate);
+		}
+
+		String samlIdpEntityId = (String)attributes.get("samlIdpEntityId");
+
+		if (samlIdpEntityId != null) {
+			setSamlIdpEntityId(samlIdpEntityId);
 		}
 
 		Boolean assertionSignatureRequired = (Boolean)attributes.get(
@@ -167,12 +173,6 @@ public class SamlSpIdpConnectionWrapper
 
 		if (nameIdFormat != null) {
 			setNameIdFormat(nameIdFormat);
-		}
-
-		String samlIdpEntityId = (String)attributes.get("samlIdpEntityId");
-
-		if (samlIdpEntityId != null) {
-			setSamlIdpEntityId(samlIdpEntityId);
 		}
 
 		Boolean signAuthnRequest = (Boolean)attributes.get("signAuthnRequest");
