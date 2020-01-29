@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.saml.persistence.internal.upgrade.v1_1_4.util;
+package com.liferay.saml.persistence.internal.upgrade.v2_0_0.util;
 
 import java.sql.Types;
 
