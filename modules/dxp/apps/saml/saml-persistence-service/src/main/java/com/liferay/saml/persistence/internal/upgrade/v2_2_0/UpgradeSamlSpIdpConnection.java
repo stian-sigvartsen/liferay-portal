@@ -12,11 +12,11 @@
  *
  */
 
-package com.liferay.saml.persistence.internal.upgrade.v2_1_0;
+package com.liferay.saml.persistence.internal.upgrade.v2_2_0;
 
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.util.LoggingTimer;
-import com.liferay.saml.persistence.internal.upgrade.v2_1_0.util.SamlSpIdpConnectionTable;
+import com.liferay.saml.persistence.internal.upgrade.v2_2_0.util.SamlSpIdpConnectionTable;
 
 import java.sql.SQLException;
 
