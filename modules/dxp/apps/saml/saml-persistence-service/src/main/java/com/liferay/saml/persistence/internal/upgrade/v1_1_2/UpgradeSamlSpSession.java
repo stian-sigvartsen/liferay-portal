@@ -12,10 +12,10 @@
  *
  */
 
-package com.liferay.saml.persistence.internal.upgrade.v1_1_1;
+package com.liferay.saml.persistence.internal.upgrade.v1_1_2;
 
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
-import com.liferay.saml.persistence.internal.upgrade.v1_1_1.util.SamlSpSessionTable;
+import com.liferay.saml.persistence.internal.upgrade.v1_1_2.util.SamlSpSessionTable;
 
 import java.sql.SQLException;
 
