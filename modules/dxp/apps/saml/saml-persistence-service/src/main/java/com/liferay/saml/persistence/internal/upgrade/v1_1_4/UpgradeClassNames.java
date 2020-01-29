@@ -12,7 +12,7 @@
  *
  */
 
-package com.liferay.saml.persistence.internal.upgrade.v1_1_3;
+package com.liferay.saml.persistence.internal.upgrade.v1_1_4;
 
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.petra.string.StringBundler;
