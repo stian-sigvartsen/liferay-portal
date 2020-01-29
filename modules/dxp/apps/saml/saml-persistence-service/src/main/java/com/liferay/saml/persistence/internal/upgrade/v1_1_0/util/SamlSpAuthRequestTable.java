@@ -12,31 +12,30 @@
  *
  */
 
-package com.liferay.saml.persistence.internal.upgrade.v1_0_0.util;
+package com.liferay.saml.persistence.internal.upgrade.v1_1_0.util;
 
 import java.sql.Types;
 
 /**
  * @author Brian Wing Shun Chan
  */
-public class SamlSpMessageTable {
+public class SamlSpAuthRequestTable {
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"samlSpMessageId", Types.BIGINT}, {"companyId", Types.BIGINT},
+		{"samlSpAuthnRequestId", Types.BIGINT}, {"companyId", Types.BIGINT},
 		{"createDate", Types.TIMESTAMP}, {"samlIdpEntityId", Types.VARCHAR},
-		{"samlIdpResponseKey", Types.VARCHAR},
-		{"expirationDate", Types.TIMESTAMP}
+		{"samlSpAuthRequestKey", Types.VARCHAR}
 	};
 
-	public static final String TABLE_NAME = "SamlSpMessage";
+	public static final String TABLE_NAME = "SamlSpAuthRequest";
 
 	public static final String[] TABLE_SQL_ADD_INDEXES = {
-		"create index IX_5615F9DD on SamlSpMessage (samlIdpEntityId, samlIdpResponseKey)"
+		"create index IX_10D77E09 on SamlSpAuthRequest (samlIdpEntityId, samlSpAuthRequestKey)"
 	};
 
 	public static final String TABLE_SQL_CREATE =
-		"create table SamlSpMessage (samlSpMessageId LONG not null primary key,companyId LONG,createDate DATE null,samlIdpEntityId VARCHAR(75) null,samlIdpResponseKey VARCHAR(75) null,expirationDate DATE null)";
+		"create table SamlSpAuthRequest (samlSpAuthnRequestId LONG not null primary key,companyId LONG,createDate DATE null,samlIdpEntityId VARCHAR(75) null,samlSpAuthRequestKey VARCHAR(75) null)";
 
-	public static final String TABLE_SQL_DROP = "drop table SamlSpMessage";
+	public static final String TABLE_SQL_DROP = "drop table SamlSpAuthRequest";
 
 }
