@@ -53,7 +53,7 @@ public class SamlServiceUpgrade implements UpgradeStepRegistrator {
 
 		registry.register(
 			"1.1.2", "1.1.3",
-			new com.liferay.saml.persistence.internal.upgrade.v1_1_2.
+			new com.liferay.saml.persistence.internal.upgrade.v1_1_3.
 				UpgradeSamlSpIdpConnection());
 
 		registry.register(
