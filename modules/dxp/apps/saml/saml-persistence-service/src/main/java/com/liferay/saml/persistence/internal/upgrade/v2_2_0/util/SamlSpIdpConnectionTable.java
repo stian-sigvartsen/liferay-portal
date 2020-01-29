@@ -31,13 +31,14 @@ public class SamlSpIdpConnectionTable {
 		{"samlSpIdpConnectionId", Types.BIGINT}, {"companyId", Types.BIGINT},
 		{"userId", Types.BIGINT}, {"userName", Types.VARCHAR},
 		{"createDate", Types.TIMESTAMP}, {"modifiedDate", Types.TIMESTAMP},
+		{"samlIdpEntityId", Types.VARCHAR},
 		{"assertionSignatureRequired", Types.BOOLEAN},
 		{"clockSkew", Types.BIGINT}, {"enabled", Types.BOOLEAN},
 		{"forceAuthn", Types.BOOLEAN}, {"ldapImportEnabled", Types.BOOLEAN},
 		{"metadataUpdatedDate", Types.TIMESTAMP},
 		{"metadataUrl", Types.VARCHAR}, {"metadataXml", Types.CLOB},
 		{"name", Types.VARCHAR}, {"nameIdFormat", Types.VARCHAR},
-		{"samlIdpEntityId", Types.VARCHAR}, {"signAuthnRequest", Types.BOOLEAN},
+		{"signAuthnRequest", Types.BOOLEAN},
 		{"unknownUsersAreStrangers", Types.BOOLEAN},
 		{"userAttributeMappings", Types.VARCHAR}
 	};
@@ -57,6 +58,8 @@ TABLE_COLUMNS_MAP.put("userName", Types.VARCHAR);
 TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 
 TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
+
+TABLE_COLUMNS_MAP.put("samlIdpEntityId", Types.VARCHAR);
 
 TABLE_COLUMNS_MAP.put("assertionSignatureRequired", Types.BOOLEAN);
 
@@ -78,8 +81,6 @@ TABLE_COLUMNS_MAP.put("name", Types.VARCHAR);
 
 TABLE_COLUMNS_MAP.put("nameIdFormat", Types.VARCHAR);
 
-TABLE_COLUMNS_MAP.put("samlIdpEntityId", Types.VARCHAR);
-
 TABLE_COLUMNS_MAP.put("signAuthnRequest", Types.BOOLEAN);
 
 TABLE_COLUMNS_MAP.put("unknownUsersAreStrangers", Types.BOOLEAN);
@@ -88,7 +89,7 @@ TABLE_COLUMNS_MAP.put("userAttributeMappings", Types.VARCHAR);
 
 }
 	public static final String TABLE_SQL_CREATE =
-"create table SamlSpIdpConnection (samlSpIdpConnectionId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,assertionSignatureRequired BOOLEAN,clockSkew LONG,enabled BOOLEAN,forceAuthn BOOLEAN,ldapImportEnabled BOOLEAN,metadataUpdatedDate DATE null,metadataUrl VARCHAR(1024) null,metadataXml TEXT null,name VARCHAR(75) null,nameIdFormat VARCHAR(1024) null,samlIdpEntityId VARCHAR(1024) null,signAuthnRequest BOOLEAN,unknownUsersAreStrangers BOOLEAN,userAttributeMappings STRING null)";
+"create table SamlSpIdpConnection (samlSpIdpConnectionId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,samlIdpEntityId VARCHAR(1024) null,assertionSignatureRequired BOOLEAN,clockSkew LONG,enabled BOOLEAN,forceAuthn BOOLEAN,ldapImportEnabled BOOLEAN,metadataUpdatedDate DATE null,metadataUrl VARCHAR(1024) null,metadataXml TEXT null,name VARCHAR(75) null,nameIdFormat VARCHAR(1024) null,signAuthnRequest BOOLEAN,unknownUsersAreStrangers BOOLEAN,userAttributeMappings STRING null)";
 
 	public static final String TABLE_SQL_DROP =
 "drop table SamlSpIdpConnection";
