@@ -18,7 +18,7 @@ import com.liferay.portal.kernel.upgrade.DummyUpgradeStep;
 import com.liferay.portal.upgrade.registry.UpgradeStepRegistrator;
 import com.liferay.saml.persistence.internal.upgrade.v1_0_0.UpgradeSamlSpAuthRequest;
 import com.liferay.saml.persistence.internal.upgrade.v1_0_0.UpgradeSamlSpMessage;
-import com.liferay.saml.persistence.internal.upgrade.v2_0_0.UpgradeSamlIdpSpConnection;
+import com.liferay.saml.persistence.internal.upgrade.v2_1_0.UpgradeSamlIdpSpConnection;
 
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.annotations.Component;
