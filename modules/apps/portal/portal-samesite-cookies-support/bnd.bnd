@@ -1,0 +1,3 @@
+Bundle-Name: Liferay Portal SameSite Cookies Support
+Bundle-SymbolicName: com.liferay.portal.samesite.cookies.support
+Bundle-Version: 1.0.0
