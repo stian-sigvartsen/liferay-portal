@@ -117,6 +117,9 @@
 		<finder name="OAuth2ApplicationId" return-type="Collection">
 			<finder-column name="oAuth2ApplicationId" />
 		</finder>
+		<finder name="AccessTokenExpirationDate" return-type="Collection">
+			<finder-column comparator="&lt;" name="accessTokenExpirationDate" />
+		</finder>
 		<finder name="AccessTokenContentHash" return-type="Collection">
 			<finder-column name="companyId" />
 			<finder-column name="accessTokenContentHash" />
