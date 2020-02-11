@@ -152,6 +152,11 @@ public class OAuth2AuthorizationLocalServiceWrapper
 			oAuth2AuthorizationId);
 	}
 
+	@Override
+	public void deleteExpiredAccessTokens() {
+		_oAuth2AuthorizationLocalService.deleteExpiredAccessTokens();
+	}
+
 	/**
 	 * Deletes the o auth2 authorization with the primary key from the database. Also notifies the appropriate model listeners.
 	 *

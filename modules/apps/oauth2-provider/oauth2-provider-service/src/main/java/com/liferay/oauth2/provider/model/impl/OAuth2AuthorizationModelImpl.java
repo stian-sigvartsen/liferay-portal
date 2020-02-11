@@ -128,15 +128,17 @@ public class OAuth2AuthorizationModelImpl
 
 	public static final long ACCESSTOKENCONTENTHASH_COLUMN_BITMASK = 1L;
 
-	public static final long COMPANYID_COLUMN_BITMASK = 2L;
+	public static final long ACCESSTOKENEXPIRATIONDATE_COLUMN_BITMASK = 2L;
 
-	public static final long OAUTH2APPLICATIONID_COLUMN_BITMASK = 4L;
+	public static final long COMPANYID_COLUMN_BITMASK = 4L;
 
-	public static final long REFRESHTOKENCONTENTHASH_COLUMN_BITMASK = 8L;
+	public static final long OAUTH2APPLICATIONID_COLUMN_BITMASK = 8L;
 
-	public static final long USERID_COLUMN_BITMASK = 16L;
+	public static final long REFRESHTOKENCONTENTHASH_COLUMN_BITMASK = 16L;
 
-	public static final long OAUTH2AUTHORIZATIONID_COLUMN_BITMASK = 32L;
+	public static final long USERID_COLUMN_BITMASK = 32L;
+
+	public static final long OAUTH2AUTHORIZATIONID_COLUMN_BITMASK = 64L;
 
 	public static void setEntityCacheEnabled(boolean entityCacheEnabled) {
 		_entityCacheEnabled = entityCacheEnabled;
@@ -652,7 +654,17 @@ public class OAuth2AuthorizationModelImpl
 
 	@Override
 	public void setAccessTokenExpirationDate(Date accessTokenExpirationDate) {
+		_columnBitmask |= ACCESSTOKENEXPIRATIONDATE_COLUMN_BITMASK;
+
+		if (_originalAccessTokenExpirationDate == null) {
+			_originalAccessTokenExpirationDate = _accessTokenExpirationDate;
+		}
+
 		_accessTokenExpirationDate = accessTokenExpirationDate;
+	}
+
+	public Date getOriginalAccessTokenExpirationDate() {
+		return _originalAccessTokenExpirationDate;
 	}
 
 	@Override
@@ -889,6 +901,9 @@ public class OAuth2AuthorizationModelImpl
 
 		oAuth2AuthorizationModelImpl._setOriginalAccessTokenContentHash = false;
 
+		oAuth2AuthorizationModelImpl._originalAccessTokenExpirationDate =
+			oAuth2AuthorizationModelImpl._accessTokenExpirationDate;
+
 		oAuth2AuthorizationModelImpl._originalRefreshTokenContentHash =
 			oAuth2AuthorizationModelImpl._refreshTokenContentHash;
 
@@ -1118,6 +1133,7 @@ public class OAuth2AuthorizationModelImpl
 	private boolean _setOriginalAccessTokenContentHash;
 	private Date _accessTokenCreateDate;
 	private Date _accessTokenExpirationDate;
+	private Date _originalAccessTokenExpirationDate;
 	private String _remoteHostInfo;
 	private String _remoteIPInfo;
 	private String _refreshTokenContent;

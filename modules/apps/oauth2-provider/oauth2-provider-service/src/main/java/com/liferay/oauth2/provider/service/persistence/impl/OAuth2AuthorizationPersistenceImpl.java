@@ -48,6 +48,9 @@ import java.io.Serializable;
 
 import java.lang.reflect.InvocationHandler;
 
+import java.sql.Timestamp;
+
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -1689,6 +1692,572 @@ public class OAuth2AuthorizationPersistenceImpl
 	private static final String
 		_FINDER_COLUMN_ACCESSTOKENCONTENTHASH_ACCESSTOKENCONTENTHASH_2 =
 			"oAuth2Authorization.accessTokenContentHash = ?";
+
+	private FinderPath _finderPathWithPaginationFindByAccessTokenExpirationDate;
+	private FinderPath
+		_finderPathWithPaginationCountByAccessTokenExpirationDate;
+
+	/**
+	 * Returns all the o auth2 authorizations where accessTokenExpirationDate &lt; &#63;.
+	 *
+	 * @param accessTokenExpirationDate the access token expiration date
+	 * @return the matching o auth2 authorizations
+	 */
+	@Override
+	public List<OAuth2Authorization> findByAccessTokenExpirationDate(
+		Date accessTokenExpirationDate) {
+
+		return findByAccessTokenExpirationDate(
+			accessTokenExpirationDate, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+			null);
+	}
+
+	/**
+	 * Returns a range of all the o auth2 authorizations where accessTokenExpirationDate &lt; &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>OAuth2AuthorizationModelImpl</code>.
+	 * </p>
+	 *
+	 * @param accessTokenExpirationDate the access token expiration date
+	 * @param start the lower bound of the range of o auth2 authorizations
+	 * @param end the upper bound of the range of o auth2 authorizations (not inclusive)
+	 * @return the range of matching o auth2 authorizations
+	 */
+	@Override
+	public List<OAuth2Authorization> findByAccessTokenExpirationDate(
+		Date accessTokenExpirationDate, int start, int end) {
+
+		return findByAccessTokenExpirationDate(
+			accessTokenExpirationDate, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the o auth2 authorizations where accessTokenExpirationDate &lt; &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>OAuth2AuthorizationModelImpl</code>.
+	 * </p>
+	 *
+	 * @param accessTokenExpirationDate the access token expiration date
+	 * @param start the lower bound of the range of o auth2 authorizations
+	 * @param end the upper bound of the range of o auth2 authorizations (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching o auth2 authorizations
+	 */
+	@Override
+	public List<OAuth2Authorization> findByAccessTokenExpirationDate(
+		Date accessTokenExpirationDate, int start, int end,
+		OrderByComparator<OAuth2Authorization> orderByComparator) {
+
+		return findByAccessTokenExpirationDate(
+			accessTokenExpirationDate, start, end, orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the o auth2 authorizations where accessTokenExpirationDate &lt; &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>OAuth2AuthorizationModelImpl</code>.
+	 * </p>
+	 *
+	 * @param accessTokenExpirationDate the access token expiration date
+	 * @param start the lower bound of the range of o auth2 authorizations
+	 * @param end the upper bound of the range of o auth2 authorizations (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching o auth2 authorizations
+	 */
+	@Override
+	public List<OAuth2Authorization> findByAccessTokenExpirationDate(
+		Date accessTokenExpirationDate, int start, int end,
+		OrderByComparator<OAuth2Authorization> orderByComparator,
+		boolean useFinderCache) {
+
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		finderPath = _finderPathWithPaginationFindByAccessTokenExpirationDate;
+		finderArgs = new Object[] {
+			_getTime(accessTokenExpirationDate), start, end, orderByComparator
+		};
+
+		List<OAuth2Authorization> list = null;
+
+		if (useFinderCache) {
+			list = (List<OAuth2Authorization>)finderCache.getResult(
+				finderPath, finderArgs, this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (OAuth2Authorization oAuth2Authorization : list) {
+					if (accessTokenExpirationDate.getTime() <=
+							oAuth2Authorization.
+								getAccessTokenExpirationDate().getTime()) {
+
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(
+					3 + (orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				query = new StringBundler(3);
+			}
+
+			query.append(_SQL_SELECT_OAUTH2AUTHORIZATION_WHERE);
+
+			boolean bindAccessTokenExpirationDate = false;
+
+			if (accessTokenExpirationDate == null) {
+				query.append(
+					_FINDER_COLUMN_ACCESSTOKENEXPIRATIONDATE_ACCESSTOKENEXPIRATIONDATE_1);
+			}
+			else {
+				bindAccessTokenExpirationDate = true;
+
+				query.append(
+					_FINDER_COLUMN_ACCESSTOKENEXPIRATIONDATE_ACCESSTOKENEXPIRATIONDATE_2);
+			}
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(
+					query, _ORDER_BY_ENTITY_ALIAS, orderByComparator);
+			}
+			else {
+				query.append(OAuth2AuthorizationModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (bindAccessTokenExpirationDate) {
+					qPos.add(
+						new Timestamp(accessTokenExpirationDate.getTime()));
+				}
+
+				list = (List<OAuth2Authorization>)QueryUtil.list(
+					q, getDialect(), start, end);
+
+				cacheResult(list);
+
+				if (useFinderCache) {
+					finderCache.putResult(finderPath, finderArgs, list);
+				}
+			}
+			catch (Exception exception) {
+				if (useFinderCache) {
+					finderCache.removeResult(finderPath, finderArgs);
+				}
+
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first o auth2 authorization in the ordered set where accessTokenExpirationDate &lt; &#63;.
+	 *
+	 * @param accessTokenExpirationDate the access token expiration date
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching o auth2 authorization
+	 * @throws NoSuchOAuth2AuthorizationException if a matching o auth2 authorization could not be found
+	 */
+	@Override
+	public OAuth2Authorization findByAccessTokenExpirationDate_First(
+			Date accessTokenExpirationDate,
+			OrderByComparator<OAuth2Authorization> orderByComparator)
+		throws NoSuchOAuth2AuthorizationException {
+
+		OAuth2Authorization oAuth2Authorization =
+			fetchByAccessTokenExpirationDate_First(
+				accessTokenExpirationDate, orderByComparator);
+
+		if (oAuth2Authorization != null) {
+			return oAuth2Authorization;
+		}
+
+		StringBundler msg = new StringBundler(4);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("accessTokenExpirationDate<");
+		msg.append(accessTokenExpirationDate);
+
+		msg.append("}");
+
+		throw new NoSuchOAuth2AuthorizationException(msg.toString());
+	}
+
+	/**
+	 * Returns the first o auth2 authorization in the ordered set where accessTokenExpirationDate &lt; &#63;.
+	 *
+	 * @param accessTokenExpirationDate the access token expiration date
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching o auth2 authorization, or <code>null</code> if a matching o auth2 authorization could not be found
+	 */
+	@Override
+	public OAuth2Authorization fetchByAccessTokenExpirationDate_First(
+		Date accessTokenExpirationDate,
+		OrderByComparator<OAuth2Authorization> orderByComparator) {
+
+		List<OAuth2Authorization> list = findByAccessTokenExpirationDate(
+			accessTokenExpirationDate, 0, 1, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last o auth2 authorization in the ordered set where accessTokenExpirationDate &lt; &#63;.
+	 *
+	 * @param accessTokenExpirationDate the access token expiration date
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching o auth2 authorization
+	 * @throws NoSuchOAuth2AuthorizationException if a matching o auth2 authorization could not be found
+	 */
+	@Override
+	public OAuth2Authorization findByAccessTokenExpirationDate_Last(
+			Date accessTokenExpirationDate,
+			OrderByComparator<OAuth2Authorization> orderByComparator)
+		throws NoSuchOAuth2AuthorizationException {
+
+		OAuth2Authorization oAuth2Authorization =
+			fetchByAccessTokenExpirationDate_Last(
+				accessTokenExpirationDate, orderByComparator);
+
+		if (oAuth2Authorization != null) {
+			return oAuth2Authorization;
+		}
+
+		StringBundler msg = new StringBundler(4);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("accessTokenExpirationDate<");
+		msg.append(accessTokenExpirationDate);
+
+		msg.append("}");
+
+		throw new NoSuchOAuth2AuthorizationException(msg.toString());
+	}
+
+	/**
+	 * Returns the last o auth2 authorization in the ordered set where accessTokenExpirationDate &lt; &#63;.
+	 *
+	 * @param accessTokenExpirationDate the access token expiration date
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching o auth2 authorization, or <code>null</code> if a matching o auth2 authorization could not be found
+	 */
+	@Override
+	public OAuth2Authorization fetchByAccessTokenExpirationDate_Last(
+		Date accessTokenExpirationDate,
+		OrderByComparator<OAuth2Authorization> orderByComparator) {
+
+		int count = countByAccessTokenExpirationDate(accessTokenExpirationDate);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<OAuth2Authorization> list = findByAccessTokenExpirationDate(
+			accessTokenExpirationDate, count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the o auth2 authorizations before and after the current o auth2 authorization in the ordered set where accessTokenExpirationDate &lt; &#63;.
+	 *
+	 * @param oAuth2AuthorizationId the primary key of the current o auth2 authorization
+	 * @param accessTokenExpirationDate the access token expiration date
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next o auth2 authorization
+	 * @throws NoSuchOAuth2AuthorizationException if a o auth2 authorization with the primary key could not be found
+	 */
+	@Override
+	public OAuth2Authorization[] findByAccessTokenExpirationDate_PrevAndNext(
+			long oAuth2AuthorizationId, Date accessTokenExpirationDate,
+			OrderByComparator<OAuth2Authorization> orderByComparator)
+		throws NoSuchOAuth2AuthorizationException {
+
+		OAuth2Authorization oAuth2Authorization = findByPrimaryKey(
+			oAuth2AuthorizationId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			OAuth2Authorization[] array = new OAuth2AuthorizationImpl[3];
+
+			array[0] = getByAccessTokenExpirationDate_PrevAndNext(
+				session, oAuth2Authorization, accessTokenExpirationDate,
+				orderByComparator, true);
+
+			array[1] = oAuth2Authorization;
+
+			array[2] = getByAccessTokenExpirationDate_PrevAndNext(
+				session, oAuth2Authorization, accessTokenExpirationDate,
+				orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected OAuth2Authorization getByAccessTokenExpirationDate_PrevAndNext(
+		Session session, OAuth2Authorization oAuth2Authorization,
+		Date accessTokenExpirationDate,
+		OrderByComparator<OAuth2Authorization> orderByComparator,
+		boolean previous) {
+
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(
+				4 + (orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		query.append(_SQL_SELECT_OAUTH2AUTHORIZATION_WHERE);
+
+		boolean bindAccessTokenExpirationDate = false;
+
+		if (accessTokenExpirationDate == null) {
+			query.append(
+				_FINDER_COLUMN_ACCESSTOKENEXPIRATIONDATE_ACCESSTOKENEXPIRATIONDATE_1);
+		}
+		else {
+			bindAccessTokenExpirationDate = true;
+
+			query.append(
+				_FINDER_COLUMN_ACCESSTOKENEXPIRATIONDATE_ACCESSTOKENEXPIRATIONDATE_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields =
+				orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			query.append(OAuth2AuthorizationModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = query.toString();
+
+		Query q = session.createQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		if (bindAccessTokenExpirationDate) {
+			qPos.add(new Timestamp(accessTokenExpirationDate.getTime()));
+		}
+
+		if (orderByComparator != null) {
+			for (Object orderByConditionValue :
+					orderByComparator.getOrderByConditionValues(
+						oAuth2Authorization)) {
+
+				qPos.add(orderByConditionValue);
+			}
+		}
+
+		List<OAuth2Authorization> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the o auth2 authorizations where accessTokenExpirationDate &lt; &#63; from the database.
+	 *
+	 * @param accessTokenExpirationDate the access token expiration date
+	 */
+	@Override
+	public void removeByAccessTokenExpirationDate(
+		Date accessTokenExpirationDate) {
+
+		for (OAuth2Authorization oAuth2Authorization :
+				findByAccessTokenExpirationDate(
+					accessTokenExpirationDate, QueryUtil.ALL_POS,
+					QueryUtil.ALL_POS, null)) {
+
+			remove(oAuth2Authorization);
+		}
+	}
+
+	/**
+	 * Returns the number of o auth2 authorizations where accessTokenExpirationDate &lt; &#63;.
+	 *
+	 * @param accessTokenExpirationDate the access token expiration date
+	 * @return the number of matching o auth2 authorizations
+	 */
+	@Override
+	public int countByAccessTokenExpirationDate(
+		Date accessTokenExpirationDate) {
+
+		FinderPath finderPath =
+			_finderPathWithPaginationCountByAccessTokenExpirationDate;
+
+		Object[] finderArgs = new Object[] {
+			_getTime(accessTokenExpirationDate)
+		};
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(2);
+
+			query.append(_SQL_COUNT_OAUTH2AUTHORIZATION_WHERE);
+
+			boolean bindAccessTokenExpirationDate = false;
+
+			if (accessTokenExpirationDate == null) {
+				query.append(
+					_FINDER_COLUMN_ACCESSTOKENEXPIRATIONDATE_ACCESSTOKENEXPIRATIONDATE_1);
+			}
+			else {
+				bindAccessTokenExpirationDate = true;
+
+				query.append(
+					_FINDER_COLUMN_ACCESSTOKENEXPIRATIONDATE_ACCESSTOKENEXPIRATIONDATE_2);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (bindAccessTokenExpirationDate) {
+					qPos.add(
+						new Timestamp(accessTokenExpirationDate.getTime()));
+				}
+
+				count = (Long)q.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception exception) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String
+		_FINDER_COLUMN_ACCESSTOKENEXPIRATIONDATE_ACCESSTOKENEXPIRATIONDATE_1 =
+			"oAuth2Authorization.accessTokenExpirationDate IS NULL";
+
+	private static final String
+		_FINDER_COLUMN_ACCESSTOKENEXPIRATIONDATE_ACCESSTOKENEXPIRATIONDATE_2 =
+			"oAuth2Authorization.accessTokenExpirationDate < ?";
 
 	private FinderPath _finderPathWithPaginationFindByRefreshTokenContentHash;
 	private FinderPath
@@ -3377,6 +3946,24 @@ public class OAuth2AuthorizationPersistenceImpl
 			"countByAccessTokenContentHash",
 			new String[] {Long.class.getName(), Long.class.getName()});
 
+		_finderPathWithPaginationFindByAccessTokenExpirationDate =
+			new FinderPath(
+				entityCacheEnabled, finderCacheEnabled,
+				OAuth2AuthorizationImpl.class,
+				FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
+				"findByAccessTokenExpirationDate",
+				new String[] {
+					Date.class.getName(), Integer.class.getName(),
+					Integer.class.getName(), OrderByComparator.class.getName()
+				});
+
+		_finderPathWithPaginationCountByAccessTokenExpirationDate =
+			new FinderPath(
+				entityCacheEnabled, finderCacheEnabled, Long.class,
+				FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
+				"countByAccessTokenExpirationDate",
+				new String[] {Date.class.getName()});
+
 		_finderPathWithPaginationFindByRefreshTokenContentHash = new FinderPath(
 			entityCacheEnabled, finderCacheEnabled,
 			OAuth2AuthorizationImpl.class,
@@ -3459,6 +4046,14 @@ public class OAuth2AuthorizationPersistenceImpl
 
 	protected TableMapper<OAuth2Authorization, OAuth2ScopeGrant>
 		oAuth2AuthorizationToOAuth2ScopeGrantTableMapper;
+
+	private Long _getTime(Date date) {
+		if (date == null) {
+			return null;
+		}
+
+		return date.getTime();
+	}
 
 	private static final String _SQL_SELECT_OAUTH2AUTHORIZATION =
 		"SELECT oAuth2Authorization FROM OAuth2Authorization oAuth2Authorization";

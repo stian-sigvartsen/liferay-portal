@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 
 import java.io.Serializable;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -674,6 +675,195 @@ public class OAuth2AuthorizationUtil {
 
 		return getPersistence().countByAccessTokenContentHash(
 			companyId, accessTokenContentHash);
+	}
+
+	/**
+	 * Returns all the o auth2 authorizations where accessTokenExpirationDate &lt; &#63;.
+	 *
+	 * @param accessTokenExpirationDate the access token expiration date
+	 * @return the matching o auth2 authorizations
+	 */
+	public static List<OAuth2Authorization> findByAccessTokenExpirationDate(
+		Date accessTokenExpirationDate) {
+
+		return getPersistence().findByAccessTokenExpirationDate(
+			accessTokenExpirationDate);
+	}
+
+	/**
+	 * Returns a range of all the o auth2 authorizations where accessTokenExpirationDate &lt; &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>OAuth2AuthorizationModelImpl</code>.
+	 * </p>
+	 *
+	 * @param accessTokenExpirationDate the access token expiration date
+	 * @param start the lower bound of the range of o auth2 authorizations
+	 * @param end the upper bound of the range of o auth2 authorizations (not inclusive)
+	 * @return the range of matching o auth2 authorizations
+	 */
+	public static List<OAuth2Authorization> findByAccessTokenExpirationDate(
+		Date accessTokenExpirationDate, int start, int end) {
+
+		return getPersistence().findByAccessTokenExpirationDate(
+			accessTokenExpirationDate, start, end);
+	}
+
+	/**
+	 * Returns an ordered range of all the o auth2 authorizations where accessTokenExpirationDate &lt; &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>OAuth2AuthorizationModelImpl</code>.
+	 * </p>
+	 *
+	 * @param accessTokenExpirationDate the access token expiration date
+	 * @param start the lower bound of the range of o auth2 authorizations
+	 * @param end the upper bound of the range of o auth2 authorizations (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching o auth2 authorizations
+	 */
+	public static List<OAuth2Authorization> findByAccessTokenExpirationDate(
+		Date accessTokenExpirationDate, int start, int end,
+		OrderByComparator<OAuth2Authorization> orderByComparator) {
+
+		return getPersistence().findByAccessTokenExpirationDate(
+			accessTokenExpirationDate, start, end, orderByComparator);
+	}
+
+	/**
+	 * Returns an ordered range of all the o auth2 authorizations where accessTokenExpirationDate &lt; &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>OAuth2AuthorizationModelImpl</code>.
+	 * </p>
+	 *
+	 * @param accessTokenExpirationDate the access token expiration date
+	 * @param start the lower bound of the range of o auth2 authorizations
+	 * @param end the upper bound of the range of o auth2 authorizations (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching o auth2 authorizations
+	 */
+	public static List<OAuth2Authorization> findByAccessTokenExpirationDate(
+		Date accessTokenExpirationDate, int start, int end,
+		OrderByComparator<OAuth2Authorization> orderByComparator,
+		boolean useFinderCache) {
+
+		return getPersistence().findByAccessTokenExpirationDate(
+			accessTokenExpirationDate, start, end, orderByComparator,
+			useFinderCache);
+	}
+
+	/**
+	 * Returns the first o auth2 authorization in the ordered set where accessTokenExpirationDate &lt; &#63;.
+	 *
+	 * @param accessTokenExpirationDate the access token expiration date
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching o auth2 authorization
+	 * @throws NoSuchOAuth2AuthorizationException if a matching o auth2 authorization could not be found
+	 */
+	public static OAuth2Authorization findByAccessTokenExpirationDate_First(
+			Date accessTokenExpirationDate,
+			OrderByComparator<OAuth2Authorization> orderByComparator)
+		throws com.liferay.oauth2.provider.exception.
+			NoSuchOAuth2AuthorizationException {
+
+		return getPersistence().findByAccessTokenExpirationDate_First(
+			accessTokenExpirationDate, orderByComparator);
+	}
+
+	/**
+	 * Returns the first o auth2 authorization in the ordered set where accessTokenExpirationDate &lt; &#63;.
+	 *
+	 * @param accessTokenExpirationDate the access token expiration date
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching o auth2 authorization, or <code>null</code> if a matching o auth2 authorization could not be found
+	 */
+	public static OAuth2Authorization fetchByAccessTokenExpirationDate_First(
+		Date accessTokenExpirationDate,
+		OrderByComparator<OAuth2Authorization> orderByComparator) {
+
+		return getPersistence().fetchByAccessTokenExpirationDate_First(
+			accessTokenExpirationDate, orderByComparator);
+	}
+
+	/**
+	 * Returns the last o auth2 authorization in the ordered set where accessTokenExpirationDate &lt; &#63;.
+	 *
+	 * @param accessTokenExpirationDate the access token expiration date
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching o auth2 authorization
+	 * @throws NoSuchOAuth2AuthorizationException if a matching o auth2 authorization could not be found
+	 */
+	public static OAuth2Authorization findByAccessTokenExpirationDate_Last(
+			Date accessTokenExpirationDate,
+			OrderByComparator<OAuth2Authorization> orderByComparator)
+		throws com.liferay.oauth2.provider.exception.
+			NoSuchOAuth2AuthorizationException {
+
+		return getPersistence().findByAccessTokenExpirationDate_Last(
+			accessTokenExpirationDate, orderByComparator);
+	}
+
+	/**
+	 * Returns the last o auth2 authorization in the ordered set where accessTokenExpirationDate &lt; &#63;.
+	 *
+	 * @param accessTokenExpirationDate the access token expiration date
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching o auth2 authorization, or <code>null</code> if a matching o auth2 authorization could not be found
+	 */
+	public static OAuth2Authorization fetchByAccessTokenExpirationDate_Last(
+		Date accessTokenExpirationDate,
+		OrderByComparator<OAuth2Authorization> orderByComparator) {
+
+		return getPersistence().fetchByAccessTokenExpirationDate_Last(
+			accessTokenExpirationDate, orderByComparator);
+	}
+
+	/**
+	 * Returns the o auth2 authorizations before and after the current o auth2 authorization in the ordered set where accessTokenExpirationDate &lt; &#63;.
+	 *
+	 * @param oAuth2AuthorizationId the primary key of the current o auth2 authorization
+	 * @param accessTokenExpirationDate the access token expiration date
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next o auth2 authorization
+	 * @throws NoSuchOAuth2AuthorizationException if a o auth2 authorization with the primary key could not be found
+	 */
+	public static OAuth2Authorization[]
+			findByAccessTokenExpirationDate_PrevAndNext(
+				long oAuth2AuthorizationId, Date accessTokenExpirationDate,
+				OrderByComparator<OAuth2Authorization> orderByComparator)
+		throws com.liferay.oauth2.provider.exception.
+			NoSuchOAuth2AuthorizationException {
+
+		return getPersistence().findByAccessTokenExpirationDate_PrevAndNext(
+			oAuth2AuthorizationId, accessTokenExpirationDate,
+			orderByComparator);
+	}
+
+	/**
+	 * Removes all the o auth2 authorizations where accessTokenExpirationDate &lt; &#63; from the database.
+	 *
+	 * @param accessTokenExpirationDate the access token expiration date
+	 */
+	public static void removeByAccessTokenExpirationDate(
+		Date accessTokenExpirationDate) {
+
+		getPersistence().removeByAccessTokenExpirationDate(
+			accessTokenExpirationDate);
+	}
+
+	/**
+	 * Returns the number of o auth2 authorizations where accessTokenExpirationDate &lt; &#63;.
+	 *
+	 * @param accessTokenExpirationDate the access token expiration date
+	 * @return the number of matching o auth2 authorizations
+	 */
+	public static int countByAccessTokenExpirationDate(
+		Date accessTokenExpirationDate) {
+
+		return getPersistence().countByAccessTokenExpirationDate(
+			accessTokenExpirationDate);
 	}
 
 	/**

@@ -121,6 +121,8 @@ public interface OAuth2AuthorizationLocalService
 	public OAuth2Authorization createOAuth2Authorization(
 		long oAuth2AuthorizationId);
 
+	public void deleteExpiredAccessTokens();
+
 	/**
 	 * Deletes the o auth2 authorization with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
