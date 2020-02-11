@@ -152,6 +152,11 @@ public class OAuth2AuthorizationLocalServiceWrapper
 			oAuth2AuthorizationId);
 	}
 
+	@Override
+	public void deleteExpiredAccessTokens() {
+		_oAuth2AuthorizationLocalService.deleteExpiredAccessTokens();
+	}
+
 	/**
 	 * @throws PortalException
 	 */

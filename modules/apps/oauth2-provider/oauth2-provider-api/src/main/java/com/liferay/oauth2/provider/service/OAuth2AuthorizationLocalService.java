@@ -121,6 +121,8 @@ public interface OAuth2AuthorizationLocalService
 	public OAuth2Authorization createOAuth2Authorization(
 		long oAuth2AuthorizationId);
 
+	public void deleteExpiredAccessTokens();
+
 	/**
 	 * @throws PortalException
 	 */

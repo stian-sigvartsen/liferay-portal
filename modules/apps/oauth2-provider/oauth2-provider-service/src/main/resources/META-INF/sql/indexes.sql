@@ -7,6 +7,7 @@ create index IX_282ECE83 on OAuth2ApplicationScopeAliases (companyId);
 create index IX_2F9EBCBB on OAuth2ApplicationScopeAliases (oAuth2ApplicationId);
 
 create index IX_77D3B9EA on OAuth2Authorization (accessTokenContentHash);
+create index IX_3492CDFE on OAuth2Authorization (accessTokenExpirationDate);
 create index IX_FB9F7B8A on OAuth2Authorization (companyId, accessTokenContentHash);
 create index IX_673EE35 on OAuth2Authorization (companyId, refreshTokenContentHash);
 create index IX_70DD169C on OAuth2Authorization (oAuth2ApplicationId);
