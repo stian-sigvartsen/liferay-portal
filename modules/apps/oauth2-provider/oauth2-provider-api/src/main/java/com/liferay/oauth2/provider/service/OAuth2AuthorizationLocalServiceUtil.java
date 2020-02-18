@@ -144,10 +144,6 @@ public class OAuth2AuthorizationLocalServiceUtil {
 		return getService().createOAuth2Authorization(oAuth2AuthorizationId);
 	}
 
-	public static void deleteExpiredAccessTokens() {
-		getService().deleteExpiredAccessTokens();
-	}
-
 	/**
 	 * @throws PortalException
 	 */
