@@ -115,7 +115,7 @@ public class SamlSameSiteLaxCookiesFilterTest {
 		String contentType = httpClient.getHeaderField("Content-Type");
 
 		Assert.assertTrue(
-			"Response is not text/html content type",
+			"Response content type is not text/html",
 			Validator.isNotNull(contentType) &&
 			contentType.startsWith("text/html"));
 
