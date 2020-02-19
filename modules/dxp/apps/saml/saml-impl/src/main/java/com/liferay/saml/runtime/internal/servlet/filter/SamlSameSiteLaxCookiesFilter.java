@@ -95,7 +95,7 @@ public class SamlSameSiteLaxCookiesFilter extends BaseSamlPortalFilter {
 		if (ParamUtil.getBoolean(httpServletRequest, "noscript")) {
 			printWriter.write(
 				StringBundler.concat(
-					"<!DOCTYPE html>\n<html><body>",
+					"<!DOCTYPE html>\n\n<html><body>",
 					ResourceBundleUtil.getString(
 						_resourceBundleLoader.loadResourceBundle(
 							_portal.getLocale(httpServletRequest)),
@@ -109,7 +109,7 @@ public class SamlSameSiteLaxCookiesFilter extends BaseSamlPortalFilter {
 
 		StringBundler sb = new StringBundler(7 + 5 * _PARAMS.length);
 
-		sb.append("<!DOCTYPE html>\n");
+		sb.append("<!DOCTYPE html>\n\n");
 		sb.append("<html><body onload=\"document.forms[0].submit()\">");
 		sb.append("<form action=\"?continue=true\" method=\"post\"");
 		sb.append("name=\"fm\">");
