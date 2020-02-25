@@ -79,7 +79,7 @@ public class OAuth2AuthorizationFinderImpl
 				findByPurgeDate(
 					purgeDate, QueryUtil.ALL_POS, QueryUtil.ALL_POS)) {
 
-			remove(oAuth2Authorization);
+			oAuth2AuthorizationPersistence.remove(oAuth2Authorization);
 		}
 	}
 
