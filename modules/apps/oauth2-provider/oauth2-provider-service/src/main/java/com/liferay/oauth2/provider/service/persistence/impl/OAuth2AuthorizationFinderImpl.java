@@ -39,7 +39,7 @@ public class OAuth2AuthorizationFinderImpl
 	extends OAuth2AuthorizationFinderBaseImpl
 	implements OAuth2AuthorizationFinder {
 
-	public static final String FIND_BY_PURGEDATE =
+	public static final String FIND_BY_PURGE_DATE =
 		OAuth2AuthorizationFinder.class.getName() + ".findByPurgeDate";
 
 	@Override
@@ -51,7 +51,7 @@ public class OAuth2AuthorizationFinderImpl
 		try {
 			session = openSession();
 
-			String sql = _customSQL.get(getClass(), FIND_BY_PURGEDATE);
+			String sql = _customSQL.get(getClass(), FIND_BY_PURGE_DATE);
 
 			SQLQuery q = session.createSynchronizedSQLQuery(sql);
 
