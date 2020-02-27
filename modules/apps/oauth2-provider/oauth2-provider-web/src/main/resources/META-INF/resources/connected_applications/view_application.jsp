@@ -127,20 +127,11 @@ renderResponse.setTitle(oAuth2Application.getName());
 				if (expirationDate == null) {
 					expirationDate = oAuth2Authorization.getAccessTokenExpirationDate();
 				}
-
-				String key;
-
-				if (expirationDate.before(new Date())) {
-					key = "x-ago";
-				}
-				else {
-					key = "within-x";
-				}
 				%>
 
 				<p class="authorization text-truncate">
 					<span><liferay-ui:message key="expiration" /></span>:
-					<liferay-ui:message arguments="<%= LanguageUtil.getTimeDescription(locale, Math.abs(System.currentTimeMillis() - expirationDate.getTime()), true) %>" key="<%= key %>" translateArguments="<%= false %>" />
+					<liferay-ui:message arguments="<%= LanguageUtil.getTimeDescription(locale, Math.abs(System.currentTimeMillis() - expirationDate.getTime()), true) %>" key='<%= expirationDate.before(new Date()) ? "x-ago" : "within-x" %>' translateArguments="<%= false %>" />
 				</p>
 
 				<p class="buttons">
