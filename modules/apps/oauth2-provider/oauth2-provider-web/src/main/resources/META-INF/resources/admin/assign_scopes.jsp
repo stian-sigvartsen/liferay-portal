@@ -16,6 +16,7 @@
 
 <%@ include file="/admin/init.jsp" %>
 
+
 <%
 String redirect = ParamUtil.getString(request, "redirect");
 
