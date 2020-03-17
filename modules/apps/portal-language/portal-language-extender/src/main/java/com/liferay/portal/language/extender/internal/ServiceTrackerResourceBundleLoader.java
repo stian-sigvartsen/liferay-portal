@@ -47,7 +47,7 @@ public class ServiceTrackerResourceBundleLoader
 			Filter filter = bundleContext.createFilter(
 				StringBundler.concat(
 					"(&(objectClass=", ResourceBundleLoader.class.getName(),
-					")", filterString, "(|(!(aggregateId=*))(!(aggregateId=",
+					")", filterString, "(|(!(aggregateId=*))(!(aggregateId>=",
 					aggregateId, "))))"));
 
 			ServiceTracker<ResourceBundleLoader, ResourceBundleLoader>
