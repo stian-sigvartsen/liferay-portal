@@ -78,7 +78,9 @@ public class ServiceTrackerResourceBundleLoader
 			ResourceBundleLoader resourceBundleLoader =
 				serviceTracker.getService();
 
-			if (resourceBundleLoader != null) {
+			if ((resourceBundleLoader != null) &&
+				(resourceBundleLoader != this)) {
+
 				ResourceBundle resourceBundle =
 					resourceBundleLoader.loadResourceBundle(locale);
 
