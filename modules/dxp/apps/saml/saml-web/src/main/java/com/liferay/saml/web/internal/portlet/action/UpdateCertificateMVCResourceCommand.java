@@ -80,7 +80,6 @@ public class UpdateCertificateMVCResourceCommand
 		try {
 			SamlTempFileEntryUtil.deleteTempFileEntry(
 				themeDisplay.getUser(),
-				//Do we need to validate fileName somehow?
 				ParamUtil.getString(resourceRequest, "fileName"));
 
 			jsonObject.put("deleted", Boolean.TRUE);
