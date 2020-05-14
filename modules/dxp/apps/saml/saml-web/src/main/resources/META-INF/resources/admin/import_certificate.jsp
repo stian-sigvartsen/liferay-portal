@@ -65,7 +65,7 @@ if (Validator.isNotNull(tempFileName)) {
 				'strings.fileCannotBeSavedText':
 					'<liferay-ui:message key="the-file-x-cannot-be-inspected" />',
 				uploadFile:
-					'<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" id="/admin/updateCertificate"><portlet:param name="cmd" value="<%= Constants.ADD_TEMP %>" /></liferay-portlet:resourceURL>',
+					'<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" id="/admin/updateCertificate"><portlet:param name="<%= Constants.CMD %>" value="<%= Constants.ADD_TEMP %>" /></liferay-portlet:resourceURL>',
 			});
 
 			liferayUpload._uploader.on('alluploadscomplete', function (event) {
@@ -188,7 +188,7 @@ if (Validator.isNotNull(tempFileName)) {
 
 		<portlet:renderURL var="backURL">
 			<portlet:param name="mvcRenderCommandName" value="/admin/updateCertificate" />
-			<portlet:param name="<%= Constants.CMD %>" value='<%= ParamUtil.getString(request, "cmd") %>' />
+			<portlet:param name="<%= Constants.CMD %>" value="<%= ParamUtil.getString(request, Constants.CMD) %>" />
 			<portlet:param name="certificateUsage" value="<%= certificateUsage.name() %>" />
 			<portlet:param name="selectUploadedFile" value="<%= fileEntry.getFileName() %>" />
 		</portlet:renderURL>

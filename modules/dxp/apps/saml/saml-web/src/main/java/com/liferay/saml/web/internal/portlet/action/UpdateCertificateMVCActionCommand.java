@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropertiesParamUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
@@ -131,7 +132,7 @@ public class UpdateCertificateMVCActionCommand extends BaseMVCActionCommand {
 			throw new PrincipalException();
 		}
 
-		String cmd = ParamUtil.get(actionRequest, "cmd", "auth");
+		String cmd = ParamUtil.get(actionRequest, Constants.CMD, "auth");
 
 		if (cmd.equals("auth")) {
 			authenticateCertificate(actionRequest, actionResponse);

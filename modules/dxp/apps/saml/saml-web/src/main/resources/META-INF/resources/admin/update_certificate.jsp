@@ -17,7 +17,7 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String cmd = ParamUtil.getString(request, "cmd", "auth");
+String cmd = ParamUtil.getString(request, Constants.CMD, "auth");
 
 LocalEntityManager.CertificateUsage certificateUsage = LocalEntityManager.CertificateUsage.valueOf(ParamUtil.getString(request, "certificateUsage"));
 
@@ -45,7 +45,7 @@ X509Certificate x509Certificate = (X509Certificate)request.getAttribute(SamlWebK
 		navigationItems='<%=
 			new JSPNavigationItemList(pageContext) {
 				{
-					portletURL.setParameter("cmd", "replace");
+					portletURL.setParameter(Constants.CMD, "replace");
 
 					add(
 						navigationItem -> {
@@ -55,7 +55,7 @@ X509Certificate x509Certificate = (X509Certificate)request.getAttribute(SamlWebK
 						}
 					);
 
-					portletURL.setParameter("cmd", "import");
+					portletURL.setParameter(Constants.CMD, "import");
 
 					add(
 						navigationItem -> {
@@ -72,8 +72,8 @@ X509Certificate x509Certificate = (X509Certificate)request.getAttribute(SamlWebK
 
 <liferay-portlet:actionURL name="/admin/updateCertificate" var="updateCertificateURL">
 	<portlet:param name="mvcRenderCommandName" value="/admin/updateCertificate" />
+	<portlet:param name="<%= Constants.CMD %>" value="<%= cmd %>" />
 	<portlet:param name="certificateUsage" value="<%= certificateUsage.name() %>" />
-	<portlet:param name="cmd" value="<%= cmd %>" />
 </liferay-portlet:actionURL>
 
 <aui:form action="<%= updateCertificateURL.toString() %>" cssClass="" method="post" name="fm1">

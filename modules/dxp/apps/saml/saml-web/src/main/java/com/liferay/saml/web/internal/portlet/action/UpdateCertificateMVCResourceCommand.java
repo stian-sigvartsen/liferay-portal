@@ -115,7 +115,8 @@ public class UpdateCertificateMVCResourceCommand
 			throw new PrincipalException();
 		}
 
-		String cmd = ParamUtil.get(resourceRequest, "cmd", "get_temp");
+		String cmd = ParamUtil.get(
+			resourceRequest, Constants.CMD, Constants.GET_TEMP);
 
 		if (cmd.equals(Constants.ADD_TEMP)) {
 			addTempFile(resourceRequest, resourceResponse);
