@@ -182,11 +182,7 @@ public class UpdateCertificateMVCActionCommand extends BaseMVCActionCommand {
 		String keyStorePassword = ParamUtil.getString(
 			actionRequest, "keyStorePassword");
 
-		char[] password = null;
-
-		if (keyStorePassword != null) {
-			password = keyStorePassword.toCharArray();
-		}
+		char[] password = keyStorePassword.toCharArray();
 
 		String selectKeyStoreAlias = actionRequest.getParameter(
 			"selectKeyStoreAlias");
