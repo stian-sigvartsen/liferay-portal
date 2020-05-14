@@ -124,12 +124,12 @@ public class UpdateCertificateMVCResourceCommand
 			deleteTempFile(resourceRequest, resourceResponse, themeDisplay);
 		}
 		else if (cmd.equals(Constants.GET_TEMP)) {
-			includeTempFile(
+			includeTempFileName(
 				resourceRequest, resourceResponse, themeDisplay.getUser());
 		}
 	}
 
-	protected void includeTempFile(
+	protected void includeTempFileName(
 			ResourceRequest resourceRequest, ResourceResponse resourceResponse,
 			User user)
 		throws IOException {
