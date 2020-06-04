@@ -14,10 +14,8 @@
 
 package com.liferay.portal.security.auth.verifier.internal.basic.auth.header;
 
-import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.security.auth.verifier.AuthVerifier;
 import com.liferay.portal.kernel.security.auto.login.AutoLogin;
-import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.security.auth.verifier.internal.BaseAuthVerifierPublisher;
 
 import java.util.Map;
@@ -45,8 +43,7 @@ public class BasicAuthHeaderAuthVerifierPublisher
 	protected void activate(
 		BundleContext bundleContext, Map<String, Object> properties) {
 
-		_authVerifier = new BasicAuthHeaderAuthVerifier(
-			_autoLogin, _configurationProvider, _portal);
+		_authVerifier = new BasicAuthHeaderAuthVerifier(_autoLogin);
 
 		super.activate(bundleContext, properties);
 	}
@@ -83,11 +80,5 @@ public class BasicAuthHeaderAuthVerifierPublisher
 
 	@Reference(target = "(&(private.auto.login=true)(type=basic.auth.header))")
 	private AutoLogin _autoLogin;
-
-	@Reference
-	private ConfigurationProvider _configurationProvider;
-
-	@Reference
-	private Portal _portal;
 
 }
