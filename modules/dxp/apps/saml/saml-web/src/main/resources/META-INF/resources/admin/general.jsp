@@ -55,7 +55,7 @@ if (samlRoleIdpOptionDisabled) {
 			</div>
 		</c:if>
 
-		<c:if test="<%= StringUtil.equalsIgnoreCase(samlProviderConfiguration.role(), SamlProviderConfigurationKeys.SAML_ROLE_SP) && !localEntityManager.hasDefaultIdpRole() %>">
+		<c:if test="<%= samlProviderConfigurationHelper.isEnabled() && StringUtil.equalsIgnoreCase(samlProviderConfiguration.role(), SamlProviderConfigurationKeys.SAML_ROLE_SP) && !localEntityManager.hasDefaultIdpRole() %>">
 			<div class="portlet-msg-info">
 				<liferay-ui:message key="you-must-configure-at-least-one-identity-provider-connection-for-saml-to-function" />
 			</div>
