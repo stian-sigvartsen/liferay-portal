@@ -26,6 +26,13 @@ GeneralTabDefaultViewDisplayContext.X509CertificateStatus x509CertificateStatus 
 boolean keystoreException = x509CertificateStatus.getStatus() == GeneralTabDefaultViewDisplayContext.X509CertificateStatus.Status.SAML_KEYSTORE_EXCEPTION;
 boolean keystoreIncorrectPassword = x509CertificateStatus.getStatus() == GeneralTabDefaultViewDisplayContext.X509CertificateStatus.Status.SAML_KEYSTORE_PASSWORD_INCORRECT;
 String samlRole = properties.getProperty(PortletPropsKeys.SAML_ROLE, samlProviderConfiguration.role());
+String samlRoleHelpMessage = StringPool.BLANK;
+
+boolean samlRoleIdpOptionDisabled = StringUtil.equalsIgnoreCase(samlProviderConfiguration.role(), SamlProviderConfigurationKeys.SAML_ROLE_SP) && !generalTabDefaultViewDisplayContext.isRoleIdPAvailable();
+
+if (samlRoleIdpOptionDisabled) {
+	samlRoleHelpMessage = "the-identity-provider-role-has-been-disabled-it-can-be-re-enabled-in-system-settings";
+}
 %>
 
 <portlet:actionURL name="/admin/updateGeneral" var="updateGeneralURL">
@@ -36,13 +43,13 @@ String samlRole = properties.getProperty(PortletPropsKeys.SAML_ROLE, samlProvide
 	<liferay-ui:error key="certificateInvalid" message="please-create-a-signing-credential-before-enabling" />
 	<liferay-ui:error key="entityIdInUse" message="saml-must-be-disabled-before-changing-the-entity-id" />
 	<liferay-ui:error key="entityIdTooLong" message="entity-id-too-long" />
-	<liferay-ui:error key="idpRoleNotConfigurable" message="the-identity-provider-role-has-been-disabled-please-re-enable-it" />
+	<liferay-ui:error key="idpRoleNotConfigurable" message="the-identity-provider-role-has-been-disabled-it-can-be-re-enabled-in-system-settings" />
 	<liferay-ui:error key="roleInUse" message="saml-must-be-disabled-before-changing-the-saml-role" />
 
 	<aui:fieldset>
 		<aui:input label="enabled" name='<%= "settings--" + PortletPropsKeys.SAML_ENABLED + "--" %>' type="checkbox" value="<%= samlProviderConfigurationHelper.isEnabled() %>" />
 
-		<c:if test="<%= !generalTabDefaultViewDisplayContext.isRoleIdPAvailable() && StringUtil.equalsIgnoreCase(samlProviderConfiguration.role(), SamlProviderConfigurationKeys.SAML_ROLE_IDP) %>">
+		<c:if test="<%= !samlRoleIdpOptionDisabled && !generalTabDefaultViewDisplayContext.isRoleIdPAvailable() %>">
 			<div class="portlet-msg-info">
 				<liferay-ui:message key="the-identity-provider-role-has-been-disabled-please-re-enable-it-in-system-settings" />
 			</div>
@@ -54,10 +61,14 @@ String samlRole = properties.getProperty(PortletPropsKeys.SAML_ROLE, samlProvide
 			</div>
 		</c:if>
 
-		<aui:select label="saml-role" name='<%= "settings--" + PortletPropsKeys.SAML_ROLE + "--" %>' required="<%= true %>" showEmptyOption="<%= true %>">
+		<aui:select disabled="<%= samlRoleIdpOptionDisabled %>" helpMessage="<%= samlRoleHelpMessage %>" label="saml-role" name='<%= "settings--" + PortletPropsKeys.SAML_ROLE + "--" %>' required="<%= !samlRoleIdpOptionDisabled %>">
 			<aui:option label="identity-provider" selected="<%= samlRole.equals(SamlProviderConfigurationKeys.SAML_ROLE_IDP) %>" value="<%= SamlProviderConfigurationKeys.SAML_ROLE_IDP %>" />
 			<aui:option label="service-provider" selected="<%= samlRole.equals(SamlProviderConfigurationKeys.SAML_ROLE_SP) %>" value="<%= SamlProviderConfigurationKeys.SAML_ROLE_SP %>" />
 		</aui:select>
+
+		<c:if test="<%= samlRoleIdpOptionDisabled %>">
+			<aui:input name='<%= "settings--" + PortletPropsKeys.SAML_ROLE + "--" %>' type="hidden" value="<%= SamlProviderConfigurationKeys.SAML_ROLE_SP %>" />
+		</c:if>
 
 		<aui:input helpMessage="entity-id-help" label="saml-entity-id" name='<%= "settings--" + PortletPropsKeys.SAML_ENTITY_ID + "--" %>' required="<%= true %>" value="<%= entityId %>" />
 	</aui:fieldset>
