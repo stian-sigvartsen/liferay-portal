@@ -95,10 +95,6 @@ public class MFASystemConfigurationListener
 		}
 	}
 
-	@Reference
-	protected UserNotificationEventLocalService
-		userNotificationEventLocalService;
-
 	private void _sendNotificationToInstanceAdministrators(
 			long companyId, boolean mfaDisableGlobally)
 		throws PortalException {
@@ -120,7 +116,7 @@ public class MFASystemConfigurationListener
 				"userId", userId
 			);
 
-			userNotificationEventLocalService.sendUserNotificationEvents(
+			_userNotificationEventLocalService.sendUserNotificationEvents(
 				userId, ConfigurationAdminPortletKeys.INSTANCE_SETTINGS,
 				UserNotificationDeliveryConstants.TYPE_WEBSITE, false,
 				notificationEventJSONObject);
@@ -138,5 +134,8 @@ public class MFASystemConfigurationListener
 
 	@Reference
 	private UserLocalService _userLocalService;
+
+	@Reference
+	private UserNotificationEventLocalService _userNotificationEventLocalService;
 
 }
