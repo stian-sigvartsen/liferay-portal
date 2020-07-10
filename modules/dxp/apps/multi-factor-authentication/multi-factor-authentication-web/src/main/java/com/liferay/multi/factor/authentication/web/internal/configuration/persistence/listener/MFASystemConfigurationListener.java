@@ -136,6 +136,7 @@ public class MFASystemConfigurationListener
 	private UserLocalService _userLocalService;
 
 	@Reference
-	private UserNotificationEventLocalService _userNotificationEventLocalService;
+	private UserNotificationEventLocalService
+		_userNotificationEventLocalService;
 
 }

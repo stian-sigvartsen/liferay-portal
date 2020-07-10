@@ -99,11 +99,11 @@ public class MFAEmailOTPConfigurationListener
 		}
 	}
 
+	private static final Log _log = LogFactoryUtil.getLog(
+		MFAEmailOTPConfigurationListener.class);
+
 	@Reference
 	private UserNotificationEventLocalService
 		_userNotificationEventLocalService;
-
-	private static final Log _log = LogFactoryUtil.getLog(
-		MFAEmailOTPConfigurationListener.class);
 
 }
