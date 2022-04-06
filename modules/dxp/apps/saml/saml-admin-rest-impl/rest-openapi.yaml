@@ -1,0 +1,209 @@
+components:
+    schemas:
+        BaseSamlConnection:
+            # @review
+            description:
+                Connection details for a connected SAML peer
+            properties:
+                enabled:
+                    type: boolean
+                entityId:
+                    type: string
+                id:
+                    format: int64
+                    type: integer
+                metadataUpdatedDate:
+                    format: date-time
+                    readOnly: true
+                    type: string
+                metadataUrl:
+                    type: string
+                name:
+                    type: string
+                nameIdFormat:
+                    type: string
+            type: object
+        IdpConnection:
+            allOf:
+                - $ref: "#/components/schemas/BaseSamlConnection"
+            # @review
+            description:
+                Connection details for a connected SAML IDP
+            properties:
+                assertionSignatureRequired:
+                    type: boolean
+                clockSkew:
+                    format: int64
+                    type: integer
+                forceAuthn:
+                    type: boolean
+                signAuthnRequest:
+                    type: boolean
+                unknownUsersAreStrangers:
+                    type: boolean
+                userAttributeMappings:
+                    type: string
+            type: object
+        ProviderConfiguration:
+            # @review
+            description:
+                The provider provides the SAML capability
+            properties:
+                allowShowingTheLoginPortlet:
+                    type: boolean
+                assertionSignatureRequired:
+                    type: boolean
+                authnRequestSignatureRequired:
+                    type: boolean
+                clockSkew:
+                    format: int64
+                    type: integer
+                companyId:
+                    format: int64
+                    type: integer
+                defaultAssertionLifetime:
+                    type: integer
+                enabled:
+                    type: boolean
+                entityId:
+                    type: string
+                idpConnections:
+                    description:
+                        Connected SAML IDPs
+                    items:
+                        $ref: "#/components/schemas/IdpConnection"
+                    type: array
+                keyStoreCredentialPassword:
+                    type: string
+                ldapImportEnabled:
+                    type: boolean
+                role:
+                    type: string
+                samlKeystoreCredentialPassword:
+                    type: string
+                sessionMaximumAge:
+                    format: int64
+                    type: integer
+                sessionTimeout:
+                    format: int64
+                    type: integer
+                signAuthnRequest:
+                    type: boolean
+                signMetadata:
+                    type: boolean
+                sslRequired:
+                    type: boolean
+            type: object
+info:
+    description:
+        "SAML configuration"
+    license:
+        name: "Apache 2.0"
+        url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+    title: "Headless Admin SAML"
+    version: v1.0
+openapi: 3.0.1
+paths:
+    "/idpConnections":
+        get:
+            # @review
+            description:
+                Retrieves the connected SAML IDPs
+            operationId: getIdpConnections
+            parameters:
+                - in: query
+                  name: filter
+                  schema:
+                      type: string
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                - in: query
+                  name: pageSize
+                  schema:
+                      type: integer
+                - in: query
+                  name: search
+                  schema:
+                      type: string
+                - in: query
+                  name: sort
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/IdpConnection"
+                                type: array
+                        application/xml:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/IdpConnection"
+                                type: array
+            tags: ["IdpConnection"]
+        post:
+            description:
+                Creates a new SAML IDP connection
+            operationId: postIdpConnection
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/IdpConnection"
+                    application/xml:
+                        schema:
+                            $ref: "#/components/schemas/IdpConnection"
+            responses:
+                201:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/IdpConnection"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/IdpConnection"
+                    # @review
+                    description:
+                        "SAML SP IDP connection successfully created"
+            tags: ["IdpConnection"]
+    "/idpConnections/{idpConnectionId}":
+        get:
+            description:
+                Gets details of a SAML IDP connection
+            operationId: getIdpConnection
+            parameters:
+                - in: path
+                  name: idpConnectionId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/IdpConnection"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/IdpConnection"
+            tags: ["IdpConnection"]
+    "/provider":
+        get:
+            description:
+                Provider configuration
+            operationId: getProviderConfiguration
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ProviderConfiguration"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/ProviderConfiguration"
+            tags: ["ProviderConfiguration"]
