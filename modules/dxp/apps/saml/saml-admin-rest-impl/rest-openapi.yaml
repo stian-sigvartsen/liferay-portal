@@ -4,9 +4,6 @@ components:
             # @review
             description:
                 Connection details for a connected SAML peer
-            anyOf:
-                - $ref: "#/components/schemas/IdpConnection"
-                - $ref: "#/components/schemas/SpConnection"
             properties:
                 enabled:
                     type: boolean
@@ -27,25 +24,8 @@ components:
                     type: string
             type: object
         IdpConnection:
-            # @review
-            description:
-                Connection details for a connected SAML IDP
-            properties:
-                assertionSignatureRequired:
-                    type: boolean
-                clockSkew:
-                    format: int64
-                    type: integer
-                forceAuthn:
-                    type: boolean
-                signAuthnRequest:
-                    type: boolean
-                unknownUsersAreStrangers:
-                    type: boolean
-                userAttributeMappings:
-                    type: string
-            type: object
-        SpConnection:
+            allOf:
+                - $ref: "#/components/schemas/BaseSamlConnection"
             # @review
             description:
                 Connection details for a connected SAML IDP
