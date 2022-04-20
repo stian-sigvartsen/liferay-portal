@@ -1,14 +1,21 @@
 components:
     schemas:
-        BaseSamlConnection:
+        IdpConnection:
             # @review
             description:
-                Connection details for a connected SAML peer
+                Connection details for a connected SAML IDP
             properties:
+                assertionSignatureRequired:
+                    type: boolean
+                clockSkew:
+                    format: int64
+                    type: integer
                 enabled:
                     type: boolean
                 entityId:
                     type: string
+                forceAuthn:
+                    type: boolean
                 id:
                     format: int64
                     type: integer
@@ -22,21 +29,6 @@ components:
                     type: string
                 nameIdFormat:
                     type: string
-            type: object
-        IdpConnection:
-            allOf:
-                - $ref: "#/components/schemas/BaseSamlConnection"
-            # @review
-            description:
-                Connection details for a connected SAML IDP
-            properties:
-                assertionSignatureRequired:
-                    type: boolean
-                clockSkew:
-                    format: int64
-                    type: integer
-                forceAuthn:
-                    type: boolean
                 signAuthnRequest:
                     type: boolean
                 unknownUsersAreStrangers:
@@ -56,9 +48,6 @@ components:
                 authnRequestSignatureRequired:
                     type: boolean
                 clockSkew:
-                    format: int64
-                    type: integer
-                companyId:
                     format: int64
                     type: integer
                 defaultAssertionLifetime:
