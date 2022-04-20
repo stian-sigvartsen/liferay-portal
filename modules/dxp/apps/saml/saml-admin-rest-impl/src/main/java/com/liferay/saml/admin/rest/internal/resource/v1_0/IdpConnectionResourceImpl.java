@@ -41,25 +41,18 @@ public class IdpConnectionResourceImpl extends BaseIdpConnectionResourceImpl {
 			_samlSpIdpConnectionLocalService.getSamlSpIdpConnection(
 				idpConnectionId);
 
-		IdpConnection idpConnection = new IdpConnection();
-
-		idpConnection.setClockSkew(samlSpIdpConnection::getClockSkew);
-		idpConnection.setAssertionSignatureRequired(
-			samlSpIdpConnection::getAssertionSignatureRequired);
-		idpConnection.setForceAuthn(samlSpIdpConnection::getForceAuthn);
 		return new IdpConnection() {
 			{
-				//enabled = samlSpIdpConnection.getEnabled();
-				//entityId = samlSpIdpConnection.getSamlIdpEntityId();
-				//id = samlSpIdpConnection.getSamlSpIdpConnectionId();
-				//samlSpIdpConnection.getMetadataUpdatedDate();
-				//metadataUrl = samlSpIdpConnection.getMetadataUrl();
-				//name = samlSpIdpConnection.getName();
-				//nameIdFormat = samlSpIdpConnection.getNameIdFormat();
-
+				enabled = samlSpIdpConnection.getEnabled();
+				entityId = samlSpIdpConnection.getSamlIdpEntityId();
+				id = samlSpIdpConnection.getSamlSpIdpConnectionId();
+				metadataUrl = samlSpIdpConnection.getMetadataUrl();
+				name = samlSpIdpConnection.getName();
+				nameIdFormat = samlSpIdpConnection.getNameIdFormat();
 				assertionSignatureRequired = samlSpIdpConnection.getAssertionSignatureRequired();
 				clockSkew = samlSpIdpConnection.getClockSkew();
 				forceAuthn = samlSpIdpConnection.getForceAuthn();
+				samlSpIdpConnection.getMetadataUpdatedDate();
 				signAuthnRequest = samlSpIdpConnection.getSignAuthnRequest();
 				unknownUsersAreStrangers = samlSpIdpConnection.getUnknownUsersAreStrangers();
 				userAttributeMappings = samlSpIdpConnection.getUserAttributeMappings();
