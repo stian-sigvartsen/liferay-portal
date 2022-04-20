@@ -125,7 +125,7 @@ public abstract class BaseIdpConnectionResourceImpl
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -X 'POST' 'http://localhost:8080/o/saml-admin/v1.0/idpConnections' -d $'{"assertionSignatureRequired": ___, "clockSkew": ___, "forceAuthn": ___, "signAuthnRequest": ___, "unknownUsersAreStrangers": ___, "userAttributeMappings": ___}' --header 'Content-Type: application/json' -u 'test@liferay.com:test'
+	 * curl -X 'POST' 'http://localhost:8080/o/saml-admin/v1.0/idpConnections' -d $'{"assertionSignatureRequired": ___, "clockSkew": ___, "enabled": ___, "entityId": ___, "forceAuthn": ___, "id": ___, "metadataUrl": ___, "name": ___, "nameIdFormat": ___, "signAuthnRequest": ___, "unknownUsersAreStrangers": ___, "userAttributeMappings": ___}' --header 'Content-Type: application/json' -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Operation(
 		description = "Creates a new SAML IDP connection"

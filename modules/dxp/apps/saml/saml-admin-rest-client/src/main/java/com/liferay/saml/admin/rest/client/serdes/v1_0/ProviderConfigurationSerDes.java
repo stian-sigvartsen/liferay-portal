@@ -97,16 +97,6 @@ public class ProviderConfigurationSerDes {
 			sb.append(providerConfiguration.getClockSkew());
 		}
 
-		if (providerConfiguration.getCompanyId() != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"companyId\": ");
-
-			sb.append(providerConfiguration.getCompanyId());
-		}
-
 		if (providerConfiguration.getDefaultAssertionLifetime() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -332,15 +322,6 @@ public class ProviderConfigurationSerDes {
 				String.valueOf(providerConfiguration.getClockSkew()));
 		}
 
-		if (providerConfiguration.getCompanyId() == null) {
-			map.put("companyId", null);
-		}
-		else {
-			map.put(
-				"companyId",
-				String.valueOf(providerConfiguration.getCompanyId()));
-		}
-
 		if (providerConfiguration.getDefaultAssertionLifetime() == null) {
 			map.put("defaultAssertionLifetime", null);
 		}
@@ -506,12 +487,6 @@ public class ProviderConfigurationSerDes {
 			else if (Objects.equals(jsonParserFieldName, "clockSkew")) {
 				if (jsonParserFieldValue != null) {
 					providerConfiguration.setClockSkew(
-						Long.valueOf((String)jsonParserFieldValue));
-				}
-			}
-			else if (Objects.equals(jsonParserFieldName, "companyId")) {
-				if (jsonParserFieldValue != null) {
-					providerConfiguration.setCompanyId(
 						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}

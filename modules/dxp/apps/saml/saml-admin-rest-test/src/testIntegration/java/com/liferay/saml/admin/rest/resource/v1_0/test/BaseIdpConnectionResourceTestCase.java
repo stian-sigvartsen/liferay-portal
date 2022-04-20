@@ -185,6 +185,10 @@ public abstract class BaseIdpConnectionResourceTestCase {
 
 		IdpConnection idpConnection = randomIdpConnection();
 
+		idpConnection.setEntityId(regex);
+		idpConnection.setMetadataUrl(regex);
+		idpConnection.setName(regex);
+		idpConnection.setNameIdFormat(regex);
 		idpConnection.setUserAttributeMappings(regex);
 
 		String json = IdpConnectionSerDes.toJSON(idpConnection);
@@ -193,6 +197,10 @@ public abstract class BaseIdpConnectionResourceTestCase {
 
 		idpConnection = IdpConnectionSerDes.toDTO(json);
 
+		Assert.assertEquals(regex, idpConnection.getEntityId());
+		Assert.assertEquals(regex, idpConnection.getMetadataUrl());
+		Assert.assertEquals(regex, idpConnection.getName());
+		Assert.assertEquals(regex, idpConnection.getNameIdFormat());
 		Assert.assertEquals(regex, idpConnection.getUserAttributeMappings());
 	}
 
@@ -483,7 +491,51 @@ public abstract class BaseIdpConnectionResourceTestCase {
 
 	@Test
 	public void testGraphQLGetIdpConnections() throws Exception {
-		Assert.assertTrue(false);
+		GraphQLField graphQLField = new GraphQLField(
+			"idpConnections",
+			new HashMap<String, Object>() {
+				{
+					put("page", 1);
+					put("pageSize", 10);
+				}
+			},
+			new GraphQLField("items", getGraphQLFields()),
+			new GraphQLField("page"), new GraphQLField("totalCount"));
+
+		JSONObject idpConnectionsJSONObject = JSONUtil.getValueAsJSONObject(
+			invokeGraphQLQuery(graphQLField), "JSONObject/data",
+			"JSONObject/idpConnections");
+
+		long totalCount = idpConnectionsJSONObject.getLong("totalCount");
+
+		IdpConnection idpConnection1 =
+			testGraphQLGetIdpConnections_addIdpConnection();
+		IdpConnection idpConnection2 =
+			testGraphQLGetIdpConnections_addIdpConnection();
+
+		idpConnectionsJSONObject = JSONUtil.getValueAsJSONObject(
+			invokeGraphQLQuery(graphQLField), "JSONObject/data",
+			"JSONObject/idpConnections");
+
+		Assert.assertEquals(
+			totalCount + 2, idpConnectionsJSONObject.getLong("totalCount"));
+
+		assertContains(
+			idpConnection1,
+			Arrays.asList(
+				IdpConnectionSerDes.toDTOs(
+					idpConnectionsJSONObject.getString("items"))));
+		assertContains(
+			idpConnection2,
+			Arrays.asList(
+				IdpConnectionSerDes.toDTOs(
+					idpConnectionsJSONObject.getString("items"))));
+	}
+
+	protected IdpConnection testGraphQLGetIdpConnections_addIdpConnection()
+		throws Exception {
+
+		return testGraphQLIdpConnection_addIdpConnection();
 	}
 
 	@Test
@@ -507,21 +559,84 @@ public abstract class BaseIdpConnectionResourceTestCase {
 
 	@Test
 	public void testGetIdpConnection() throws Exception {
-		Assert.assertTrue(false);
+		IdpConnection postIdpConnection =
+			testGetIdpConnection_addIdpConnection();
+
+		IdpConnection getIdpConnection = idpConnectionResource.getIdpConnection(
+			postIdpConnection.getId());
+
+		assertEquals(postIdpConnection, getIdpConnection);
+		assertValid(getIdpConnection);
+	}
+
+	protected IdpConnection testGetIdpConnection_addIdpConnection()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
 	public void testGraphQLGetIdpConnection() throws Exception {
-		Assert.assertTrue(true);
+		IdpConnection idpConnection =
+			testGraphQLGetIdpConnection_addIdpConnection();
+
+		Assert.assertTrue(
+			equals(
+				idpConnection,
+				IdpConnectionSerDes.toDTO(
+					JSONUtil.getValueAsString(
+						invokeGraphQLQuery(
+							new GraphQLField(
+								"idpConnection",
+								new HashMap<String, Object>() {
+									{
+										put(
+											"idpConnectionId",
+											idpConnection.getId());
+									}
+								},
+								getGraphQLFields())),
+						"JSONObject/data", "Object/idpConnection"))));
 	}
 
 	@Test
 	public void testGraphQLGetIdpConnectionNotFound() throws Exception {
-		Assert.assertTrue(true);
+		Long irrelevantIdpConnectionId = RandomTestUtil.randomLong();
+
+		Assert.assertEquals(
+			"Not Found",
+			JSONUtil.getValueAsString(
+				invokeGraphQLQuery(
+					new GraphQLField(
+						"idpConnection",
+						new HashMap<String, Object>() {
+							{
+								put(
+									"idpConnectionId",
+									irrelevantIdpConnectionId);
+							}
+						},
+						getGraphQLFields())),
+				"JSONArray/errors", "Object/0", "JSONObject/extensions",
+				"Object/code"));
+	}
+
+	protected IdpConnection testGraphQLGetIdpConnection_addIdpConnection()
+		throws Exception {
+
+		return testGraphQLIdpConnection_addIdpConnection();
 	}
 
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
+
+	protected IdpConnection testGraphQLIdpConnection_addIdpConnection()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
 
 	protected void assertContains(
 		IdpConnection idpConnection, List<IdpConnection> idpConnections) {
@@ -596,6 +711,10 @@ public abstract class BaseIdpConnectionResourceTestCase {
 	protected void assertValid(IdpConnection idpConnection) throws Exception {
 		boolean valid = true;
 
+		if (idpConnection.getId() == null) {
+			valid = false;
+		}
+
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
@@ -617,8 +736,58 @@ public abstract class BaseIdpConnectionResourceTestCase {
 				continue;
 			}
 
+			if (Objects.equals("enabled", additionalAssertFieldName)) {
+				if (idpConnection.getEnabled() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("entityId", additionalAssertFieldName)) {
+				if (idpConnection.getEntityId() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
 			if (Objects.equals("forceAuthn", additionalAssertFieldName)) {
 				if (idpConnection.getForceAuthn() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"metadataUpdatedDate", additionalAssertFieldName)) {
+
+				if (idpConnection.getMetadataUpdatedDate() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("metadataUrl", additionalAssertFieldName)) {
+				if (idpConnection.getMetadataUrl() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("name", additionalAssertFieldName)) {
+				if (idpConnection.getName() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("nameIdFormat", additionalAssertFieldName)) {
+				if (idpConnection.getNameIdFormat() == null) {
 					valid = false;
 				}
 
@@ -769,10 +938,87 @@ public abstract class BaseIdpConnectionResourceTestCase {
 				continue;
 			}
 
+			if (Objects.equals("enabled", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						idpConnection1.getEnabled(),
+						idpConnection2.getEnabled())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("entityId", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						idpConnection1.getEntityId(),
+						idpConnection2.getEntityId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
 			if (Objects.equals("forceAuthn", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
 						idpConnection1.getForceAuthn(),
 						idpConnection2.getForceAuthn())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						idpConnection1.getId(), idpConnection2.getId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"metadataUpdatedDate", additionalAssertFieldName)) {
+
+				if (!Objects.deepEquals(
+						idpConnection1.getMetadataUpdatedDate(),
+						idpConnection2.getMetadataUpdatedDate())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("metadataUrl", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						idpConnection1.getMetadataUrl(),
+						idpConnection2.getMetadataUrl())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("name", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						idpConnection1.getName(), idpConnection2.getName())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("nameIdFormat", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						idpConnection1.getNameIdFormat(),
+						idpConnection2.getNameIdFormat())) {
 
 					return false;
 				}
@@ -924,9 +1170,85 @@ public abstract class BaseIdpConnectionResourceTestCase {
 				"Invalid entity field " + entityFieldName);
 		}
 
+		if (entityFieldName.equals("enabled")) {
+			throw new IllegalArgumentException(
+				"Invalid entity field " + entityFieldName);
+		}
+
+		if (entityFieldName.equals("entityId")) {
+			sb.append("'");
+			sb.append(String.valueOf(idpConnection.getEntityId()));
+			sb.append("'");
+
+			return sb.toString();
+		}
+
 		if (entityFieldName.equals("forceAuthn")) {
 			throw new IllegalArgumentException(
 				"Invalid entity field " + entityFieldName);
+		}
+
+		if (entityFieldName.equals("id")) {
+			throw new IllegalArgumentException(
+				"Invalid entity field " + entityFieldName);
+		}
+
+		if (entityFieldName.equals("metadataUpdatedDate")) {
+			if (operator.equals("between")) {
+				sb = new StringBundler();
+
+				sb.append("(");
+				sb.append(entityFieldName);
+				sb.append(" gt ");
+				sb.append(
+					_dateFormat.format(
+						DateUtils.addSeconds(
+							idpConnection.getMetadataUpdatedDate(), -2)));
+				sb.append(" and ");
+				sb.append(entityFieldName);
+				sb.append(" lt ");
+				sb.append(
+					_dateFormat.format(
+						DateUtils.addSeconds(
+							idpConnection.getMetadataUpdatedDate(), 2)));
+				sb.append(")");
+			}
+			else {
+				sb.append(entityFieldName);
+
+				sb.append(" ");
+				sb.append(operator);
+				sb.append(" ");
+
+				sb.append(
+					_dateFormat.format(idpConnection.getMetadataUpdatedDate()));
+			}
+
+			return sb.toString();
+		}
+
+		if (entityFieldName.equals("metadataUrl")) {
+			sb.append("'");
+			sb.append(String.valueOf(idpConnection.getMetadataUrl()));
+			sb.append("'");
+
+			return sb.toString();
+		}
+
+		if (entityFieldName.equals("name")) {
+			sb.append("'");
+			sb.append(String.valueOf(idpConnection.getName()));
+			sb.append("'");
+
+			return sb.toString();
+		}
+
+		if (entityFieldName.equals("nameIdFormat")) {
+			sb.append("'");
+			sb.append(String.valueOf(idpConnection.getNameIdFormat()));
+			sb.append("'");
+
+			return sb.toString();
 		}
 
 		if (entityFieldName.equals("signAuthnRequest")) {
@@ -993,7 +1315,17 @@ public abstract class BaseIdpConnectionResourceTestCase {
 			{
 				assertionSignatureRequired = RandomTestUtil.randomBoolean();
 				clockSkew = RandomTestUtil.randomLong();
+				enabled = RandomTestUtil.randomBoolean();
+				entityId = StringUtil.toLowerCase(
+					RandomTestUtil.randomString());
 				forceAuthn = RandomTestUtil.randomBoolean();
+				id = RandomTestUtil.randomLong();
+				metadataUpdatedDate = RandomTestUtil.nextDate();
+				metadataUrl = StringUtil.toLowerCase(
+					RandomTestUtil.randomString());
+				name = StringUtil.toLowerCase(RandomTestUtil.randomString());
+				nameIdFormat = StringUtil.toLowerCase(
+					RandomTestUtil.randomString());
 				signAuthnRequest = RandomTestUtil.randomBoolean();
 				unknownUsersAreStrangers = RandomTestUtil.randomBoolean();
 				userAttributeMappings = StringUtil.toLowerCase(

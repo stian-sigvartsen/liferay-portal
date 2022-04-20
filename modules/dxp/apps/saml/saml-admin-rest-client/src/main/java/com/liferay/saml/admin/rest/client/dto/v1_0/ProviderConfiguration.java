@@ -130,27 +130,6 @@ public class ProviderConfiguration implements Cloneable, Serializable {
 
 	protected Long clockSkew;
 
-	public Long getCompanyId() {
-		return companyId;
-	}
-
-	public void setCompanyId(Long companyId) {
-		this.companyId = companyId;
-	}
-
-	public void setCompanyId(
-		UnsafeSupplier<Long, Exception> companyIdUnsafeSupplier) {
-
-		try {
-			companyId = companyIdUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected Long companyId;
-
 	public Integer getDefaultAssertionLifetime() {
 		return defaultAssertionLifetime;
 	}

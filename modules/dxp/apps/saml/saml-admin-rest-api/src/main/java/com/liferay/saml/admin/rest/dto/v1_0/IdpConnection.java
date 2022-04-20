@@ -29,6 +29,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serializable;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
@@ -120,6 +124,62 @@ public class IdpConnection implements Serializable {
 	protected Long clockSkew;
 
 	@Schema
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	@JsonIgnore
+	public void setEnabled(
+		UnsafeSupplier<Boolean, Exception> enabledUnsafeSupplier) {
+
+		try {
+			enabled = enabledUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Boolean enabled;
+
+	@Schema
+	public String getEntityId() {
+		return entityId;
+	}
+
+	public void setEntityId(String entityId) {
+		this.entityId = entityId;
+	}
+
+	@JsonIgnore
+	public void setEntityId(
+		UnsafeSupplier<String, Exception> entityIdUnsafeSupplier) {
+
+		try {
+			entityId = entityIdUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String entityId;
+
+	@Schema
 	public Boolean getForceAuthn() {
 		return forceAuthn;
 	}
@@ -146,6 +206,142 @@ public class IdpConnection implements Serializable {
 	@GraphQLField
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Boolean forceAuthn;
+
+	@Schema
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	@JsonIgnore
+	public void setId(UnsafeSupplier<Long, Exception> idUnsafeSupplier) {
+		try {
+			id = idUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Long id;
+
+	@Schema
+	public Date getMetadataUpdatedDate() {
+		return metadataUpdatedDate;
+	}
+
+	public void setMetadataUpdatedDate(Date metadataUpdatedDate) {
+		this.metadataUpdatedDate = metadataUpdatedDate;
+	}
+
+	@JsonIgnore
+	public void setMetadataUpdatedDate(
+		UnsafeSupplier<Date, Exception> metadataUpdatedDateUnsafeSupplier) {
+
+		try {
+			metadataUpdatedDate = metadataUpdatedDateUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	protected Date metadataUpdatedDate;
+
+	@Schema
+	public String getMetadataUrl() {
+		return metadataUrl;
+	}
+
+	public void setMetadataUrl(String metadataUrl) {
+		this.metadataUrl = metadataUrl;
+	}
+
+	@JsonIgnore
+	public void setMetadataUrl(
+		UnsafeSupplier<String, Exception> metadataUrlUnsafeSupplier) {
+
+		try {
+			metadataUrl = metadataUrlUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String metadataUrl;
+
+	@Schema
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@JsonIgnore
+	public void setName(UnsafeSupplier<String, Exception> nameUnsafeSupplier) {
+		try {
+			name = nameUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String name;
+
+	@Schema
+	public String getNameIdFormat() {
+		return nameIdFormat;
+	}
+
+	public void setNameIdFormat(String nameIdFormat) {
+		this.nameIdFormat = nameIdFormat;
+	}
+
+	@JsonIgnore
+	public void setNameIdFormat(
+		UnsafeSupplier<String, Exception> nameIdFormatUnsafeSupplier) {
+
+		try {
+			nameIdFormat = nameIdFormatUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String nameIdFormat;
 
 	@Schema
 	public Boolean getSignAuthnRequest() {
@@ -260,6 +456,9 @@ public class IdpConnection implements Serializable {
 
 		sb.append("{");
 
+		DateFormat liferayToJSONDateFormat = new SimpleDateFormat(
+			"yyyy-MM-dd'T'HH:mm:ss'Z'");
+
 		if (assertionSignatureRequired != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -280,6 +479,30 @@ public class IdpConnection implements Serializable {
 			sb.append(clockSkew);
 		}
 
+		if (enabled != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"enabled\": ");
+
+			sb.append(enabled);
+		}
+
+		if (entityId != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"entityId\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(entityId));
+
+			sb.append("\"");
+		}
+
 		if (forceAuthn != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -288,6 +511,72 @@ public class IdpConnection implements Serializable {
 			sb.append("\"forceAuthn\": ");
 
 			sb.append(forceAuthn);
+		}
+
+		if (id != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"id\": ");
+
+			sb.append(id);
+		}
+
+		if (metadataUpdatedDate != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"metadataUpdatedDate\": ");
+
+			sb.append("\"");
+
+			sb.append(liferayToJSONDateFormat.format(metadataUpdatedDate));
+
+			sb.append("\"");
+		}
+
+		if (metadataUrl != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"metadataUrl\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(metadataUrl));
+
+			sb.append("\"");
+		}
+
+		if (name != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"name\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(name));
+
+			sb.append("\"");
+		}
+
+		if (nameIdFormat != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"nameIdFormat\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(nameIdFormat));
+
+			sb.append("\"");
 		}
 
 		if (signAuthnRequest != null) {

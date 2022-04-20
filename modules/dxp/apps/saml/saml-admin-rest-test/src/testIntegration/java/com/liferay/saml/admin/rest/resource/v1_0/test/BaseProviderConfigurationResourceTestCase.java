@@ -355,14 +355,6 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("companyId", additionalAssertFieldName)) {
-				if (providerConfiguration.getCompanyId() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
 			if (Objects.equals(
 					"defaultAssertionLifetime", additionalAssertFieldName)) {
 
@@ -627,17 +619,6 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 				if (!Objects.deepEquals(
 						providerConfiguration1.getClockSkew(),
 						providerConfiguration2.getClockSkew())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("companyId", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						providerConfiguration1.getCompanyId(),
-						providerConfiguration2.getCompanyId())) {
 
 					return false;
 				}
@@ -920,11 +901,6 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 				"Invalid entity field " + entityFieldName);
 		}
 
-		if (entityFieldName.equals("companyId")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
 		if (entityFieldName.equals("defaultAssertionLifetime")) {
 			sb.append(
 				String.valueOf(
@@ -1059,7 +1035,6 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 				assertionSignatureRequired = RandomTestUtil.randomBoolean();
 				authnRequestSignatureRequired = RandomTestUtil.randomBoolean();
 				clockSkew = RandomTestUtil.randomLong();
-				companyId = RandomTestUtil.randomLong();
 				defaultAssertionLifetime = RandomTestUtil.randomInt();
 				enabled = RandomTestUtil.randomBoolean();
 				entityId = StringUtil.toLowerCase(

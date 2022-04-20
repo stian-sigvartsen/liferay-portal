@@ -17,6 +17,9 @@ package com.liferay.saml.admin.rest.client.serdes.v1_0;
 import com.liferay.saml.admin.rest.client.dto.v1_0.IdpConnection;
 import com.liferay.saml.admin.rest.client.json.BaseJSONParser;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
@@ -55,6 +58,9 @@ public class IdpConnectionSerDes {
 
 		sb.append("{");
 
+		DateFormat liferayToJSONDateFormat = new SimpleDateFormat(
+			"yyyy-MM-dd'T'HH:mm:ssXX");
+
 		if (idpConnection.getAssertionSignatureRequired() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -75,6 +81,30 @@ public class IdpConnectionSerDes {
 			sb.append(idpConnection.getClockSkew());
 		}
 
+		if (idpConnection.getEnabled() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"enabled\": ");
+
+			sb.append(idpConnection.getEnabled());
+		}
+
+		if (idpConnection.getEntityId() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"entityId\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(idpConnection.getEntityId()));
+
+			sb.append("\"");
+		}
+
 		if (idpConnection.getForceAuthn() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -83,6 +113,74 @@ public class IdpConnectionSerDes {
 			sb.append("\"forceAuthn\": ");
 
 			sb.append(idpConnection.getForceAuthn());
+		}
+
+		if (idpConnection.getId() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"id\": ");
+
+			sb.append(idpConnection.getId());
+		}
+
+		if (idpConnection.getMetadataUpdatedDate() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"metadataUpdatedDate\": ");
+
+			sb.append("\"");
+
+			sb.append(
+				liferayToJSONDateFormat.format(
+					idpConnection.getMetadataUpdatedDate()));
+
+			sb.append("\"");
+		}
+
+		if (idpConnection.getMetadataUrl() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"metadataUrl\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(idpConnection.getMetadataUrl()));
+
+			sb.append("\"");
+		}
+
+		if (idpConnection.getName() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"name\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(idpConnection.getName()));
+
+			sb.append("\"");
+		}
+
+		if (idpConnection.getNameIdFormat() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"nameIdFormat\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(idpConnection.getNameIdFormat()));
+
+			sb.append("\"");
 		}
 
 		if (idpConnection.getSignAuthnRequest() != null) {
@@ -138,6 +236,9 @@ public class IdpConnectionSerDes {
 
 		Map<String, String> map = new TreeMap<>();
 
+		DateFormat liferayToJSONDateFormat = new SimpleDateFormat(
+			"yyyy-MM-dd'T'HH:mm:ssXX");
+
 		if (idpConnection.getAssertionSignatureRequired() == null) {
 			map.put("assertionSignatureRequired", null);
 		}
@@ -154,12 +255,67 @@ public class IdpConnectionSerDes {
 			map.put("clockSkew", String.valueOf(idpConnection.getClockSkew()));
 		}
 
+		if (idpConnection.getEnabled() == null) {
+			map.put("enabled", null);
+		}
+		else {
+			map.put("enabled", String.valueOf(idpConnection.getEnabled()));
+		}
+
+		if (idpConnection.getEntityId() == null) {
+			map.put("entityId", null);
+		}
+		else {
+			map.put("entityId", String.valueOf(idpConnection.getEntityId()));
+		}
+
 		if (idpConnection.getForceAuthn() == null) {
 			map.put("forceAuthn", null);
 		}
 		else {
 			map.put(
 				"forceAuthn", String.valueOf(idpConnection.getForceAuthn()));
+		}
+
+		if (idpConnection.getId() == null) {
+			map.put("id", null);
+		}
+		else {
+			map.put("id", String.valueOf(idpConnection.getId()));
+		}
+
+		if (idpConnection.getMetadataUpdatedDate() == null) {
+			map.put("metadataUpdatedDate", null);
+		}
+		else {
+			map.put(
+				"metadataUpdatedDate",
+				liferayToJSONDateFormat.format(
+					idpConnection.getMetadataUpdatedDate()));
+		}
+
+		if (idpConnection.getMetadataUrl() == null) {
+			map.put("metadataUrl", null);
+		}
+		else {
+			map.put(
+				"metadataUrl", String.valueOf(idpConnection.getMetadataUrl()));
+		}
+
+		if (idpConnection.getName() == null) {
+			map.put("name", null);
+		}
+		else {
+			map.put("name", String.valueOf(idpConnection.getName()));
+		}
+
+		if (idpConnection.getNameIdFormat() == null) {
+			map.put("nameIdFormat", null);
+		}
+		else {
+			map.put(
+				"nameIdFormat",
+				String.valueOf(idpConnection.getNameIdFormat()));
 		}
 
 		if (idpConnection.getSignAuthnRequest() == null) {
@@ -224,9 +380,48 @@ public class IdpConnectionSerDes {
 						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
+			else if (Objects.equals(jsonParserFieldName, "enabled")) {
+				if (jsonParserFieldValue != null) {
+					idpConnection.setEnabled((Boolean)jsonParserFieldValue);
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "entityId")) {
+				if (jsonParserFieldValue != null) {
+					idpConnection.setEntityId((String)jsonParserFieldValue);
+				}
+			}
 			else if (Objects.equals(jsonParserFieldName, "forceAuthn")) {
 				if (jsonParserFieldValue != null) {
 					idpConnection.setForceAuthn((Boolean)jsonParserFieldValue);
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "id")) {
+				if (jsonParserFieldValue != null) {
+					idpConnection.setId(
+						Long.valueOf((String)jsonParserFieldValue));
+				}
+			}
+			else if (Objects.equals(
+						jsonParserFieldName, "metadataUpdatedDate")) {
+
+				if (jsonParserFieldValue != null) {
+					idpConnection.setMetadataUpdatedDate(
+						toDate((String)jsonParserFieldValue));
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "metadataUrl")) {
+				if (jsonParserFieldValue != null) {
+					idpConnection.setMetadataUrl((String)jsonParserFieldValue);
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "name")) {
+				if (jsonParserFieldValue != null) {
+					idpConnection.setName((String)jsonParserFieldValue);
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "nameIdFormat")) {
+				if (jsonParserFieldValue != null) {
+					idpConnection.setNameIdFormat((String)jsonParserFieldValue);
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "signAuthnRequest")) {

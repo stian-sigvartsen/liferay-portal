@@ -187,34 +187,6 @@ public class ProviderConfiguration implements Serializable {
 	protected Long clockSkew;
 
 	@Schema
-	public Long getCompanyId() {
-		return companyId;
-	}
-
-	public void setCompanyId(Long companyId) {
-		this.companyId = companyId;
-	}
-
-	@JsonIgnore
-	public void setCompanyId(
-		UnsafeSupplier<Long, Exception> companyIdUnsafeSupplier) {
-
-		try {
-			companyId = companyIdUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Long companyId;
-
-	@Schema
 	public Integer getDefaultAssertionLifetime() {
 		return defaultAssertionLifetime;
 	}
@@ -654,16 +626,6 @@ public class ProviderConfiguration implements Serializable {
 			sb.append("\"clockSkew\": ");
 
 			sb.append(clockSkew);
-		}
-
-		if (companyId != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"companyId\": ");
-
-			sb.append(companyId);
 		}
 
 		if (defaultAssertionLifetime != null) {
