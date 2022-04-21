@@ -14,6 +14,11 @@
 
 package com.liferay.saml.admin.rest.internal.resource.v1_0;
 
+import com.liferay.portal.kernel.search.Sort;
+import com.liferay.portal.kernel.search.filter.Filter;
+import com.liferay.portal.vulcan.pagination.Page;
+import com.liferay.portal.vulcan.pagination.Pagination;
+import com.liferay.portal.vulcan.util.TransformUtil;
 import com.liferay.saml.admin.rest.dto.v1_0.IdpConnection;
 import com.liferay.saml.admin.rest.resource.v1_0.IdpConnectionResource;
 
@@ -23,6 +28,8 @@ import com.liferay.saml.persistence.service.SamlSpIdpConnectionLocalService;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
+
+import java.util.List;
 
 /**
  * @author Stian Sigvartsen
@@ -41,6 +48,10 @@ public class IdpConnectionResourceImpl extends BaseIdpConnectionResourceImpl {
 			_samlSpIdpConnectionLocalService.getSamlSpIdpConnection(
 				idpConnectionId);
 
+		return _convert(samlSpIdpConnection);
+	}
+
+	private IdpConnection _convert(SamlSpIdpConnection samlSpIdpConnection) {
 		return new IdpConnection() {
 			{
 				enabled = samlSpIdpConnection.getEnabled();
@@ -58,6 +69,20 @@ public class IdpConnectionResourceImpl extends BaseIdpConnectionResourceImpl {
 				userAttributeMappings = samlSpIdpConnection.getUserAttributeMappings();
 			}
 		};
+	}
+
+	@Override
+	public Page<IdpConnection> getIdpConnections(Pagination pagination)
+		throws Exception {
+
+		List<SamlSpIdpConnection> samlSpIdpConnections =
+			_samlSpIdpConnectionLocalService.getSamlSpIdpConnections(
+				contextCompany.getCompanyId(), pagination.getStartPosition(),
+				pagination.getEndPosition());
+
+		return Page.of(
+			TransformUtil.transform(samlSpIdpConnections, this::_convert),
+			pagination, samlSpIdpConnections.size());
 	}
 
 	@Reference
