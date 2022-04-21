@@ -68,15 +68,12 @@ public class Query {
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {idpConnections(filter: ___, page: ___, pageSize: ___, search: ___, sorts: ___){items {__}, page, pageSize, totalCount}}"}' -u 'test@liferay.com:test'
+	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {idpConnections(page: ___, pageSize: ___){items {__}, page, pageSize, totalCount}}"}' -u 'test@liferay.com:test'
 	 */
 	@GraphQLField(description = "Retrieves the connected SAML IDPs")
 	public IdpConnectionPage idpConnections(
-			@GraphQLName("search") String search,
-			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
-			@GraphQLName("page") int page,
-			@GraphQLName("sort") String sortsString)
+			@GraphQLName("page") int page)
 		throws Exception {
 
 		return _applyComponentServiceObjects(
@@ -84,12 +81,7 @@ public class Query {
 			this::_populateResourceContext,
 			idpConnectionResource -> new IdpConnectionPage(
 				idpConnectionResource.getIdpConnections(
-					search,
-					_filterBiFunction.apply(
-						idpConnectionResource, filterString),
-					Pagination.of(page, pageSize),
-					_sortsBiFunction.apply(
-						idpConnectionResource, sortsString))));
+					Pagination.of(page, pageSize))));
 	}
 
 	/**

@@ -14,7 +14,6 @@
 
 package com.liferay.saml.admin.rest.resource.v1_0;
 
-import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.ResourceActionLocalService;
@@ -59,8 +58,7 @@ public interface IdpConnectionResource {
 		return FactoryHolder.factory.create();
 	}
 
-	public Page<IdpConnection> getIdpConnections(
-			String search, Filter filter, Pagination pagination, Sort[] sorts)
+	public Page<IdpConnection> getIdpConnections(Pagination pagination)
 		throws Exception;
 
 	public IdpConnection postIdpConnection(IdpConnection idpConnection)

@@ -22,7 +22,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 
-import com.liferay.petra.function.UnsafeTriConsumer;
 import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -41,7 +40,6 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.odata.entity.EntityField;
 import com.liferay.portal.odata.entity.EntityModel;
-import com.liferay.portal.search.test.util.SearchTestRule;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.vulcan.resource.EntityModelResource;
@@ -58,8 +56,6 @@ import java.text.DateFormat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +67,6 @@ import javax.annotation.Generated;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.lang.time.DateUtils;
 
@@ -207,7 +202,7 @@ public abstract class BaseIdpConnectionResourceTestCase {
 	@Test
 	public void testGetIdpConnections() throws Exception {
 		Page<IdpConnection> page = idpConnectionResource.getIdpConnections(
-			null, null, Pagination.of(1, 10), null);
+			Pagination.of(1, 10));
 
 		long totalCount = page.getTotalCount();
 
@@ -217,8 +212,7 @@ public abstract class BaseIdpConnectionResourceTestCase {
 		IdpConnection idpConnection2 = testGetIdpConnections_addIdpConnection(
 			randomIdpConnection());
 
-		page = idpConnectionResource.getIdpConnections(
-			null, null, Pagination.of(1, 10), null);
+		page = idpConnectionResource.getIdpConnections(Pagination.of(1, 10));
 
 		Assert.assertEquals(totalCount + 2, page.getTotalCount());
 
@@ -228,89 +222,9 @@ public abstract class BaseIdpConnectionResourceTestCase {
 	}
 
 	@Test
-	public void testGetIdpConnectionsWithFilterDateTimeEquals()
-		throws Exception {
-
-		List<EntityField> entityFields = getEntityFields(
-			EntityField.Type.DATE_TIME);
-
-		if (entityFields.isEmpty()) {
-			return;
-		}
-
-		IdpConnection idpConnection1 = randomIdpConnection();
-
-		idpConnection1 = testGetIdpConnections_addIdpConnection(idpConnection1);
-
-		for (EntityField entityField : entityFields) {
-			Page<IdpConnection> page = idpConnectionResource.getIdpConnections(
-				null, getFilterString(entityField, "between", idpConnection1),
-				Pagination.of(1, 2), null);
-
-			assertEquals(
-				Collections.singletonList(idpConnection1),
-				(List<IdpConnection>)page.getItems());
-		}
-	}
-
-	@Test
-	public void testGetIdpConnectionsWithFilterDoubleEquals() throws Exception {
-		List<EntityField> entityFields = getEntityFields(
-			EntityField.Type.DOUBLE);
-
-		if (entityFields.isEmpty()) {
-			return;
-		}
-
-		IdpConnection idpConnection1 = testGetIdpConnections_addIdpConnection(
-			randomIdpConnection());
-
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		IdpConnection idpConnection2 = testGetIdpConnections_addIdpConnection(
-			randomIdpConnection());
-
-		for (EntityField entityField : entityFields) {
-			Page<IdpConnection> page = idpConnectionResource.getIdpConnections(
-				null, getFilterString(entityField, "eq", idpConnection1),
-				Pagination.of(1, 2), null);
-
-			assertEquals(
-				Collections.singletonList(idpConnection1),
-				(List<IdpConnection>)page.getItems());
-		}
-	}
-
-	@Test
-	public void testGetIdpConnectionsWithFilterStringEquals() throws Exception {
-		List<EntityField> entityFields = getEntityFields(
-			EntityField.Type.STRING);
-
-		if (entityFields.isEmpty()) {
-			return;
-		}
-
-		IdpConnection idpConnection1 = testGetIdpConnections_addIdpConnection(
-			randomIdpConnection());
-
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		IdpConnection idpConnection2 = testGetIdpConnections_addIdpConnection(
-			randomIdpConnection());
-
-		for (EntityField entityField : entityFields) {
-			Page<IdpConnection> page = idpConnectionResource.getIdpConnections(
-				null, getFilterString(entityField, "eq", idpConnection1),
-				Pagination.of(1, 2), null);
-
-			assertEquals(
-				Collections.singletonList(idpConnection1),
-				(List<IdpConnection>)page.getItems());
-		}
-	}
-
-	@Test
 	public void testGetIdpConnectionsWithPagination() throws Exception {
 		Page<IdpConnection> totalPage = idpConnectionResource.getIdpConnections(
-			null, null, null, null);
+			null);
 
 		int totalCount = GetterUtil.getInteger(totalPage.getTotalCount());
 
@@ -324,7 +238,7 @@ public abstract class BaseIdpConnectionResourceTestCase {
 			randomIdpConnection());
 
 		Page<IdpConnection> page1 = idpConnectionResource.getIdpConnections(
-			null, null, Pagination.of(1, totalCount + 2), null);
+			Pagination.of(1, totalCount + 2));
 
 		List<IdpConnection> idpConnections1 =
 			(List<IdpConnection>)page1.getItems();
@@ -333,7 +247,7 @@ public abstract class BaseIdpConnectionResourceTestCase {
 			idpConnections1.toString(), totalCount + 2, idpConnections1.size());
 
 		Page<IdpConnection> page2 = idpConnectionResource.getIdpConnections(
-			null, null, Pagination.of(2, totalCount + 2), null);
+			Pagination.of(2, totalCount + 2));
 
 		Assert.assertEquals(totalCount + 3, page2.getTotalCount());
 
@@ -344,141 +258,11 @@ public abstract class BaseIdpConnectionResourceTestCase {
 			idpConnections2.toString(), 1, idpConnections2.size());
 
 		Page<IdpConnection> page3 = idpConnectionResource.getIdpConnections(
-			null, null, Pagination.of(1, totalCount + 3), null);
+			Pagination.of(1, totalCount + 3));
 
 		assertContains(idpConnection1, (List<IdpConnection>)page3.getItems());
 		assertContains(idpConnection2, (List<IdpConnection>)page3.getItems());
 		assertContains(idpConnection3, (List<IdpConnection>)page3.getItems());
-	}
-
-	@Test
-	public void testGetIdpConnectionsWithSortDateTime() throws Exception {
-		testGetIdpConnectionsWithSort(
-			EntityField.Type.DATE_TIME,
-			(entityField, idpConnection1, idpConnection2) -> {
-				BeanUtils.setProperty(
-					idpConnection1, entityField.getName(),
-					DateUtils.addMinutes(new Date(), -2));
-			});
-	}
-
-	@Test
-	public void testGetIdpConnectionsWithSortDouble() throws Exception {
-		testGetIdpConnectionsWithSort(
-			EntityField.Type.DOUBLE,
-			(entityField, idpConnection1, idpConnection2) -> {
-				BeanUtils.setProperty(
-					idpConnection1, entityField.getName(), 0.1);
-				BeanUtils.setProperty(
-					idpConnection2, entityField.getName(), 0.5);
-			});
-	}
-
-	@Test
-	public void testGetIdpConnectionsWithSortInteger() throws Exception {
-		testGetIdpConnectionsWithSort(
-			EntityField.Type.INTEGER,
-			(entityField, idpConnection1, idpConnection2) -> {
-				BeanUtils.setProperty(idpConnection1, entityField.getName(), 0);
-				BeanUtils.setProperty(idpConnection2, entityField.getName(), 1);
-			});
-	}
-
-	@Test
-	public void testGetIdpConnectionsWithSortString() throws Exception {
-		testGetIdpConnectionsWithSort(
-			EntityField.Type.STRING,
-			(entityField, idpConnection1, idpConnection2) -> {
-				Class<?> clazz = idpConnection1.getClass();
-
-				String entityFieldName = entityField.getName();
-
-				java.lang.reflect.Method method = clazz.getMethod(
-					"get" + StringUtil.upperCaseFirstLetter(entityFieldName));
-
-				Class<?> returnType = method.getReturnType();
-
-				if (returnType.isAssignableFrom(Map.class)) {
-					BeanUtils.setProperty(
-						idpConnection1, entityFieldName,
-						Collections.singletonMap("Aaa", "Aaa"));
-					BeanUtils.setProperty(
-						idpConnection2, entityFieldName,
-						Collections.singletonMap("Bbb", "Bbb"));
-				}
-				else if (entityFieldName.contains("email")) {
-					BeanUtils.setProperty(
-						idpConnection1, entityFieldName,
-						"aaa" +
-							StringUtil.toLowerCase(
-								RandomTestUtil.randomString()) +
-									"@liferay.com");
-					BeanUtils.setProperty(
-						idpConnection2, entityFieldName,
-						"bbb" +
-							StringUtil.toLowerCase(
-								RandomTestUtil.randomString()) +
-									"@liferay.com");
-				}
-				else {
-					BeanUtils.setProperty(
-						idpConnection1, entityFieldName,
-						"aaa" +
-							StringUtil.toLowerCase(
-								RandomTestUtil.randomString()));
-					BeanUtils.setProperty(
-						idpConnection2, entityFieldName,
-						"bbb" +
-							StringUtil.toLowerCase(
-								RandomTestUtil.randomString()));
-				}
-			});
-	}
-
-	protected void testGetIdpConnectionsWithSort(
-			EntityField.Type type,
-			UnsafeTriConsumer
-				<EntityField, IdpConnection, IdpConnection, Exception>
-					unsafeTriConsumer)
-		throws Exception {
-
-		List<EntityField> entityFields = getEntityFields(type);
-
-		if (entityFields.isEmpty()) {
-			return;
-		}
-
-		IdpConnection idpConnection1 = randomIdpConnection();
-		IdpConnection idpConnection2 = randomIdpConnection();
-
-		for (EntityField entityField : entityFields) {
-			unsafeTriConsumer.accept(
-				entityField, idpConnection1, idpConnection2);
-		}
-
-		idpConnection1 = testGetIdpConnections_addIdpConnection(idpConnection1);
-
-		idpConnection2 = testGetIdpConnections_addIdpConnection(idpConnection2);
-
-		for (EntityField entityField : entityFields) {
-			Page<IdpConnection> ascPage =
-				idpConnectionResource.getIdpConnections(
-					null, null, Pagination.of(1, 2),
-					entityField.getName() + ":asc");
-
-			assertEquals(
-				Arrays.asList(idpConnection1, idpConnection2),
-				(List<IdpConnection>)ascPage.getItems());
-
-			Page<IdpConnection> descPage =
-				idpConnectionResource.getIdpConnections(
-					null, null, Pagination.of(1, 2),
-					entityField.getName() + ":desc");
-
-			assertEquals(
-				Arrays.asList(idpConnection2, idpConnection1),
-				(List<IdpConnection>)descPage.getItems());
-		}
 	}
 
 	protected IdpConnection testGetIdpConnections_addIdpConnection(
@@ -627,9 +411,6 @@ public abstract class BaseIdpConnectionResourceTestCase {
 
 		return testGraphQLIdpConnection_addIdpConnection();
 	}
-
-	@Rule
-	public SearchTestRule searchTestRule = new SearchTestRule();
 
 	protected IdpConnection testGraphQLIdpConnection_addIdpConnection()
 		throws Exception {
