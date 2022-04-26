@@ -14,8 +14,7 @@
 
 package com.liferay.saml.admin.rest.internal.resource.v1_0;
 
-import com.liferay.portal.kernel.search.Sort;
-import com.liferay.portal.kernel.search.filter.Filter;
+import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
 import com.liferay.portal.vulcan.util.TransformUtil;
@@ -23,7 +22,6 @@ import com.liferay.saml.admin.rest.dto.v1_0.IdpConnection;
 import com.liferay.saml.admin.rest.resource.v1_0.IdpConnectionResource;
 
 import com.liferay.saml.persistence.model.SamlSpIdpConnection;
-import com.liferay.saml.persistence.service.SamlSpAuthRequestLocalService;
 import com.liferay.saml.persistence.service.SamlSpIdpConnectionLocalService;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -39,7 +37,6 @@ import java.util.List;
 	scope = ServiceScope.PROTOTYPE, service = IdpConnectionResource.class
 )
 public class IdpConnectionResourceImpl extends BaseIdpConnectionResourceImpl {
-
 	@Override
 	public IdpConnection getIdpConnection(
 		Long idpConnectionId) throws Exception {
@@ -83,6 +80,23 @@ public class IdpConnectionResourceImpl extends BaseIdpConnectionResourceImpl {
 		return Page.of(
 			TransformUtil.transform(samlSpIdpConnections, this::_convert),
 			pagination, samlSpIdpConnections.size());
+	}
+
+	@Override
+	public IdpConnection postIdpConnection(IdpConnection idpConnection)
+		throws Exception {
+
+		return _convert(
+			_samlSpIdpConnectionLocalService.addSamlSpIdpConnection(
+				idpConnection.getAssertionSignatureRequired(),
+				idpConnection.getClockSkew(), idpConnection.getEnabled(),
+				idpConnection.getForceAuthn(), false, idpConnection.getMetadataUrl(),
+				null, idpConnection.getName(), idpConnection.getNameIdFormat(),
+				idpConnection.getEntityId(), idpConnection.getSignAuthnRequest(),
+				idpConnection.getUnknownUsersAreStrangers(),
+				idpConnection.getUserAttributeMappings(), "userIdentitiferExpression",
+				ServiceContextFactory.getInstance(
+					SamlSpIdpConnection.class.getName(), contextHttpServletRequest)));
 	}
 
 	@Reference
