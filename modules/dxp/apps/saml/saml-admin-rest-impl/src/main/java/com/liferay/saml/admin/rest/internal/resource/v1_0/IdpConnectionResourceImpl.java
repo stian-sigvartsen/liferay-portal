@@ -14,6 +14,8 @@
 
 package com.liferay.saml.admin.rest.internal.resource.v1_0;
 
+import com.liferay.portal.kernel.search.Sort;
+import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
@@ -23,7 +25,10 @@ import com.liferay.saml.admin.rest.resource.v1_0.IdpConnectionResource;
 import com.liferay.saml.persistence.model.SamlSpIdpConnection;
 import com.liferay.saml.persistence.service.SamlSpIdpConnectionLocalService;
 
+import java.io.Serializable;
+
 import java.util.List;
+import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -81,6 +86,15 @@ public class IdpConnectionResourceImpl extends BaseIdpConnectionResourceImpl {
 				ServiceContextFactory.getInstance(
 					SamlSpIdpConnection.class.getName(),
 					contextHttpServletRequest)));
+	}
+
+	@Override
+	public Page<IdpConnection> read(
+			Filter filter, Pagination pagination, Sort[] sorts,
+			Map<String, Serializable> parameters, String search)
+		throws Exception {
+
+		return getIdpConnections(pagination);
 	}
 
 	private IdpConnection _convert(SamlSpIdpConnection samlSpIdpConnection) {
