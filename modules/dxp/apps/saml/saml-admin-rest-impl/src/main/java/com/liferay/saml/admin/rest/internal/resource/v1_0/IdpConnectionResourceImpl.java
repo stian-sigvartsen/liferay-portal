@@ -20,14 +20,14 @@ import com.liferay.portal.vulcan.pagination.Pagination;
 import com.liferay.portal.vulcan.util.TransformUtil;
 import com.liferay.saml.admin.rest.dto.v1_0.IdpConnection;
 import com.liferay.saml.admin.rest.resource.v1_0.IdpConnectionResource;
-
 import com.liferay.saml.persistence.model.SamlSpIdpConnection;
 import com.liferay.saml.persistence.service.SamlSpIdpConnectionLocalService;
+
+import java.util.List;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
-
-import java.util.List;
 
 /**
  * @author Stian Sigvartsen
@@ -37,35 +37,16 @@ import java.util.List;
 	scope = ServiceScope.PROTOTYPE, service = IdpConnectionResource.class
 )
 public class IdpConnectionResourceImpl extends BaseIdpConnectionResourceImpl {
+
 	@Override
-	public IdpConnection getIdpConnection(
-		Long idpConnectionId) throws Exception {
+	public IdpConnection getIdpConnection(Long idpConnectionId)
+		throws Exception {
 
 		SamlSpIdpConnection samlSpIdpConnection =
 			_samlSpIdpConnectionLocalService.getSamlSpIdpConnection(
 				idpConnectionId);
 
 		return _convert(samlSpIdpConnection);
-	}
-
-	private IdpConnection _convert(SamlSpIdpConnection samlSpIdpConnection) {
-		return new IdpConnection() {
-			{
-				enabled = samlSpIdpConnection.getEnabled();
-				entityId = samlSpIdpConnection.getSamlIdpEntityId();
-				id = samlSpIdpConnection.getSamlSpIdpConnectionId();
-				metadataUrl = samlSpIdpConnection.getMetadataUrl();
-				name = samlSpIdpConnection.getName();
-				nameIdFormat = samlSpIdpConnection.getNameIdFormat();
-				assertionSignatureRequired = samlSpIdpConnection.getAssertionSignatureRequired();
-				clockSkew = samlSpIdpConnection.getClockSkew();
-				forceAuthn = samlSpIdpConnection.getForceAuthn();
-				samlSpIdpConnection.getMetadataUpdatedDate();
-				signAuthnRequest = samlSpIdpConnection.getSignAuthnRequest();
-				unknownUsersAreStrangers = samlSpIdpConnection.getUnknownUsersAreStrangers();
-				userAttributeMappings = samlSpIdpConnection.getUserAttributeMappings();
-			}
-		};
 	}
 
 	@Override
@@ -90,15 +71,42 @@ public class IdpConnectionResourceImpl extends BaseIdpConnectionResourceImpl {
 			_samlSpIdpConnectionLocalService.addSamlSpIdpConnection(
 				idpConnection.getAssertionSignatureRequired(),
 				idpConnection.getClockSkew(), idpConnection.getEnabled(),
-				idpConnection.getForceAuthn(), false, idpConnection.getMetadataUrl(),
-				null, idpConnection.getName(), idpConnection.getNameIdFormat(),
-				idpConnection.getEntityId(), idpConnection.getSignAuthnRequest(),
+				idpConnection.getForceAuthn(), false,
+				idpConnection.getMetadataUrl(), null, idpConnection.getName(),
+				idpConnection.getNameIdFormat(), idpConnection.getEntityId(),
+				idpConnection.getSignAuthnRequest(),
 				idpConnection.getUnknownUsersAreStrangers(),
-				idpConnection.getUserAttributeMappings(), "userIdentitiferExpression",
+				idpConnection.getUserAttributeMappings(),
+				"userIdentitiferExpression",
 				ServiceContextFactory.getInstance(
-					SamlSpIdpConnection.class.getName(), contextHttpServletRequest)));
+					SamlSpIdpConnection.class.getName(),
+					contextHttpServletRequest)));
+	}
+
+	private IdpConnection _convert(SamlSpIdpConnection samlSpIdpConnection) {
+		return new IdpConnection() {
+			{
+				enabled = samlSpIdpConnection.isEnabled();
+				entityId = samlSpIdpConnection.getSamlIdpEntityId();
+				id = samlSpIdpConnection.getSamlSpIdpConnectionId();
+				metadataUrl = samlSpIdpConnection.getMetadataUrl();
+				name = samlSpIdpConnection.getName();
+				nameIdFormat = samlSpIdpConnection.getNameIdFormat();
+				assertionSignatureRequired =
+					samlSpIdpConnection.isAssertionSignatureRequired();
+				clockSkew = samlSpIdpConnection.getClockSkew();
+				forceAuthn = samlSpIdpConnection.isForceAuthn();
+				samlSpIdpConnection.getMetadataUpdatedDate();
+				signAuthnRequest = samlSpIdpConnection.isSignAuthnRequest();
+				unknownUsersAreStrangers =
+					samlSpIdpConnection.isUnknownUsersAreStrangers();
+				userAttributeMappings =
+					samlSpIdpConnection.getUserAttributeMappings();
+			}
+		};
 	}
 
 	@Reference
 	private SamlSpIdpConnectionLocalService _samlSpIdpConnectionLocalService;
+
 }
