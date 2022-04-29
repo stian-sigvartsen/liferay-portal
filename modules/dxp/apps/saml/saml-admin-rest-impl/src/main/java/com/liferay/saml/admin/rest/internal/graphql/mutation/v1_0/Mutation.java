@@ -79,6 +79,78 @@ public class Mutation {
 					callbackURL, object));
 	}
 
+	@GraphQLField(description = "Deletes the SAML IDP connection")
+	public boolean deleteIdpConnection(
+			@GraphQLName("idpConnectionId") Long idpConnectionId)
+		throws Exception {
+
+		_applyVoidComponentServiceObjects(
+			_idpConnectionResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			idpConnectionResource -> idpConnectionResource.deleteIdpConnection(
+				idpConnectionId));
+
+		return true;
+	}
+
+	@GraphQLField
+	public Response deleteIdpConnectionBatch(
+			@GraphQLName("callbackURL") String callbackURL,
+			@GraphQLName("object") Object object)
+		throws Exception {
+
+		return _applyComponentServiceObjects(
+			_idpConnectionResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			idpConnectionResource ->
+				idpConnectionResource.deleteIdpConnectionBatch(
+					callbackURL, object));
+	}
+
+	@GraphQLField(
+		description = "Updates the SAML IDP Connection with information sent in the request body. Only the provided fields are updated."
+	)
+	public IdpConnection patchIdpConnection(
+			@GraphQLName("idpConnectionId") Long idpConnectionId,
+			@GraphQLName("idpConnection") IdpConnection idpConnection)
+		throws Exception {
+
+		return _applyComponentServiceObjects(
+			_idpConnectionResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			idpConnectionResource -> idpConnectionResource.patchIdpConnection(
+				idpConnectionId, idpConnection));
+	}
+
+	@GraphQLField(
+		description = "Replaces the SAML IDP connection with information sent in the request body. Any missing fields are deleted unless they are required."
+	)
+	public IdpConnection updateIdpConnection(
+			@GraphQLName("idpConnectionId") Long idpConnectionId,
+			@GraphQLName("idpConnection") IdpConnection idpConnection)
+		throws Exception {
+
+		return _applyComponentServiceObjects(
+			_idpConnectionResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			idpConnectionResource -> idpConnectionResource.putIdpConnection(
+				idpConnectionId, idpConnection));
+	}
+
+	@GraphQLField
+	public Response updateIdpConnectionBatch(
+			@GraphQLName("callbackURL") String callbackURL,
+			@GraphQLName("object") Object object)
+		throws Exception {
+
+		return _applyComponentServiceObjects(
+			_idpConnectionResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			idpConnectionResource ->
+				idpConnectionResource.putIdpConnectionBatch(
+					callbackURL, object));
+	}
+
 	private <T, R, E1 extends Throwable, E2 extends Throwable> R
 			_applyComponentServiceObjects(
 				ComponentServiceObjects<T> componentServiceObjects,

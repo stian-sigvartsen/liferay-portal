@@ -67,7 +67,23 @@ public interface IdpConnectionResource {
 	public Response postIdpConnectionBatch(String callbackURL, Object object)
 		throws Exception;
 
+	public void deleteIdpConnection(Long idpConnectionId) throws Exception;
+
+	public Response deleteIdpConnectionBatch(String callbackURL, Object object)
+		throws Exception;
+
 	public IdpConnection getIdpConnection(Long idpConnectionId)
+		throws Exception;
+
+	public IdpConnection patchIdpConnection(
+			Long idpConnectionId, IdpConnection idpConnection)
+		throws Exception;
+
+	public IdpConnection putIdpConnection(
+			Long idpConnectionId, IdpConnection idpConnection)
+		throws Exception;
+
+	public Response putIdpConnectionBatch(String callbackURL, Object object)
 		throws Exception;
 
 	public default void setContextAcceptLanguage(

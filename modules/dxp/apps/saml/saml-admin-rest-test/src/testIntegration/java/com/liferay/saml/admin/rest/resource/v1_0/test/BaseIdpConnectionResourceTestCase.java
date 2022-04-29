@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 
 import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.petra.string.StringBundler;
+import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
@@ -219,6 +220,10 @@ public abstract class BaseIdpConnectionResourceTestCase {
 		assertContains(idpConnection1, (List<IdpConnection>)page.getItems());
 		assertContains(idpConnection2, (List<IdpConnection>)page.getItems());
 		assertValid(page);
+
+		idpConnectionResource.deleteIdpConnection(idpConnection1.getId());
+
+		idpConnectionResource.deleteIdpConnection(idpConnection2.getId());
 	}
 
 	@Test
@@ -342,6 +347,70 @@ public abstract class BaseIdpConnectionResourceTestCase {
 	}
 
 	@Test
+	public void testDeleteIdpConnection() throws Exception {
+		@SuppressWarnings("PMD.UnusedLocalVariable")
+		IdpConnection idpConnection =
+			testDeleteIdpConnection_addIdpConnection();
+
+		assertHttpResponseStatusCode(
+			204,
+			idpConnectionResource.deleteIdpConnectionHttpResponse(
+				idpConnection.getId()));
+
+		assertHttpResponseStatusCode(
+			404,
+			idpConnectionResource.getIdpConnectionHttpResponse(
+				idpConnection.getId()));
+
+		assertHttpResponseStatusCode(
+			404, idpConnectionResource.getIdpConnectionHttpResponse(0L));
+	}
+
+	protected IdpConnection testDeleteIdpConnection_addIdpConnection()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	@Test
+	public void testGraphQLDeleteIdpConnection() throws Exception {
+		IdpConnection idpConnection =
+			testGraphQLDeleteIdpConnection_addIdpConnection();
+
+		Assert.assertTrue(
+			JSONUtil.getValueAsBoolean(
+				invokeGraphQLMutation(
+					new GraphQLField(
+						"deleteIdpConnection",
+						new HashMap<String, Object>() {
+							{
+								put("idpConnectionId", idpConnection.getId());
+							}
+						})),
+				"JSONObject/data", "Object/deleteIdpConnection"));
+		JSONArray errorsJSONArray = JSONUtil.getValueAsJSONArray(
+			invokeGraphQLQuery(
+				new GraphQLField(
+					"idpConnection",
+					new HashMap<String, Object>() {
+						{
+							put("idpConnectionId", idpConnection.getId());
+						}
+					},
+					new GraphQLField("id"))),
+			"JSONArray/errors");
+
+		Assert.assertTrue(errorsJSONArray.length() > 0);
+	}
+
+	protected IdpConnection testGraphQLDeleteIdpConnection_addIdpConnection()
+		throws Exception {
+
+		return testGraphQLIdpConnection_addIdpConnection();
+	}
+
+	@Test
 	public void testGetIdpConnection() throws Exception {
 		IdpConnection postIdpConnection =
 			testGetIdpConnection_addIdpConnection();
@@ -410,6 +479,64 @@ public abstract class BaseIdpConnectionResourceTestCase {
 		throws Exception {
 
 		return testGraphQLIdpConnection_addIdpConnection();
+	}
+
+	@Test
+	public void testPatchIdpConnection() throws Exception {
+		IdpConnection postIdpConnection =
+			testPatchIdpConnection_addIdpConnection();
+
+		IdpConnection randomPatchIdpConnection = randomPatchIdpConnection();
+
+		@SuppressWarnings("PMD.UnusedLocalVariable")
+		IdpConnection patchIdpConnection =
+			idpConnectionResource.patchIdpConnection(
+				postIdpConnection.getId(), randomPatchIdpConnection);
+
+		IdpConnection expectedPatchIdpConnection = postIdpConnection.clone();
+
+		_beanUtilsBean.copyProperties(
+			expectedPatchIdpConnection, randomPatchIdpConnection);
+
+		IdpConnection getIdpConnection = idpConnectionResource.getIdpConnection(
+			patchIdpConnection.getId());
+
+		assertEquals(expectedPatchIdpConnection, getIdpConnection);
+		assertValid(getIdpConnection);
+	}
+
+	protected IdpConnection testPatchIdpConnection_addIdpConnection()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	@Test
+	public void testPutIdpConnection() throws Exception {
+		IdpConnection postIdpConnection =
+			testPutIdpConnection_addIdpConnection();
+
+		IdpConnection randomIdpConnection = randomIdpConnection();
+
+		IdpConnection putIdpConnection = idpConnectionResource.putIdpConnection(
+			postIdpConnection.getId(), randomIdpConnection);
+
+		assertEquals(randomIdpConnection, putIdpConnection);
+		assertValid(putIdpConnection);
+
+		IdpConnection getIdpConnection = idpConnectionResource.getIdpConnection(
+			putIdpConnection.getId());
+
+		assertEquals(randomIdpConnection, getIdpConnection);
+		assertValid(getIdpConnection);
+	}
+
+	protected IdpConnection testPutIdpConnection_addIdpConnection()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected IdpConnection testGraphQLIdpConnection_addIdpConnection()

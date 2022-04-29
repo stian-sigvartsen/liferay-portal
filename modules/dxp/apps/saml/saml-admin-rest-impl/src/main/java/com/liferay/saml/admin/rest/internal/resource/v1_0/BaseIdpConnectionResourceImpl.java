@@ -178,10 +178,89 @@ public abstract class BaseIdpConnectionResourceImpl
 	/**
 	 * Invoke this method with the command line:
 	 *
+	 * curl -X 'DELETE' 'http://localhost:8080/o/saml-admin/v1.0/idpConnections/{idpConnectionId}'  -u 'test@liferay.com:test'
+	 */
+	@io.swagger.v3.oas.annotations.Operation(
+		description = "Deletes the SAML IDP connection"
+	)
+	@io.swagger.v3.oas.annotations.Parameters(
+		value = {
+			@io.swagger.v3.oas.annotations.Parameter(
+				in = io.swagger.v3.oas.annotations.enums.ParameterIn.PATH,
+				name = "idpConnectionId"
+			)
+		}
+	)
+	@io.swagger.v3.oas.annotations.tags.Tags(
+		value = {
+			@io.swagger.v3.oas.annotations.tags.Tag(name = "IdpConnection")
+		}
+	)
+	@javax.ws.rs.DELETE
+	@javax.ws.rs.Path("/idpConnections/{idpConnectionId}")
+	@javax.ws.rs.Produces({"application/json", "application/xml"})
+	@Override
+	public void deleteIdpConnection(
+			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
+			@javax.validation.constraints.NotNull
+			@javax.ws.rs.PathParam("idpConnectionId")
+			Long idpConnectionId)
+		throws Exception {
+	}
+
+	/**
+	 * Invoke this method with the command line:
+	 *
+	 * curl -X 'DELETE' 'http://localhost:8080/o/saml-admin/v1.0/idpConnections/batch'  -u 'test@liferay.com:test'
+	 */
+	@io.swagger.v3.oas.annotations.Parameters(
+		value = {
+			@io.swagger.v3.oas.annotations.Parameter(
+				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
+				name = "callbackURL"
+			)
+		}
+	)
+	@io.swagger.v3.oas.annotations.tags.Tags(
+		value = {
+			@io.swagger.v3.oas.annotations.tags.Tag(name = "IdpConnection")
+		}
+	)
+	@javax.ws.rs.Consumes("application/json")
+	@javax.ws.rs.DELETE
+	@javax.ws.rs.Path("/idpConnections/batch")
+	@javax.ws.rs.Produces("application/json")
+	@Override
+	public Response deleteIdpConnectionBatch(
+			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
+			@javax.ws.rs.QueryParam("callbackURL")
+			String callbackURL,
+			Object object)
+		throws Exception {
+
+		vulcanBatchEngineImportTaskResource.setContextAcceptLanguage(
+			contextAcceptLanguage);
+		vulcanBatchEngineImportTaskResource.setContextCompany(contextCompany);
+		vulcanBatchEngineImportTaskResource.setContextHttpServletRequest(
+			contextHttpServletRequest);
+		vulcanBatchEngineImportTaskResource.setContextUriInfo(contextUriInfo);
+		vulcanBatchEngineImportTaskResource.setContextUser(contextUser);
+
+		Response.ResponseBuilder responseBuilder = Response.accepted();
+
+		return responseBuilder.entity(
+			vulcanBatchEngineImportTaskResource.deleteImportTask(
+				IdpConnection.class.getName(), callbackURL, object)
+		).build();
+	}
+
+	/**
+	 * Invoke this method with the command line:
+	 *
 	 * curl -X 'GET' 'http://localhost:8080/o/saml-admin/v1.0/idpConnections/{idpConnectionId}'  -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Operation(
-		description = "Gets details of a SAML IDP connection"
+		description = "Retrieves the SAML IDP connection."
 	)
 	@io.swagger.v3.oas.annotations.Parameters(
 		value = {
@@ -210,6 +289,185 @@ public abstract class BaseIdpConnectionResourceImpl
 		return new IdpConnection();
 	}
 
+	/**
+	 * Invoke this method with the command line:
+	 *
+	 * curl -X 'PATCH' 'http://localhost:8080/o/saml-admin/v1.0/idpConnections/{idpConnectionId}' -d $'{"assertionSignatureRequired": ___, "clockSkew": ___, "enabled": ___, "entityId": ___, "forceAuthn": ___, "id": ___, "metadataUrl": ___, "name": ___, "nameIdFormat": ___, "signAuthnRequest": ___, "unknownUsersAreStrangers": ___, "userAttributeMappings": ___}' --header 'Content-Type: application/json' -u 'test@liferay.com:test'
+	 */
+	@io.swagger.v3.oas.annotations.Operation(
+		description = "Updates the SAML IDP Connection with information sent in the request body. Only the provided fields are updated."
+	)
+	@io.swagger.v3.oas.annotations.Parameters(
+		value = {
+			@io.swagger.v3.oas.annotations.Parameter(
+				in = io.swagger.v3.oas.annotations.enums.ParameterIn.PATH,
+				name = "idpConnectionId"
+			)
+		}
+	)
+	@io.swagger.v3.oas.annotations.tags.Tags(
+		value = {
+			@io.swagger.v3.oas.annotations.tags.Tag(name = "IdpConnection")
+		}
+	)
+	@javax.ws.rs.Consumes({"application/json", "application/xml"})
+	@javax.ws.rs.PATCH
+	@javax.ws.rs.Path("/idpConnections/{idpConnectionId}")
+	@javax.ws.rs.Produces({"application/json", "application/xml"})
+	@Override
+	public IdpConnection patchIdpConnection(
+			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
+			@javax.validation.constraints.NotNull
+			@javax.ws.rs.PathParam("idpConnectionId")
+			Long idpConnectionId,
+			IdpConnection idpConnection)
+		throws Exception {
+
+		IdpConnection existingIdpConnection = getIdpConnection(idpConnectionId);
+
+		if (idpConnection.getAssertionSignatureRequired() != null) {
+			existingIdpConnection.setAssertionSignatureRequired(
+				idpConnection.getAssertionSignatureRequired());
+		}
+
+		if (idpConnection.getClockSkew() != null) {
+			existingIdpConnection.setClockSkew(idpConnection.getClockSkew());
+		}
+
+		if (idpConnection.getEnabled() != null) {
+			existingIdpConnection.setEnabled(idpConnection.getEnabled());
+		}
+
+		if (idpConnection.getEntityId() != null) {
+			existingIdpConnection.setEntityId(idpConnection.getEntityId());
+		}
+
+		if (idpConnection.getForceAuthn() != null) {
+			existingIdpConnection.setForceAuthn(idpConnection.getForceAuthn());
+		}
+
+		if (idpConnection.getMetadataUpdatedDate() != null) {
+			existingIdpConnection.setMetadataUpdatedDate(
+				idpConnection.getMetadataUpdatedDate());
+		}
+
+		if (idpConnection.getMetadataUrl() != null) {
+			existingIdpConnection.setMetadataUrl(
+				idpConnection.getMetadataUrl());
+		}
+
+		if (idpConnection.getName() != null) {
+			existingIdpConnection.setName(idpConnection.getName());
+		}
+
+		if (idpConnection.getNameIdFormat() != null) {
+			existingIdpConnection.setNameIdFormat(
+				idpConnection.getNameIdFormat());
+		}
+
+		if (idpConnection.getSignAuthnRequest() != null) {
+			existingIdpConnection.setSignAuthnRequest(
+				idpConnection.getSignAuthnRequest());
+		}
+
+		if (idpConnection.getUnknownUsersAreStrangers() != null) {
+			existingIdpConnection.setUnknownUsersAreStrangers(
+				idpConnection.getUnknownUsersAreStrangers());
+		}
+
+		if (idpConnection.getUserAttributeMappings() != null) {
+			existingIdpConnection.setUserAttributeMappings(
+				idpConnection.getUserAttributeMappings());
+		}
+
+		preparePatch(idpConnection, existingIdpConnection);
+
+		return putIdpConnection(idpConnectionId, existingIdpConnection);
+	}
+
+	/**
+	 * Invoke this method with the command line:
+	 *
+	 * curl -X 'PUT' 'http://localhost:8080/o/saml-admin/v1.0/idpConnections/{idpConnectionId}' -d $'{"assertionSignatureRequired": ___, "clockSkew": ___, "enabled": ___, "entityId": ___, "forceAuthn": ___, "id": ___, "metadataUrl": ___, "name": ___, "nameIdFormat": ___, "signAuthnRequest": ___, "unknownUsersAreStrangers": ___, "userAttributeMappings": ___}' --header 'Content-Type: application/json' -u 'test@liferay.com:test'
+	 */
+	@io.swagger.v3.oas.annotations.Operation(
+		description = "Replaces the SAML IDP connection with information sent in the request body. Any missing fields are deleted unless they are required."
+	)
+	@io.swagger.v3.oas.annotations.Parameters(
+		value = {
+			@io.swagger.v3.oas.annotations.Parameter(
+				in = io.swagger.v3.oas.annotations.enums.ParameterIn.PATH,
+				name = "idpConnectionId"
+			)
+		}
+	)
+	@io.swagger.v3.oas.annotations.tags.Tags(
+		value = {
+			@io.swagger.v3.oas.annotations.tags.Tag(name = "IdpConnection")
+		}
+	)
+	@javax.ws.rs.Consumes({"application/json", "application/xml"})
+	@javax.ws.rs.Path("/idpConnections/{idpConnectionId}")
+	@javax.ws.rs.Produces({"application/json", "application/xml"})
+	@javax.ws.rs.PUT
+	@Override
+	public IdpConnection putIdpConnection(
+			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
+			@javax.validation.constraints.NotNull
+			@javax.ws.rs.PathParam("idpConnectionId")
+			Long idpConnectionId,
+			IdpConnection idpConnection)
+		throws Exception {
+
+		return new IdpConnection();
+	}
+
+	/**
+	 * Invoke this method with the command line:
+	 *
+	 * curl -X 'PUT' 'http://localhost:8080/o/saml-admin/v1.0/idpConnections/batch'  -u 'test@liferay.com:test'
+	 */
+	@io.swagger.v3.oas.annotations.Parameters(
+		value = {
+			@io.swagger.v3.oas.annotations.Parameter(
+				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
+				name = "callbackURL"
+			)
+		}
+	)
+	@io.swagger.v3.oas.annotations.tags.Tags(
+		value = {
+			@io.swagger.v3.oas.annotations.tags.Tag(name = "IdpConnection")
+		}
+	)
+	@javax.ws.rs.Consumes("application/json")
+	@javax.ws.rs.Path("/idpConnections/batch")
+	@javax.ws.rs.Produces("application/json")
+	@javax.ws.rs.PUT
+	@Override
+	public Response putIdpConnectionBatch(
+			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
+			@javax.ws.rs.QueryParam("callbackURL")
+			String callbackURL,
+			Object object)
+		throws Exception {
+
+		vulcanBatchEngineImportTaskResource.setContextAcceptLanguage(
+			contextAcceptLanguage);
+		vulcanBatchEngineImportTaskResource.setContextCompany(contextCompany);
+		vulcanBatchEngineImportTaskResource.setContextHttpServletRequest(
+			contextHttpServletRequest);
+		vulcanBatchEngineImportTaskResource.setContextUriInfo(contextUriInfo);
+		vulcanBatchEngineImportTaskResource.setContextUser(contextUser);
+
+		Response.ResponseBuilder responseBuilder = Response.accepted();
+
+		return responseBuilder.entity(
+			vulcanBatchEngineImportTaskResource.putImportTask(
+				IdpConnection.class.getName(), callbackURL, object)
+		).build();
+	}
+
 	@Override
 	@SuppressWarnings("PMD.UnusedLocalVariable")
 	public void create(
@@ -236,6 +494,10 @@ public abstract class BaseIdpConnectionResourceImpl
 			java.util.Collection<IdpConnection> idpConnections,
 			Map<String, Serializable> parameters)
 		throws Exception {
+
+		for (IdpConnection idpConnection : idpConnections) {
+			deleteIdpConnection(idpConnection.getId());
+		}
 	}
 
 	@Override
@@ -293,6 +555,13 @@ public abstract class BaseIdpConnectionResourceImpl
 			java.util.Collection<IdpConnection> idpConnections,
 			Map<String, Serializable> parameters)
 		throws Exception {
+
+		for (IdpConnection idpConnection : idpConnections) {
+			putIdpConnection(
+				idpConnection.getId() != null ? idpConnection.getId() :
+					Long.parseLong((String)parameters.get("idpConnectionId")),
+				idpConnection);
+		}
 	}
 
 	public void setContextAcceptLanguage(AcceptLanguage contextAcceptLanguage) {
@@ -433,6 +702,10 @@ public abstract class BaseIdpConnectionResourceImpl
 
 		return addAction(
 			actionName, siteId, methodName, null, permissionName, siteId);
+	}
+
+	protected void preparePatch(
+		IdpConnection idpConnection, IdpConnection existingIdpConnection) {
 	}
 
 	protected <T, R> List<R> transform(

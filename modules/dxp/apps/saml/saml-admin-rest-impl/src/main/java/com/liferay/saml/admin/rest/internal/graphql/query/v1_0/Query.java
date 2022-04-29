@@ -89,7 +89,7 @@ public class Query {
 	 *
 	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {idpConnection(idpConnectionId: ___){assertionSignatureRequired, clockSkew, enabled, entityId, forceAuthn, id, metadataUpdatedDate, metadataUrl, name, nameIdFormat, signAuthnRequest, unknownUsersAreStrangers, userAttributeMappings}}"}' -u 'test@liferay.com:test'
 	 */
-	@GraphQLField(description = "Gets details of a SAML IDP connection")
+	@GraphQLField(description = "Retrieves the SAML IDP connection.")
 	public IdpConnection idpConnection(
 			@GraphQLName("idpConnectionId") Long idpConnectionId)
 		throws Exception {
@@ -106,7 +106,7 @@ public class Query {
 	 *
 	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {providerConfiguration{allowShowingTheLoginPortlet, assertionSignatureRequired, authnRequestSignatureRequired, clockSkew, defaultAssertionLifetime, enabled, entityId, idpConnections, keyStoreCredentialPassword, ldapImportEnabled, role, samlKeystoreCredentialPassword, sessionMaximumAge, sessionTimeout, signAuthnRequest, signMetadata, sslRequired}}"}' -u 'test@liferay.com:test'
 	 */
-	@GraphQLField(description = "Provider configuration")
+	@GraphQLField(description = "Retrieves the SAML Provider configuration.")
 	public ProviderConfiguration providerConfiguration() throws Exception {
 		return _applyComponentServiceObjects(
 			_providerConfigurationResourceComponentServiceObjects,

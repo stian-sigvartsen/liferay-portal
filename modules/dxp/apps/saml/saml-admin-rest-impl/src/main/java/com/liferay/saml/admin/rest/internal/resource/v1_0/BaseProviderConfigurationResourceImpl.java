@@ -73,7 +73,7 @@ public abstract class BaseProviderConfigurationResourceImpl
 	 * curl -X 'GET' 'http://localhost:8080/o/saml-admin/v1.0/provider'  -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Operation(
-		description = "Provider configuration"
+		description = "Retrieves the SAML Provider configuration."
 	)
 	@io.swagger.v3.oas.annotations.tags.Tags(
 		value = {
