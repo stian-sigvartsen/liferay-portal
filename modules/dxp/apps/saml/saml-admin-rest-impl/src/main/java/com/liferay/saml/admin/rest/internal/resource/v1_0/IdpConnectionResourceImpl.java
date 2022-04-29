@@ -44,6 +44,11 @@ import org.osgi.service.component.annotations.ServiceScope;
 public class IdpConnectionResourceImpl extends BaseIdpConnectionResourceImpl {
 
 	@Override
+	public void deleteIdpConnection(Long idpConnectionId) throws Exception {
+		super.deleteIdpConnection(idpConnectionId);
+	}
+
+	@Override
 	public IdpConnection getIdpConnection(Long idpConnectionId)
 		throws Exception {
 
@@ -69,6 +74,14 @@ public class IdpConnectionResourceImpl extends BaseIdpConnectionResourceImpl {
 	}
 
 	@Override
+	public IdpConnection patchIdpConnection(
+			Long idpConnectionId, IdpConnection idpConnection)
+		throws Exception {
+
+		return super.patchIdpConnection(idpConnectionId, idpConnection);
+	}
+
+	@Override
 	public IdpConnection postIdpConnection(IdpConnection idpConnection)
 		throws Exception {
 
@@ -89,12 +102,27 @@ public class IdpConnectionResourceImpl extends BaseIdpConnectionResourceImpl {
 	}
 
 	@Override
+	public IdpConnection putIdpConnection(
+			Long idpConnectionId, IdpConnection idpConnection)
+		throws Exception {
+
+		return super.putIdpConnection(idpConnectionId, idpConnection);
+	}
+
+	@Override
 	public Page<IdpConnection> read(
 			Filter filter, Pagination pagination, Sort[] sorts,
 			Map<String, Serializable> parameters, String search)
 		throws Exception {
 
 		return getIdpConnections(pagination);
+	}
+
+	@Override
+	protected void preparePatch(
+		IdpConnection idpConnection, IdpConnection existingIdpConnection) {
+
+		super.preparePatch(idpConnection, existingIdpConnection);
 	}
 
 	private IdpConnection _convert(SamlSpIdpConnection samlSpIdpConnection) {
