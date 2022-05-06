@@ -33,7 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
+import javax.ws.rs.BadRequestException;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
@@ -111,8 +112,7 @@ public class IdpConnectionResourceImpl extends BaseIdpConnectionResourceImpl {
 		throws Exception {
 
 		if (!Objects.equals(idpConnection.getId(), idpConnectionId)) {
-			throw new IllegalArgumentException(
-				"Inconsistent ID " + idpConnectionId);
+			throw new BadRequestException("Inconsistent ID " + idpConnectionId);
 		}
 
 		SamlSpIdpConnection samlSpIdpConnection =
@@ -127,14 +127,13 @@ public class IdpConnectionResourceImpl extends BaseIdpConnectionResourceImpl {
 
 		return _convert(
 			_samlSpIdpConnectionLocalService.updateSamlSpIdpConnection(
-				idpConnectionId,
-				idpConnection.getAssertionSignatureRequired(),
+				idpConnectionId, idpConnection.getAssertionSignatureRequired(),
 				idpConnection.getClockSkew(), idpConnection.getEnabled(),
-				idpConnection.getForceAuthn(),
-				idpConnection.getForceAuthn(), idpConnection.getMetadataUrl(),
-				metadataXmlInputStream,
+				idpConnection.getForceAuthn(), idpConnection.getForceAuthn(),
+				idpConnection.getMetadataUrl(), metadataXmlInputStream,
 				idpConnection.getName(), idpConnection.getNameIdFormat(),
-				idpConnection.getEntityId(), idpConnection.getSignAuthnRequest(),
+				idpConnection.getEntityId(),
+				idpConnection.getSignAuthnRequest(),
 				idpConnection.getUnknownUsersAreStrangers(),
 				idpConnection.getUserAttributeMappings(),
 				samlSpIdpConnection.getUserIdentifierExpression(),
