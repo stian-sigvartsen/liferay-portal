@@ -65,6 +65,17 @@ public class MetadataResourceImpl extends BaseMetadataResourceImpl {
 				samlSpIdpConnection));
 	}
 
+	@Override
+	public Metadata getIdpConnectionMetadata(Long idpConnectionId)
+		throws Exception {
+
+		SamlSpIdpConnection samlSpIdpConnection =
+			_samlSpIdpConnectionLocalService.getSamlSpIdpConnection(
+				idpConnectionId);
+
+		return _convert(samlSpIdpConnection);
+	}
+
 	private String _base64Encode(String str) {
 		if (str == null) {
 			return null;

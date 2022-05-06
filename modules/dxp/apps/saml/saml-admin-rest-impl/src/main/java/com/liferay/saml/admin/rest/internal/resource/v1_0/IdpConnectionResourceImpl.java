@@ -68,16 +68,6 @@ public class IdpConnectionResourceImpl extends BaseIdpConnectionResourceImpl {
 		return _convert(samlSpIdpConnection);
 	}
 
-	@Override
-	public Metadata getIdpConnectionMetadata(Long idpConnectionId)
-		throws Exception {
-
-		SamlSpIdpConnection samlSpIdpConnection =
-			_samlSpIdpConnectionLocalService.getSamlSpIdpConnection(
-				idpConnectionId);
-
-		return _convertToMetadata(samlSpIdpConnection);
-	}
 
 	@Override
 	public Page<IdpConnection> getIdpConnections(Pagination pagination)
@@ -200,20 +190,6 @@ public class IdpConnectionResourceImpl extends BaseIdpConnectionResourceImpl {
 					samlSpIdpConnection.isUnknownUsersAreStrangers();
 				userAttributeMappings =
 					samlSpIdpConnection.getUserAttributeMappings();
-			}
-		};
-	}
-
-	private Metadata _convertToMetadata(
-		SamlSpIdpConnection samlSpIdpConnection) {
-
-		return new Metadata() {
-			{
-				contentUrl = samlSpIdpConnection.getMetadataUrl();
-				contentValue = _base64Encode(
-					samlSpIdpConnection.getMetadataXml());
-				metadataUpdatedDate =
-					samlSpIdpConnection.getMetadataUpdatedDate();
 			}
 		};
 	}
