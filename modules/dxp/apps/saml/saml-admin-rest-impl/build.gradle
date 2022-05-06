@@ -19,5 +19,6 @@ dependencies {
 	compileOnly project(":core:petra:petra-lang")
 	compileOnly project(":core:petra:petra-string")
 	compileOnly project(":dxp:apps:saml:saml-admin-rest-api")
+	compileOnly project(":dxp:apps:saml:saml-api")
 	compileOnly project(":dxp:apps:saml:saml-persistence-api")
 }

@@ -17,10 +17,12 @@ package com.liferay.saml.admin.rest.internal.resource.v1_0;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
+import com.liferay.portal.kernel.util.Base64;
 import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
 import com.liferay.portal.vulcan.util.TransformUtil;
 import com.liferay.saml.admin.rest.dto.v1_0.IdpConnection;
+import com.liferay.saml.admin.rest.dto.v1_0.Metadata;
 import com.liferay.saml.admin.rest.resource.v1_0.IdpConnectionResource;
 import com.liferay.saml.persistence.model.SamlSpIdpConnection;
 import com.liferay.saml.persistence.service.SamlSpIdpConnectionLocalService;
@@ -28,6 +30,8 @@ import com.liferay.saml.persistence.service.SamlSpIdpConnectionLocalService;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Serializable;
+
+import java.nio.charset.StandardCharsets;
 
 import java.util.List;
 import java.util.Map;
@@ -62,6 +66,17 @@ public class IdpConnectionResourceImpl extends BaseIdpConnectionResourceImpl {
 				idpConnectionId);
 
 		return _convert(samlSpIdpConnection);
+	}
+
+	@Override
+	public Metadata getIdpConnectionMetadata(Long idpConnectionId)
+		throws Exception {
+
+		SamlSpIdpConnection samlSpIdpConnection =
+			_samlSpIdpConnectionLocalService.getSamlSpIdpConnection(
+				idpConnectionId);
+
+		return _convertToMetadata(samlSpIdpConnection);
 	}
 
 	@Override
@@ -158,6 +173,14 @@ public class IdpConnectionResourceImpl extends BaseIdpConnectionResourceImpl {
 		super.preparePatch(idpConnection, existingIdpConnection);
 	}
 
+	private String _base64Encode(String str) {
+		if (str == null) {
+			return null;
+		}
+
+		return Base64.encode(str.getBytes(StandardCharsets.UTF_8));
+	}
+
 	private IdpConnection _convert(SamlSpIdpConnection samlSpIdpConnection) {
 		return new IdpConnection() {
 			{
@@ -177,6 +200,20 @@ public class IdpConnectionResourceImpl extends BaseIdpConnectionResourceImpl {
 					samlSpIdpConnection.isUnknownUsersAreStrangers();
 				userAttributeMappings =
 					samlSpIdpConnection.getUserAttributeMappings();
+			}
+		};
+	}
+
+	private Metadata _convertToMetadata(
+		SamlSpIdpConnection samlSpIdpConnection) {
+
+		return new Metadata() {
+			{
+				contentUrl = samlSpIdpConnection.getMetadataUrl();
+				contentValue = _base64Encode(
+					samlSpIdpConnection.getMetadataXml());
+				metadataUpdatedDate =
+					samlSpIdpConnection.getMetadataUpdatedDate();
 			}
 		};
 	}
