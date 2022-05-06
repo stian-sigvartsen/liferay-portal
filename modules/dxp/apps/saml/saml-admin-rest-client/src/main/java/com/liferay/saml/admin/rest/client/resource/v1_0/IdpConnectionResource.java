@@ -42,7 +42,7 @@ public interface IdpConnectionResource {
 		return new Builder();
 	}
 
-	public Page<Metadata> getIdpConnectionMetadata(Long idpConnectionId)
+	public Metadata getIdpConnectionMetadata(Long idpConnectionId)
 		throws Exception;
 
 	public HttpInvoker.HttpResponse getIdpConnectionMetadataHttpResponse(
@@ -185,7 +185,7 @@ public interface IdpConnectionResource {
 	public static class IdpConnectionResourceImpl
 		implements IdpConnectionResource {
 
-		public Page<Metadata> getIdpConnectionMetadata(Long idpConnectionId)
+		public Metadata getIdpConnectionMetadata(Long idpConnectionId)
 			throws Exception {
 
 			HttpInvoker.HttpResponse httpResponse =
@@ -217,7 +217,7 @@ public interface IdpConnectionResource {
 			}
 
 			try {
-				return Page.of(content, MetadataSerDes::toDTO);
+				return MetadataSerDes.toDTO(content);
 			}
 			catch (Exception e) {
 				_logger.log(

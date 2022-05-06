@@ -27,6 +27,7 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLTypeExtension;
 import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
 import com.liferay.saml.admin.rest.dto.v1_0.IdpConnection;
+import com.liferay.saml.admin.rest.dto.v1_0.Metadata;
 import com.liferay.saml.admin.rest.dto.v1_0.ProviderConfiguration;
 import com.liferay.saml.admin.rest.resource.v1_0.IdpConnectionResource;
 import com.liferay.saml.admin.rest.resource.v1_0.ProviderConfigurationResource;
@@ -69,19 +70,19 @@ public class Query {
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {idpConnectionMetadata(idpConnectionId: ___){items {__}, page, pageSize, totalCount}}"}' -u 'test@liferay.com:test'
+	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {idpConnectionMetadata(idpConnectionId: ___){contentUrl, contentValue, metadataUpdatedDate}}"}' -u 'test@liferay.com:test'
 	 */
 	@GraphQLField(description = "Retrieves the associated SAML metadata")
-	public IdpConnectionPage idpConnectionMetadata(
+	public Metadata idpConnectionMetadata(
 			@GraphQLName("idpConnectionId") Long idpConnectionId)
 		throws Exception {
 
 		return _applyComponentServiceObjects(
 			_idpConnectionResourceComponentServiceObjects,
 			this::_populateResourceContext,
-			idpConnectionResource -> new IdpConnectionPage(
+			idpConnectionResource ->
 				idpConnectionResource.getIdpConnectionMetadata(
-					idpConnectionId)));
+					idpConnectionId));
 	}
 
 	/**
@@ -144,13 +145,13 @@ public class Query {
 		}
 
 		@GraphQLField(description = "Retrieves the associated SAML metadata")
-		public IdpConnectionPage metadata() throws Exception {
+		public Metadata metadata() throws Exception {
 			return _applyComponentServiceObjects(
 				_idpConnectionResourceComponentServiceObjects,
 				Query.this::_populateResourceContext,
-				idpConnectionResource -> new IdpConnectionPage(
+				idpConnectionResource ->
 					idpConnectionResource.getIdpConnectionMetadata(
-						_idpConnection.getId())));
+						_idpConnection.getId()));
 		}
 
 		private IdpConnection _idpConnection;

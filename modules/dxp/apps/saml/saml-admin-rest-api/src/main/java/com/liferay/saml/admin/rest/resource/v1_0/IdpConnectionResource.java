@@ -59,7 +59,7 @@ public interface IdpConnectionResource {
 		return FactoryHolder.factory.create();
 	}
 
-	public Page<Metadata> getIdpConnectionMetadata(Long idpConnectionId)
+	public Metadata getIdpConnectionMetadata(Long idpConnectionId)
 		throws Exception;
 
 	public Page<IdpConnection> getIdpConnections(Pagination pagination)
