@@ -132,14 +132,10 @@ paths:
                     content:
                         application/json:
                             schema:
-                                items:
-                                    $ref: "#/components/schemas/Metadata"
-                                type: array
+                                $ref: "#/components/schemas/Metadata"
                         application/xml:
                             schema:
-                                items:
-                                    $ref: "#/components/schemas/Metadata"
-                                type: array
+                                $ref: "#/components/schemas/Metadata"
             tags: ["IdpConnection"]
         post:
             description:
