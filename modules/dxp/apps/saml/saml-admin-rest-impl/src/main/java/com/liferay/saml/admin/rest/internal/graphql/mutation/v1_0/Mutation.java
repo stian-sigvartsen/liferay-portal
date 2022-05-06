@@ -181,6 +181,21 @@ public class Mutation {
 				idpConnectionId, multipartBody));
 	}
 
+	@GraphQLField
+	public Response createIdpConnectionMetadataBatch(
+			@GraphQLName("idpConnectionId") Long idpConnectionId,
+			@GraphQLName("multipartBody") MultipartBody multipartBody,
+			@GraphQLName("callbackURL") String callbackURL,
+			@GraphQLName("object") Object object)
+		throws Exception {
+
+		return _applyComponentServiceObjects(
+			_metadataResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			metadataResource -> metadataResource.postIdpConnectionMetadataBatch(
+				idpConnectionId, multipartBody, callbackURL, object));
+	}
+
 	private <T, R, E1 extends Throwable, E2 extends Throwable> R
 			_applyComponentServiceObjects(
 				ComponentServiceObjects<T> componentServiceObjects,

@@ -56,6 +56,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -71,7 +72,7 @@ public abstract class BaseMetadataResourceImpl
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -X 'GET' 'http://localhost:8080/o/saml-admin/v1.0/idpConnection/{idpConnectionId}/metadata'  -u 'test@liferay.com:test'
+	 * curl -X 'GET' 'http://localhost:8080/o/saml-admin/v1.0/idpConnections/{idpConnectionId}/metadata'  -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Operation(
 		description = "Retrieves the associated SAML metadata"
@@ -88,7 +89,7 @@ public abstract class BaseMetadataResourceImpl
 		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Metadata")}
 	)
 	@javax.ws.rs.GET
-	@javax.ws.rs.Path("/idpConnection/{idpConnectionId}/metadata")
+	@javax.ws.rs.Path("/idpConnections/{idpConnectionId}/metadata")
 	@javax.ws.rs.Produces({"application/json", "application/xml"})
 	@Override
 	public Metadata getIdpConnectionMetadata(
@@ -104,7 +105,7 @@ public abstract class BaseMetadataResourceImpl
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -X 'POST' 'http://localhost:8080/o/saml-admin/v1.0/idpConnection/{idpConnectionId}/metadata'  -u 'test@liferay.com:test'
+	 * curl -X 'POST' 'http://localhost:8080/o/saml-admin/v1.0/idpConnections/{idpConnectionId}/metadata'  -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Operation(
 		description = "Creates a new metadata for an existing IDP connection. The request body must be `multipart/form-data` with two parts, a `file` part with the file's bytes, and an optional JSON string (`Metadata`) with the metadata."
@@ -121,7 +122,7 @@ public abstract class BaseMetadataResourceImpl
 		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Metadata")}
 	)
 	@javax.ws.rs.Consumes("multipart/form-data")
-	@javax.ws.rs.Path("/idpConnection/{idpConnectionId}/metadata")
+	@javax.ws.rs.Path("/idpConnections/{idpConnectionId}/metadata")
 	@javax.ws.rs.POST
 	@javax.ws.rs.Produces({"application/json", "application/xml"})
 	@Override
@@ -136,12 +137,80 @@ public abstract class BaseMetadataResourceImpl
 		return new Metadata();
 	}
 
+	/**
+	 * Invoke this method with the command line:
+	 *
+	 * curl -X 'POST' 'http://localhost:8080/o/saml-admin/v1.0/idpConnections/{idpConnectionId}/metadata/batch'  -u 'test@liferay.com:test'
+	 */
+	@io.swagger.v3.oas.annotations.Parameters(
+		value = {
+			@io.swagger.v3.oas.annotations.Parameter(
+				in = io.swagger.v3.oas.annotations.enums.ParameterIn.PATH,
+				name = "idpConnectionId"
+			),
+			@io.swagger.v3.oas.annotations.Parameter(
+				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
+				name = "callbackURL"
+			)
+		}
+	)
+	@io.swagger.v3.oas.annotations.tags.Tags(
+		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Metadata")}
+	)
+	@javax.ws.rs.Consumes("application/json")
+	@javax.ws.rs.Path("/idpConnections/{idpConnectionId}/metadata/batch")
+	@javax.ws.rs.POST
+	@javax.ws.rs.Produces("application/json")
+	@Override
+	public Response postIdpConnectionMetadataBatch(
+			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
+			@javax.validation.constraints.NotNull
+			@javax.ws.rs.PathParam("idpConnectionId")
+			Long idpConnectionId,
+			MultipartBody multipartBody,
+			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
+			@javax.ws.rs.QueryParam("callbackURL")
+			String callbackURL,
+			Object object)
+		throws Exception {
+
+		vulcanBatchEngineImportTaskResource.setContextAcceptLanguage(
+			contextAcceptLanguage);
+		vulcanBatchEngineImportTaskResource.setContextCompany(contextCompany);
+		vulcanBatchEngineImportTaskResource.setContextHttpServletRequest(
+			contextHttpServletRequest);
+		vulcanBatchEngineImportTaskResource.setContextUriInfo(contextUriInfo);
+		vulcanBatchEngineImportTaskResource.setContextUser(contextUser);
+
+		Response.ResponseBuilder responseBuilder = Response.accepted();
+
+		return responseBuilder.entity(
+			vulcanBatchEngineImportTaskResource.postImportTask(
+				Metadata.class.getName(), callbackURL, null, object)
+		).build();
+	}
+
 	@Override
 	@SuppressWarnings("PMD.UnusedLocalVariable")
 	public void create(
 			java.util.Collection<Metadata> metadatas,
 			Map<String, Serializable> parameters)
 		throws Exception {
+
+		UnsafeConsumer<Metadata, Exception> metadataUnsafeConsumer =
+			metadata -> postIdpConnectionMetadata(
+				Long.parseLong((String)parameters.get("idpConnectionId")),
+				(MultipartBody)parameters.get("multipartBody"));
+
+		if (contextBatchUnsafeConsumer != null) {
+			contextBatchUnsafeConsumer.accept(
+				metadatas, metadataUnsafeConsumer);
+		}
+		else {
+			for (Metadata metadata : metadatas) {
+				metadataUnsafeConsumer.accept(metadata);
+			}
+		}
 	}
 
 	@Override
