@@ -290,6 +290,34 @@ public class IdpConnection implements Serializable {
 	protected String metadataUrl;
 
 	@Schema
+	public String getMetadataXml() {
+		return metadataXml;
+	}
+
+	public void setMetadataXml(String metadataXml) {
+		this.metadataXml = metadataXml;
+	}
+
+	@JsonIgnore
+	public void setMetadataXml(
+		UnsafeSupplier<String, Exception> metadataXmlUnsafeSupplier) {
+
+		try {
+			metadataXml = metadataXmlUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String metadataXml;
+
+	@Schema
 	public String getName() {
 		return name;
 	}
@@ -547,6 +575,20 @@ public class IdpConnection implements Serializable {
 			sb.append("\"");
 
 			sb.append(_escape(metadataUrl));
+
+			sb.append("\"");
+		}
+
+		if (metadataXml != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"metadataXml\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(metadataXml));
 
 			sb.append("\"");
 		}

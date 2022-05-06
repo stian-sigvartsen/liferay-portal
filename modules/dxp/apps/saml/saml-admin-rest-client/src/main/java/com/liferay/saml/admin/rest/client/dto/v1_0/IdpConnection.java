@@ -205,6 +205,27 @@ public class IdpConnection implements Cloneable, Serializable {
 
 	protected String metadataUrl;
 
+	public String getMetadataXml() {
+		return metadataXml;
+	}
+
+	public void setMetadataXml(String metadataXml) {
+		this.metadataXml = metadataXml;
+	}
+
+	public void setMetadataXml(
+		UnsafeSupplier<String, Exception> metadataXmlUnsafeSupplier) {
+
+		try {
+			metadataXml = metadataXmlUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected String metadataXml;
+
 	public String getName() {
 		return name;
 	}

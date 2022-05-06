@@ -183,6 +183,7 @@ public abstract class BaseIdpConnectionResourceTestCase {
 
 		idpConnection.setEntityId(regex);
 		idpConnection.setMetadataUrl(regex);
+		idpConnection.setMetadataXml(regex);
 		idpConnection.setName(regex);
 		idpConnection.setNameIdFormat(regex);
 		idpConnection.setUserAttributeMappings(regex);
@@ -195,9 +196,81 @@ public abstract class BaseIdpConnectionResourceTestCase {
 
 		Assert.assertEquals(regex, idpConnection.getEntityId());
 		Assert.assertEquals(regex, idpConnection.getMetadataUrl());
+		Assert.assertEquals(regex, idpConnection.getMetadataXml());
 		Assert.assertEquals(regex, idpConnection.getName());
 		Assert.assertEquals(regex, idpConnection.getNameIdFormat());
 		Assert.assertEquals(regex, idpConnection.getUserAttributeMappings());
+	}
+
+	@Test
+	public void testGetIdpConnectionMetadata() throws Exception {
+		Long idpConnectionId =
+			testGetIdpConnectionMetadata_getIdpConnectionId();
+		Long irrelevantIdpConnectionId =
+			testGetIdpConnectionMetadata_getIrrelevantIdpConnectionId();
+
+		Page<IdpConnection> page =
+			idpConnectionResource.getIdpConnectionMetadata(idpConnectionId);
+
+		Assert.assertEquals(0, page.getTotalCount());
+
+		if (irrelevantIdpConnectionId != null) {
+			IdpConnection irrelevantIdpConnection =
+				testGetIdpConnectionMetadata_addIdpConnection(
+					irrelevantIdpConnectionId, randomIrrelevantIdpConnection());
+
+			page = idpConnectionResource.getIdpConnectionMetadata(
+				irrelevantIdpConnectionId);
+
+			Assert.assertEquals(1, page.getTotalCount());
+
+			assertEquals(
+				Arrays.asList(irrelevantIdpConnection),
+				(List<IdpConnection>)page.getItems());
+			assertValid(page);
+		}
+
+		IdpConnection idpConnection1 =
+			testGetIdpConnectionMetadata_addIdpConnection(
+				idpConnectionId, randomIdpConnection());
+
+		IdpConnection idpConnection2 =
+			testGetIdpConnectionMetadata_addIdpConnection(
+				idpConnectionId, randomIdpConnection());
+
+		page = idpConnectionResource.getIdpConnectionMetadata(idpConnectionId);
+
+		Assert.assertEquals(2, page.getTotalCount());
+
+		assertEqualsIgnoringOrder(
+			Arrays.asList(idpConnection1, idpConnection2),
+			(List<IdpConnection>)page.getItems());
+		assertValid(page);
+
+		idpConnectionResource.deleteIdpConnection(idpConnection1.getId());
+
+		idpConnectionResource.deleteIdpConnection(idpConnection2.getId());
+	}
+
+	protected IdpConnection testGetIdpConnectionMetadata_addIdpConnection(
+			Long idpConnectionId, IdpConnection idpConnection)
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	protected Long testGetIdpConnectionMetadata_getIdpConnectionId()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	protected Long testGetIdpConnectionMetadata_getIrrelevantIdpConnectionId()
+		throws Exception {
+
+		return null;
 	}
 
 	@Test
@@ -686,6 +759,14 @@ public abstract class BaseIdpConnectionResourceTestCase {
 				continue;
 			}
 
+			if (Objects.equals("metadataXml", additionalAssertFieldName)) {
+				if (idpConnection.getMetadataXml() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
 			if (Objects.equals("name", additionalAssertFieldName)) {
 				if (idpConnection.getName() == null) {
 					valid = false;
@@ -906,6 +987,17 @@ public abstract class BaseIdpConnectionResourceTestCase {
 				if (!Objects.deepEquals(
 						idpConnection1.getMetadataUrl(),
 						idpConnection2.getMetadataUrl())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("metadataXml", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						idpConnection1.getMetadataXml(),
+						idpConnection2.getMetadataXml())) {
 
 					return false;
 				}
@@ -1143,6 +1235,14 @@ public abstract class BaseIdpConnectionResourceTestCase {
 			return sb.toString();
 		}
 
+		if (entityFieldName.equals("metadataXml")) {
+			sb.append("'");
+			sb.append(String.valueOf(idpConnection.getMetadataXml()));
+			sb.append("'");
+
+			return sb.toString();
+		}
+
 		if (entityFieldName.equals("name")) {
 			sb.append("'");
 			sb.append(String.valueOf(idpConnection.getName()));
@@ -1230,6 +1330,8 @@ public abstract class BaseIdpConnectionResourceTestCase {
 				id = RandomTestUtil.randomLong();
 				metadataUpdatedDate = RandomTestUtil.nextDate();
 				metadataUrl = StringUtil.toLowerCase(
+					RandomTestUtil.randomString());
+				metadataXml = StringUtil.toLowerCase(
 					RandomTestUtil.randomString());
 				name = StringUtil.toLowerCase(RandomTestUtil.randomString());
 				nameIdFormat = StringUtil.toLowerCase(

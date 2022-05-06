@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.vulcan.accept.language.AcceptLanguage;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
+import com.liferay.portal.vulcan.graphql.annotation.GraphQLTypeExtension;
 import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
 import com.liferay.saml.admin.rest.dto.v1_0.IdpConnection;
@@ -68,6 +69,24 @@ public class Query {
 	/**
 	 * Invoke this method with the command line:
 	 *
+	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {idpConnectionMetadata(idpConnectionId: ___){items {__}, page, pageSize, totalCount}}"}' -u 'test@liferay.com:test'
+	 */
+	@GraphQLField(description = "Retrieves the associated SAML metadata")
+	public IdpConnectionPage idpConnectionMetadata(
+			@GraphQLName("idpConnectionId") Long idpConnectionId)
+		throws Exception {
+
+		return _applyComponentServiceObjects(
+			_idpConnectionResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			idpConnectionResource -> new IdpConnectionPage(
+				idpConnectionResource.getIdpConnectionMetadata(
+					idpConnectionId)));
+	}
+
+	/**
+	 * Invoke this method with the command line:
+	 *
 	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {idpConnections(page: ___, pageSize: ___){items {__}, page, pageSize, totalCount}}"}' -u 'test@liferay.com:test'
 	 */
 	@GraphQLField(description = "Retrieves the connected SAML IDPs")
@@ -87,7 +106,7 @@ public class Query {
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {idpConnection(idpConnectionId: ___){assertionSignatureRequired, clockSkew, enabled, entityId, forceAuthn, id, metadataUpdatedDate, metadataUrl, name, nameIdFormat, signAuthnRequest, unknownUsersAreStrangers, userAttributeMappings}}"}' -u 'test@liferay.com:test'
+	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {idpConnection(idpConnectionId: ___){assertionSignatureRequired, clockSkew, enabled, entityId, forceAuthn, id, metadataUpdatedDate, metadataUrl, metadataXml, name, nameIdFormat, signAuthnRequest, unknownUsersAreStrangers, userAttributeMappings}}"}' -u 'test@liferay.com:test'
 	 */
 	@GraphQLField(description = "Retrieves the SAML IDP connection.")
 	public IdpConnection idpConnection(
@@ -113,6 +132,29 @@ public class Query {
 			this::_populateResourceContext,
 			providerConfigurationResource ->
 				providerConfigurationResource.getProviderConfiguration());
+	}
+
+	@GraphQLTypeExtension(IdpConnection.class)
+	public class GetIdpConnectionMetadataTypeExtension {
+
+		public GetIdpConnectionMetadataTypeExtension(
+			IdpConnection idpConnection) {
+
+			_idpConnection = idpConnection;
+		}
+
+		@GraphQLField(description = "Retrieves the associated SAML metadata")
+		public IdpConnectionPage metadata() throws Exception {
+			return _applyComponentServiceObjects(
+				_idpConnectionResourceComponentServiceObjects,
+				Query.this::_populateResourceContext,
+				idpConnectionResource -> new IdpConnectionPage(
+					idpConnectionResource.getIdpConnectionMetadata(
+						_idpConnection.getId())));
+		}
+
+		private IdpConnection _idpConnection;
+
 	}
 
 	@GraphQLName("IdpConnectionPage")

@@ -23,9 +23,7 @@ import com.liferay.portal.odata.filter.ExpressionConvert;
 import com.liferay.portal.odata.filter.FilterParserProvider;
 import com.liferay.portal.vulcan.accept.language.AcceptLanguage;
 import com.liferay.portal.vulcan.batch.engine.resource.VulcanBatchEngineImportTaskResource;
-import com.liferay.portal.vulcan.pagination.Page;
-import com.liferay.portal.vulcan.pagination.Pagination;
-import com.liferay.saml.admin.rest.dto.v1_0.IdpConnection;
+import com.liferay.portal.vulcan.multipart.MultipartBody;
 import com.liferay.saml.admin.rest.dto.v1_0.Metadata;
 
 import java.util.Collections;
@@ -38,7 +36,6 @@ import javax.annotation.Generated;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -53,41 +50,14 @@ import org.osgi.annotation.versioning.ProviderType;
  */
 @Generated("")
 @ProviderType
-public interface IdpConnectionResource {
+public interface MetadataResource {
 
 	public static Builder builder() {
 		return FactoryHolder.factory.create();
 	}
 
-	public Page<Metadata> getIdpConnectionMetadata(Long idpConnectionId)
-		throws Exception;
-
-	public Page<IdpConnection> getIdpConnections(Pagination pagination)
-		throws Exception;
-
-	public IdpConnection postIdpConnection(IdpConnection idpConnection)
-		throws Exception;
-
-	public Response postIdpConnectionBatch(String callbackURL, Object object)
-		throws Exception;
-
-	public void deleteIdpConnection(Long idpConnectionId) throws Exception;
-
-	public Response deleteIdpConnectionBatch(String callbackURL, Object object)
-		throws Exception;
-
-	public IdpConnection getIdpConnection(Long idpConnectionId)
-		throws Exception;
-
-	public IdpConnection patchIdpConnection(
-			Long idpConnectionId, IdpConnection idpConnection)
-		throws Exception;
-
-	public IdpConnection putIdpConnection(
-			Long idpConnectionId, IdpConnection idpConnection)
-		throws Exception;
-
-	public Response putIdpConnectionBatch(String callbackURL, Object object)
+	public Metadata postIdpConnectionMetadata(
+			Long idpConnectionId, MultipartBody multipartBody)
 		throws Exception;
 
 	public default void setContextAcceptLanguage(
@@ -151,7 +121,7 @@ public interface IdpConnectionResource {
 	@ProviderType
 	public interface Builder {
 
-		public IdpConnectionResource build();
+		public MetadataResource build();
 
 		public Builder checkPermissions(boolean checkPermissions);
 

@@ -155,6 +155,20 @@ public class IdpConnectionSerDes {
 			sb.append("\"");
 		}
 
+		if (idpConnection.getMetadataXml() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"metadataXml\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(idpConnection.getMetadataXml()));
+
+			sb.append("\"");
+		}
+
 		if (idpConnection.getName() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -302,6 +316,14 @@ public class IdpConnectionSerDes {
 				"metadataUrl", String.valueOf(idpConnection.getMetadataUrl()));
 		}
 
+		if (idpConnection.getMetadataXml() == null) {
+			map.put("metadataXml", null);
+		}
+		else {
+			map.put(
+				"metadataXml", String.valueOf(idpConnection.getMetadataXml()));
+		}
+
 		if (idpConnection.getName() == null) {
 			map.put("name", null);
 		}
@@ -412,6 +434,11 @@ public class IdpConnectionSerDes {
 			else if (Objects.equals(jsonParserFieldName, "metadataUrl")) {
 				if (jsonParserFieldValue != null) {
 					idpConnection.setMetadataUrl((String)jsonParserFieldValue);
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "metadataXml")) {
+				if (jsonParserFieldValue != null) {
+					idpConnection.setMetadataXml((String)jsonParserFieldValue);
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "name")) {

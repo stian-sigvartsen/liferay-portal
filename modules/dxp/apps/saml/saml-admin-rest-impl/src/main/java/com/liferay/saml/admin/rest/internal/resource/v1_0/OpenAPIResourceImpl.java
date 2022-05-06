@@ -82,6 +82,8 @@ public class OpenAPIResourceImpl {
 		{
 			add(IdpConnectionResourceImpl.class);
 
+			add(MetadataResourceImpl.class);
+
 			add(ProviderConfigurationResourceImpl.class);
 
 			add(OpenAPIResourceImpl.class);
