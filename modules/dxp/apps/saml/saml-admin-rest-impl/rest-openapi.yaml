@@ -136,7 +136,7 @@ paths:
                         application/xml:
                             schema:
                                 $ref: "#/components/schemas/Metadata"
-            tags: ["IdpConnection"]
+            tags: ["Metadata"]
         post:
             description:
                 Creates a new metadata for an existing IDP connection. The request body must be `multipart/form-data`
