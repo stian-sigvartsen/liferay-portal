@@ -115,7 +115,7 @@ info:
     version: v1.0
 openapi: 3.0.1
 paths:
-    "/idpConnection/{idpConnectionId}/metadata":
+    "/idpConnections/{idpConnectionId}/metadata":
         get:
             description:
                 Retrieves the associated SAML metadata
