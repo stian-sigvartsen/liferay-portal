@@ -40,7 +40,6 @@ import com.liferay.portal.vulcan.resource.EntityModelResource;
 import com.liferay.portal.vulcan.util.ActionUtil;
 import com.liferay.portal.vulcan.util.TransformUtil;
 import com.liferay.saml.admin.rest.dto.v1_0.IdpConnection;
-import com.liferay.saml.admin.rest.dto.v1_0.Metadata;
 import com.liferay.saml.admin.rest.resource.v1_0.IdpConnectionResource;
 
 import java.io.Serializable;
@@ -69,41 +68,6 @@ import javax.ws.rs.core.UriInfo;
 public abstract class BaseIdpConnectionResourceImpl
 	implements EntityModelResource, IdpConnectionResource,
 			   VulcanBatchEngineTaskItemDelegate<IdpConnection> {
-
-	/**
-	 * Invoke this method with the command line:
-	 *
-	 * curl -X 'GET' 'http://localhost:8080/o/saml-admin/v1.0/idpConnection/{idpConnectionId}/metadata'  -u 'test@liferay.com:test'
-	 */
-	@io.swagger.v3.oas.annotations.Operation(
-		description = "Retrieves the associated SAML metadata"
-	)
-	@io.swagger.v3.oas.annotations.Parameters(
-		value = {
-			@io.swagger.v3.oas.annotations.Parameter(
-				in = io.swagger.v3.oas.annotations.enums.ParameterIn.PATH,
-				name = "idpConnectionId"
-			)
-		}
-	)
-	@io.swagger.v3.oas.annotations.tags.Tags(
-		value = {
-			@io.swagger.v3.oas.annotations.tags.Tag(name = "IdpConnection")
-		}
-	)
-	@javax.ws.rs.GET
-	@javax.ws.rs.Path("/idpConnection/{idpConnectionId}/metadata")
-	@javax.ws.rs.Produces({"application/json", "application/xml"})
-	@Override
-	public Metadata getIdpConnectionMetadata(
-			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
-			@javax.validation.constraints.NotNull
-			@javax.ws.rs.PathParam("idpConnectionId")
-			Long idpConnectionId)
-		throws Exception {
-
-		return new Metadata();
-	}
 
 	/**
 	 * Invoke this method with the command line:

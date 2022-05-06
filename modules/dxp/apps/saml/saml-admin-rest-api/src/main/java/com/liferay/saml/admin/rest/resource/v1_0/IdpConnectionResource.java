@@ -26,7 +26,6 @@ import com.liferay.portal.vulcan.batch.engine.resource.VulcanBatchEngineImportTa
 import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
 import com.liferay.saml.admin.rest.dto.v1_0.IdpConnection;
-import com.liferay.saml.admin.rest.dto.v1_0.Metadata;
 
 import java.util.Collections;
 import java.util.List;
@@ -58,9 +57,6 @@ public interface IdpConnectionResource {
 	public static Builder builder() {
 		return FactoryHolder.factory.create();
 	}
-
-	public Metadata getIdpConnectionMetadata(Long idpConnectionId)
-		throws Exception;
 
 	public Page<IdpConnection> getIdpConnections(Pagination pagination)
 		throws Exception;

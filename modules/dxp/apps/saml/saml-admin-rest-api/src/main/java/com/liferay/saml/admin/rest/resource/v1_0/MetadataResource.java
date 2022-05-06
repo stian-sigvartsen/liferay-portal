@@ -56,6 +56,9 @@ public interface MetadataResource {
 		return FactoryHolder.factory.create();
 	}
 
+	public Metadata getIdpConnectionMetadata(Long idpConnectionId)
+		throws Exception;
+
 	public Metadata postIdpConnectionMetadata(
 			Long idpConnectionId, MultipartBody multipartBody)
 		throws Exception;

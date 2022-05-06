@@ -194,6 +194,21 @@ public abstract class BaseMetadataResourceTestCase {
 	}
 
 	@Test
+	public void testGetIdpConnectionMetadata() throws Exception {
+		Assert.assertTrue(false);
+	}
+
+	@Test
+	public void testGraphQLGetIdpConnectionMetadata() throws Exception {
+		Assert.assertTrue(true);
+	}
+
+	@Test
+	public void testGraphQLGetIdpConnectionMetadataNotFound() throws Exception {
+		Assert.assertTrue(true);
+	}
+
+	@Test
 	public void testPostIdpConnectionMetadata() throws Exception {
 		Metadata randomMetadata = randomMetadata();
 

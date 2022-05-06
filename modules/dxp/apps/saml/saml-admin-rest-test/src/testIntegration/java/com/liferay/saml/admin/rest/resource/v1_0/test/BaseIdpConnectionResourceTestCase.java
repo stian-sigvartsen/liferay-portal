@@ -45,7 +45,6 @@ import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.vulcan.resource.EntityModelResource;
 import com.liferay.saml.admin.rest.client.dto.v1_0.IdpConnection;
-import com.liferay.saml.admin.rest.client.dto.v1_0.Metadata;
 import com.liferay.saml.admin.rest.client.http.HttpInvoker;
 import com.liferay.saml.admin.rest.client.pagination.Page;
 import com.liferay.saml.admin.rest.client.pagination.Pagination;
@@ -542,29 +541,6 @@ public abstract class BaseIdpConnectionResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	@Test
-	public void testGetIdpConnectionMetadata() throws Exception {
-		IdpConnection postIdpConnection =
-			testGetIdpConnection_addIdpConnection();
-
-		Metadata postMetadata = testGetIdpConnectionMetadata_addMetadata(
-			postIdpConnection.getId(), randomMetadata());
-
-		Metadata getMetadata = idpConnectionResource.getIdpConnectionMetadata(
-			postIdpConnection.getId());
-
-		assertEquals(postMetadata, getMetadata);
-		assertValid(getMetadata);
-	}
-
-	protected Metadata testGetIdpConnectionMetadata_addMetadata(
-			long idpConnectionId, Metadata metadata)
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
 	protected IdpConnection testGraphQLIdpConnection_addIdpConnection()
 		throws Exception {
 
@@ -617,12 +593,6 @@ public abstract class BaseIdpConnectionResourceTestCase {
 
 			assertEquals(idpConnection1, idpConnection2);
 		}
-	}
-
-	protected void assertEquals(Metadata metadata1, Metadata metadata2) {
-		Assert.assertTrue(
-			metadata1 + " does not equal " + metadata2,
-			equals(metadata1, metadata2));
 	}
 
 	protected void assertEqualsIgnoringOrder(
@@ -795,51 +765,7 @@ public abstract class BaseIdpConnectionResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
-	protected void assertValid(Metadata metadata) {
-		boolean valid = true;
-
-		for (String additionalAssertFieldName :
-				getAdditionalMetadataAssertFieldNames()) {
-
-			if (Objects.equals("contentUrl", additionalAssertFieldName)) {
-				if (metadata.getContentUrl() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("contentValue", additionalAssertFieldName)) {
-				if (metadata.getContentValue() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"metadataUpdatedDate", additionalAssertFieldName)) {
-
-				if (metadata.getMetadataUpdatedDate() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			throw new IllegalArgumentException(
-				"Invalid additional assert field name " +
-					additionalAssertFieldName);
-		}
-
-		Assert.assertTrue(valid);
-	}
-
 	protected String[] getAdditionalAssertFieldNames() {
-		return new String[0];
-	}
-
-	protected String[] getAdditionalMetadataAssertFieldNames() {
 		return new String[0];
 	}
 
@@ -1100,56 +1026,6 @@ public abstract class BaseIdpConnectionResourceTestCase {
 		return false;
 	}
 
-	protected boolean equals(Metadata metadata1, Metadata metadata2) {
-		if (metadata1 == metadata2) {
-			return true;
-		}
-
-		for (String additionalAssertFieldName :
-				getAdditionalMetadataAssertFieldNames()) {
-
-			if (Objects.equals("contentUrl", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						metadata1.getContentUrl(), metadata2.getContentUrl())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("contentValue", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						metadata1.getContentValue(),
-						metadata2.getContentValue())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"metadataUpdatedDate", additionalAssertFieldName)) {
-
-				if (!Objects.deepEquals(
-						metadata1.getMetadataUpdatedDate(),
-						metadata2.getMetadataUpdatedDate())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			throw new IllegalArgumentException(
-				"Invalid additional assert field name " +
-					additionalAssertFieldName);
-		}
-
-		return true;
-	}
-
 	protected java.lang.reflect.Field[] getDeclaredFields(Class clazz)
 		throws Exception {
 
@@ -1405,16 +1281,6 @@ public abstract class BaseIdpConnectionResourceTestCase {
 
 	protected IdpConnection randomPatchIdpConnection() throws Exception {
 		return randomIdpConnection();
-	}
-
-	protected Metadata randomMetadata() throws Exception {
-		return new Metadata() {
-			{
-				contentUrl = RandomTestUtil.randomString();
-				contentValue = RandomTestUtil.randomString();
-				metadataUpdatedDate = RandomTestUtil.nextDate();
-			}
-		};
 	}
 
 	protected IdpConnectionResource idpConnectionResource;

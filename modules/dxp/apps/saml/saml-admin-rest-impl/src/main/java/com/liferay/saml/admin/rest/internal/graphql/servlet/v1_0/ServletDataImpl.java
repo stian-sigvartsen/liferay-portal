@@ -47,6 +47,8 @@ public class ServletDataImpl implements ServletData {
 
 		Query.setIdpConnectionResourceComponentServiceObjects(
 			_idpConnectionResourceComponentServiceObjects);
+		Query.setMetadataResourceComponentServiceObjects(
+			_metadataResourceComponentServiceObjects);
 		Query.setProviderConfigurationResourceComponentServiceObjects(
 			_providerConfigurationResourceComponentServiceObjects);
 	}
