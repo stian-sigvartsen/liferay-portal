@@ -25,11 +25,15 @@ import com.liferay.saml.admin.rest.resource.v1_0.IdpConnectionResource;
 import com.liferay.saml.persistence.model.SamlSpIdpConnection;
 import com.liferay.saml.persistence.service.SamlSpIdpConnectionLocalService;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.Serializable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
@@ -106,7 +110,37 @@ public class IdpConnectionResourceImpl extends BaseIdpConnectionResourceImpl {
 			Long idpConnectionId, IdpConnection idpConnection)
 		throws Exception {
 
-		return super.putIdpConnection(idpConnectionId, idpConnection);
+		if (!Objects.equals(idpConnection.getId(), idpConnectionId)) {
+			throw new IllegalArgumentException(
+				"Inconsistent ID " + idpConnectionId);
+		}
+
+		SamlSpIdpConnection samlSpIdpConnection =
+			_samlSpIdpConnectionLocalService.fetchSamlSpIdpConnection(
+				idpConnectionId);
+
+		if (samlSpIdpConnection == null) {
+			return postIdpConnection(idpConnection);
+		}
+
+		InputStream metadataXmlInputStream = new ByteArrayInputStream(null);
+
+		return _convert(
+			_samlSpIdpConnectionLocalService.updateSamlSpIdpConnection(
+				idpConnectionId,
+				idpConnection.getAssertionSignatureRequired(),
+				idpConnection.getClockSkew(), idpConnection.getEnabled(),
+				idpConnection.getForceAuthn(),
+				idpConnection.getForceAuthn(), idpConnection.getMetadataUrl(),
+				metadataXmlInputStream,
+				idpConnection.getName(), idpConnection.getNameIdFormat(),
+				idpConnection.getEntityId(), idpConnection.getSignAuthnRequest(),
+				idpConnection.getUnknownUsersAreStrangers(),
+				idpConnection.getUserAttributeMappings(),
+				samlSpIdpConnection.getUserIdentifierExpression(),
+				ServiceContextFactory.getInstance(
+					SamlSpIdpConnection.class.getName(),
+					contextHttpServletRequest)));
 	}
 
 	@Override
