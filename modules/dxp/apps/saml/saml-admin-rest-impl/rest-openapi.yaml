@@ -144,6 +144,13 @@ components:
                 sslRequired:
                     type: boolean
             type: object
+        ProviderConfiguration:
+            description:
+                Dummy schema which can be referenced from tags
+            properties:
+                enabled:
+                    type: boolean
+            type: object
 info:
     description:
         "SAML configuration"
