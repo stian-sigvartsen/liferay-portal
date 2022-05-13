@@ -38,13 +38,37 @@ components:
                 userAttributeMappings:
                     type: string
             type: object
-        SpConnection:
+        IdpProviderConfiguration:
             # @review
             description:
-                Connection details for a connected SAML SP
+                Configuration of the SAML provider's IDP capability
             properties:
+                authnRequestSignatureRequired:
+                    type: boolean
                 enabled:
                     type: boolean
+                entityId:
+                    type: string
+                role:
+                    enum: ["idp"]
+                    type: string
+                sessionMaximumAge:
+                    format: int64
+                    type: integer
+                sessionTimeout:
+                    format: int64
+                    type: integer
+                signMetadata:
+                    type: boolean
+                spConnections:
+                    description:
+                        Connected SAML SPs
+                    items:
+                        $ref: "#/components/schemas/SpConnection"
+                    type: array
+                sslRequired:
+                    type: boolean
+            type: object
         Metadata:
             description:
                 Represents a SAML metadata XML
@@ -65,37 +89,20 @@ components:
                     readOnly: true
                     type: string
             type: object
-        IdpProviderConfiguration:
-            # @review
+        ProviderConfiguration:
             description:
-                Configuration of the SAML provider's IDP capability
+                Dummy schema which can be referenced from tags
             properties:
-                authnRequestSignatureRequired:
-                    type: boolean
                 enabled:
                     type: boolean
-                entityId:
-                    type: string
-                role:
-                    type: string
-                    enum: ["idp"]
-                sessionMaximumAge:
-                    format: int64
-                    type: integer
-                sessionTimeout:
-                    format: int64
-                    type: integer
-                signMetadata:
-                    type: boolean
-                spConnections:
-                    description:
-                        Connected SAML SPs
-                    items:
-                        $ref: "#/components/schemas/SpConnection"
-                    type: array
-                sslRequired:
-                    type: boolean
             type: object
+        SpConnection:
+            # @review
+            description:
+                Connection details for a connected SAML SP
+            properties:
+                enabled:
+                    type: boolean
         SpProviderConfiguration:
             # @review
             description:
@@ -127,8 +134,8 @@ components:
                 ldapImportEnabled:
                     type: boolean
                 role:
-                    type: string
                     enum: ["sp"]
+                    type: string
                 samlKeystoreCredentialPassword:
                     type: string
                 sessionMaximumAge:
@@ -144,13 +151,6 @@ components:
                 sslRequired:
                     type: boolean
             type: object
-        ProviderConfiguration:
-            description:
-                Dummy schema which can be referenced from tags
-            properties:
-                enabled:
-                    type: boolean
-            type: object
 info:
     description:
         "SAML configuration"
@@ -161,62 +161,6 @@ info:
     version: v1.0
 openapi: 3.0.1
 paths:
-    "/idpConnections/{idpConnectionId}/metadata":
-        get:
-            description:
-                Retrieves the associated SAML metadata
-            operationId: getIdpConnectionMetadata
-            parameters:
-                - in: path
-                  name: idpConnectionId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/Metadata"
-                        application/xml:
-                            schema:
-                                $ref: "#/components/schemas/Metadata"
-            tags: ["Metadata"]
-        post:
-            description:
-                Creates a new metadata for an existing IDP connection. The request body must be `multipart/form-data`
-                with two parts, a `file` part with the file's bytes, and an optional JSON string (`Metadata`) with the
-                metadata.
-            operationId: postIdpConnectionMetadata
-            parameters:
-                - in: path
-                  name: idpConnectionId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-            requestBody:
-                content:
-                    multipart/form-data:
-                        schema:
-                            properties:
-                                file:
-                                    format: binary
-                                    type: string
-                                knowledgeBaseAttachment:
-                                    $ref: "#/components/schemas/Metadata"
-                            type: object
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/Metadata"
-                        application/xml:
-                            schema:
-                                $ref: "#/components/schemas/Metadata"
-            tags: ["Metadata"]
     "/idpConnections":
         get:
             # @review
@@ -377,6 +321,62 @@ paths:
                     description:
                         "SAML SP IDP connection successfully created"
             tags: ["IdpConnection"]
+    "/idpConnections/{idpConnectionId}/metadata":
+        get:
+            description:
+                Retrieves the associated SAML metadata
+            operationId: getIdpConnectionMetadata
+            parameters:
+                - in: path
+                  name: idpConnectionId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Metadata"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/Metadata"
+            tags: ["Metadata"]
+        post:
+            description:
+                Creates a new metadata for an existing IDP connection. The request body must be `multipart/form-data`
+                with two parts, a `file` part with the file's bytes, and an optional JSON string (`Metadata`) with the
+                metadata.
+            operationId: postIdpConnectionMetadata
+            parameters:
+                - in: path
+                  name: idpConnectionId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            requestBody:
+                content:
+                    multipart/form-data:
+                        schema:
+                            properties:
+                                file:
+                                    format: binary
+                                    type: string
+                                knowledgeBaseAttachment:
+                                    $ref: "#/components/schemas/Metadata"
+                            type: object
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Metadata"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/Metadata"
+            tags: ["Metadata"]
     "/provider":
         delete:
             description:
