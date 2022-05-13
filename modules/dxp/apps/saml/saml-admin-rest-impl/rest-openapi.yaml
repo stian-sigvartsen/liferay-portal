@@ -397,10 +397,14 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/SpProviderConfiguration"
+                                oneOf:
+                                    - $ref: "#/components/schemas/IdpProviderConfiguration"
+                                    - $ref: "#/components/schemas/SpProviderConfiguration"
                         application/xml:
                             schema:
-                                $ref: "#/components/schemas/SpProviderConfiguration"
+                                oneOf:
+                                    - $ref: "#/components/schemas/IdpProviderConfiguration"
+                                    - $ref: "#/components/schemas/SpProviderConfiguration"
             tags: ["ProviderConfiguration"]
         patch:
             description:
@@ -410,19 +414,27 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: "#/components/schemas/SpProviderConfiguration"
+                            oneOf:
+                                - $ref: "#/components/schemas/IdpProviderConfiguration"
+                                - $ref: "#/components/schemas/SpProviderConfiguration"
                     application/xml:
                         schema:
-                            $ref: "#/components/schemas/SpProviderConfiguration"
+                            oneOf:
+                                - $ref: "#/components/schemas/IdpProviderConfiguration"
+                                - $ref: "#/components/schemas/SpProviderConfiguration"
             responses:
                 200:
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/SpProviderConfiguration"
+                                oneOf:
+                                    - $ref: "#/components/schemas/IdpProviderConfiguration"
+                                    - $ref: "#/components/schemas/SpProviderConfiguration"
                         application/xml:
                             schema:
-                                $ref: "#/components/schemas/SpProviderConfiguration"
+                                oneOf:
+                                    - $ref: "#/components/schemas/IdpProviderConfiguration"
+                                    - $ref: "#/components/schemas/SpProviderConfiguration"
                     # @review
                     description:
                         "SAML provider configuration was successfully created"
@@ -435,19 +447,27 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: "#/components/schemas/SpProviderConfiguration"
+                            oneOf:
+                                - $ref: "#/components/schemas/IdpProviderConfiguration"
+                                - $ref: "#/components/schemas/SpProviderConfiguration"
                     application/xml:
                         schema:
-                            $ref: "#/components/schemas/SpProviderConfiguration"
+                            oneOf:
+                                - $ref: "#/components/schemas/IdpProviderConfiguration"
+                                - $ref: "#/components/schemas/SpProviderConfiguration"
             responses:
                 200:
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/SpProviderConfiguration"
+                                oneOf:
+                                    - $ref: "#/components/schemas/IdpProviderConfiguration"
+                                    - $ref: "#/components/schemas/SpProviderConfiguration"
                         application/xml:
                             schema:
-                                $ref: "#/components/schemas/SpProviderConfiguration"
+                                oneOf:
+                                    - $ref: "#/components/schemas/IdpProviderConfiguration"
+                                    - $ref: "#/components/schemas/SpProviderConfiguration"
                     # @review
                     description:
                         "SAML provider configuration was successfully created"
@@ -460,19 +480,27 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: "#/components/schemas/SpProviderConfiguration"
+                            oneOf:
+                                - $ref: "#/components/schemas/IdpProviderConfiguration"
+                                - $ref: "#/components/schemas/SpProviderConfiguration"
                     application/xml:
                         schema:
-                            $ref: "#/components/schemas/SpProviderConfiguration"
+                            oneOf:
+                                - $ref: "#/components/schemas/IdpProviderConfiguration"
+                                - $ref: "#/components/schemas/SpProviderConfiguration"
             responses:
                 200:
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/SpProviderConfiguration"
+                                oneOf:
+                                    - $ref: "#/components/schemas/IdpProviderConfiguration"
+                                    - $ref: "#/components/schemas/SpProviderConfiguration"
                         application/xml:
                             schema:
-                                $ref: "#/components/schemas/SpProviderConfiguration"
+                                oneOf:
+                                    - $ref: "#/components/schemas/IdpProviderConfiguration"
+                                    - $ref: "#/components/schemas/SpProviderConfiguration"
                     # @review
                     description:
                         "SAML provider configuration was successfully created"
