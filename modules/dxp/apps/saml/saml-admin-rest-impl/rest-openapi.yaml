@@ -377,17 +377,11 @@ paths:
                     description:
                         "SAML SP IDP connection successfully created"
             tags: ["IdpConnection"]
-    "/provider/{provider}":
+    "/provider":
         delete:
             description:
                 Delete the SAML Provider configuration.
             operationId: deleteProviderConfiguration
-            parameters:
-                - in: path
-                  name: provider
-                  required: true
-                  schema:
-                      type: string
             responses:
                 204:
                     content:
@@ -398,12 +392,6 @@ paths:
             description:
                 Retrieves the SAML Provider configuration.
             operationId: getProviderConfiguration
-            parameters:
-                - in: path
-                  name: provider
-                  required: true
-                  schema:
-                      type: string
             responses:
                 200:
                     content:
@@ -418,12 +406,31 @@ paths:
             description:
                 Creates a full SAML Provider configuration with peer connections.
             operationId: patchProviderConfiguration
-            parameters:
-                - in: path
-                  name: provider
-                  required: true
-                  schema:
-                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/SpProviderConfiguration"
+                    application/xml:
+                        schema:
+                            $ref: "#/components/schemas/SpProviderConfiguration"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/SpProviderConfiguration"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/SpProviderConfiguration"
+                    # @review
+                    description:
+                        "SAML provider configuration was successfully created"
+            tags: ["ProviderConfiguration"]
+        post:
+            description:
+                Creates a full SAML Provider configuration with peer connections.
+            operationId: postProviderConfiguration
             requestBody:
                 content:
                     application/json:
@@ -449,38 +456,6 @@ paths:
             description:
                 Replaces the SAML Provider configuration.
             operationId: putProviderConfiguration
-            parameters:
-                - in: path
-                  name: provider
-                  required: true
-                  schema:
-                      type: string
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: "#/components/schemas/SpProviderConfiguration"
-                    application/xml:
-                        schema:
-                            $ref: "#/components/schemas/SpProviderConfiguration"
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/SpProviderConfiguration"
-                        application/xml:
-                            schema:
-                                $ref: "#/components/schemas/SpProviderConfiguration"
-                    # @review
-                    description:
-                        "SAML provider configuration was successfully created"
-            tags: ["ProviderConfiguration"]
-    "/provider":
-        post:
-            description:
-                Creates a full SAML Provider configuration with peer connections.
-            operationId: postProviderConfiguration
             requestBody:
                 content:
                     application/json:
