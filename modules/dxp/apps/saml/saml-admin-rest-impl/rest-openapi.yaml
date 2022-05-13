@@ -38,6 +38,13 @@ components:
                 userAttributeMappings:
                     type: string
             type: object
+        SpConnection:
+            # @review
+            description:
+                Connection details for a connected SAML SP
+            properties:
+                enabled:
+                    type: boolean
         Metadata:
             description:
                 Represents a SAML metadata XML
@@ -58,10 +65,41 @@ components:
                     readOnly: true
                     type: string
             type: object
-        ProviderConfiguration:
+        IdpProviderConfiguration:
             # @review
             description:
-                The provider provides the SAML capability
+                Configuration of the SAML provider's IDP capability
+            properties:
+                authnRequestSignatureRequired:
+                    type: boolean
+                enabled:
+                    type: boolean
+                entityId:
+                    type: string
+                role:
+                    type: string
+                    enum: ["idp"]
+                sessionMaximumAge:
+                    format: int64
+                    type: integer
+                sessionTimeout:
+                    format: int64
+                    type: integer
+                signMetadata:
+                    type: boolean
+                spConnections:
+                    description:
+                        Connected SAML SPs
+                    items:
+                        $ref: "#/components/schemas/SpConnection"
+                    type: array
+                sslRequired:
+                    type: boolean
+            type: object
+        SpProviderConfiguration:
+            # @review
+            description:
+                Configuration of the SAML provider's SP capability
             properties:
                 allowShowingTheLoginPortlet:
                     type: boolean
@@ -90,6 +128,7 @@ components:
                     type: boolean
                 role:
                     type: string
+                    enum: ["sp"]
                 samlKeystoreCredentialPassword:
                     type: string
                 sessionMaximumAge:
@@ -341,8 +380,12 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/ProviderConfiguration"
+                                oneOf:
+                                  - $ref: "#/components/schemas/IdpProviderConfiguration"
+                                  - $ref: "#/components/schemas/SpProviderConfiguration"
                         application/xml:
                             schema:
-                                $ref: "#/components/schemas/ProviderConfiguration"
+                                oneOf:
+                                    - $ref: "#/components/schemas/IdpProviderConfiguration"
+                                    - $ref: "#/components/schemas/SpProviderConfiguration"
             tags: ["ProviderConfiguration"]
