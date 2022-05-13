@@ -371,6 +371,16 @@ paths:
                         "SAML SP IDP connection successfully created"
             tags: ["IdpConnection"]
     "/provider":
+        delete:
+            description:
+                Delete the SAML Provider configuration.
+            operationId: deleteProviderConfiguration
+            responses:
+                204:
+                    content:
+                        application/json: {}
+                        application/xml: {}
+            tags: ["ProviderConfiguration"]
         get:
             description:
                 Retrieves the SAML Provider configuration.
@@ -380,12 +390,83 @@ paths:
                     content:
                         application/json:
                             schema:
-                                oneOf:
-                                  - $ref: "#/components/schemas/IdpProviderConfiguration"
-                                  - $ref: "#/components/schemas/SpProviderConfiguration"
+                                $ref: "#/components/schemas/SpProviderConfiguration"
                         application/xml:
                             schema:
-                                oneOf:
-                                    - $ref: "#/components/schemas/IdpProviderConfiguration"
-                                    - $ref: "#/components/schemas/SpProviderConfiguration"
+                                $ref: "#/components/schemas/SpProviderConfiguration"
+            tags: ["ProviderConfiguration"]
+        patch:
+            description:
+                Creates a full SAML Provider configuration with peer connections.
+            operationId: patchProviderConfiguration
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/SpProviderConfiguration"
+                    application/xml:
+                        schema:
+                            $ref: "#/components/schemas/SpProviderConfiguration"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/SpProviderConfiguration"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/SpProviderConfiguration"
+                    # @review
+                    description:
+                        "SAML provider configuration was successfully created"
+            tags: ["ProviderConfiguration"]
+        post:
+            description:
+                Creates a full SAML Provider configuration with peer connections.
+            operationId: postProviderConfiguration
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/SpProviderConfiguration"
+                    application/xml:
+                        schema:
+                            $ref: "#/components/schemas/SpProviderConfiguration"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/SpProviderConfiguration"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/SpProviderConfiguration"
+                    # @review
+                    description:
+                        "SAML provider configuration was successfully created"
+            tags: ["ProviderConfiguration"]
+        put:
+            description:
+                Replaces the SAML Provider configuration.
+            operationId: putProviderConfiguration
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/SpProviderConfiguration"
+                    application/xml:
+                        schema:
+                            $ref: "#/components/schemas/SpProviderConfiguration"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/SpProviderConfiguration"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/SpProviderConfiguration"
+                    # @review
+                    description:
+                        "SAML provider configuration was successfully created"
             tags: ["ProviderConfiguration"]
