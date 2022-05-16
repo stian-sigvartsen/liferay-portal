@@ -100,6 +100,14 @@ components:
                         - $ref: "#/components/schemas/IdpProviderConfiguration"
                         - $ref: "#/components/schemas/SpProviderConfiguration"
             type: object
+        Role:
+            # @review
+            description:
+                SAML Role
+            oneOf:
+              - $ref: "#/components/schemas/IdpProviderConfiguration"
+              - $ref: "#/components/schemas/SpProviderConfiguration"
+            type: object
         SpConnection:
             # @review
             description:
@@ -421,14 +429,14 @@ paths:
                     description:
                         "SAML provider configuration was successfully created"
             tags: ["ProviderConfiguration"]
-    "/provider/SpProviderConfiguration":
+    "/provider/{roleId}":
         delete:
             description:
                 Delete the SAML SP Provider configuration.
-            operationId: deleteSpProviderConfiguration
+            operationId: deleteRole
             parameters:
                 - in: path
-                  name: spProviderConfigurationId
+                  name: roleId
                   required: true
                   schema:
                       type: string
@@ -437,14 +445,14 @@ paths:
                     content:
                         application/json: {}
                         application/xml: {}
-            tags: ["SpProviderConfiguration"]
+            tags: ["Role"]
         get:
             description:
                 Retrieves the SAML SP Provider configuration.
-            operationId: getSpProviderConfiguration
+            operationId: getRole
             parameters:
                 - in: path
-                  name: spProviderConfigurationId
+                  name: roleId
                   required: true
                   schema:
                       type: string
@@ -453,18 +461,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/SpProviderConfiguration"
+                                $ref: "#/components/schemas/Role"
                         application/xml:
                             schema:
-                                $ref: "#/components/schemas/SpProviderConfiguration"
-            tags: ["SpProviderConfiguration"]
+                                $ref: "#/components/schemas/Role"
+            tags: ["Role"]
         patch:
             description:
                 Patch the SAML SP Provider configuration.
-            operationId: patchSpProviderConfiguration
+            operationId: patchRole
             parameters:
                 - in: path
-                  name: spProviderConfigurationId
+                  name: roleId
                   required: true
                   schema:
                       type: string
@@ -472,30 +480,30 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: "#/components/schemas/SpProviderConfiguration"
+                            $ref: "#/components/schemas/Role"
                     application/xml:
                         schema:
-                            $ref: "#/components/schemas/SpProviderConfiguration"
+                            $ref: "#/components/schemas/Role"
             responses:
                 200:
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/SpProviderConfiguration"
+                                $ref: "#/components/schemas/Role"
                         application/xml:
                             schema:
-                                $ref: "#/components/schemas/SpProviderConfiguration"
+                                $ref: "#/components/schemas/Role"
                     # @review
                     description:
                         "SAML provider configuration was successfully created"
-            tags: ["SpProviderConfiguration"]
+            tags: ["Role"]
         put:
             description:
                 Replaces the SAML SP Provider configuration.
-            operationId: putSpProviderConfiguration
+            operationId: putRole
             parameters:
                 - in: path
-                  name: spProviderConfigurationId
+                  name: roleId
                   required: true
                   schema:
                       type: string
@@ -503,20 +511,20 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: "#/components/schemas/SpProviderConfiguration"
+                            $ref: "#/components/schemas/Role"
                     application/xml:
                         schema:
-                            $ref: "#/components/schemas/SpProviderConfiguration"
+                            $ref: "#/components/schemas/Role"
             responses:
                 200:
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/SpProviderConfiguration"
+                                $ref: "#/components/schemas/Role"
                         application/xml:
                             schema:
-                                $ref: "#/components/schemas/SpProviderConfiguration"
+                                $ref: "#/components/schemas/Role"
                     # @review
                     description:
                         "SAML provider configuration was successfully created"
-            tags: ["SpProviderConfiguration"]
+            tags: ["Role"]
