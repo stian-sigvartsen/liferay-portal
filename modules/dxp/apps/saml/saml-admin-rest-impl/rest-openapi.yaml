@@ -96,17 +96,9 @@ components:
                 enabled:
                     type: boolean
                 role:
-                    oneOf:
+                    anyOf:
                         - $ref: "#/components/schemas/IdpProviderConfiguration"
                         - $ref: "#/components/schemas/SpProviderConfiguration"
-            type: object
-        Role:
-            # @review
-            description:
-                SAML Role
-            oneOf:
-              - $ref: "#/components/schemas/IdpProviderConfiguration"
-              - $ref: "#/components/schemas/SpProviderConfiguration"
             type: object
         SpConnection:
             # @review
@@ -429,102 +421,110 @@ paths:
                     description:
                         "SAML provider configuration was successfully created"
             tags: ["ProviderConfiguration"]
-    "/provider/{roleId}":
+    "/provider/{spProviderConfigurationId}":
         delete:
             description:
                 Delete the SAML SP Provider configuration.
-            operationId: deleteRole
+            operationId: deleteSpProviderConfiguration
             parameters:
                 - in: path
-                  name: roleId
+                  name: spProviderConfigurationId
                   required: true
                   schema:
                       type: string
+                      enum:
+                          - "sp"
             responses:
                 204:
                     content:
                         application/json: {}
                         application/xml: {}
-            tags: ["Role"]
+            tags: ["ProviderConfiguration"]
         get:
             description:
                 Retrieves the SAML SP Provider configuration.
-            operationId: getRole
+            operationId: getProviderConfiguration
             parameters:
                 - in: path
-                  name: roleId
+                  name: spProviderConfigurationId
                   required: true
                   schema:
                       type: string
+                      enum:
+                          - "sp"
             responses:
                 200:
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/Role"
+                                $ref: "#/components/schemas/SpProviderConfiguration"
                         application/xml:
                             schema:
-                                $ref: "#/components/schemas/Role"
-            tags: ["Role"]
+                                $ref: "#/components/schemas/SpProviderConfiguration"
+            tags: ["ProviderConfiguration"]
         patch:
             description:
                 Patch the SAML SP Provider configuration.
-            operationId: patchRole
+            operationId: patchSpProviderConfiguration
             parameters:
                 - in: path
-                  name: roleId
+                  name: spProviderConfigurationId
                   required: true
                   schema:
                       type: string
+                      enum:
+                          - "sp"
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: "#/components/schemas/Role"
+                            $ref: "#/components/schemas/SpProviderConfiguration"
                     application/xml:
                         schema:
-                            $ref: "#/components/schemas/Role"
+                            $ref: "#/components/schemas/SpProviderConfiguration"
             responses:
                 200:
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/Role"
+                                $ref: "#/components/schemas/SpProviderConfiguration"
                         application/xml:
                             schema:
-                                $ref: "#/components/schemas/Role"
+                                $ref: "#/components/schemas/SpProviderConfiguration"
                     # @review
                     description:
                         "SAML provider configuration was successfully created"
-            tags: ["Role"]
+            tags: ["ProviderConfiguration"]
         put:
             description:
                 Replaces the SAML SP Provider configuration.
-            operationId: putRole
+            operationId: putSpProviderConfiguration
             parameters:
                 - in: path
-                  name: roleId
+                  name: spProviderConfigurationId
                   required: true
                   schema:
                       type: string
+                      enum:
+                          - "sp"
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: "#/components/schemas/Role"
+                            $ref: "#/components/schemas/SpProviderConfiguration"
                     application/xml:
                         schema:
-                            $ref: "#/components/schemas/Role"
+                            $ref: "#/components/schemas/SpProviderConfiguration"
             responses:
                 200:
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/Role"
+                                $ref: "#/components/schemas/SpProviderConfiguration"
                         application/xml:
                             schema:
-                                $ref: "#/components/schemas/Role"
+                                $ref: "#/components/schemas/SpProviderConfiguration"
                     # @review
                     description:
                         "SAML provider configuration was successfully created"
-            tags: ["Role"]
+            tags: ["ProviderConfiguration"]
