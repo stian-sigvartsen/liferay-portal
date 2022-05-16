@@ -421,14 +421,14 @@ paths:
                     description:
                         "SAML provider configuration was successfully created"
             tags: ["ProviderConfiguration"]
-    "/provider/sp":
+    "/provider/SpProviderConfiguration":
         delete:
             description:
                 Delete the SAML SP Provider configuration.
             operationId: deleteSpProviderConfiguration
             parameters:
                 - in: path
-                  name: role
+                  name: spProviderConfigurationId
                   required: true
                   schema:
                       type: string
@@ -444,7 +444,7 @@ paths:
             operationId: getSpProviderConfiguration
             parameters:
                 - in: path
-                  name: role
+                  name: spProviderConfigurationId
                   required: true
                   schema:
                       type: string
@@ -464,7 +464,7 @@ paths:
             operationId: patchSpProviderConfiguration
             parameters:
                 - in: path
-                  name: role
+                  name: spProviderConfigurationId
                   required: true
                   schema:
                       type: string
@@ -495,7 +495,7 @@ paths:
             operationId: putSpProviderConfiguration
             parameters:
                 - in: path
-                  name: role
+                  name: spProviderConfigurationId
                   required: true
                   schema:
                       type: string
