@@ -426,6 +426,12 @@ paths:
             description:
                 Delete the SAML SP Provider configuration.
             operationId: deleteSpProviderConfiguration
+            parameters:
+                - in: path
+                  name: role
+                  required: true
+                  schema:
+                      type: string
             responses:
                 204:
                     content:
@@ -436,6 +442,12 @@ paths:
             description:
                 Retrieves the SAML SP Provider configuration.
             operationId: getSpProviderConfiguration
+            parameters:
+                - in: path
+                  name: role
+                  required: true
+                  schema:
+                      type: string
             responses:
                 200:
                     content:
@@ -450,6 +462,12 @@ paths:
             description:
                 Patch the SAML SP Provider configuration.
             operationId: patchSpProviderConfiguration
+            parameters:
+                - in: path
+                  name: role
+                  required: true
+                  schema:
+                      type: string
             requestBody:
                 content:
                     application/json:
@@ -475,6 +493,12 @@ paths:
             description:
                 Replaces the SAML SP Provider configuration.
             operationId: putSpProviderConfiguration
+            parameters:
+                - in: path
+                  name: role
+                  required: true
+                  schema:
+                      type: string
             requestBody:
                 content:
                     application/json:
