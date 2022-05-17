@@ -15,7 +15,7 @@
 package com.liferay.saml.admin.rest.client.dto.v1_0;
 
 import com.liferay.saml.admin.rest.client.function.UnsafeSupplier;
-import com.liferay.saml.admin.rest.client.serdes.v1_0.ProviderConfigurationSerDes;
+import com.liferay.saml.admin.rest.client.serdes.v1_0.SpConnectionSerDes;
 
 import java.io.Serializable;
 
@@ -28,10 +28,10 @@ import javax.annotation.Generated;
  * @generated
  */
 @Generated("")
-public class ProviderConfiguration implements Cloneable, Serializable {
+public class SpConnection implements Cloneable, Serializable {
 
-	public static ProviderConfiguration toDTO(String json) {
-		return ProviderConfigurationSerDes.toDTO(json);
+	public static SpConnection toDTO(String json) {
+		return SpConnectionSerDes.toDTO(json);
 	}
 
 	public Boolean getEnabled() {
@@ -55,28 +55,9 @@ public class ProviderConfiguration implements Cloneable, Serializable {
 
 	protected Boolean enabled;
 
-	public Object getRole() {
-		return role;
-	}
-
-	public void setRole(Object role) {
-		this.role = role;
-	}
-
-	public void setRole(UnsafeSupplier<Object, Exception> roleUnsafeSupplier) {
-		try {
-			role = roleUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected Object role;
-
 	@Override
-	public ProviderConfiguration clone() throws CloneNotSupportedException {
-		return (ProviderConfiguration)super.clone();
+	public SpConnection clone() throws CloneNotSupportedException {
+		return (SpConnection)super.clone();
 	}
 
 	@Override
@@ -85,14 +66,13 @@ public class ProviderConfiguration implements Cloneable, Serializable {
 			return true;
 		}
 
-		if (!(object instanceof ProviderConfiguration)) {
+		if (!(object instanceof SpConnection)) {
 			return false;
 		}
 
-		ProviderConfiguration providerConfiguration =
-			(ProviderConfiguration)object;
+		SpConnection spConnection = (SpConnection)object;
 
-		return Objects.equals(toString(), providerConfiguration.toString());
+		return Objects.equals(toString(), spConnection.toString());
 	}
 
 	@Override
@@ -103,7 +83,7 @@ public class ProviderConfiguration implements Cloneable, Serializable {
 	}
 
 	public String toString() {
-		return ProviderConfigurationSerDes.toJSON(this);
+		return SpConnectionSerDes.toJSON(this);
 	}
 
 }

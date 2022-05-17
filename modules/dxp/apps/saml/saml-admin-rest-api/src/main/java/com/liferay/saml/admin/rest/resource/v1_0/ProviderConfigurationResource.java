@@ -35,6 +35,7 @@ import javax.annotation.Generated;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -56,6 +57,22 @@ public interface ProviderConfigurationResource {
 	}
 
 	public ProviderConfiguration getProviderConfiguration() throws Exception;
+
+	public ProviderConfiguration postProviderConfiguration(
+			ProviderConfiguration providerConfiguration)
+		throws Exception;
+
+	public Response postProviderConfigurationBatch(
+			String callbackURL, Object object)
+		throws Exception;
+
+	public void deleteRole(String roleId) throws Exception;
+
+	public Object getProviderConfiguration(String roleId) throws Exception;
+
+	public Response patchRole(String roleId, Object object) throws Exception;
+
+	public Response putRole(String roleId, Object object) throws Exception;
 
 	public default void setContextAcceptLanguage(
 		AcceptLanguage contextAcceptLanguage) {

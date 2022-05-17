@@ -44,6 +44,8 @@ public class ServletDataImpl implements ServletData {
 			_idpConnectionResourceComponentServiceObjects);
 		Mutation.setMetadataResourceComponentServiceObjects(
 			_metadataResourceComponentServiceObjects);
+		Mutation.setProviderConfigurationResourceComponentServiceObjects(
+			_providerConfigurationResourceComponentServiceObjects);
 
 		Query.setIdpConnectionResourceComponentServiceObjects(
 			_idpConnectionResourceComponentServiceObjects);

@@ -36,7 +36,6 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.odata.entity.EntityField;
 import com.liferay.portal.odata.entity.EntityModel;
 import com.liferay.portal.test.rule.Inject;
@@ -184,23 +183,11 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 		ProviderConfiguration providerConfiguration =
 			randomProviderConfiguration();
 
-		providerConfiguration.setEntityId(regex);
-		providerConfiguration.setKeyStoreCredentialPassword(regex);
-		providerConfiguration.setRole(regex);
-		providerConfiguration.setSamlKeystoreCredentialPassword(regex);
-
 		String json = ProviderConfigurationSerDes.toJSON(providerConfiguration);
 
 		Assert.assertFalse(json.contains(regex));
 
 		providerConfiguration = ProviderConfigurationSerDes.toDTO(json);
-
-		Assert.assertEquals(regex, providerConfiguration.getEntityId());
-		Assert.assertEquals(
-			regex, providerConfiguration.getKeyStoreCredentialPassword());
-		Assert.assertEquals(regex, providerConfiguration.getRole());
-		Assert.assertEquals(
-			regex, providerConfiguration.getSamlKeystoreCredentialPassword());
 	}
 
 	@Test
@@ -216,6 +203,48 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 	@Test
 	public void testGraphQLGetProviderConfigurationNotFound() throws Exception {
 		Assert.assertTrue(true);
+	}
+
+	@Test
+	public void testPostProviderConfiguration() throws Exception {
+		ProviderConfiguration randomProviderConfiguration =
+			randomProviderConfiguration();
+
+		ProviderConfiguration postProviderConfiguration =
+			testPostProviderConfiguration_addProviderConfiguration(
+				randomProviderConfiguration);
+
+		assertEquals(randomProviderConfiguration, postProviderConfiguration);
+		assertValid(postProviderConfiguration);
+	}
+
+	protected ProviderConfiguration
+			testPostProviderConfiguration_addProviderConfiguration(
+				ProviderConfiguration providerConfiguration)
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	@Test
+	public void testDeleteRole() throws Exception {
+		Assert.assertTrue(false);
+	}
+
+	@Test
+	public void testGetProviderConfiguration() throws Exception {
+		Assert.assertTrue(false);
+	}
+
+	@Test
+	public void testPatchRole() throws Exception {
+		Assert.assertTrue(false);
+	}
+
+	@Test
+	public void testPutRole() throws Exception {
+		Assert.assertTrue(false);
 	}
 
 	protected void assertContains(
@@ -310,63 +339,6 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals(
-					"allowShowingTheLoginPortlet", additionalAssertFieldName)) {
-
-				if (providerConfiguration.getAllowShowingTheLoginPortlet() ==
-						null) {
-
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"assertionSignatureRequired", additionalAssertFieldName)) {
-
-				if (providerConfiguration.getAssertionSignatureRequired() ==
-						null) {
-
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"authnRequestSignatureRequired",
-					additionalAssertFieldName)) {
-
-				if (providerConfiguration.getAuthnRequestSignatureRequired() ==
-						null) {
-
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("clockSkew", additionalAssertFieldName)) {
-				if (providerConfiguration.getClockSkew() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"defaultAssertionLifetime", additionalAssertFieldName)) {
-
-				if (providerConfiguration.getDefaultAssertionLifetime() ==
-						null) {
-
-					valid = false;
-				}
-
-				continue;
-			}
-
 			if (Objects.equals("enabled", additionalAssertFieldName)) {
 				if (providerConfiguration.getEnabled() == null) {
 					valid = false;
@@ -375,101 +347,8 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("entityId", additionalAssertFieldName)) {
-				if (providerConfiguration.getEntityId() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("idpConnections", additionalAssertFieldName)) {
-				if (providerConfiguration.getIdpConnections() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"keyStoreCredentialPassword", additionalAssertFieldName)) {
-
-				if (providerConfiguration.getKeyStoreCredentialPassword() ==
-						null) {
-
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"ldapImportEnabled", additionalAssertFieldName)) {
-
-				if (providerConfiguration.getLdapImportEnabled() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
 			if (Objects.equals("role", additionalAssertFieldName)) {
 				if (providerConfiguration.getRole() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"samlKeystoreCredentialPassword",
-					additionalAssertFieldName)) {
-
-				if (providerConfiguration.getSamlKeystoreCredentialPassword() ==
-						null) {
-
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"sessionMaximumAge", additionalAssertFieldName)) {
-
-				if (providerConfiguration.getSessionMaximumAge() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("sessionTimeout", additionalAssertFieldName)) {
-				if (providerConfiguration.getSessionTimeout() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("signAuthnRequest", additionalAssertFieldName)) {
-				if (providerConfiguration.getSignAuthnRequest() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("signMetadata", additionalAssertFieldName)) {
-				if (providerConfiguration.getSignMetadata() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("sslRequired", additionalAssertFieldName)) {
-				if (providerConfiguration.getSslRequired() == null) {
 					valid = false;
 				}
 
@@ -571,74 +450,6 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals(
-					"allowShowingTheLoginPortlet", additionalAssertFieldName)) {
-
-				if (!Objects.deepEquals(
-						providerConfiguration1.getAllowShowingTheLoginPortlet(),
-						providerConfiguration2.
-							getAllowShowingTheLoginPortlet())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"assertionSignatureRequired", additionalAssertFieldName)) {
-
-				if (!Objects.deepEquals(
-						providerConfiguration1.getAssertionSignatureRequired(),
-						providerConfiguration2.
-							getAssertionSignatureRequired())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"authnRequestSignatureRequired",
-					additionalAssertFieldName)) {
-
-				if (!Objects.deepEquals(
-						providerConfiguration1.
-							getAuthnRequestSignatureRequired(),
-						providerConfiguration2.
-							getAuthnRequestSignatureRequired())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("clockSkew", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						providerConfiguration1.getClockSkew(),
-						providerConfiguration2.getClockSkew())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"defaultAssertionLifetime", additionalAssertFieldName)) {
-
-				if (!Objects.deepEquals(
-						providerConfiguration1.getDefaultAssertionLifetime(),
-						providerConfiguration2.getDefaultAssertionLifetime())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
 			if (Objects.equals("enabled", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
 						providerConfiguration1.getEnabled(),
@@ -650,132 +461,10 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("entityId", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						providerConfiguration1.getEntityId(),
-						providerConfiguration2.getEntityId())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("idpConnections", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						providerConfiguration1.getIdpConnections(),
-						providerConfiguration2.getIdpConnections())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"keyStoreCredentialPassword", additionalAssertFieldName)) {
-
-				if (!Objects.deepEquals(
-						providerConfiguration1.getKeyStoreCredentialPassword(),
-						providerConfiguration2.
-							getKeyStoreCredentialPassword())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"ldapImportEnabled", additionalAssertFieldName)) {
-
-				if (!Objects.deepEquals(
-						providerConfiguration1.getLdapImportEnabled(),
-						providerConfiguration2.getLdapImportEnabled())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
 			if (Objects.equals("role", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
 						providerConfiguration1.getRole(),
 						providerConfiguration2.getRole())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"samlKeystoreCredentialPassword",
-					additionalAssertFieldName)) {
-
-				if (!Objects.deepEquals(
-						providerConfiguration1.
-							getSamlKeystoreCredentialPassword(),
-						providerConfiguration2.
-							getSamlKeystoreCredentialPassword())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"sessionMaximumAge", additionalAssertFieldName)) {
-
-				if (!Objects.deepEquals(
-						providerConfiguration1.getSessionMaximumAge(),
-						providerConfiguration2.getSessionMaximumAge())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("sessionTimeout", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						providerConfiguration1.getSessionTimeout(),
-						providerConfiguration2.getSessionTimeout())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("signAuthnRequest", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						providerConfiguration1.getSignAuthnRequest(),
-						providerConfiguration2.getSignAuthnRequest())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("signMetadata", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						providerConfiguration1.getSignMetadata(),
-						providerConfiguration2.getSignMetadata())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("sslRequired", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						providerConfiguration1.getSslRequired(),
-						providerConfiguration2.getSslRequired())) {
 
 					return false;
 				}
@@ -881,106 +570,12 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 		sb.append(operator);
 		sb.append(" ");
 
-		if (entityFieldName.equals("allowShowingTheLoginPortlet")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
-		if (entityFieldName.equals("assertionSignatureRequired")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
-		if (entityFieldName.equals("authnRequestSignatureRequired")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
-		if (entityFieldName.equals("clockSkew")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
-		if (entityFieldName.equals("defaultAssertionLifetime")) {
-			sb.append(
-				String.valueOf(
-					providerConfiguration.getDefaultAssertionLifetime()));
-
-			return sb.toString();
-		}
-
 		if (entityFieldName.equals("enabled")) {
 			throw new IllegalArgumentException(
 				"Invalid entity field " + entityFieldName);
 		}
 
-		if (entityFieldName.equals("entityId")) {
-			sb.append("'");
-			sb.append(String.valueOf(providerConfiguration.getEntityId()));
-			sb.append("'");
-
-			return sb.toString();
-		}
-
-		if (entityFieldName.equals("idpConnections")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
-		if (entityFieldName.equals("keyStoreCredentialPassword")) {
-			sb.append("'");
-			sb.append(
-				String.valueOf(
-					providerConfiguration.getKeyStoreCredentialPassword()));
-			sb.append("'");
-
-			return sb.toString();
-		}
-
-		if (entityFieldName.equals("ldapImportEnabled")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
 		if (entityFieldName.equals("role")) {
-			sb.append("'");
-			sb.append(String.valueOf(providerConfiguration.getRole()));
-			sb.append("'");
-
-			return sb.toString();
-		}
-
-		if (entityFieldName.equals("samlKeystoreCredentialPassword")) {
-			sb.append("'");
-			sb.append(
-				String.valueOf(
-					providerConfiguration.getSamlKeystoreCredentialPassword()));
-			sb.append("'");
-
-			return sb.toString();
-		}
-
-		if (entityFieldName.equals("sessionMaximumAge")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
-		if (entityFieldName.equals("sessionTimeout")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
-		if (entityFieldName.equals("signAuthnRequest")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
-		if (entityFieldName.equals("signMetadata")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
-		if (entityFieldName.equals("sslRequired")) {
 			throw new IllegalArgumentException(
 				"Invalid entity field " + entityFieldName);
 		}
@@ -1031,25 +626,7 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 
 		return new ProviderConfiguration() {
 			{
-				allowShowingTheLoginPortlet = RandomTestUtil.randomBoolean();
-				assertionSignatureRequired = RandomTestUtil.randomBoolean();
-				authnRequestSignatureRequired = RandomTestUtil.randomBoolean();
-				clockSkew = RandomTestUtil.randomLong();
-				defaultAssertionLifetime = RandomTestUtil.randomInt();
 				enabled = RandomTestUtil.randomBoolean();
-				entityId = StringUtil.toLowerCase(
-					RandomTestUtil.randomString());
-				keyStoreCredentialPassword = StringUtil.toLowerCase(
-					RandomTestUtil.randomString());
-				ldapImportEnabled = RandomTestUtil.randomBoolean();
-				role = StringUtil.toLowerCase(RandomTestUtil.randomString());
-				samlKeystoreCredentialPassword = StringUtil.toLowerCase(
-					RandomTestUtil.randomString());
-				sessionMaximumAge = RandomTestUtil.randomLong();
-				sessionTimeout = RandomTestUtil.randomLong();
-				signAuthnRequest = RandomTestUtil.randomBoolean();
-				signMetadata = RandomTestUtil.randomBoolean();
-				sslRequired = RandomTestUtil.randomBoolean();
 			}
 		};
 	}

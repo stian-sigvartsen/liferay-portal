@@ -14,7 +14,7 @@
 
 package com.liferay.saml.admin.rest.client.serdes.v1_0;
 
-import com.liferay.saml.admin.rest.client.dto.v1_0.ProviderConfiguration;
+import com.liferay.saml.admin.rest.client.dto.v1_0.SpConnection;
 import com.liferay.saml.admin.rest.client.json.BaseJSONParser;
 
 import java.util.Iterator;
@@ -30,24 +30,24 @@ import javax.annotation.Generated;
  * @generated
  */
 @Generated("")
-public class ProviderConfigurationSerDes {
+public class SpConnectionSerDes {
 
-	public static ProviderConfiguration toDTO(String json) {
-		ProviderConfigurationJSONParser providerConfigurationJSONParser =
-			new ProviderConfigurationJSONParser();
+	public static SpConnection toDTO(String json) {
+		SpConnectionJSONParser spConnectionJSONParser =
+			new SpConnectionJSONParser();
 
-		return providerConfigurationJSONParser.parseToDTO(json);
+		return spConnectionJSONParser.parseToDTO(json);
 	}
 
-	public static ProviderConfiguration[] toDTOs(String json) {
-		ProviderConfigurationJSONParser providerConfigurationJSONParser =
-			new ProviderConfigurationJSONParser();
+	public static SpConnection[] toDTOs(String json) {
+		SpConnectionJSONParser spConnectionJSONParser =
+			new SpConnectionJSONParser();
 
-		return providerConfigurationJSONParser.parseToDTOs(json);
+		return spConnectionJSONParser.parseToDTOs(json);
 	}
 
-	public static String toJSON(ProviderConfiguration providerConfiguration) {
-		if (providerConfiguration == null) {
+	public static String toJSON(SpConnection spConnection) {
+		if (spConnection == null) {
 			return "null";
 		}
 
@@ -55,31 +55,14 @@ public class ProviderConfigurationSerDes {
 
 		sb.append("{");
 
-		if (providerConfiguration.getEnabled() != null) {
+		if (spConnection.getEnabled() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
 
 			sb.append("\"enabled\": ");
 
-			sb.append(providerConfiguration.getEnabled());
-		}
-
-		if (providerConfiguration.getRole() != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"role\": ");
-
-			if (providerConfiguration.getRole() instanceof String) {
-				sb.append("\"");
-				sb.append((String)providerConfiguration.getRole());
-				sb.append("\"");
-			}
-			else {
-				sb.append(providerConfiguration.getRole());
-			}
+			sb.append(spConnection.getEnabled());
 		}
 
 		sb.append("}");
@@ -88,66 +71,50 @@ public class ProviderConfigurationSerDes {
 	}
 
 	public static Map<String, Object> toMap(String json) {
-		ProviderConfigurationJSONParser providerConfigurationJSONParser =
-			new ProviderConfigurationJSONParser();
+		SpConnectionJSONParser spConnectionJSONParser =
+			new SpConnectionJSONParser();
 
-		return providerConfigurationJSONParser.parseToMap(json);
+		return spConnectionJSONParser.parseToMap(json);
 	}
 
-	public static Map<String, String> toMap(
-		ProviderConfiguration providerConfiguration) {
-
-		if (providerConfiguration == null) {
+	public static Map<String, String> toMap(SpConnection spConnection) {
+		if (spConnection == null) {
 			return null;
 		}
 
 		Map<String, String> map = new TreeMap<>();
 
-		if (providerConfiguration.getEnabled() == null) {
+		if (spConnection.getEnabled() == null) {
 			map.put("enabled", null);
 		}
 		else {
-			map.put(
-				"enabled", String.valueOf(providerConfiguration.getEnabled()));
-		}
-
-		if (providerConfiguration.getRole() == null) {
-			map.put("role", null);
-		}
-		else {
-			map.put("role", String.valueOf(providerConfiguration.getRole()));
+			map.put("enabled", String.valueOf(spConnection.getEnabled()));
 		}
 
 		return map;
 	}
 
-	public static class ProviderConfigurationJSONParser
-		extends BaseJSONParser<ProviderConfiguration> {
+	public static class SpConnectionJSONParser
+		extends BaseJSONParser<SpConnection> {
 
 		@Override
-		protected ProviderConfiguration createDTO() {
-			return new ProviderConfiguration();
+		protected SpConnection createDTO() {
+			return new SpConnection();
 		}
 
 		@Override
-		protected ProviderConfiguration[] createDTOArray(int size) {
-			return new ProviderConfiguration[size];
+		protected SpConnection[] createDTOArray(int size) {
+			return new SpConnection[size];
 		}
 
 		@Override
 		protected void setField(
-			ProviderConfiguration providerConfiguration,
-			String jsonParserFieldName, Object jsonParserFieldValue) {
+			SpConnection spConnection, String jsonParserFieldName,
+			Object jsonParserFieldValue) {
 
 			if (Objects.equals(jsonParserFieldName, "enabled")) {
 				if (jsonParserFieldValue != null) {
-					providerConfiguration.setEnabled(
-						(Boolean)jsonParserFieldValue);
-				}
-			}
-			else if (Objects.equals(jsonParserFieldName, "role")) {
-				if (jsonParserFieldValue != null) {
-					providerConfiguration.setRole((Object)jsonParserFieldValue);
+					spConnection.setEnabled((Boolean)jsonParserFieldValue);
 				}
 			}
 		}

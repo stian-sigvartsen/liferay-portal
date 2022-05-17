@@ -132,7 +132,7 @@ public class Query {
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {providerConfiguration{allowShowingTheLoginPortlet, assertionSignatureRequired, authnRequestSignatureRequired, clockSkew, defaultAssertionLifetime, enabled, entityId, idpConnections, keyStoreCredentialPassword, ldapImportEnabled, role, samlKeystoreCredentialPassword, sessionMaximumAge, sessionTimeout, signAuthnRequest, signMetadata, sslRequired}}"}' -u 'test@liferay.com:test'
+	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {providerConfiguration{enabled, role}}"}' -u 'test@liferay.com:test'
 	 */
 	@GraphQLField(description = "Retrieves the SAML Provider configuration.")
 	public ProviderConfiguration providerConfiguration() throws Exception {
@@ -141,6 +141,22 @@ public class Query {
 			this::_populateResourceContext,
 			providerConfigurationResource ->
 				providerConfigurationResource.getProviderConfiguration());
+	}
+
+	/**
+	 * Invoke this method with the command line:
+	 *
+	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {providerConfiguration(roleId: ___){}}"}' -u 'test@liferay.com:test'
+	 */
+	@GraphQLField(description = "Retrieves the SAML SP Provider configuration.")
+	public Object providerConfiguration(@GraphQLName("roleId") String roleId)
+		throws Exception {
+
+		return _applyComponentServiceObjects(
+			_providerConfigurationResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			providerConfigurationResource ->
+				providerConfigurationResource.getProviderConfiguration(roleId));
 	}
 
 	@GraphQLTypeExtension(IdpConnection.class)

@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import com.liferay.petra.function.UnsafeSupplier;
 import com.liferay.petra.string.StringBundler;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
@@ -37,8 +36,6 @@ import java.util.Set;
 
 import javax.annotation.Generated;
 
-import javax.validation.Valid;
-
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -47,20 +44,19 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Generated("")
 @GraphQLName(
-	description = "Dummy schema which can be referenced from tags",
-	value = "ProviderConfiguration"
+	description = "Connection details for a connected SAML SP",
+	value = "SpConnection"
 )
 @JsonFilter("Liferay.Vulcan")
-@XmlRootElement(name = "ProviderConfiguration")
-public class ProviderConfiguration implements Serializable {
+@XmlRootElement(name = "SpConnection")
+public class SpConnection implements Serializable {
 
-	public static ProviderConfiguration toDTO(String json) {
-		return ObjectMapperUtil.readValue(ProviderConfiguration.class, json);
+	public static SpConnection toDTO(String json) {
+		return ObjectMapperUtil.readValue(SpConnection.class, json);
 	}
 
-	public static ProviderConfiguration unsafeToDTO(String json) {
-		return ObjectMapperUtil.unsafeReadValue(
-			ProviderConfiguration.class, json);
+	public static SpConnection unsafeToDTO(String json) {
+		return ObjectMapperUtil.unsafeReadValue(SpConnection.class, json);
 	}
 
 	@Schema
@@ -91,47 +87,19 @@ public class ProviderConfiguration implements Serializable {
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Boolean enabled;
 
-	@Schema
-	@Valid
-	public Object getRole() {
-		return role;
-	}
-
-	public void setRole(Object role) {
-		this.role = role;
-	}
-
-	@JsonIgnore
-	public void setRole(UnsafeSupplier<Object, Exception> roleUnsafeSupplier) {
-		try {
-			role = roleUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Object role;
-
 	@Override
 	public boolean equals(Object object) {
 		if (this == object) {
 			return true;
 		}
 
-		if (!(object instanceof ProviderConfiguration)) {
+		if (!(object instanceof SpConnection)) {
 			return false;
 		}
 
-		ProviderConfiguration providerConfiguration =
-			(ProviderConfiguration)object;
+		SpConnection spConnection = (SpConnection)object;
 
-		return Objects.equals(toString(), providerConfiguration.toString());
+		return Objects.equals(toString(), spConnection.toString());
 	}
 
 	@Override
@@ -156,26 +124,6 @@ public class ProviderConfiguration implements Serializable {
 			sb.append(enabled);
 		}
 
-		if (role != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"role\": ");
-
-			if (role instanceof Map) {
-				sb.append(JSONFactoryUtil.createJSONObject((Map<?, ?>)role));
-			}
-			else if (role instanceof String) {
-				sb.append("\"");
-				sb.append(_escape((String)role));
-				sb.append("\"");
-			}
-			else {
-				sb.append(role);
-			}
-		}
-
 		sb.append("}");
 
 		return sb.toString();
@@ -183,7 +131,7 @@ public class ProviderConfiguration implements Serializable {
 
 	@Schema(
 		accessMode = Schema.AccessMode.READ_ONLY,
-		defaultValue = "com.liferay.saml.admin.rest.dto.v1_0.ProviderConfiguration",
+		defaultValue = "com.liferay.saml.admin.rest.dto.v1_0.SpConnection",
 		name = "x-class-name"
 	)
 	public String xClassName;
