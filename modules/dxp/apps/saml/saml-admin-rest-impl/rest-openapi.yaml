@@ -1,5 +1,12 @@
 components:
     schemas:
+        Credentials:
+            description:
+                TBC
+            properties:
+                keyStoreCredentialPassword:
+                    type: string
+                    writeOnly: true
         IdpConnection:
             # @review
             description:
@@ -114,8 +121,6 @@ components:
                     type: boolean
                 assertionSignatureRequired:
                     type: boolean
-                authnRequestSignatureRequired:
-                    type: boolean
                 clockSkew:
                     format: int64
                     type: integer
@@ -127,18 +132,8 @@ components:
                     items:
                         $ref: "#/components/schemas/IdpConnection"
                     type: array
-                keyStoreCredentialPassword:
-                    type: string
                 ldapImportEnabled:
                     type: boolean
-                samlKeystoreCredentialPassword:
-                    type: string
-                sessionMaximumAge:
-                    format: int64
-                    type: integer
-                sessionTimeout:
-                    format: int64
-                    type: integer
                 signAuthnRequest:
                     type: boolean
                 signMetadata:
