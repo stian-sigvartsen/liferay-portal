@@ -28,10 +28,10 @@ import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
 import com.liferay.saml.admin.rest.dto.v1_0.IdpConnection;
 import com.liferay.saml.admin.rest.dto.v1_0.Metadata;
-import com.liferay.saml.admin.rest.dto.v1_0.ProviderConfiguration;
+import com.liferay.saml.admin.rest.dto.v1_0.Provider;
 import com.liferay.saml.admin.rest.resource.v1_0.IdpConnectionResource;
 import com.liferay.saml.admin.rest.resource.v1_0.MetadataResource;
-import com.liferay.saml.admin.rest.resource.v1_0.ProviderConfigurationResource;
+import com.liferay.saml.admin.rest.resource.v1_0.ProviderResource;
 
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -68,12 +68,12 @@ public class Query {
 			metadataResourceComponentServiceObjects;
 	}
 
-	public static void setProviderConfigurationResourceComponentServiceObjects(
-		ComponentServiceObjects<ProviderConfigurationResource>
-			providerConfigurationResourceComponentServiceObjects) {
+	public static void setProviderResourceComponentServiceObjects(
+		ComponentServiceObjects<ProviderResource>
+			providerResourceComponentServiceObjects) {
 
-		_providerConfigurationResourceComponentServiceObjects =
-			providerConfigurationResourceComponentServiceObjects;
+		_providerResourceComponentServiceObjects =
+			providerResourceComponentServiceObjects;
 	}
 
 	/**
@@ -132,31 +132,29 @@ public class Query {
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {providerConfiguration{enabled, role}}"}' -u 'test@liferay.com:test'
+	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {provider{enabled, entityId, role, idp, sp}}"}' -u 'test@liferay.com:test'
 	 */
 	@GraphQLField(description = "Retrieves the SAML Provider configuration.")
-	public ProviderConfiguration providerConfiguration() throws Exception {
+	public Provider provider() throws Exception {
 		return _applyComponentServiceObjects(
-			_providerConfigurationResourceComponentServiceObjects,
+			_providerResourceComponentServiceObjects,
 			this::_populateResourceContext,
-			providerConfigurationResource ->
-				providerConfigurationResource.getProviderConfiguration());
+			providerResource -> providerResource.getProvider());
 	}
 
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {providerConfiguration(roleId: ___){}}"}' -u 'test@liferay.com:test'
+	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {provider(roleId: ___){}}"}' -u 'test@liferay.com:test'
 	 */
 	@GraphQLField(description = "Retrieves the SAML SP Provider configuration.")
-	public Object providerConfiguration(@GraphQLName("roleId") String roleId)
+	public Object provider(@GraphQLName("roleId") String roleId)
 		throws Exception {
 
 		return _applyComponentServiceObjects(
-			_providerConfigurationResourceComponentServiceObjects,
+			_providerResourceComponentServiceObjects,
 			this::_populateResourceContext,
-			providerConfigurationResource ->
-				providerConfigurationResource.getProviderConfiguration(roleId));
+			providerResource -> providerResource.getProvider(roleId));
 	}
 
 	@GraphQLTypeExtension(IdpConnection.class)
@@ -247,24 +245,24 @@ public class Query {
 
 	}
 
-	@GraphQLName("ProviderConfigurationPage")
-	public class ProviderConfigurationPage {
+	@GraphQLName("ProviderPage")
+	public class ProviderPage {
 
-		public ProviderConfigurationPage(Page providerConfigurationPage) {
-			actions = providerConfigurationPage.getActions();
+		public ProviderPage(Page providerPage) {
+			actions = providerPage.getActions();
 
-			items = providerConfigurationPage.getItems();
-			lastPage = providerConfigurationPage.getLastPage();
-			page = providerConfigurationPage.getPage();
-			pageSize = providerConfigurationPage.getPageSize();
-			totalCount = providerConfigurationPage.getTotalCount();
+			items = providerPage.getItems();
+			lastPage = providerPage.getLastPage();
+			page = providerPage.getPage();
+			pageSize = providerPage.getPageSize();
+			totalCount = providerPage.getTotalCount();
 		}
 
 		@GraphQLField
 		protected Map<String, Map> actions;
 
 		@GraphQLField
-		protected java.util.Collection<ProviderConfiguration> items;
+		protected java.util.Collection<Provider> items;
 
 		@GraphQLField
 		protected long lastPage;
@@ -327,28 +325,25 @@ public class Query {
 		metadataResource.setRoleLocalService(_roleLocalService);
 	}
 
-	private void _populateResourceContext(
-			ProviderConfigurationResource providerConfigurationResource)
+	private void _populateResourceContext(ProviderResource providerResource)
 		throws Exception {
 
-		providerConfigurationResource.setContextAcceptLanguage(_acceptLanguage);
-		providerConfigurationResource.setContextCompany(_company);
-		providerConfigurationResource.setContextHttpServletRequest(
-			_httpServletRequest);
-		providerConfigurationResource.setContextHttpServletResponse(
-			_httpServletResponse);
-		providerConfigurationResource.setContextUriInfo(_uriInfo);
-		providerConfigurationResource.setContextUser(_user);
-		providerConfigurationResource.setGroupLocalService(_groupLocalService);
-		providerConfigurationResource.setRoleLocalService(_roleLocalService);
+		providerResource.setContextAcceptLanguage(_acceptLanguage);
+		providerResource.setContextCompany(_company);
+		providerResource.setContextHttpServletRequest(_httpServletRequest);
+		providerResource.setContextHttpServletResponse(_httpServletResponse);
+		providerResource.setContextUriInfo(_uriInfo);
+		providerResource.setContextUser(_user);
+		providerResource.setGroupLocalService(_groupLocalService);
+		providerResource.setRoleLocalService(_roleLocalService);
 	}
 
 	private static ComponentServiceObjects<IdpConnectionResource>
 		_idpConnectionResourceComponentServiceObjects;
 	private static ComponentServiceObjects<MetadataResource>
 		_metadataResourceComponentServiceObjects;
-	private static ComponentServiceObjects<ProviderConfigurationResource>
-		_providerConfigurationResourceComponentServiceObjects;
+	private static ComponentServiceObjects<ProviderResource>
+		_providerResourceComponentServiceObjects;
 
 	private AcceptLanguage _acceptLanguage;
 	private com.liferay.portal.kernel.model.Company _company;

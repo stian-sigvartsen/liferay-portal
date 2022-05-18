@@ -26,10 +26,10 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.multipart.MultipartBody;
 import com.liferay.saml.admin.rest.dto.v1_0.IdpConnection;
 import com.liferay.saml.admin.rest.dto.v1_0.Metadata;
-import com.liferay.saml.admin.rest.dto.v1_0.ProviderConfiguration;
+import com.liferay.saml.admin.rest.dto.v1_0.Provider;
 import com.liferay.saml.admin.rest.resource.v1_0.IdpConnectionResource;
 import com.liferay.saml.admin.rest.resource.v1_0.MetadataResource;
-import com.liferay.saml.admin.rest.resource.v1_0.ProviderConfigurationResource;
+import com.liferay.saml.admin.rest.resource.v1_0.ProviderResource;
 
 import java.util.function.BiFunction;
 
@@ -66,12 +66,12 @@ public class Mutation {
 			metadataResourceComponentServiceObjects;
 	}
 
-	public static void setProviderConfigurationResourceComponentServiceObjects(
-		ComponentServiceObjects<ProviderConfigurationResource>
-			providerConfigurationResourceComponentServiceObjects) {
+	public static void setProviderResourceComponentServiceObjects(
+		ComponentServiceObjects<ProviderResource>
+			providerResourceComponentServiceObjects) {
 
-		_providerConfigurationResourceComponentServiceObjects =
-			providerConfigurationResourceComponentServiceObjects;
+		_providerResourceComponentServiceObjects =
+			providerResourceComponentServiceObjects;
 	}
 
 	@GraphQLField(description = "Creates a new SAML IDP connection")
@@ -209,31 +209,26 @@ public class Mutation {
 	@GraphQLField(
 		description = "Creates a full SAML Provider configuration with peer connections."
 	)
-	public ProviderConfiguration createProviderConfiguration(
-			@GraphQLName("providerConfiguration") ProviderConfiguration
-				providerConfiguration)
+	public Provider createProvider(@GraphQLName("provider") Provider provider)
 		throws Exception {
 
 		return _applyComponentServiceObjects(
-			_providerConfigurationResourceComponentServiceObjects,
+			_providerResourceComponentServiceObjects,
 			this::_populateResourceContext,
-			providerConfigurationResource ->
-				providerConfigurationResource.postProviderConfiguration(
-					providerConfiguration));
+			providerResource -> providerResource.postProvider(provider));
 	}
 
 	@GraphQLField
-	public Response createProviderConfigurationBatch(
+	public Response createProviderBatch(
 			@GraphQLName("callbackURL") String callbackURL,
 			@GraphQLName("object") Object object)
 		throws Exception {
 
 		return _applyComponentServiceObjects(
-			_providerConfigurationResourceComponentServiceObjects,
+			_providerResourceComponentServiceObjects,
 			this::_populateResourceContext,
-			providerConfigurationResource ->
-				providerConfigurationResource.postProviderConfigurationBatch(
-					callbackURL, object));
+			providerResource -> providerResource.postProviderBatch(
+				callbackURL, object));
 	}
 
 	@GraphQLField(description = "Delete the SAML SP Provider configuration.")
@@ -241,10 +236,9 @@ public class Mutation {
 		throws Exception {
 
 		_applyVoidComponentServiceObjects(
-			_providerConfigurationResourceComponentServiceObjects,
+			_providerResourceComponentServiceObjects,
 			this::_populateResourceContext,
-			providerConfigurationResource ->
-				providerConfigurationResource.deleteRole(roleId));
+			providerResource -> providerResource.deleteRole(roleId));
 
 		return true;
 	}
@@ -256,10 +250,9 @@ public class Mutation {
 		throws Exception {
 
 		return _applyComponentServiceObjects(
-			_providerConfigurationResourceComponentServiceObjects,
+			_providerResourceComponentServiceObjects,
 			this::_populateResourceContext,
-			providerConfigurationResource ->
-				providerConfigurationResource.patchRole(roleId, object));
+			providerResource -> providerResource.patchRole(roleId, object));
 	}
 
 	@GraphQLField(description = "Replaces the SAML SP Provider configuration.")
@@ -269,10 +262,9 @@ public class Mutation {
 		throws Exception {
 
 		return _applyComponentServiceObjects(
-			_providerConfigurationResourceComponentServiceObjects,
+			_providerResourceComponentServiceObjects,
 			this::_populateResourceContext,
-			providerConfigurationResource ->
-				providerConfigurationResource.putRole(roleId, object));
+			providerResource -> providerResource.putRole(roleId, object));
 	}
 
 	private <T, R, E1 extends Throwable, E2 extends Throwable> R
@@ -347,22 +339,19 @@ public class Mutation {
 			_vulcanBatchEngineImportTaskResource);
 	}
 
-	private void _populateResourceContext(
-			ProviderConfigurationResource providerConfigurationResource)
+	private void _populateResourceContext(ProviderResource providerResource)
 		throws Exception {
 
-		providerConfigurationResource.setContextAcceptLanguage(_acceptLanguage);
-		providerConfigurationResource.setContextCompany(_company);
-		providerConfigurationResource.setContextHttpServletRequest(
-			_httpServletRequest);
-		providerConfigurationResource.setContextHttpServletResponse(
-			_httpServletResponse);
-		providerConfigurationResource.setContextUriInfo(_uriInfo);
-		providerConfigurationResource.setContextUser(_user);
-		providerConfigurationResource.setGroupLocalService(_groupLocalService);
-		providerConfigurationResource.setRoleLocalService(_roleLocalService);
+		providerResource.setContextAcceptLanguage(_acceptLanguage);
+		providerResource.setContextCompany(_company);
+		providerResource.setContextHttpServletRequest(_httpServletRequest);
+		providerResource.setContextHttpServletResponse(_httpServletResponse);
+		providerResource.setContextUriInfo(_uriInfo);
+		providerResource.setContextUser(_user);
+		providerResource.setGroupLocalService(_groupLocalService);
+		providerResource.setRoleLocalService(_roleLocalService);
 
-		providerConfigurationResource.setVulcanBatchEngineImportTaskResource(
+		providerResource.setVulcanBatchEngineImportTaskResource(
 			_vulcanBatchEngineImportTaskResource);
 	}
 
@@ -370,8 +359,8 @@ public class Mutation {
 		_idpConnectionResourceComponentServiceObjects;
 	private static ComponentServiceObjects<MetadataResource>
 		_metadataResourceComponentServiceObjects;
-	private static ComponentServiceObjects<ProviderConfigurationResource>
-		_providerConfigurationResourceComponentServiceObjects;
+	private static ComponentServiceObjects<ProviderResource>
+		_providerResourceComponentServiceObjects;
 
 	private AcceptLanguage _acceptLanguage;
 	private com.liferay.portal.kernel.model.Company _company;

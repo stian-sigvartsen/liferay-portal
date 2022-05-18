@@ -15,7 +15,7 @@
 package com.liferay.saml.admin.rest.client.dto.v1_0;
 
 import com.liferay.saml.admin.rest.client.function.UnsafeSupplier;
-import com.liferay.saml.admin.rest.client.serdes.v1_0.SpProviderConfigurationSerDes;
+import com.liferay.saml.admin.rest.client.serdes.v1_0.SpSerDes;
 
 import java.io.Serializable;
 
@@ -28,10 +28,10 @@ import javax.annotation.Generated;
  * @generated
  */
 @Generated("")
-public class SpProviderConfiguration implements Cloneable, Serializable {
+public class Sp implements Cloneable, Serializable {
 
-	public static SpProviderConfiguration toDTO(String json) {
-		return SpProviderConfigurationSerDes.toDTO(json);
+	public static Sp toDTO(String json) {
+		return SpSerDes.toDTO(json);
 	}
 
 	public Boolean getAllowShowingTheLoginPortlet() {
@@ -153,48 +153,6 @@ public class SpProviderConfiguration implements Cloneable, Serializable {
 
 	protected Integer defaultAssertionLifetime;
 
-	public Boolean getEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	public void setEnabled(
-		UnsafeSupplier<Boolean, Exception> enabledUnsafeSupplier) {
-
-		try {
-			enabled = enabledUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected Boolean enabled;
-
-	public String getEntityId() {
-		return entityId;
-	}
-
-	public void setEntityId(String entityId) {
-		this.entityId = entityId;
-	}
-
-	public void setEntityId(
-		UnsafeSupplier<String, Exception> entityIdUnsafeSupplier) {
-
-		try {
-			entityId = entityIdUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected String entityId;
-
 	public IdpConnection[] getIdpConnections() {
 		return idpConnections;
 	}
@@ -262,33 +220,6 @@ public class SpProviderConfiguration implements Cloneable, Serializable {
 	}
 
 	protected Boolean ldapImportEnabled;
-
-	public Role getRole() {
-		return role;
-	}
-
-	public String getRoleAsString() {
-		if (role == null) {
-			return null;
-		}
-
-		return role.toString();
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
-	}
-
-	public void setRole(UnsafeSupplier<Role, Exception> roleUnsafeSupplier) {
-		try {
-			role = roleUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected Role role;
 
 	public String getSamlKeystoreCredentialPassword() {
 		return samlKeystoreCredentialPassword;
@@ -421,8 +352,8 @@ public class SpProviderConfiguration implements Cloneable, Serializable {
 	protected Boolean sslRequired;
 
 	@Override
-	public SpProviderConfiguration clone() throws CloneNotSupportedException {
-		return (SpProviderConfiguration)super.clone();
+	public Sp clone() throws CloneNotSupportedException {
+		return (Sp)super.clone();
 	}
 
 	@Override
@@ -431,14 +362,13 @@ public class SpProviderConfiguration implements Cloneable, Serializable {
 			return true;
 		}
 
-		if (!(object instanceof SpProviderConfiguration)) {
+		if (!(object instanceof Sp)) {
 			return false;
 		}
 
-		SpProviderConfiguration spProviderConfiguration =
-			(SpProviderConfiguration)object;
+		Sp sp = (Sp)object;
 
-		return Objects.equals(toString(), spProviderConfiguration.toString());
+		return Objects.equals(toString(), sp.toString());
 	}
 
 	@Override
@@ -449,40 +379,7 @@ public class SpProviderConfiguration implements Cloneable, Serializable {
 	}
 
 	public String toString() {
-		return SpProviderConfigurationSerDes.toJSON(this);
-	}
-
-	public static enum Role {
-
-		SP("sp");
-
-		public static Role create(String value) {
-			for (Role role : values()) {
-				if (Objects.equals(role.getValue(), value) ||
-					Objects.equals(role.name(), value)) {
-
-					return role;
-				}
-			}
-
-			return null;
-		}
-
-		public String getValue() {
-			return _value;
-		}
-
-		@Override
-		public String toString() {
-			return _value;
-		}
-
-		private Role(String value) {
-			_value = value;
-		}
-
-		private final String _value;
-
+		return SpSerDes.toJSON(this);
 	}
 
 }

@@ -33,7 +33,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.odata.filter.ExpressionConvert;
 import com.liferay.portal.odata.filter.FilterParserProvider;
 import com.liferay.portal.vulcan.accept.language.AcceptLanguage;
-import com.liferay.saml.admin.rest.resource.v1_0.ProviderConfigurationResource;
+import com.liferay.saml.admin.rest.resource.v1_0.ProviderResource;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
@@ -61,33 +61,29 @@ import org.osgi.service.component.annotations.ReferenceScope;
  * @author Stian Sigvartsen
  * @generated
  */
-@Component(
-	immediate = true, service = ProviderConfigurationResource.Factory.class
-)
+@Component(immediate = true, service = ProviderResource.Factory.class)
 @Generated("")
-public class ProviderConfigurationResourceFactoryImpl
-	implements ProviderConfigurationResource.Factory {
+public class ProviderResourceFactoryImpl implements ProviderResource.Factory {
 
 	@Override
-	public ProviderConfigurationResource.Builder create() {
-		return new ProviderConfigurationResource.Builder() {
+	public ProviderResource.Builder create() {
+		return new ProviderResource.Builder() {
 
 			@Override
-			public ProviderConfigurationResource build() {
+			public ProviderResource build() {
 				if (_user == null) {
 					throw new IllegalArgumentException("User is not set");
 				}
 
-				return _providerConfigurationResourceProxyProviderFunction.
-					apply(
-						(proxy, method, arguments) -> _invoke(
-							method, arguments, _checkPermissions,
-							_httpServletRequest, _httpServletResponse,
-							_preferredLocale, _user));
+				return _providerResourceProxyProviderFunction.apply(
+					(proxy, method, arguments) -> _invoke(
+						method, arguments, _checkPermissions,
+						_httpServletRequest, _httpServletResponse,
+						_preferredLocale, _user));
 			}
 
 			@Override
-			public ProviderConfigurationResource.Builder checkPermissions(
+			public ProviderResource.Builder checkPermissions(
 				boolean checkPermissions) {
 
 				_checkPermissions = checkPermissions;
@@ -96,7 +92,7 @@ public class ProviderConfigurationResourceFactoryImpl
 			}
 
 			@Override
-			public ProviderConfigurationResource.Builder httpServletRequest(
+			public ProviderResource.Builder httpServletRequest(
 				HttpServletRequest httpServletRequest) {
 
 				_httpServletRequest = httpServletRequest;
@@ -105,7 +101,7 @@ public class ProviderConfigurationResourceFactoryImpl
 			}
 
 			@Override
-			public ProviderConfigurationResource.Builder httpServletResponse(
+			public ProviderResource.Builder httpServletResponse(
 				HttpServletResponse httpServletResponse) {
 
 				_httpServletResponse = httpServletResponse;
@@ -114,7 +110,7 @@ public class ProviderConfigurationResourceFactoryImpl
 			}
 
 			@Override
-			public ProviderConfigurationResource.Builder preferredLocale(
+			public ProviderResource.Builder preferredLocale(
 				Locale preferredLocale) {
 
 				_preferredLocale = preferredLocale;
@@ -123,7 +119,7 @@ public class ProviderConfigurationResourceFactoryImpl
 			}
 
 			@Override
-			public ProviderConfigurationResource.Builder user(User user) {
+			public ProviderResource.Builder user(User user) {
 				_user = user;
 
 				return this;
@@ -140,25 +136,24 @@ public class ProviderConfigurationResourceFactoryImpl
 
 	@Activate
 	protected void activate() {
-		ProviderConfigurationResource.FactoryHolder.factory = this;
+		ProviderResource.FactoryHolder.factory = this;
 	}
 
 	@Deactivate
 	protected void deactivate() {
-		ProviderConfigurationResource.FactoryHolder.factory = null;
+		ProviderResource.FactoryHolder.factory = null;
 	}
 
-	private static Function<InvocationHandler, ProviderConfigurationResource>
+	private static Function<InvocationHandler, ProviderResource>
 		_getProxyProviderFunction() {
 
 		Class<?> proxyClass = ProxyUtil.getProxyClass(
-			ProviderConfigurationResource.class.getClassLoader(),
-			ProviderConfigurationResource.class);
+			ProviderResource.class.getClassLoader(), ProviderResource.class);
 
 		try {
-			Constructor<ProviderConfigurationResource> constructor =
-				(Constructor<ProviderConfigurationResource>)
-					proxyClass.getConstructor(InvocationHandler.class);
+			Constructor<ProviderResource> constructor =
+				(Constructor<ProviderResource>)proxyClass.getConstructor(
+					InvocationHandler.class);
 
 			return invocationHandler -> {
 				try {
@@ -199,40 +194,36 @@ public class ProviderConfigurationResourceFactoryImpl
 				_liberalPermissionCheckerFactory.create(user));
 		}
 
-		ProviderConfigurationResource providerConfigurationResource =
+		ProviderResource providerResource =
 			_componentServiceObjects.getService();
 
-		providerConfigurationResource.setContextAcceptLanguage(
+		providerResource.setContextAcceptLanguage(
 			new AcceptLanguageImpl(httpServletRequest, preferredLocale, user));
 
 		Company company = _companyLocalService.getCompany(user.getCompanyId());
 
-		providerConfigurationResource.setContextCompany(company);
+		providerResource.setContextCompany(company);
 
-		providerConfigurationResource.setContextHttpServletRequest(
-			httpServletRequest);
-		providerConfigurationResource.setContextHttpServletResponse(
-			httpServletResponse);
-		providerConfigurationResource.setContextUser(user);
-		providerConfigurationResource.setExpressionConvert(_expressionConvert);
-		providerConfigurationResource.setFilterParserProvider(
-			_filterParserProvider);
-		providerConfigurationResource.setGroupLocalService(_groupLocalService);
-		providerConfigurationResource.setResourceActionLocalService(
+		providerResource.setContextHttpServletRequest(httpServletRequest);
+		providerResource.setContextHttpServletResponse(httpServletResponse);
+		providerResource.setContextUser(user);
+		providerResource.setExpressionConvert(_expressionConvert);
+		providerResource.setFilterParserProvider(_filterParserProvider);
+		providerResource.setGroupLocalService(_groupLocalService);
+		providerResource.setResourceActionLocalService(
 			_resourceActionLocalService);
-		providerConfigurationResource.setResourcePermissionLocalService(
+		providerResource.setResourcePermissionLocalService(
 			_resourcePermissionLocalService);
-		providerConfigurationResource.setRoleLocalService(_roleLocalService);
+		providerResource.setRoleLocalService(_roleLocalService);
 
 		try {
-			return method.invoke(providerConfigurationResource, arguments);
+			return method.invoke(providerResource, arguments);
 		}
 		catch (InvocationTargetException invocationTargetException) {
 			throw invocationTargetException.getTargetException();
 		}
 		finally {
-			_componentServiceObjects.ungetService(
-				providerConfigurationResource);
+			_componentServiceObjects.ungetService(providerResource);
 
 			PrincipalThreadLocal.setName(name);
 
@@ -240,17 +231,14 @@ public class ProviderConfigurationResourceFactoryImpl
 		}
 	}
 
-	private static final Function
-		<InvocationHandler, ProviderConfigurationResource>
-			_providerConfigurationResourceProxyProviderFunction =
-				_getProxyProviderFunction();
+	private static final Function<InvocationHandler, ProviderResource>
+		_providerResourceProxyProviderFunction = _getProxyProviderFunction();
 
 	@Reference
 	private CompanyLocalService _companyLocalService;
 
 	@Reference(scope = ReferenceScope.PROTOTYPE_REQUIRED)
-	private ComponentServiceObjects<ProviderConfigurationResource>
-		_componentServiceObjects;
+	private ComponentServiceObjects<ProviderResource> _componentServiceObjects;
 
 	@Reference
 	private PermissionCheckerFactory _defaultPermissionCheckerFactory;

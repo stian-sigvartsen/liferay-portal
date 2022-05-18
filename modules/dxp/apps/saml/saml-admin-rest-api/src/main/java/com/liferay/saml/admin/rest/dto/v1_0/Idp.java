@@ -14,11 +14,9 @@
 
 package com.liferay.saml.admin.rest.dto.v1_0;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 import com.liferay.petra.function.UnsafeSupplier;
 import com.liferay.petra.string.StringBundler;
@@ -49,19 +47,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Generated("")
 @GraphQLName(
 	description = "Configuration of the SAML provider's IDP capability",
-	value = "IdpProviderConfiguration"
+	value = "Idp"
 )
 @JsonFilter("Liferay.Vulcan")
-@XmlRootElement(name = "IdpProviderConfiguration")
-public class IdpProviderConfiguration implements Serializable {
+@XmlRootElement(name = "Idp")
+public class Idp implements Serializable {
 
-	public static IdpProviderConfiguration toDTO(String json) {
-		return ObjectMapperUtil.readValue(IdpProviderConfiguration.class, json);
+	public static Idp toDTO(String json) {
+		return ObjectMapperUtil.readValue(Idp.class, json);
 	}
 
-	public static IdpProviderConfiguration unsafeToDTO(String json) {
-		return ObjectMapperUtil.unsafeReadValue(
-			IdpProviderConfiguration.class, json);
+	public static Idp unsafeToDTO(String json) {
+		return ObjectMapperUtil.unsafeReadValue(Idp.class, json);
 	}
 
 	@Schema
@@ -95,98 +92,6 @@ public class IdpProviderConfiguration implements Serializable {
 	@GraphQLField
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Boolean authnRequestSignatureRequired;
-
-	@Schema
-	public Boolean getEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	@JsonIgnore
-	public void setEnabled(
-		UnsafeSupplier<Boolean, Exception> enabledUnsafeSupplier) {
-
-		try {
-			enabled = enabledUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Boolean enabled;
-
-	@Schema
-	public String getEntityId() {
-		return entityId;
-	}
-
-	public void setEntityId(String entityId) {
-		this.entityId = entityId;
-	}
-
-	@JsonIgnore
-	public void setEntityId(
-		UnsafeSupplier<String, Exception> entityIdUnsafeSupplier) {
-
-		try {
-			entityId = entityIdUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected String entityId;
-
-	@Schema
-	@Valid
-	public Role getRole() {
-		return role;
-	}
-
-	@JsonIgnore
-	public String getRoleAsString() {
-		if (role == null) {
-			return null;
-		}
-
-		return role.toString();
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
-	}
-
-	@JsonIgnore
-	public void setRole(UnsafeSupplier<Role, Exception> roleUnsafeSupplier) {
-		try {
-			role = roleUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Role role;
 
 	@Schema
 	public Long getSessionMaximumAge() {
@@ -335,14 +240,13 @@ public class IdpProviderConfiguration implements Serializable {
 			return true;
 		}
 
-		if (!(object instanceof IdpProviderConfiguration)) {
+		if (!(object instanceof Idp)) {
 			return false;
 		}
 
-		IdpProviderConfiguration idpProviderConfiguration =
-			(IdpProviderConfiguration)object;
+		Idp idp = (Idp)object;
 
-		return Objects.equals(toString(), idpProviderConfiguration.toString());
+		return Objects.equals(toString(), idp.toString());
 	}
 
 	@Override
@@ -365,44 +269,6 @@ public class IdpProviderConfiguration implements Serializable {
 			sb.append("\"authnRequestSignatureRequired\": ");
 
 			sb.append(authnRequestSignatureRequired);
-		}
-
-		if (enabled != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"enabled\": ");
-
-			sb.append(enabled);
-		}
-
-		if (entityId != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"entityId\": ");
-
-			sb.append("\"");
-
-			sb.append(_escape(entityId));
-
-			sb.append("\"");
-		}
-
-		if (role != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"role\": ");
-
-			sb.append("\"");
-
-			sb.append(role);
-
-			sb.append("\"");
 		}
 
 		if (sessionMaximumAge != null) {
@@ -472,48 +338,10 @@ public class IdpProviderConfiguration implements Serializable {
 
 	@Schema(
 		accessMode = Schema.AccessMode.READ_ONLY,
-		defaultValue = "com.liferay.saml.admin.rest.dto.v1_0.IdpProviderConfiguration",
+		defaultValue = "com.liferay.saml.admin.rest.dto.v1_0.Idp",
 		name = "x-class-name"
 	)
 	public String xClassName;
-
-	@GraphQLName("Role")
-	public static enum Role {
-
-		IDP("idp");
-
-		@JsonCreator
-		public static Role create(String value) {
-			if ((value == null) || value.equals("")) {
-				return null;
-			}
-
-			for (Role role : values()) {
-				if (Objects.equals(role.getValue(), value)) {
-					return role;
-				}
-			}
-
-			throw new IllegalArgumentException("Invalid enum value: " + value);
-		}
-
-		@JsonValue
-		public String getValue() {
-			return _value;
-		}
-
-		@Override
-		public String toString() {
-			return _value;
-		}
-
-		private Role(String value) {
-			_value = value;
-		}
-
-		private final String _value;
-
-	}
 
 	private static String _escape(Object object) {
 		return StringUtil.replace(

@@ -14,13 +14,14 @@
 
 package com.liferay.saml.admin.rest.dto.v1_0;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import com.liferay.petra.function.UnsafeSupplier;
 import com.liferay.petra.string.StringBundler;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
@@ -48,19 +49,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Generated("")
 @GraphQLName(
 	description = "Dummy schema which can be referenced from tags",
-	value = "ProviderConfiguration"
+	value = "Provider"
 )
 @JsonFilter("Liferay.Vulcan")
-@XmlRootElement(name = "ProviderConfiguration")
-public class ProviderConfiguration implements Serializable {
+@XmlRootElement(name = "Provider")
+public class Provider implements Serializable {
 
-	public static ProviderConfiguration toDTO(String json) {
-		return ObjectMapperUtil.readValue(ProviderConfiguration.class, json);
+	public static Provider toDTO(String json) {
+		return ObjectMapperUtil.readValue(Provider.class, json);
 	}
 
-	public static ProviderConfiguration unsafeToDTO(String json) {
-		return ObjectMapperUtil.unsafeReadValue(
-			ProviderConfiguration.class, json);
+	public static Provider unsafeToDTO(String json) {
+		return ObjectMapperUtil.unsafeReadValue(Provider.class, json);
 	}
 
 	@Schema
@@ -92,17 +92,81 @@ public class ProviderConfiguration implements Serializable {
 	protected Boolean enabled;
 
 	@Schema
+	public String getEntityId() {
+		return entityId;
+	}
+
+	public void setEntityId(String entityId) {
+		this.entityId = entityId;
+	}
+
+	@JsonIgnore
+	public void setEntityId(
+		UnsafeSupplier<String, Exception> entityIdUnsafeSupplier) {
+
+		try {
+			entityId = entityIdUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String entityId;
+
+	@Schema
 	@Valid
-	public Object getRole() {
+	public Idp getIdp() {
+		return idp;
+	}
+
+	public void setIdp(Idp idp) {
+		this.idp = idp;
+	}
+
+	@JsonIgnore
+	public void setIdp(UnsafeSupplier<Idp, Exception> idpUnsafeSupplier) {
+		try {
+			idp = idpUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Idp idp;
+
+	@Schema
+	@Valid
+	public Role getRole() {
 		return role;
 	}
 
-	public void setRole(Object role) {
+	@JsonIgnore
+	public String getRoleAsString() {
+		if (role == null) {
+			return null;
+		}
+
+		return role.toString();
+	}
+
+	public void setRole(Role role) {
 		this.role = role;
 	}
 
 	@JsonIgnore
-	public void setRole(UnsafeSupplier<Object, Exception> roleUnsafeSupplier) {
+	public void setRole(UnsafeSupplier<Role, Exception> roleUnsafeSupplier) {
 		try {
 			role = roleUnsafeSupplier.get();
 		}
@@ -116,7 +180,34 @@ public class ProviderConfiguration implements Serializable {
 
 	@GraphQLField
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Object role;
+	protected Role role;
+
+	@Schema
+	@Valid
+	public Sp getSp() {
+		return sp;
+	}
+
+	public void setSp(Sp sp) {
+		this.sp = sp;
+	}
+
+	@JsonIgnore
+	public void setSp(UnsafeSupplier<Sp, Exception> spUnsafeSupplier) {
+		try {
+			sp = spUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Sp sp;
 
 	@Override
 	public boolean equals(Object object) {
@@ -124,14 +215,13 @@ public class ProviderConfiguration implements Serializable {
 			return true;
 		}
 
-		if (!(object instanceof ProviderConfiguration)) {
+		if (!(object instanceof Provider)) {
 			return false;
 		}
 
-		ProviderConfiguration providerConfiguration =
-			(ProviderConfiguration)object;
+		Provider provider = (Provider)object;
 
-		return Objects.equals(toString(), providerConfiguration.toString());
+		return Objects.equals(toString(), provider.toString());
 	}
 
 	@Override
@@ -156,6 +246,30 @@ public class ProviderConfiguration implements Serializable {
 			sb.append(enabled);
 		}
 
+		if (entityId != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"entityId\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(entityId));
+
+			sb.append("\"");
+		}
+
+		if (idp != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"idp\": ");
+
+			sb.append(String.valueOf(idp));
+		}
+
 		if (role != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -163,17 +277,21 @@ public class ProviderConfiguration implements Serializable {
 
 			sb.append("\"role\": ");
 
-			if (role instanceof Map) {
-				sb.append(JSONFactoryUtil.createJSONObject((Map<?, ?>)role));
+			sb.append("\"");
+
+			sb.append(role);
+
+			sb.append("\"");
+		}
+
+		if (sp != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
 			}
-			else if (role instanceof String) {
-				sb.append("\"");
-				sb.append(_escape((String)role));
-				sb.append("\"");
-			}
-			else {
-				sb.append(role);
-			}
+
+			sb.append("\"sp\": ");
+
+			sb.append(String.valueOf(sp));
 		}
 
 		sb.append("}");
@@ -183,10 +301,48 @@ public class ProviderConfiguration implements Serializable {
 
 	@Schema(
 		accessMode = Schema.AccessMode.READ_ONLY,
-		defaultValue = "com.liferay.saml.admin.rest.dto.v1_0.ProviderConfiguration",
+		defaultValue = "com.liferay.saml.admin.rest.dto.v1_0.Provider",
 		name = "x-class-name"
 	)
 	public String xClassName;
+
+	@GraphQLName("Role")
+	public static enum Role {
+
+		IDP("idp"), SP("sp");
+
+		@JsonCreator
+		public static Role create(String value) {
+			if ((value == null) || value.equals("")) {
+				return null;
+			}
+
+			for (Role role : values()) {
+				if (Objects.equals(role.getValue(), value)) {
+					return role;
+				}
+			}
+
+			throw new IllegalArgumentException("Invalid enum value: " + value);
+		}
+
+		@JsonValue
+		public String getValue() {
+			return _value;
+		}
+
+		@Override
+		public String toString() {
+			return _value;
+		}
+
+		private Role(String value) {
+			_value = value;
+		}
+
+		private final String _value;
+
+	}
 
 	private static String _escape(Object object) {
 		return StringUtil.replace(

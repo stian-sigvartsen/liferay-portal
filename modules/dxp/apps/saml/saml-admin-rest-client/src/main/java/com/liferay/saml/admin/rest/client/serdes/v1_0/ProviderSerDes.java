@@ -14,7 +14,7 @@
 
 package com.liferay.saml.admin.rest.client.serdes.v1_0;
 
-import com.liferay.saml.admin.rest.client.dto.v1_0.ProviderConfiguration;
+import com.liferay.saml.admin.rest.client.dto.v1_0.Provider;
 import com.liferay.saml.admin.rest.client.json.BaseJSONParser;
 
 import java.util.Iterator;
@@ -30,24 +30,22 @@ import javax.annotation.Generated;
  * @generated
  */
 @Generated("")
-public class ProviderConfigurationSerDes {
+public class ProviderSerDes {
 
-	public static ProviderConfiguration toDTO(String json) {
-		ProviderConfigurationJSONParser providerConfigurationJSONParser =
-			new ProviderConfigurationJSONParser();
+	public static Provider toDTO(String json) {
+		ProviderJSONParser providerJSONParser = new ProviderJSONParser();
 
-		return providerConfigurationJSONParser.parseToDTO(json);
+		return providerJSONParser.parseToDTO(json);
 	}
 
-	public static ProviderConfiguration[] toDTOs(String json) {
-		ProviderConfigurationJSONParser providerConfigurationJSONParser =
-			new ProviderConfigurationJSONParser();
+	public static Provider[] toDTOs(String json) {
+		ProviderJSONParser providerJSONParser = new ProviderJSONParser();
 
-		return providerConfigurationJSONParser.parseToDTOs(json);
+		return providerJSONParser.parseToDTOs(json);
 	}
 
-	public static String toJSON(ProviderConfiguration providerConfiguration) {
-		if (providerConfiguration == null) {
+	public static String toJSON(Provider provider) {
+		if (provider == null) {
 			return "null";
 		}
 
@@ -55,31 +53,62 @@ public class ProviderConfigurationSerDes {
 
 		sb.append("{");
 
-		if (providerConfiguration.getEnabled() != null) {
+		if (provider.getEnabled() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
 
 			sb.append("\"enabled\": ");
 
-			sb.append(providerConfiguration.getEnabled());
+			sb.append(provider.getEnabled());
 		}
 
-		if (providerConfiguration.getRole() != null) {
+		if (provider.getEntityId() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"entityId\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(provider.getEntityId()));
+
+			sb.append("\"");
+		}
+
+		if (provider.getIdp() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"idp\": ");
+
+			sb.append(String.valueOf(provider.getIdp()));
+		}
+
+		if (provider.getRole() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
 
 			sb.append("\"role\": ");
 
-			if (providerConfiguration.getRole() instanceof String) {
-				sb.append("\"");
-				sb.append((String)providerConfiguration.getRole());
-				sb.append("\"");
+			sb.append("\"");
+
+			sb.append(provider.getRole());
+
+			sb.append("\"");
+		}
+
+		if (provider.getSp() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
 			}
-			else {
-				sb.append(providerConfiguration.getRole());
-			}
+
+			sb.append("\"sp\": ");
+
+			sb.append(String.valueOf(provider.getSp()));
 		}
 
 		sb.append("}");
@@ -88,66 +117,99 @@ public class ProviderConfigurationSerDes {
 	}
 
 	public static Map<String, Object> toMap(String json) {
-		ProviderConfigurationJSONParser providerConfigurationJSONParser =
-			new ProviderConfigurationJSONParser();
+		ProviderJSONParser providerJSONParser = new ProviderJSONParser();
 
-		return providerConfigurationJSONParser.parseToMap(json);
+		return providerJSONParser.parseToMap(json);
 	}
 
-	public static Map<String, String> toMap(
-		ProviderConfiguration providerConfiguration) {
-
-		if (providerConfiguration == null) {
+	public static Map<String, String> toMap(Provider provider) {
+		if (provider == null) {
 			return null;
 		}
 
 		Map<String, String> map = new TreeMap<>();
 
-		if (providerConfiguration.getEnabled() == null) {
+		if (provider.getEnabled() == null) {
 			map.put("enabled", null);
 		}
 		else {
-			map.put(
-				"enabled", String.valueOf(providerConfiguration.getEnabled()));
+			map.put("enabled", String.valueOf(provider.getEnabled()));
 		}
 
-		if (providerConfiguration.getRole() == null) {
+		if (provider.getEntityId() == null) {
+			map.put("entityId", null);
+		}
+		else {
+			map.put("entityId", String.valueOf(provider.getEntityId()));
+		}
+
+		if (provider.getIdp() == null) {
+			map.put("idp", null);
+		}
+		else {
+			map.put("idp", String.valueOf(provider.getIdp()));
+		}
+
+		if (provider.getRole() == null) {
 			map.put("role", null);
 		}
 		else {
-			map.put("role", String.valueOf(providerConfiguration.getRole()));
+			map.put("role", String.valueOf(provider.getRole()));
+		}
+
+		if (provider.getSp() == null) {
+			map.put("sp", null);
+		}
+		else {
+			map.put("sp", String.valueOf(provider.getSp()));
 		}
 
 		return map;
 	}
 
-	public static class ProviderConfigurationJSONParser
-		extends BaseJSONParser<ProviderConfiguration> {
+	public static class ProviderJSONParser extends BaseJSONParser<Provider> {
 
 		@Override
-		protected ProviderConfiguration createDTO() {
-			return new ProviderConfiguration();
+		protected Provider createDTO() {
+			return new Provider();
 		}
 
 		@Override
-		protected ProviderConfiguration[] createDTOArray(int size) {
-			return new ProviderConfiguration[size];
+		protected Provider[] createDTOArray(int size) {
+			return new Provider[size];
 		}
 
 		@Override
 		protected void setField(
-			ProviderConfiguration providerConfiguration,
-			String jsonParserFieldName, Object jsonParserFieldValue) {
+			Provider provider, String jsonParserFieldName,
+			Object jsonParserFieldValue) {
 
 			if (Objects.equals(jsonParserFieldName, "enabled")) {
 				if (jsonParserFieldValue != null) {
-					providerConfiguration.setEnabled(
-						(Boolean)jsonParserFieldValue);
+					provider.setEnabled((Boolean)jsonParserFieldValue);
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "entityId")) {
+				if (jsonParserFieldValue != null) {
+					provider.setEntityId((String)jsonParserFieldValue);
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "idp")) {
+				if (jsonParserFieldValue != null) {
+					provider.setIdp(
+						IdpSerDes.toDTO((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "role")) {
 				if (jsonParserFieldValue != null) {
-					providerConfiguration.setRole((Object)jsonParserFieldValue);
+					provider.setRole(
+						Provider.Role.create((String)jsonParserFieldValue));
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "sp")) {
+				if (jsonParserFieldValue != null) {
+					provider.setSp(
+						SpSerDes.toDTO((String)jsonParserFieldValue));
 				}
 			}
 		}

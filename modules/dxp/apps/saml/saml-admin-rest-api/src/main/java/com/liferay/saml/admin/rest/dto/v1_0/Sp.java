@@ -14,11 +14,9 @@
 
 package com.liferay.saml.admin.rest.dto.v1_0;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 import com.liferay.petra.function.UnsafeSupplier;
 import com.liferay.petra.string.StringBundler;
@@ -49,19 +47,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Generated("")
 @GraphQLName(
 	description = "Configuration of the SAML provider's SP capability",
-	value = "SpProviderConfiguration"
+	value = "Sp"
 )
 @JsonFilter("Liferay.Vulcan")
-@XmlRootElement(name = "SpProviderConfiguration")
-public class SpProviderConfiguration implements Serializable {
+@XmlRootElement(name = "Sp")
+public class Sp implements Serializable {
 
-	public static SpProviderConfiguration toDTO(String json) {
-		return ObjectMapperUtil.readValue(SpProviderConfiguration.class, json);
+	public static Sp toDTO(String json) {
+		return ObjectMapperUtil.readValue(Sp.class, json);
 	}
 
-	public static SpProviderConfiguration unsafeToDTO(String json) {
-		return ObjectMapperUtil.unsafeReadValue(
-			SpProviderConfiguration.class, json);
+	public static Sp unsafeToDTO(String json) {
+		return ObjectMapperUtil.unsafeReadValue(Sp.class, json);
 	}
 
 	@Schema
@@ -218,62 +215,6 @@ public class SpProviderConfiguration implements Serializable {
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Integer defaultAssertionLifetime;
 
-	@Schema
-	public Boolean getEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	@JsonIgnore
-	public void setEnabled(
-		UnsafeSupplier<Boolean, Exception> enabledUnsafeSupplier) {
-
-		try {
-			enabled = enabledUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Boolean enabled;
-
-	@Schema
-	public String getEntityId() {
-		return entityId;
-	}
-
-	public void setEntityId(String entityId) {
-		this.entityId = entityId;
-	}
-
-	@JsonIgnore
-	public void setEntityId(
-		UnsafeSupplier<String, Exception> entityIdUnsafeSupplier) {
-
-		try {
-			entityId = entityIdUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected String entityId;
-
 	@Schema(description = "Connected SAML IDPs")
 	@Valid
 	public IdpConnection[] getIdpConnections() {
@@ -363,42 +304,6 @@ public class SpProviderConfiguration implements Serializable {
 	@GraphQLField
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Boolean ldapImportEnabled;
-
-	@Schema
-	@Valid
-	public Role getRole() {
-		return role;
-	}
-
-	@JsonIgnore
-	public String getRoleAsString() {
-		if (role == null) {
-			return null;
-		}
-
-		return role.toString();
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
-	}
-
-	@JsonIgnore
-	public void setRole(UnsafeSupplier<Role, Exception> roleUnsafeSupplier) {
-		try {
-			role = roleUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Role role;
 
 	@Schema
 	public String getSamlKeystoreCredentialPassword() {
@@ -578,14 +483,13 @@ public class SpProviderConfiguration implements Serializable {
 			return true;
 		}
 
-		if (!(object instanceof SpProviderConfiguration)) {
+		if (!(object instanceof Sp)) {
 			return false;
 		}
 
-		SpProviderConfiguration spProviderConfiguration =
-			(SpProviderConfiguration)object;
+		Sp sp = (Sp)object;
 
-		return Objects.equals(toString(), spProviderConfiguration.toString());
+		return Objects.equals(toString(), sp.toString());
 	}
 
 	@Override
@@ -650,30 +554,6 @@ public class SpProviderConfiguration implements Serializable {
 			sb.append(defaultAssertionLifetime);
 		}
 
-		if (enabled != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"enabled\": ");
-
-			sb.append(enabled);
-		}
-
-		if (entityId != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"entityId\": ");
-
-			sb.append("\"");
-
-			sb.append(_escape(entityId));
-
-			sb.append("\"");
-		}
-
 		if (idpConnections != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -716,20 +596,6 @@ public class SpProviderConfiguration implements Serializable {
 			sb.append("\"ldapImportEnabled\": ");
 
 			sb.append(ldapImportEnabled);
-		}
-
-		if (role != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"role\": ");
-
-			sb.append("\"");
-
-			sb.append(role);
-
-			sb.append("\"");
 		}
 
 		if (samlKeystoreCredentialPassword != null) {
@@ -803,48 +669,10 @@ public class SpProviderConfiguration implements Serializable {
 
 	@Schema(
 		accessMode = Schema.AccessMode.READ_ONLY,
-		defaultValue = "com.liferay.saml.admin.rest.dto.v1_0.SpProviderConfiguration",
+		defaultValue = "com.liferay.saml.admin.rest.dto.v1_0.Sp",
 		name = "x-class-name"
 	)
 	public String xClassName;
-
-	@GraphQLName("Role")
-	public static enum Role {
-
-		SP("sp");
-
-		@JsonCreator
-		public static Role create(String value) {
-			if ((value == null) || value.equals("")) {
-				return null;
-			}
-
-			for (Role role : values()) {
-				if (Objects.equals(role.getValue(), value)) {
-					return role;
-				}
-			}
-
-			throw new IllegalArgumentException("Invalid enum value: " + value);
-		}
-
-		@JsonValue
-		public String getValue() {
-			return _value;
-		}
-
-		@Override
-		public String toString() {
-			return _value;
-		}
-
-		private Role(String value) {
-			_value = value;
-		}
-
-		private final String _value;
-
-	}
 
 	private static String _escape(Object object) {
 		return StringUtil.replace(

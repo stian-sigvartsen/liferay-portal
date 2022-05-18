@@ -84,7 +84,7 @@ public class OpenAPIResourceImpl {
 
 			add(MetadataResourceImpl.class);
 
-			add(ProviderConfigurationResourceImpl.class);
+			add(ProviderResourceImpl.class);
 
 			add(OpenAPIResourceImpl.class);
 		}

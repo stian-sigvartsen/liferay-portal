@@ -36,16 +36,17 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.odata.entity.EntityField;
 import com.liferay.portal.odata.entity.EntityModel;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.vulcan.resource.EntityModelResource;
-import com.liferay.saml.admin.rest.client.dto.v1_0.ProviderConfiguration;
+import com.liferay.saml.admin.rest.client.dto.v1_0.Provider;
 import com.liferay.saml.admin.rest.client.http.HttpInvoker;
 import com.liferay.saml.admin.rest.client.pagination.Page;
-import com.liferay.saml.admin.rest.client.resource.v1_0.ProviderConfigurationResource;
-import com.liferay.saml.admin.rest.client.serdes.v1_0.ProviderConfigurationSerDes;
+import com.liferay.saml.admin.rest.client.resource.v1_0.ProviderResource;
+import com.liferay.saml.admin.rest.client.serdes.v1_0.ProviderSerDes;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -79,7 +80,7 @@ import org.junit.Test;
  * @generated
  */
 @Generated("")
-public abstract class BaseProviderConfigurationResourceTestCase {
+public abstract class BaseProviderResourceTestCase {
 
 	@ClassRule
 	@Rule
@@ -100,12 +101,11 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 		testCompany = CompanyLocalServiceUtil.getCompany(
 			testGroup.getCompanyId());
 
-		_providerConfigurationResource.setContextCompany(testCompany);
+		_providerResource.setContextCompany(testCompany);
 
-		ProviderConfigurationResource.Builder builder =
-			ProviderConfigurationResource.builder();
+		ProviderResource.Builder builder = ProviderResource.builder();
 
-		providerConfigurationResource = builder.authentication(
+		providerResource = builder.authentication(
 			"test@liferay.com", "test"
 		).locale(
 			LocaleUtil.getDefault()
@@ -136,16 +136,13 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 			}
 		};
 
-		ProviderConfiguration providerConfiguration1 =
-			randomProviderConfiguration();
+		Provider provider1 = randomProvider();
 
-		String json = objectMapper.writeValueAsString(providerConfiguration1);
+		String json = objectMapper.writeValueAsString(provider1);
 
-		ProviderConfiguration providerConfiguration2 =
-			ProviderConfigurationSerDes.toDTO(json);
+		Provider provider2 = ProviderSerDes.toDTO(json);
 
-		Assert.assertTrue(
-			equals(providerConfiguration1, providerConfiguration2));
+		Assert.assertTrue(equals(provider1, provider2));
 	}
 
 	@Test
@@ -165,12 +162,10 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 			}
 		};
 
-		ProviderConfiguration providerConfiguration =
-			randomProviderConfiguration();
+		Provider provider = randomProvider();
 
-		String json1 = objectMapper.writeValueAsString(providerConfiguration);
-		String json2 = ProviderConfigurationSerDes.toJSON(
-			providerConfiguration);
+		String json1 = objectMapper.writeValueAsString(provider);
+		String json2 = ProviderSerDes.toJSON(provider);
 
 		Assert.assertEquals(
 			objectMapper.readTree(json1), objectMapper.readTree(json2));
@@ -180,47 +175,45 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 	public void testEscapeRegexInStringFields() throws Exception {
 		String regex = "^[0-9]+(\\.[0-9]{1,2})\"?";
 
-		ProviderConfiguration providerConfiguration =
-			randomProviderConfiguration();
+		Provider provider = randomProvider();
 
-		String json = ProviderConfigurationSerDes.toJSON(providerConfiguration);
+		provider.setEntityId(regex);
+
+		String json = ProviderSerDes.toJSON(provider);
 
 		Assert.assertFalse(json.contains(regex));
 
-		providerConfiguration = ProviderConfigurationSerDes.toDTO(json);
+		provider = ProviderSerDes.toDTO(json);
+
+		Assert.assertEquals(regex, provider.getEntityId());
 	}
 
 	@Test
-	public void testGetProviderConfiguration() throws Exception {
+	public void testGetProvider() throws Exception {
 		Assert.assertTrue(false);
 	}
 
 	@Test
-	public void testGraphQLGetProviderConfiguration() throws Exception {
+	public void testGraphQLGetProvider() throws Exception {
 		Assert.assertTrue(true);
 	}
 
 	@Test
-	public void testGraphQLGetProviderConfigurationNotFound() throws Exception {
+	public void testGraphQLGetProviderNotFound() throws Exception {
 		Assert.assertTrue(true);
 	}
 
 	@Test
-	public void testPostProviderConfiguration() throws Exception {
-		ProviderConfiguration randomProviderConfiguration =
-			randomProviderConfiguration();
+	public void testPostProvider() throws Exception {
+		Provider randomProvider = randomProvider();
 
-		ProviderConfiguration postProviderConfiguration =
-			testPostProviderConfiguration_addProviderConfiguration(
-				randomProviderConfiguration);
+		Provider postProvider = testPostProvider_addProvider(randomProvider);
 
-		assertEquals(randomProviderConfiguration, postProviderConfiguration);
-		assertValid(postProviderConfiguration);
+		assertEquals(randomProvider, postProvider);
+		assertValid(postProvider);
 	}
 
-	protected ProviderConfiguration
-			testPostProviderConfiguration_addProviderConfiguration(
-				ProviderConfiguration providerConfiguration)
+	protected Provider testPostProvider_addProvider(Provider provider)
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -233,7 +226,7 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 	}
 
 	@Test
-	public void testGetProviderConfiguration() throws Exception {
+	public void testGetProvider() throws Exception {
 		Assert.assertTrue(false);
 	}
 
@@ -247,14 +240,11 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 		Assert.assertTrue(false);
 	}
 
-	protected void assertContains(
-		ProviderConfiguration providerConfiguration,
-		List<ProviderConfiguration> providerConfigurations) {
-
+	protected void assertContains(Provider provider, List<Provider> providers) {
 		boolean contains = false;
 
-		for (ProviderConfiguration item : providerConfigurations) {
-			if (equals(providerConfiguration, item)) {
+		for (Provider item : providers) {
+			if (equals(provider, item)) {
 				contains = true;
 
 				break;
@@ -262,9 +252,7 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 		}
 
 		Assert.assertTrue(
-			providerConfigurations + " does not contain " +
-				providerConfiguration,
-			contains);
+			providers + " does not contain " + provider, contains);
 	}
 
 	protected void assertHttpResponseStatusCode(
@@ -275,49 +263,35 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 			expectedHttpResponseStatusCode, actualHttpResponse.getStatusCode());
 	}
 
-	protected void assertEquals(
-		ProviderConfiguration providerConfiguration1,
-		ProviderConfiguration providerConfiguration2) {
-
+	protected void assertEquals(Provider provider1, Provider provider2) {
 		Assert.assertTrue(
-			providerConfiguration1 + " does not equal " +
-				providerConfiguration2,
-			equals(providerConfiguration1, providerConfiguration2));
+			provider1 + " does not equal " + provider2,
+			equals(provider1, provider2));
 	}
 
 	protected void assertEquals(
-		List<ProviderConfiguration> providerConfigurations1,
-		List<ProviderConfiguration> providerConfigurations2) {
+		List<Provider> providers1, List<Provider> providers2) {
 
-		Assert.assertEquals(
-			providerConfigurations1.size(), providerConfigurations2.size());
+		Assert.assertEquals(providers1.size(), providers2.size());
 
-		for (int i = 0; i < providerConfigurations1.size(); i++) {
-			ProviderConfiguration providerConfiguration1 =
-				providerConfigurations1.get(i);
-			ProviderConfiguration providerConfiguration2 =
-				providerConfigurations2.get(i);
+		for (int i = 0; i < providers1.size(); i++) {
+			Provider provider1 = providers1.get(i);
+			Provider provider2 = providers2.get(i);
 
-			assertEquals(providerConfiguration1, providerConfiguration2);
+			assertEquals(provider1, provider2);
 		}
 	}
 
 	protected void assertEqualsIgnoringOrder(
-		List<ProviderConfiguration> providerConfigurations1,
-		List<ProviderConfiguration> providerConfigurations2) {
+		List<Provider> providers1, List<Provider> providers2) {
 
-		Assert.assertEquals(
-			providerConfigurations1.size(), providerConfigurations2.size());
+		Assert.assertEquals(providers1.size(), providers2.size());
 
-		for (ProviderConfiguration providerConfiguration1 :
-				providerConfigurations1) {
-
+		for (Provider provider1 : providers1) {
 			boolean contains = false;
 
-			for (ProviderConfiguration providerConfiguration2 :
-					providerConfigurations2) {
-
-				if (equals(providerConfiguration1, providerConfiguration2)) {
+			for (Provider provider2 : providers2) {
+				if (equals(provider1, provider2)) {
 					contains = true;
 
 					break;
@@ -325,22 +299,34 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 			}
 
 			Assert.assertTrue(
-				providerConfigurations2 + " does not contain " +
-					providerConfiguration1,
-				contains);
+				providers2 + " does not contain " + provider1, contains);
 		}
 	}
 
-	protected void assertValid(ProviderConfiguration providerConfiguration)
-		throws Exception {
-
+	protected void assertValid(Provider provider) throws Exception {
 		boolean valid = true;
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
 			if (Objects.equals("enabled", additionalAssertFieldName)) {
-				if (providerConfiguration.getEnabled() == null) {
+				if (provider.getEnabled() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("entityId", additionalAssertFieldName)) {
+				if (provider.getEntityId() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("idp", additionalAssertFieldName)) {
+				if (provider.getIdp() == null) {
 					valid = false;
 				}
 
@@ -348,7 +334,15 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 			}
 
 			if (Objects.equals("role", additionalAssertFieldName)) {
-				if (providerConfiguration.getRole() == null) {
+				if (provider.getRole() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("sp", additionalAssertFieldName)) {
+				if (provider.getSp() == null) {
 					valid = false;
 				}
 
@@ -363,13 +357,12 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
-	protected void assertValid(Page<ProviderConfiguration> page) {
+	protected void assertValid(Page<Provider> page) {
 		boolean valid = false;
 
-		java.util.Collection<ProviderConfiguration> providerConfigurations =
-			page.getItems();
+		java.util.Collection<Provider> providers = page.getItems();
 
-		int size = providerConfigurations.size();
+		int size = providers.size();
 
 		if ((page.getLastPage() > 0) && (page.getPage() > 0) &&
 			(page.getPageSize() > 0) && (page.getTotalCount() > 0) &&
@@ -390,8 +383,7 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 
 		for (java.lang.reflect.Field field :
 				getDeclaredFields(
-					com.liferay.saml.admin.rest.dto.v1_0.ProviderConfiguration.
-						class)) {
+					com.liferay.saml.admin.rest.dto.v1_0.Provider.class)) {
 
 			if (!ArrayUtil.contains(
 					getAdditionalAssertFieldNames(), field.getName())) {
@@ -439,11 +431,8 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 		return new String[0];
 	}
 
-	protected boolean equals(
-		ProviderConfiguration providerConfiguration1,
-		ProviderConfiguration providerConfiguration2) {
-
-		if (providerConfiguration1 == providerConfiguration2) {
+	protected boolean equals(Provider provider1, Provider provider2) {
+		if (provider1 == provider2) {
 			return true;
 		}
 
@@ -452,8 +441,27 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 
 			if (Objects.equals("enabled", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
-						providerConfiguration1.getEnabled(),
-						providerConfiguration2.getEnabled())) {
+						provider1.getEnabled(), provider2.getEnabled())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("entityId", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						provider1.getEntityId(), provider2.getEntityId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("idp", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						provider1.getIdp(), provider2.getIdp())) {
 
 					return false;
 				}
@@ -463,9 +471,16 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 
 			if (Objects.equals("role", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
-						providerConfiguration1.getRole(),
-						providerConfiguration2.getRole())) {
+						provider1.getRole(), provider2.getRole())) {
 
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("sp", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(provider1.getSp(), provider2.getSp())) {
 					return false;
 				}
 
@@ -522,13 +537,13 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 	protected java.util.Collection<EntityField> getEntityFields()
 		throws Exception {
 
-		if (!(_providerConfigurationResource instanceof EntityModelResource)) {
+		if (!(_providerResource instanceof EntityModelResource)) {
 			throw new UnsupportedOperationException(
 				"Resource is not an instance of EntityModelResource");
 		}
 
 		EntityModelResource entityModelResource =
-			(EntityModelResource)_providerConfigurationResource;
+			(EntityModelResource)_providerResource;
 
 		EntityModel entityModel = entityModelResource.getEntityModel(
 			new MultivaluedHashMap());
@@ -557,8 +572,7 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 	}
 
 	protected String getFilterString(
-		EntityField entityField, String operator,
-		ProviderConfiguration providerConfiguration) {
+		EntityField entityField, String operator, Provider provider) {
 
 		StringBundler sb = new StringBundler();
 
@@ -575,7 +589,25 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 				"Invalid entity field " + entityFieldName);
 		}
 
+		if (entityFieldName.equals("entityId")) {
+			sb.append("'");
+			sb.append(String.valueOf(provider.getEntityId()));
+			sb.append("'");
+
+			return sb.toString();
+		}
+
+		if (entityFieldName.equals("idp")) {
+			throw new IllegalArgumentException(
+				"Invalid entity field " + entityFieldName);
+		}
+
 		if (entityFieldName.equals("role")) {
+			throw new IllegalArgumentException(
+				"Invalid entity field " + entityFieldName);
+		}
+
+		if (entityFieldName.equals("sp")) {
 			throw new IllegalArgumentException(
 				"Invalid entity field " + entityFieldName);
 		}
@@ -621,32 +653,27 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 			invoke(queryGraphQLField.toString()));
 	}
 
-	protected ProviderConfiguration randomProviderConfiguration()
-		throws Exception {
-
-		return new ProviderConfiguration() {
+	protected Provider randomProvider() throws Exception {
+		return new Provider() {
 			{
 				enabled = RandomTestUtil.randomBoolean();
+				entityId = StringUtil.toLowerCase(
+					RandomTestUtil.randomString());
 			}
 		};
 	}
 
-	protected ProviderConfiguration randomIrrelevantProviderConfiguration()
-		throws Exception {
+	protected Provider randomIrrelevantProvider() throws Exception {
+		Provider randomIrrelevantProvider = randomProvider();
 
-		ProviderConfiguration randomIrrelevantProviderConfiguration =
-			randomProviderConfiguration();
-
-		return randomIrrelevantProviderConfiguration;
+		return randomIrrelevantProvider;
 	}
 
-	protected ProviderConfiguration randomPatchProviderConfiguration()
-		throws Exception {
-
-		return randomProviderConfiguration();
+	protected Provider randomPatchProvider() throws Exception {
+		return randomProvider();
 	}
 
-	protected ProviderConfigurationResource providerConfigurationResource;
+	protected ProviderResource providerResource;
 	protected Group irrelevantGroup;
 	protected Company testCompany;
 	protected Group testGroup;
@@ -723,7 +750,7 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 	}
 
 	private static final com.liferay.portal.kernel.log.Log _log =
-		LogFactoryUtil.getLog(BaseProviderConfigurationResourceTestCase.class);
+		LogFactoryUtil.getLog(BaseProviderResourceTestCase.class);
 
 	private static BeanUtilsBean _beanUtilsBean = new BeanUtilsBean() {
 
@@ -740,8 +767,7 @@ public abstract class BaseProviderConfigurationResourceTestCase {
 	private static DateFormat _dateFormat;
 
 	@Inject
-	private
-		com.liferay.saml.admin.rest.resource.v1_0.ProviderConfigurationResource
-			_providerConfigurationResource;
+	private com.liferay.saml.admin.rest.resource.v1_0.ProviderResource
+		_providerResource;
 
 }

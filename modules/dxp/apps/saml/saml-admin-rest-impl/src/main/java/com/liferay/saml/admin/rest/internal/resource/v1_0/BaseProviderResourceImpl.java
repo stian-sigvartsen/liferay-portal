@@ -39,8 +39,8 @@ import com.liferay.portal.vulcan.pagination.Pagination;
 import com.liferay.portal.vulcan.resource.EntityModelResource;
 import com.liferay.portal.vulcan.util.ActionUtil;
 import com.liferay.portal.vulcan.util.TransformUtil;
-import com.liferay.saml.admin.rest.dto.v1_0.ProviderConfiguration;
-import com.liferay.saml.admin.rest.resource.v1_0.ProviderConfigurationResource;
+import com.liferay.saml.admin.rest.dto.v1_0.Provider;
+import com.liferay.saml.admin.rest.resource.v1_0.ProviderResource;
 
 import java.io.Serializable;
 
@@ -64,9 +64,9 @@ import javax.ws.rs.core.UriInfo;
  */
 @Generated("")
 @javax.ws.rs.Path("/v1.0")
-public abstract class BaseProviderConfigurationResourceImpl
-	implements EntityModelResource, ProviderConfigurationResource,
-			   VulcanBatchEngineTaskItemDelegate<ProviderConfiguration> {
+public abstract class BaseProviderResourceImpl
+	implements EntityModelResource, ProviderResource,
+			   VulcanBatchEngineTaskItemDelegate<Provider> {
 
 	/**
 	 * Invoke this method with the command line:
@@ -77,45 +77,34 @@ public abstract class BaseProviderConfigurationResourceImpl
 		description = "Retrieves the SAML Provider configuration."
 	)
 	@io.swagger.v3.oas.annotations.tags.Tags(
-		value = {
-			@io.swagger.v3.oas.annotations.tags.Tag(
-				name = "ProviderConfiguration"
-			)
-		}
+		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Provider")}
 	)
 	@javax.ws.rs.GET
 	@javax.ws.rs.Path("/provider")
 	@javax.ws.rs.Produces({"application/json", "application/xml"})
 	@Override
-	public ProviderConfiguration getProviderConfiguration() throws Exception {
-		return new ProviderConfiguration();
+	public Provider getProvider() throws Exception {
+		return new Provider();
 	}
 
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -X 'POST' 'http://localhost:8080/o/saml-admin/v1.0/provider' -d $'{"enabled": ___, "role": ___}' --header 'Content-Type: application/json' -u 'test@liferay.com:test'
+	 * curl -X 'POST' 'http://localhost:8080/o/saml-admin/v1.0/provider' -d $'{"enabled": ___, "entityId": ___, "idp": ___, "role": ___, "sp": ___}' --header 'Content-Type: application/json' -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Operation(
 		description = "Creates a full SAML Provider configuration with peer connections."
 	)
 	@io.swagger.v3.oas.annotations.tags.Tags(
-		value = {
-			@io.swagger.v3.oas.annotations.tags.Tag(
-				name = "ProviderConfiguration"
-			)
-		}
+		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Provider")}
 	)
 	@javax.ws.rs.Consumes({"application/json", "application/xml"})
 	@javax.ws.rs.Path("/provider")
 	@javax.ws.rs.POST
 	@javax.ws.rs.Produces({"application/json", "application/xml"})
 	@Override
-	public ProviderConfiguration postProviderConfiguration(
-			ProviderConfiguration providerConfiguration)
-		throws Exception {
-
-		return new ProviderConfiguration();
+	public Provider postProvider(Provider provider) throws Exception {
+		return new Provider();
 	}
 
 	/**
@@ -132,18 +121,14 @@ public abstract class BaseProviderConfigurationResourceImpl
 		}
 	)
 	@io.swagger.v3.oas.annotations.tags.Tags(
-		value = {
-			@io.swagger.v3.oas.annotations.tags.Tag(
-				name = "ProviderConfiguration"
-			)
-		}
+		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Provider")}
 	)
 	@javax.ws.rs.Consumes("application/json")
 	@javax.ws.rs.Path("/provider/batch")
 	@javax.ws.rs.POST
 	@javax.ws.rs.Produces("application/json")
 	@Override
-	public Response postProviderConfigurationBatch(
+	public Response postProviderBatch(
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
 			@javax.ws.rs.QueryParam("callbackURL")
 			String callbackURL,
@@ -162,8 +147,7 @@ public abstract class BaseProviderConfigurationResourceImpl
 
 		return responseBuilder.entity(
 			vulcanBatchEngineImportTaskResource.postImportTask(
-				ProviderConfiguration.class.getName(), callbackURL, null,
-				object)
+				Provider.class.getName(), callbackURL, null, object)
 		).build();
 	}
 
@@ -184,11 +168,7 @@ public abstract class BaseProviderConfigurationResourceImpl
 		}
 	)
 	@io.swagger.v3.oas.annotations.tags.Tags(
-		value = {
-			@io.swagger.v3.oas.annotations.tags.Tag(
-				name = "ProviderConfiguration"
-			)
-		}
+		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Provider")}
 	)
 	@javax.ws.rs.DELETE
 	@javax.ws.rs.Path("/provider/{roleId}")
@@ -219,17 +199,13 @@ public abstract class BaseProviderConfigurationResourceImpl
 		}
 	)
 	@io.swagger.v3.oas.annotations.tags.Tags(
-		value = {
-			@io.swagger.v3.oas.annotations.tags.Tag(
-				name = "ProviderConfiguration"
-			)
-		}
+		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Provider")}
 	)
 	@javax.ws.rs.GET
 	@javax.ws.rs.Path("/provider/{roleId}")
 	@javax.ws.rs.Produces({"application/json", "application/xml"})
 	@Override
-	public Object getProviderConfiguration(
+	public Object getProvider(
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
 			@javax.validation.constraints.NotNull
 			@javax.ws.rs.PathParam("roleId")
@@ -256,11 +232,7 @@ public abstract class BaseProviderConfigurationResourceImpl
 		}
 	)
 	@io.swagger.v3.oas.annotations.tags.Tags(
-		value = {
-			@io.swagger.v3.oas.annotations.tags.Tag(
-				name = "ProviderConfiguration"
-			)
-		}
+		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Provider")}
 	)
 	@javax.ws.rs.Consumes({"application/json", "application/xml"})
 	@javax.ws.rs.PATCH
@@ -297,11 +269,7 @@ public abstract class BaseProviderConfigurationResourceImpl
 		}
 	)
 	@io.swagger.v3.oas.annotations.tags.Tags(
-		value = {
-			@io.swagger.v3.oas.annotations.tags.Tag(
-				name = "ProviderConfiguration"
-			)
-		}
+		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Provider")}
 	)
 	@javax.ws.rs.Consumes({"application/json", "application/xml"})
 	@javax.ws.rs.Path("/provider/{roleId}")
@@ -324,32 +292,27 @@ public abstract class BaseProviderConfigurationResourceImpl
 	@Override
 	@SuppressWarnings("PMD.UnusedLocalVariable")
 	public void create(
-			java.util.Collection<ProviderConfiguration> providerConfigurations,
+			java.util.Collection<Provider> providers,
 			Map<String, Serializable> parameters)
 		throws Exception {
 
-		UnsafeConsumer<ProviderConfiguration, Exception>
-			providerConfigurationUnsafeConsumer =
-				providerConfiguration -> postProviderConfiguration(
-					providerConfiguration);
+		UnsafeConsumer<Provider, Exception> providerUnsafeConsumer =
+			provider -> postProvider(provider);
 
 		if (contextBatchUnsafeConsumer != null) {
 			contextBatchUnsafeConsumer.accept(
-				providerConfigurations, providerConfigurationUnsafeConsumer);
+				providers, providerUnsafeConsumer);
 		}
 		else {
-			for (ProviderConfiguration providerConfiguration :
-					providerConfigurations) {
-
-				providerConfigurationUnsafeConsumer.accept(
-					providerConfiguration);
+			for (Provider provider : providers) {
+				providerUnsafeConsumer.accept(provider);
 			}
 		}
 	}
 
 	@Override
 	public void delete(
-			java.util.Collection<ProviderConfiguration> providerConfigurations,
+			java.util.Collection<Provider> providers,
 			Map<String, Serializable> parameters)
 		throws Exception {
 	}
@@ -374,7 +337,7 @@ public abstract class BaseProviderConfigurationResourceImpl
 	}
 
 	@Override
-	public Page<ProviderConfiguration> read(
+	public Page<Provider> read(
 			Filter filter, Pagination pagination, Sort[] sorts,
 			Map<String, Serializable> parameters, String search)
 		throws Exception {
@@ -406,7 +369,7 @@ public abstract class BaseProviderConfigurationResourceImpl
 
 	@Override
 	public void update(
-			java.util.Collection<ProviderConfiguration> providerConfigurations,
+			java.util.Collection<Provider> providers,
 			Map<String, Serializable> parameters)
 		throws Exception {
 	}
@@ -417,8 +380,8 @@ public abstract class BaseProviderConfigurationResourceImpl
 
 	public void setContextBatchUnsafeConsumer(
 		UnsafeBiConsumer
-			<java.util.Collection<ProviderConfiguration>,
-			 UnsafeConsumer<ProviderConfiguration, Exception>, Exception>
+			<java.util.Collection<Provider>,
+			 UnsafeConsumer<Provider, Exception>, Exception>
 				contextBatchUnsafeConsumer) {
 
 		this.contextBatchUnsafeConsumer = contextBatchUnsafeConsumer;
@@ -581,9 +544,8 @@ public abstract class BaseProviderConfigurationResourceImpl
 
 	protected AcceptLanguage contextAcceptLanguage;
 	protected UnsafeBiConsumer
-		<java.util.Collection<ProviderConfiguration>,
-		 UnsafeConsumer<ProviderConfiguration, Exception>, Exception>
-			contextBatchUnsafeConsumer;
+		<java.util.Collection<Provider>, UnsafeConsumer<Provider, Exception>,
+		 Exception> contextBatchUnsafeConsumer;
 	protected com.liferay.portal.kernel.model.Company contextCompany;
 	protected HttpServletRequest contextHttpServletRequest;
 	protected HttpServletResponse contextHttpServletResponse;
@@ -600,6 +562,6 @@ public abstract class BaseProviderConfigurationResourceImpl
 		vulcanBatchEngineImportTaskResource;
 
 	private static final com.liferay.portal.kernel.log.Log _log =
-		LogFactoryUtil.getLog(BaseProviderConfigurationResourceImpl.class);
+		LogFactoryUtil.getLog(BaseProviderResourceImpl.class);
 
 }

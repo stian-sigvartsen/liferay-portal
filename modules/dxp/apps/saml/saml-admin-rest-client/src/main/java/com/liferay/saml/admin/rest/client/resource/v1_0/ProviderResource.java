@@ -14,10 +14,10 @@
 
 package com.liferay.saml.admin.rest.client.resource.v1_0;
 
-import com.liferay.saml.admin.rest.client.dto.v1_0.ProviderConfiguration;
+import com.liferay.saml.admin.rest.client.dto.v1_0.Provider;
 import com.liferay.saml.admin.rest.client.http.HttpInvoker;
 import com.liferay.saml.admin.rest.client.problem.Problem;
-import com.liferay.saml.admin.rest.client.serdes.v1_0.ProviderConfigurationSerDes;
+import com.liferay.saml.admin.rest.client.serdes.v1_0.ProviderSerDes;
 
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -32,30 +32,25 @@ import javax.annotation.Generated;
  * @generated
  */
 @Generated("")
-public interface ProviderConfigurationResource {
+public interface ProviderResource {
 
 	public static Builder builder() {
 		return new Builder();
 	}
 
-	public ProviderConfiguration getProviderConfiguration() throws Exception;
+	public Provider getProvider() throws Exception;
 
-	public HttpInvoker.HttpResponse getProviderConfigurationHttpResponse()
+	public HttpInvoker.HttpResponse getProviderHttpResponse() throws Exception;
+
+	public Provider postProvider(Provider provider) throws Exception;
+
+	public HttpInvoker.HttpResponse postProviderHttpResponse(Provider provider)
 		throws Exception;
 
-	public ProviderConfiguration postProviderConfiguration(
-			ProviderConfiguration providerConfiguration)
+	public void postProviderBatch(String callbackURL, Object object)
 		throws Exception;
 
-	public HttpInvoker.HttpResponse postProviderConfigurationHttpResponse(
-			ProviderConfiguration providerConfiguration)
-		throws Exception;
-
-	public void postProviderConfigurationBatch(
-			String callbackURL, Object object)
-		throws Exception;
-
-	public HttpInvoker.HttpResponse postProviderConfigurationBatchHttpResponse(
+	public HttpInvoker.HttpResponse postProviderBatchHttpResponse(
 			String callbackURL, Object object)
 		throws Exception;
 
@@ -64,10 +59,9 @@ public interface ProviderConfigurationResource {
 	public HttpInvoker.HttpResponse deleteRoleHttpResponse(String roleId)
 		throws Exception;
 
-	public Object getProviderConfiguration(String roleId) throws Exception;
+	public Object getProvider(String roleId) throws Exception;
 
-	public HttpInvoker.HttpResponse getProviderConfigurationHttpResponse(
-			String roleId)
+	public HttpInvoker.HttpResponse getProviderHttpResponse(String roleId)
 		throws Exception;
 
 	public void patchRole(String roleId, Object object) throws Exception;
@@ -91,8 +85,8 @@ public interface ProviderConfigurationResource {
 			return this;
 		}
 
-		public ProviderConfigurationResource build() {
-			return new ProviderConfigurationResourceImpl(this);
+		public ProviderResource build() {
+			return new ProviderResourceImpl(this);
 		}
 
 		public Builder endpoint(String host, int port, String scheme) {
@@ -151,14 +145,10 @@ public interface ProviderConfigurationResource {
 
 	}
 
-	public static class ProviderConfigurationResourceImpl
-		implements ProviderConfigurationResource {
+	public static class ProviderResourceImpl implements ProviderResource {
 
-		public ProviderConfiguration getProviderConfiguration()
-			throws Exception {
-
-			HttpInvoker.HttpResponse httpResponse =
-				getProviderConfigurationHttpResponse();
+		public Provider getProvider() throws Exception {
+			HttpInvoker.HttpResponse httpResponse = getProviderHttpResponse();
 
 			String content = httpResponse.getContent();
 
@@ -186,7 +176,7 @@ public interface ProviderConfigurationResource {
 			}
 
 			try {
-				return ProviderConfigurationSerDes.toDTO(content);
+				return ProviderSerDes.toDTO(content);
 			}
 			catch (Exception e) {
 				_logger.log(
@@ -197,7 +187,7 @@ public interface ProviderConfigurationResource {
 			}
 		}
 
-		public HttpInvoker.HttpResponse getProviderConfigurationHttpResponse()
+		public HttpInvoker.HttpResponse getProviderHttpResponse()
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
@@ -231,12 +221,9 @@ public interface ProviderConfigurationResource {
 			return httpInvoker.invoke();
 		}
 
-		public ProviderConfiguration postProviderConfiguration(
-				ProviderConfiguration providerConfiguration)
-			throws Exception {
-
-			HttpInvoker.HttpResponse httpResponse =
-				postProviderConfigurationHttpResponse(providerConfiguration);
+		public Provider postProvider(Provider provider) throws Exception {
+			HttpInvoker.HttpResponse httpResponse = postProviderHttpResponse(
+				provider);
 
 			String content = httpResponse.getContent();
 
@@ -264,7 +251,7 @@ public interface ProviderConfigurationResource {
 			}
 
 			try {
-				return ProviderConfigurationSerDes.toDTO(content);
+				return ProviderSerDes.toDTO(content);
 			}
 			catch (Exception e) {
 				_logger.log(
@@ -275,14 +262,13 @@ public interface ProviderConfigurationResource {
 			}
 		}
 
-		public HttpInvoker.HttpResponse postProviderConfigurationHttpResponse(
-				ProviderConfiguration providerConfiguration)
+		public HttpInvoker.HttpResponse postProviderHttpResponse(
+				Provider provider)
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
 
-			httpInvoker.body(
-				providerConfiguration.toString(), "application/json");
+			httpInvoker.body(provider.toString(), "application/json");
 
 			if (_builder._locale != null) {
 				httpInvoker.header(
@@ -313,12 +299,11 @@ public interface ProviderConfigurationResource {
 			return httpInvoker.invoke();
 		}
 
-		public void postProviderConfigurationBatch(
-				String callbackURL, Object object)
+		public void postProviderBatch(String callbackURL, Object object)
 			throws Exception {
 
 			HttpInvoker.HttpResponse httpResponse =
-				postProviderConfigurationBatchHttpResponse(callbackURL, object);
+				postProviderBatchHttpResponse(callbackURL, object);
 
 			String content = httpResponse.getContent();
 
@@ -346,9 +331,8 @@ public interface ProviderConfigurationResource {
 			}
 		}
 
-		public HttpInvoker.HttpResponse
-				postProviderConfigurationBatchHttpResponse(
-					String callbackURL, Object object)
+		public HttpInvoker.HttpResponse postProviderBatchHttpResponse(
+				String callbackURL, Object object)
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
@@ -466,9 +450,9 @@ public interface ProviderConfigurationResource {
 			return httpInvoker.invoke();
 		}
 
-		public Object getProviderConfiguration(String roleId) throws Exception {
-			HttpInvoker.HttpResponse httpResponse =
-				getProviderConfigurationHttpResponse(roleId);
+		public Object getProvider(String roleId) throws Exception {
+			HttpInvoker.HttpResponse httpResponse = getProviderHttpResponse(
+				roleId);
 
 			String content = httpResponse.getContent();
 
@@ -507,8 +491,7 @@ public interface ProviderConfigurationResource {
 			}
 		}
 
-		public HttpInvoker.HttpResponse getProviderConfigurationHttpResponse(
-				String roleId)
+		public HttpInvoker.HttpResponse getProviderHttpResponse(String roleId)
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
@@ -682,12 +665,12 @@ public interface ProviderConfigurationResource {
 			return httpInvoker.invoke();
 		}
 
-		private ProviderConfigurationResourceImpl(Builder builder) {
+		private ProviderResourceImpl(Builder builder) {
 			_builder = builder;
 		}
 
 		private static final Logger _logger = Logger.getLogger(
-			ProviderConfigurationResource.class.getName());
+			ProviderResource.class.getName());
 
 		private Builder _builder;
 

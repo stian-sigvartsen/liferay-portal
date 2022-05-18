@@ -15,7 +15,7 @@
 package com.liferay.saml.admin.rest.client.dto.v1_0;
 
 import com.liferay.saml.admin.rest.client.function.UnsafeSupplier;
-import com.liferay.saml.admin.rest.client.serdes.v1_0.IdpProviderConfigurationSerDes;
+import com.liferay.saml.admin.rest.client.serdes.v1_0.IdpSerDes;
 
 import java.io.Serializable;
 
@@ -28,10 +28,10 @@ import javax.annotation.Generated;
  * @generated
  */
 @Generated("")
-public class IdpProviderConfiguration implements Cloneable, Serializable {
+public class Idp implements Cloneable, Serializable {
 
-	public static IdpProviderConfiguration toDTO(String json) {
-		return IdpProviderConfigurationSerDes.toDTO(json);
+	public static Idp toDTO(String json) {
+		return IdpSerDes.toDTO(json);
 	}
 
 	public Boolean getAuthnRequestSignatureRequired() {
@@ -58,75 +58,6 @@ public class IdpProviderConfiguration implements Cloneable, Serializable {
 	}
 
 	protected Boolean authnRequestSignatureRequired;
-
-	public Boolean getEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	public void setEnabled(
-		UnsafeSupplier<Boolean, Exception> enabledUnsafeSupplier) {
-
-		try {
-			enabled = enabledUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected Boolean enabled;
-
-	public String getEntityId() {
-		return entityId;
-	}
-
-	public void setEntityId(String entityId) {
-		this.entityId = entityId;
-	}
-
-	public void setEntityId(
-		UnsafeSupplier<String, Exception> entityIdUnsafeSupplier) {
-
-		try {
-			entityId = entityIdUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected String entityId;
-
-	public Role getRole() {
-		return role;
-	}
-
-	public String getRoleAsString() {
-		if (role == null) {
-			return null;
-		}
-
-		return role.toString();
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
-	}
-
-	public void setRole(UnsafeSupplier<Role, Exception> roleUnsafeSupplier) {
-		try {
-			role = roleUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected Role role;
 
 	public Long getSessionMaximumAge() {
 		return sessionMaximumAge;
@@ -234,8 +165,8 @@ public class IdpProviderConfiguration implements Cloneable, Serializable {
 	protected Boolean sslRequired;
 
 	@Override
-	public IdpProviderConfiguration clone() throws CloneNotSupportedException {
-		return (IdpProviderConfiguration)super.clone();
+	public Idp clone() throws CloneNotSupportedException {
+		return (Idp)super.clone();
 	}
 
 	@Override
@@ -244,14 +175,13 @@ public class IdpProviderConfiguration implements Cloneable, Serializable {
 			return true;
 		}
 
-		if (!(object instanceof IdpProviderConfiguration)) {
+		if (!(object instanceof Idp)) {
 			return false;
 		}
 
-		IdpProviderConfiguration idpProviderConfiguration =
-			(IdpProviderConfiguration)object;
+		Idp idp = (Idp)object;
 
-		return Objects.equals(toString(), idpProviderConfiguration.toString());
+		return Objects.equals(toString(), idp.toString());
 	}
 
 	@Override
@@ -262,40 +192,7 @@ public class IdpProviderConfiguration implements Cloneable, Serializable {
 	}
 
 	public String toString() {
-		return IdpProviderConfigurationSerDes.toJSON(this);
-	}
-
-	public static enum Role {
-
-		IDP("idp");
-
-		public static Role create(String value) {
-			for (Role role : values()) {
-				if (Objects.equals(role.getValue(), value) ||
-					Objects.equals(role.name(), value)) {
-
-					return role;
-				}
-			}
-
-			return null;
-		}
-
-		public String getValue() {
-			return _value;
-		}
-
-		@Override
-		public String toString() {
-			return _value;
-		}
-
-		private Role(String value) {
-			_value = value;
-		}
-
-		private final String _value;
-
+		return IdpSerDes.toJSON(this);
 	}
 
 }
