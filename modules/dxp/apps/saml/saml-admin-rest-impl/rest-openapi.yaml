@@ -45,13 +45,6 @@ components:
             properties:
                 authnRequestSignatureRequired:
                     type: boolean
-                enabled:
-                    type: boolean
-                entityId:
-                    type: string
-                role:
-                    enum: ["idp"]
-                    type: string
                 sessionMaximumAge:
                     format: int64
                     type: integer
@@ -95,6 +88,8 @@ components:
             properties:
                 enabled:
                     type: boolean
+                entityId:
+                    type: string
                 role:
                     type: string
                     enum: [idp, sp]
@@ -126,10 +121,6 @@ components:
                     type: integer
                 defaultAssertionLifetime:
                     type: integer
-                enabled:
-                    type: boolean
-                entityId:
-                    type: string
                 idpConnections:
                     description:
                         Connected SAML IDPs
@@ -140,9 +131,6 @@ components:
                     type: string
                 ldapImportEnabled:
                     type: boolean
-                role:
-                    enum: ["sp"]
-                    type: string
                 samlKeystoreCredentialPassword:
                     type: string
                 sessionMaximumAge:

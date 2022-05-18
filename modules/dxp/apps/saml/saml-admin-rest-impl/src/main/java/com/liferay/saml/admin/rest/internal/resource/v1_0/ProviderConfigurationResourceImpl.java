@@ -39,19 +39,23 @@ public class ProviderConfigurationResourceImpl
 			new ProviderConfiguration();
 
 		providerConfiguration.setEnabled(true);
+		providerConfiguration.setEntityId("test");
 
-		IdpProviderConfiguration idpProviderConfiguration =
-			new IdpProviderConfiguration();
-
-		idpProviderConfiguration.setEntityId("test");
-
-		providerConfiguration.setIdp(idpProviderConfiguration);
+		providerConfiguration.setIdp(_getIdp());
 
 		return providerConfiguration;
 	}
 
 	@Override
 	public Object getProviderConfiguration(String roleId) throws Exception {
-		return super.getProviderConfiguration(roleId);
+		return _getIdp();
+	}
+
+	private IdpProviderConfiguration _getIdp() {
+
+		IdpProviderConfiguration idpProviderConfiguration =
+			new IdpProviderConfiguration();
+
+		return idpProviderConfiguration;
 	}
 }
