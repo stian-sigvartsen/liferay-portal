@@ -14,6 +14,8 @@
 
 package com.liferay.saml.admin.rest.internal.resource.v1_0;
 
+import com.liferay.saml.admin.rest.dto.v1_0.IdpProviderConfiguration;
+import com.liferay.saml.admin.rest.dto.v1_0.ProviderConfiguration;
 import com.liferay.saml.admin.rest.resource.v1_0.ProviderConfigurationResource;
 
 import org.osgi.service.component.annotations.Component;
@@ -29,4 +31,25 @@ import org.osgi.service.component.annotations.ServiceScope;
 )
 public class ProviderConfigurationResourceImpl
 	extends BaseProviderConfigurationResourceImpl {
+
+	@Override
+	public ProviderConfiguration getProviderConfiguration() throws Exception {
+
+		ProviderConfiguration providerConfiguration =
+			new ProviderConfiguration();
+
+		IdpProviderConfiguration idpProviderConfiguration =
+			new IdpProviderConfiguration();
+
+		idpProviderConfiguration.setEntityId("test");
+
+		providerConfiguration.setRole(idpProviderConfiguration);
+
+		return providerConfiguration;
+	}
+
+	@Override
+	public Object getProviderConfiguration(String roleId) throws Exception {
+		return super.getProviderConfiguration(roleId);
+	}
 }
