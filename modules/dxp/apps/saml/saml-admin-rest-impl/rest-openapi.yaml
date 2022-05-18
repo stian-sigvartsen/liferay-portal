@@ -38,7 +38,7 @@ components:
                 userAttributeMappings:
                     type: string
             type: object
-        IdpProviderConfiguration:
+        Idp:
             # @review
             description:
                 Configuration of the SAML provider's IDP capability
@@ -82,7 +82,7 @@ components:
                     readOnly: true
                     type: string
             type: object
-        ProviderConfiguration:
+        Provider:
             description:
                 Dummy schema which can be referenced from tags
             properties:
@@ -94,9 +94,9 @@ components:
                     type: string
                     enum: [idp, sp]
                 idp:
-                    $ref: "#/components/schemas/IdpProviderConfiguration"
+                    $ref: "#/components/schemas/Idp"
                 sp:
-                    $ref: "#/components/schemas/SpProviderConfiguration"
+                    $ref: "#/components/schemas/Sp"
             type: object
         SpConnection:
             # @review
@@ -105,7 +105,7 @@ components:
             properties:
                 enabled:
                     type: boolean
-        SpProviderConfiguration:
+        Sp:
             # @review
             description:
                 Configuration of the SAML provider's SP capability
@@ -376,42 +376,42 @@ paths:
         get:
             description:
                 Retrieves the SAML Provider configuration.
-            operationId: getProviderConfiguration
+            operationId: getProvider
             responses:
                 200:
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/ProviderConfiguration"
+                                $ref: "#/components/schemas/Provider"
                         application/xml:
                             schema:
-                                $ref: "#/components/schemas/ProviderConfiguration"
-            tags: ["ProviderConfiguration"]
+                                $ref: "#/components/schemas/Provider"
+            tags: ["Provider"]
         post:
             description:
                 Creates a full SAML Provider configuration with peer connections.
-            operationId: postProviderConfiguration
+            operationId: postProvider
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: "#/components/schemas/ProviderConfiguration"
+                            $ref: "#/components/schemas/Provider"
                     application/xml:
                         schema:
-                            $ref: "#/components/schemas/ProviderConfiguration"
+                            $ref: "#/components/schemas/Provider"
             responses:
                 200:
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/ProviderConfiguration"
+                                $ref: "#/components/schemas/Provider"
                         application/xml:
                             schema:
-                                $ref: "#/components/schemas/ProviderConfiguration"
+                                $ref: "#/components/schemas/Provider"
                     # @review
                     description:
                         "SAML provider configuration was successfully created"
-            tags: ["ProviderConfiguration"]
+            tags: ["Provider"]
     "/provider/{roleId}":
         delete:
             description:
@@ -428,11 +428,11 @@ paths:
                     content:
                         application/json: {}
                         application/xml: {}
-            tags: ["ProviderConfiguration"]
+            tags: ["Provider"]
         get:
             description:
                 Retrieves the SAML SP Provider configuration.
-            operationId: getProviderConfiguration
+            operationId: getProvider
             parameters:
                 - in: path
                   name: roleId
@@ -445,14 +445,14 @@ paths:
                         application/json:
                             schema:
                                 oneOf:
-                                  - $ref: "#/components/schemas/IdpProviderConfiguration"
-                                  - $ref: "#/components/schemas/SpProviderConfiguration"
+                                  - $ref: "#/components/schemas/Idp"
+                                  - $ref: "#/components/schemas/Sp"
                         application/xml:
                             schema:
                                 oneOf:
-                                  - $ref: "#/components/schemas/IdpProviderConfiguration"
-                                  - $ref: "#/components/schemas/SpProviderConfiguration"
-            tags: ["ProviderConfiguration"]
+                                  - $ref: "#/components/schemas/Idp"
+                                  - $ref: "#/components/schemas/Sp"
+            tags: ["Provider"]
         patch:
             description:
                 Patch the SAML SP Provider configuration.
@@ -468,30 +468,30 @@ paths:
                     application/json:
                         schema:
                             oneOf:
-                                - $ref: "#/components/schemas/IdpProviderConfiguration"
-                                - $ref: "#/components/schemas/SpProviderConfiguration"
+                                - $ref: "#/components/schemas/Idp"
+                                - $ref: "#/components/schemas/Sp"
                     application/xml:
                         schema:
                             oneOf:
-                                - $ref: "#/components/schemas/IdpProviderConfiguration"
-                                - $ref: "#/components/schemas/SpProviderConfiguration"
+                                - $ref: "#/components/schemas/Idp"
+                                - $ref: "#/components/schemas/Sp"
             responses:
                 200:
                     content:
                         application/json:
                             schema:
                                 oneOf:
-                                    - $ref: "#/components/schemas/IdpProviderConfiguration"
-                                    - $ref: "#/components/schemas/SpProviderConfiguration"
+                                    - $ref: "#/components/schemas/Idp"
+                                    - $ref: "#/components/schemas/Sp"
                         application/xml:
                             schema:
                                 oneOf:
-                                    - $ref: "#/components/schemas/IdpProviderConfiguration"
-                                    - $ref: "#/components/schemas/SpProviderConfiguration"
+                                    - $ref: "#/components/schemas/Idp"
+                                    - $ref: "#/components/schemas/Sp"
                     # @review
                     description:
                         "SAML provider configuration was successfully created"
-            tags: ["ProviderConfiguration"]
+            tags: ["Provider"]
         put:
             description:
                 Replaces the SAML SP Provider configuration.
@@ -507,27 +507,27 @@ paths:
                     application/json:
                         schema:
                             oneOf:
-                                - $ref: "#/components/schemas/IdpProviderConfiguration"
-                                - $ref: "#/components/schemas/SpProviderConfiguration"
+                                - $ref: "#/components/schemas/Idp"
+                                - $ref: "#/components/schemas/Sp"
                     application/xml:
                         schema:
                             oneOf:
-                                - $ref: "#/components/schemas/IdpProviderConfiguration"
-                                - $ref: "#/components/schemas/SpProviderConfiguration"
+                                - $ref: "#/components/schemas/Idp"
+                                - $ref: "#/components/schemas/Sp"
             responses:
                 200:
                     content:
                         application/json:
                             schema:
                                 oneOf:
-                                    - $ref: "#/components/schemas/IdpProviderConfiguration"
-                                    - $ref: "#/components/schemas/SpProviderConfiguration"
+                                    - $ref: "#/components/schemas/Idp"
+                                    - $ref: "#/components/schemas/Sp"
                         application/xml:
                             schema:
                                 oneOf:
-                                    - $ref: "#/components/schemas/IdpProviderConfiguration"
-                                    - $ref: "#/components/schemas/SpProviderConfiguration"
+                                    - $ref: "#/components/schemas/Idp"
+                                    - $ref: "#/components/schemas/Sp"
                     # @review
                     description:
                         "SAML provider configuration was successfully created"
-            tags: ["ProviderConfiguration"]
+            tags: ["Provider"]
