@@ -96,9 +96,12 @@ components:
                 enabled:
                     type: boolean
                 role:
-                    anyOf:
-                        - $ref: "#/components/schemas/IdpProviderConfiguration"
-                        - $ref: "#/components/schemas/SpProviderConfiguration"
+                    type: string
+                    enum: [idp, sp]
+                idp:
+                    $ref: "#/components/schemas/IdpProviderConfiguration"
+                sp:
+                    $ref: "#/components/schemas/SpProviderConfiguration"
             type: object
         SpConnection:
             # @review

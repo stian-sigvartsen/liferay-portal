@@ -38,12 +38,14 @@ public class ProviderConfigurationResourceImpl
 		ProviderConfiguration providerConfiguration =
 			new ProviderConfiguration();
 
+		providerConfiguration.setEnabled(true);
+
 		IdpProviderConfiguration idpProviderConfiguration =
 			new IdpProviderConfiguration();
 
 		idpProviderConfiguration.setEntityId("test");
 
-		providerConfiguration.setRole(idpProviderConfiguration);
+		providerConfiguration.setIdp(idpProviderConfiguration);
 
 		return providerConfiguration;
 	}
