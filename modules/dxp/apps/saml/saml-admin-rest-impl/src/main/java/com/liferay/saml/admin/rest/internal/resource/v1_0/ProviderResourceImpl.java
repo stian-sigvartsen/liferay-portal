@@ -14,6 +14,10 @@
 
 package com.liferay.saml.admin.rest.internal.resource.v1_0;
 
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.vulcan.dto.converter.DTOConverter;
+import com.liferay.portal.vulcan.dto.converter.DTOConverterRegistry;
+import com.liferay.portal.vulcan.dto.converter.DefaultDTOConverterContext;
 import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
 import com.liferay.saml.admin.rest.dto.v1_0.Idp;
@@ -23,6 +27,8 @@ import com.liferay.saml.admin.rest.dto.v1_0.Sp;
 import com.liferay.saml.admin.rest.resource.v1_0.IdpConnectionResource;
 import com.liferay.saml.admin.rest.resource.v1_0.ProviderResource;
 
+import com.liferay.saml.persistence.model.SamlSpIdpConnection;
+import com.liferay.saml.persistence.service.SamlSpIdpConnectionLocalService;
 import com.liferay.saml.runtime.configuration.SamlProviderConfiguration;
 import com.liferay.saml.runtime.configuration.SamlProviderConfigurationHelper;
 import org.osgi.service.component.annotations.Component;
@@ -30,6 +36,8 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Stian Sigvartsen
@@ -102,12 +110,28 @@ public class ProviderResourceImpl extends BaseProviderResourceImpl {
 		sp.setSignMetadata(samlProviderConfiguration.signMetadata());
 		sp.setSslRequired(samlProviderConfiguration.sslRequired());
 
-		Page<IdpConnection> page =
-			_idpConnectionResource.getIdpConnections(Pagination.of(-1, -1));
+		DTOConverter<?, IdpConnection> idpConnectionDTOConverter =
+			(DTOConverter<?, IdpConnection>)
+				_dtoConverterRegistry.getDTOConverter(
+					SamlSpIdpConnection.class.getName());
 
-		Collection<IdpConnection> collection = page.getItems();
+		List<SamlSpIdpConnection> samlSpIdpConnections =
+			_samlSpIdpConnectionLocalService.getSamlSpIdpConnections(
+				contextCompany.getCompanyId());
 
-		sp.setIdpConnections(collection.toArray(new IdpConnection[0]));
+		IdpConnection[] idpConnections = new IdpConnection[samlSpIdpConnections.size()];
+		int i = 0;
+
+		for (SamlSpIdpConnection samlSpIdpConnection : samlSpIdpConnections) {
+			idpConnections[i++] = idpConnectionDTOConverter.toDTO(
+				new DefaultDTOConverterContext(
+					_dtoConverterRegistry,
+					samlSpIdpConnection.getSamlSpIdpConnectionId(),
+					contextAcceptLanguage.getPreferredLocale(), contextUriInfo,
+					contextUser));
+		}
+
+		sp.setIdpConnections(idpConnections);
 
 		return sp;
 	}
@@ -116,5 +140,8 @@ public class ProviderResourceImpl extends BaseProviderResourceImpl {
 	private SamlProviderConfigurationHelper _samlProviderConfigurationHelper;
 
 	@Reference
-	private IdpConnectionResource _idpConnectionResource;
+	private SamlSpIdpConnectionLocalService _samlSpIdpConnectionLocalService;
+
+	@Reference
+	private DTOConverterRegistry _dtoConverterRegistry;
 }
