@@ -14,9 +14,13 @@
 
 package com.liferay.saml.admin.rest.internal.resource.v1_0;
 
+import com.liferay.portal.kernel.search.Sort;
+import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.vulcan.dto.converter.DTOConverter;
 import com.liferay.portal.vulcan.dto.converter.DTOConverterRegistry;
 import com.liferay.portal.vulcan.dto.converter.DefaultDTOConverterContext;
+import com.liferay.portal.vulcan.pagination.Page;
+import com.liferay.portal.vulcan.pagination.Pagination;
 import com.liferay.saml.admin.rest.dto.v1_0.Idp;
 import com.liferay.saml.admin.rest.dto.v1_0.IdpConnection;
 import com.liferay.saml.admin.rest.dto.v1_0.Provider;
@@ -34,7 +38,10 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 
+import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -46,6 +53,15 @@ import java.util.function.Supplier;
 	scope = ServiceScope.PROTOTYPE, service = ProviderResource.class
 )
 public class ProviderResourceImpl extends BaseProviderResourceImpl {
+
+	@Override
+	public Page<Provider> read(
+		Filter filter, Pagination pagination, Sort[] sorts,
+		Map<String, Serializable> parameters, String search) throws Exception {
+
+		return Page.of(Collections.singleton(getProvider()));
+	}
+
 	@Override
 	public Provider getProvider() throws Exception {
 
