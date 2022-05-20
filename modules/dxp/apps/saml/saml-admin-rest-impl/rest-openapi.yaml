@@ -382,6 +382,31 @@ paths:
                             schema:
                                 $ref: "#/components/schemas/Provider"
             tags: ["Provider"]
+        patch:
+            description:
+                Patch the SAML Provider configuration.
+            operationId: patchProvider
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Provider"
+                    application/xml:
+                        schema:
+                            $ref: "#/components/schemas/Provider"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Provider"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/Provider"
+                    # @review
+                    description:
+                        "SAML provider configuration was successfully created"
+            tags: ["Provider"]
         post:
             description:
                 Creates a full SAML Provider configuration with peer connections.
