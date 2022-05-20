@@ -112,6 +112,7 @@ components:
             properties:
                 enabled:
                     type: boolean
+            type: object
         Sp:
             # @review
             description:
