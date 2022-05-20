@@ -58,6 +58,8 @@ public interface ProviderResource {
 
 	public Provider getProvider() throws Exception;
 
+	public Provider patchProvider(Provider provider) throws Exception;
+
 	public Provider postProvider(Provider provider) throws Exception;
 
 	public Response postProviderBatch(String callbackURL, Object object)

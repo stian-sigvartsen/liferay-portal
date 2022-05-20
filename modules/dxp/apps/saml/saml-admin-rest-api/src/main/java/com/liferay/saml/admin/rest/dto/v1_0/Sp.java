@@ -126,38 +126,6 @@ public class Sp implements Serializable {
 	protected Boolean assertionSignatureRequired;
 
 	@Schema
-	public Boolean getAuthnRequestSignatureRequired() {
-		return authnRequestSignatureRequired;
-	}
-
-	public void setAuthnRequestSignatureRequired(
-		Boolean authnRequestSignatureRequired) {
-
-		this.authnRequestSignatureRequired = authnRequestSignatureRequired;
-	}
-
-	@JsonIgnore
-	public void setAuthnRequestSignatureRequired(
-		UnsafeSupplier<Boolean, Exception>
-			authnRequestSignatureRequiredUnsafeSupplier) {
-
-		try {
-			authnRequestSignatureRequired =
-				authnRequestSignatureRequiredUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Boolean authnRequestSignatureRequired;
-
-	@Schema
 	public Long getClockSkew() {
 		return clockSkew;
 	}
@@ -246,38 +214,6 @@ public class Sp implements Serializable {
 	protected IdpConnection[] idpConnections;
 
 	@Schema
-	public String getKeyStoreCredentialPassword() {
-		return keyStoreCredentialPassword;
-	}
-
-	public void setKeyStoreCredentialPassword(
-		String keyStoreCredentialPassword) {
-
-		this.keyStoreCredentialPassword = keyStoreCredentialPassword;
-	}
-
-	@JsonIgnore
-	public void setKeyStoreCredentialPassword(
-		UnsafeSupplier<String, Exception>
-			keyStoreCredentialPasswordUnsafeSupplier) {
-
-		try {
-			keyStoreCredentialPassword =
-				keyStoreCredentialPasswordUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected String keyStoreCredentialPassword;
-
-	@Schema
 	public Boolean getLdapImportEnabled() {
 		return ldapImportEnabled;
 	}
@@ -304,94 +240,6 @@ public class Sp implements Serializable {
 	@GraphQLField
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Boolean ldapImportEnabled;
-
-	@Schema
-	public String getSamlKeystoreCredentialPassword() {
-		return samlKeystoreCredentialPassword;
-	}
-
-	public void setSamlKeystoreCredentialPassword(
-		String samlKeystoreCredentialPassword) {
-
-		this.samlKeystoreCredentialPassword = samlKeystoreCredentialPassword;
-	}
-
-	@JsonIgnore
-	public void setSamlKeystoreCredentialPassword(
-		UnsafeSupplier<String, Exception>
-			samlKeystoreCredentialPasswordUnsafeSupplier) {
-
-		try {
-			samlKeystoreCredentialPassword =
-				samlKeystoreCredentialPasswordUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected String samlKeystoreCredentialPassword;
-
-	@Schema
-	public Long getSessionMaximumAge() {
-		return sessionMaximumAge;
-	}
-
-	public void setSessionMaximumAge(Long sessionMaximumAge) {
-		this.sessionMaximumAge = sessionMaximumAge;
-	}
-
-	@JsonIgnore
-	public void setSessionMaximumAge(
-		UnsafeSupplier<Long, Exception> sessionMaximumAgeUnsafeSupplier) {
-
-		try {
-			sessionMaximumAge = sessionMaximumAgeUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Long sessionMaximumAge;
-
-	@Schema
-	public Long getSessionTimeout() {
-		return sessionTimeout;
-	}
-
-	public void setSessionTimeout(Long sessionTimeout) {
-		this.sessionTimeout = sessionTimeout;
-	}
-
-	@JsonIgnore
-	public void setSessionTimeout(
-		UnsafeSupplier<Long, Exception> sessionTimeoutUnsafeSupplier) {
-
-		try {
-			sessionTimeout = sessionTimeoutUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Long sessionTimeout;
 
 	@Schema
 	public Boolean getSignAuthnRequest() {
@@ -524,16 +372,6 @@ public class Sp implements Serializable {
 			sb.append(assertionSignatureRequired);
 		}
 
-		if (authnRequestSignatureRequired != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"authnRequestSignatureRequired\": ");
-
-			sb.append(authnRequestSignatureRequired);
-		}
-
 		if (clockSkew != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -574,20 +412,6 @@ public class Sp implements Serializable {
 			sb.append("]");
 		}
 
-		if (keyStoreCredentialPassword != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"keyStoreCredentialPassword\": ");
-
-			sb.append("\"");
-
-			sb.append(_escape(keyStoreCredentialPassword));
-
-			sb.append("\"");
-		}
-
 		if (ldapImportEnabled != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -596,40 +420,6 @@ public class Sp implements Serializable {
 			sb.append("\"ldapImportEnabled\": ");
 
 			sb.append(ldapImportEnabled);
-		}
-
-		if (samlKeystoreCredentialPassword != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"samlKeystoreCredentialPassword\": ");
-
-			sb.append("\"");
-
-			sb.append(_escape(samlKeystoreCredentialPassword));
-
-			sb.append("\"");
-		}
-
-		if (sessionMaximumAge != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"sessionMaximumAge\": ");
-
-			sb.append(sessionMaximumAge);
-		}
-
-		if (sessionTimeout != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"sessionTimeout\": ");
-
-			sb.append(sessionTimeout);
 		}
 
 		if (signAuthnRequest != null) {

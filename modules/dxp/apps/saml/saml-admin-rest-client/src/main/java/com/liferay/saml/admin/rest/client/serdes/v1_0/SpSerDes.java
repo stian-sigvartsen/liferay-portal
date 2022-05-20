@@ -75,16 +75,6 @@ public class SpSerDes {
 			sb.append(sp.getAssertionSignatureRequired());
 		}
 
-		if (sp.getAuthnRequestSignatureRequired() != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"authnRequestSignatureRequired\": ");
-
-			sb.append(sp.getAuthnRequestSignatureRequired());
-		}
-
 		if (sp.getClockSkew() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -125,20 +115,6 @@ public class SpSerDes {
 			sb.append("]");
 		}
 
-		if (sp.getKeyStoreCredentialPassword() != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"keyStoreCredentialPassword\": ");
-
-			sb.append("\"");
-
-			sb.append(_escape(sp.getKeyStoreCredentialPassword()));
-
-			sb.append("\"");
-		}
-
 		if (sp.getLdapImportEnabled() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -147,40 +123,6 @@ public class SpSerDes {
 			sb.append("\"ldapImportEnabled\": ");
 
 			sb.append(sp.getLdapImportEnabled());
-		}
-
-		if (sp.getSamlKeystoreCredentialPassword() != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"samlKeystoreCredentialPassword\": ");
-
-			sb.append("\"");
-
-			sb.append(_escape(sp.getSamlKeystoreCredentialPassword()));
-
-			sb.append("\"");
-		}
-
-		if (sp.getSessionMaximumAge() != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"sessionMaximumAge\": ");
-
-			sb.append(sp.getSessionMaximumAge());
-		}
-
-		if (sp.getSessionTimeout() != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"sessionTimeout\": ");
-
-			sb.append(sp.getSessionTimeout());
 		}
 
 		if (sp.getSignAuthnRequest() != null) {
@@ -249,15 +191,6 @@ public class SpSerDes {
 				String.valueOf(sp.getAssertionSignatureRequired()));
 		}
 
-		if (sp.getAuthnRequestSignatureRequired() == null) {
-			map.put("authnRequestSignatureRequired", null);
-		}
-		else {
-			map.put(
-				"authnRequestSignatureRequired",
-				String.valueOf(sp.getAuthnRequestSignatureRequired()));
-		}
-
 		if (sp.getClockSkew() == null) {
 			map.put("clockSkew", null);
 		}
@@ -281,45 +214,12 @@ public class SpSerDes {
 			map.put("idpConnections", String.valueOf(sp.getIdpConnections()));
 		}
 
-		if (sp.getKeyStoreCredentialPassword() == null) {
-			map.put("keyStoreCredentialPassword", null);
-		}
-		else {
-			map.put(
-				"keyStoreCredentialPassword",
-				String.valueOf(sp.getKeyStoreCredentialPassword()));
-		}
-
 		if (sp.getLdapImportEnabled() == null) {
 			map.put("ldapImportEnabled", null);
 		}
 		else {
 			map.put(
 				"ldapImportEnabled", String.valueOf(sp.getLdapImportEnabled()));
-		}
-
-		if (sp.getSamlKeystoreCredentialPassword() == null) {
-			map.put("samlKeystoreCredentialPassword", null);
-		}
-		else {
-			map.put(
-				"samlKeystoreCredentialPassword",
-				String.valueOf(sp.getSamlKeystoreCredentialPassword()));
-		}
-
-		if (sp.getSessionMaximumAge() == null) {
-			map.put("sessionMaximumAge", null);
-		}
-		else {
-			map.put(
-				"sessionMaximumAge", String.valueOf(sp.getSessionMaximumAge()));
-		}
-
-		if (sp.getSessionTimeout() == null) {
-			map.put("sessionTimeout", null);
-		}
-		else {
-			map.put("sessionTimeout", String.valueOf(sp.getSessionTimeout()));
 		}
 
 		if (sp.getSignAuthnRequest() == null) {
@@ -379,14 +279,6 @@ public class SpSerDes {
 						(Boolean)jsonParserFieldValue);
 				}
 			}
-			else if (Objects.equals(
-						jsonParserFieldName, "authnRequestSignatureRequired")) {
-
-				if (jsonParserFieldValue != null) {
-					sp.setAuthnRequestSignatureRequired(
-						(Boolean)jsonParserFieldValue);
-				}
-			}
 			else if (Objects.equals(jsonParserFieldName, "clockSkew")) {
 				if (jsonParserFieldValue != null) {
 					sp.setClockSkew(Long.valueOf((String)jsonParserFieldValue));
@@ -412,38 +304,9 @@ public class SpSerDes {
 						));
 				}
 			}
-			else if (Objects.equals(
-						jsonParserFieldName, "keyStoreCredentialPassword")) {
-
-				if (jsonParserFieldValue != null) {
-					sp.setKeyStoreCredentialPassword(
-						(String)jsonParserFieldValue);
-				}
-			}
 			else if (Objects.equals(jsonParserFieldName, "ldapImportEnabled")) {
 				if (jsonParserFieldValue != null) {
 					sp.setLdapImportEnabled((Boolean)jsonParserFieldValue);
-				}
-			}
-			else if (Objects.equals(
-						jsonParserFieldName,
-						"samlKeystoreCredentialPassword")) {
-
-				if (jsonParserFieldValue != null) {
-					sp.setSamlKeystoreCredentialPassword(
-						(String)jsonParserFieldValue);
-				}
-			}
-			else if (Objects.equals(jsonParserFieldName, "sessionMaximumAge")) {
-				if (jsonParserFieldValue != null) {
-					sp.setSessionMaximumAge(
-						Long.valueOf((String)jsonParserFieldValue));
-				}
-			}
-			else if (Objects.equals(jsonParserFieldName, "sessionTimeout")) {
-				if (jsonParserFieldValue != null) {
-					sp.setSessionTimeout(
-						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "signAuthnRequest")) {

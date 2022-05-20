@@ -193,3 +193,5 @@
 /working.dir.properties
 _sass_cache_*.css
 poshi-warnings.xml
+/modules/dxp/apps/saml/oneOf*
+/modules/dxp/apps/saml/singleton*

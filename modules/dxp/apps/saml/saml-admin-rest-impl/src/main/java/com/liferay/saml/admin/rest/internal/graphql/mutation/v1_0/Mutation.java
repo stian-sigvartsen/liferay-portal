@@ -206,6 +206,16 @@ public class Mutation {
 				idpConnectionId, multipartBody, callbackURL, object));
 	}
 
+	@GraphQLField(description = "Patch the SAML Provider configuration.")
+	public Provider patchProvider(@GraphQLName("provider") Provider provider)
+		throws Exception {
+
+		return _applyComponentServiceObjects(
+			_providerResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			providerResource -> providerResource.patchProvider(provider));
+	}
+
 	@GraphQLField(
 		description = "Creates a full SAML Provider configuration with peer connections."
 	)

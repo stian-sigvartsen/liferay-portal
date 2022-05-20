@@ -204,6 +204,11 @@ public abstract class BaseProviderResourceTestCase {
 	}
 
 	@Test
+	public void testPatchProvider() throws Exception {
+		Assert.assertTrue(false);
+	}
+
+	@Test
 	public void testPostProvider() throws Exception {
 		Provider randomProvider = randomProvider();
 

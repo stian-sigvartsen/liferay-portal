@@ -90,6 +90,26 @@ public abstract class BaseProviderResourceImpl
 	/**
 	 * Invoke this method with the command line:
 	 *
+	 * curl -X 'PATCH' 'http://localhost:8080/o/saml-admin/v1.0/provider' -d $'{"enabled": ___, "entityId": ___, "idp": ___, "role": ___, "sp": ___}' --header 'Content-Type: application/json' -u 'test@liferay.com:test'
+	 */
+	@io.swagger.v3.oas.annotations.Operation(
+		description = "Patch the SAML Provider configuration."
+	)
+	@io.swagger.v3.oas.annotations.tags.Tags(
+		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Provider")}
+	)
+	@javax.ws.rs.Consumes({"application/json", "application/xml"})
+	@javax.ws.rs.PATCH
+	@javax.ws.rs.Path("/provider")
+	@javax.ws.rs.Produces({"application/json", "application/xml"})
+	@Override
+	public Provider patchProvider(Provider provider) throws Exception {
+		return new Provider();
+	}
+
+	/**
+	 * Invoke this method with the command line:
+	 *
 	 * curl -X 'POST' 'http://localhost:8080/o/saml-admin/v1.0/provider' -d $'{"enabled": ___, "entityId": ___, "idp": ___, "role": ___, "sp": ___}' --header 'Content-Type: application/json' -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Operation(

@@ -84,31 +84,6 @@ public class Sp implements Cloneable, Serializable {
 
 	protected Boolean assertionSignatureRequired;
 
-	public Boolean getAuthnRequestSignatureRequired() {
-		return authnRequestSignatureRequired;
-	}
-
-	public void setAuthnRequestSignatureRequired(
-		Boolean authnRequestSignatureRequired) {
-
-		this.authnRequestSignatureRequired = authnRequestSignatureRequired;
-	}
-
-	public void setAuthnRequestSignatureRequired(
-		UnsafeSupplier<Boolean, Exception>
-			authnRequestSignatureRequiredUnsafeSupplier) {
-
-		try {
-			authnRequestSignatureRequired =
-				authnRequestSignatureRequiredUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected Boolean authnRequestSignatureRequired;
-
 	public Long getClockSkew() {
 		return clockSkew;
 	}
@@ -175,31 +150,6 @@ public class Sp implements Cloneable, Serializable {
 
 	protected IdpConnection[] idpConnections;
 
-	public String getKeyStoreCredentialPassword() {
-		return keyStoreCredentialPassword;
-	}
-
-	public void setKeyStoreCredentialPassword(
-		String keyStoreCredentialPassword) {
-
-		this.keyStoreCredentialPassword = keyStoreCredentialPassword;
-	}
-
-	public void setKeyStoreCredentialPassword(
-		UnsafeSupplier<String, Exception>
-			keyStoreCredentialPasswordUnsafeSupplier) {
-
-		try {
-			keyStoreCredentialPassword =
-				keyStoreCredentialPasswordUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected String keyStoreCredentialPassword;
-
 	public Boolean getLdapImportEnabled() {
 		return ldapImportEnabled;
 	}
@@ -220,73 +170,6 @@ public class Sp implements Cloneable, Serializable {
 	}
 
 	protected Boolean ldapImportEnabled;
-
-	public String getSamlKeystoreCredentialPassword() {
-		return samlKeystoreCredentialPassword;
-	}
-
-	public void setSamlKeystoreCredentialPassword(
-		String samlKeystoreCredentialPassword) {
-
-		this.samlKeystoreCredentialPassword = samlKeystoreCredentialPassword;
-	}
-
-	public void setSamlKeystoreCredentialPassword(
-		UnsafeSupplier<String, Exception>
-			samlKeystoreCredentialPasswordUnsafeSupplier) {
-
-		try {
-			samlKeystoreCredentialPassword =
-				samlKeystoreCredentialPasswordUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected String samlKeystoreCredentialPassword;
-
-	public Long getSessionMaximumAge() {
-		return sessionMaximumAge;
-	}
-
-	public void setSessionMaximumAge(Long sessionMaximumAge) {
-		this.sessionMaximumAge = sessionMaximumAge;
-	}
-
-	public void setSessionMaximumAge(
-		UnsafeSupplier<Long, Exception> sessionMaximumAgeUnsafeSupplier) {
-
-		try {
-			sessionMaximumAge = sessionMaximumAgeUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected Long sessionMaximumAge;
-
-	public Long getSessionTimeout() {
-		return sessionTimeout;
-	}
-
-	public void setSessionTimeout(Long sessionTimeout) {
-		this.sessionTimeout = sessionTimeout;
-	}
-
-	public void setSessionTimeout(
-		UnsafeSupplier<Long, Exception> sessionTimeoutUnsafeSupplier) {
-
-		try {
-			sessionTimeout = sessionTimeoutUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected Long sessionTimeout;
 
 	public Boolean getSignAuthnRequest() {
 		return signAuthnRequest;
