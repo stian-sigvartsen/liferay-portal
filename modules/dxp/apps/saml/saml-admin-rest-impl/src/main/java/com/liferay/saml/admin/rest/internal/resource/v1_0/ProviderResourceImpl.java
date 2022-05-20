@@ -63,6 +63,16 @@ public class ProviderResourceImpl extends BaseProviderResourceImpl {
 	}
 
 	@Override
+	public Provider postProvider(Provider provider) throws Exception {
+		return super.postProvider(provider);
+	}
+
+	@Override
+	public Provider patchProvider(Provider provider) throws Exception {
+		return super.patchProvider(provider);
+	}
+
+	@Override
 	public Provider getProvider() throws Exception {
 
 		SamlProviderConfiguration samlProviderConfiguration =
