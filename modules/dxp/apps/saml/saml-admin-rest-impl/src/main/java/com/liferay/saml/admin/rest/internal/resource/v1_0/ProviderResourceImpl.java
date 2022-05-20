@@ -14,20 +14,19 @@
 
 package com.liferay.saml.admin.rest.internal.resource.v1_0;
 
-import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.vulcan.dto.converter.DTOConverter;
 import com.liferay.portal.vulcan.dto.converter.DTOConverterRegistry;
 import com.liferay.portal.vulcan.dto.converter.DefaultDTOConverterContext;
-import com.liferay.portal.vulcan.pagination.Page;
-import com.liferay.portal.vulcan.pagination.Pagination;
 import com.liferay.saml.admin.rest.dto.v1_0.Idp;
 import com.liferay.saml.admin.rest.dto.v1_0.IdpConnection;
 import com.liferay.saml.admin.rest.dto.v1_0.Provider;
 import com.liferay.saml.admin.rest.dto.v1_0.Sp;
-import com.liferay.saml.admin.rest.resource.v1_0.IdpConnectionResource;
+import com.liferay.saml.admin.rest.dto.v1_0.SpConnection;
 import com.liferay.saml.admin.rest.resource.v1_0.ProviderResource;
 
+import com.liferay.saml.persistence.model.SamlIdpSpConnection;
 import com.liferay.saml.persistence.model.SamlSpIdpConnection;
+import com.liferay.saml.persistence.service.SamlIdpSpConnectionLocalService;
 import com.liferay.saml.persistence.service.SamlSpIdpConnectionLocalService;
 import com.liferay.saml.runtime.configuration.SamlProviderConfiguration;
 import com.liferay.saml.runtime.configuration.SamlProviderConfigurationHelper;
@@ -35,9 +34,9 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author Stian Sigvartsen
@@ -80,7 +79,8 @@ public class ProviderResourceImpl extends BaseProviderResourceImpl {
 		return null;
 	}
 
-	private Idp _getIdp(SamlProviderConfiguration samlProviderConfiguration) {
+	private Idp _getIdp(SamlProviderConfiguration samlProviderConfiguration)
+		throws Exception {
 
 		Idp idp = new Idp();
 
@@ -90,6 +90,16 @@ public class ProviderResourceImpl extends BaseProviderResourceImpl {
 		idp.setSessionTimeout(samlProviderConfiguration.sessionTimeout());
 		idp.setSignMetadata(samlProviderConfiguration.signMetadata());
 		idp.setSslRequired(samlProviderConfiguration.sslRequired());
+
+		idp.setSpConnections(
+			_convert(
+				() -> _samlIdpSpConnectionLocalService.getSamlIdpSpConnections(
+					contextCompany.getCompanyId()),
+				SamlIdpSpConnection::getSamlIdpSpConnectionId,
+				(DTOConverter<?, SpConnection>)
+					_dtoConverterRegistry.getDTOConverter(
+						SamlIdpSpConnection.class.getName()),
+				SpConnection[]::new));
 
 		return idp;
 	}
@@ -110,30 +120,41 @@ public class ProviderResourceImpl extends BaseProviderResourceImpl {
 		sp.setSignMetadata(samlProviderConfiguration.signMetadata());
 		sp.setSslRequired(samlProviderConfiguration.sslRequired());
 
-		DTOConverter<?, IdpConnection> idpConnectionDTOConverter =
-			(DTOConverter<?, IdpConnection>)
-				_dtoConverterRegistry.getDTOConverter(
-					SamlSpIdpConnection.class.getName());
-
-		List<SamlSpIdpConnection> samlSpIdpConnections =
-			_samlSpIdpConnectionLocalService.getSamlSpIdpConnections(
-				contextCompany.getCompanyId());
-
-		IdpConnection[] idpConnections = new IdpConnection[samlSpIdpConnections.size()];
-		int i = 0;
-
-		for (SamlSpIdpConnection samlSpIdpConnection : samlSpIdpConnections) {
-			idpConnections[i++] = idpConnectionDTOConverter.toDTO(
-				new DefaultDTOConverterContext(
-					_dtoConverterRegistry,
-					samlSpIdpConnection.getSamlSpIdpConnectionId(),
-					contextAcceptLanguage.getPreferredLocale(), contextUriInfo,
-					contextUser));
-		}
-
-		sp.setIdpConnections(idpConnections);
+		sp.setIdpConnections(
+			_convert(
+				() -> _samlSpIdpConnectionLocalService.getSamlSpIdpConnections(
+					contextCompany.getCompanyId()),
+				SamlSpIdpConnection::getSamlSpIdpConnectionId,
+				(DTOConverter<?, IdpConnection>)
+					_dtoConverterRegistry.getDTOConverter(
+						SamlSpIdpConnection.class.getName()),
+				IdpConnection[]::new));
 
 		return sp;
+	}
+
+	private <T, V> V[] _convert(
+		Supplier<List<T>> supplier, Function<T, Object> idFunction,
+			DTOConverter<?, V> dtoConverter,
+			Function<Integer, V[]> arrayFunction)
+		throws Exception {
+
+		List<T> list = supplier.get();
+
+		V[] array = arrayFunction.apply(list.size());
+		int i = 0;
+
+		for (T t : list) {
+			array[i++] =
+				dtoConverter.toDTO(
+					new DefaultDTOConverterContext(
+						_dtoConverterRegistry,
+						idFunction.apply(t),
+						contextAcceptLanguage.getPreferredLocale(),
+						contextUriInfo, contextUser));
+		}
+
+		return array;
 	}
 
 	@Reference
@@ -141,6 +162,9 @@ public class ProviderResourceImpl extends BaseProviderResourceImpl {
 
 	@Reference
 	private SamlSpIdpConnectionLocalService _samlSpIdpConnectionLocalService;
+
+	@Reference
+	private SamlIdpSpConnectionLocalService _samlIdpSpConnectionLocalService;
 
 	@Reference
 	private DTOConverterRegistry _dtoConverterRegistry;
