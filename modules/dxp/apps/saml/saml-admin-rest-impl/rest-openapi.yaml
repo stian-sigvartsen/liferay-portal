@@ -52,22 +52,20 @@ components:
             properties:
                 authnRequestSignatureRequired:
                     type: boolean
+                defaultAssertionLifetime:
+                    type: integer
                 sessionMaximumAge:
                     format: int64
                     type: integer
                 sessionTimeout:
                     format: int64
                     type: integer
-                signMetadata:
-                    type: boolean
                 spConnections:
                     description:
                         Connected SAML SPs
                     items:
                         $ref: "#/components/schemas/SpConnection"
                     type: array
-                sslRequired:
-                    type: boolean
             type: object
         Metadata:
             description:
@@ -100,6 +98,10 @@ components:
                 role:
                     type: string
                     enum: [idp, sp]
+                signMetadata:
+                    type: boolean
+                sslRequired:
+                    type: boolean
                 idp:
                     $ref: "#/components/schemas/Idp"
                 sp:
@@ -125,8 +127,6 @@ components:
                 clockSkew:
                     format: int64
                     type: integer
-                defaultAssertionLifetime:
-                    type: integer
                 idpConnections:
                     description:
                         Connected SAML IDPs
@@ -136,10 +136,6 @@ components:
                 ldapImportEnabled:
                     type: boolean
                 signAuthnRequest:
-                    type: boolean
-                signMetadata:
-                    type: boolean
-                sslRequired:
                     type: boolean
             type: object
 info:
