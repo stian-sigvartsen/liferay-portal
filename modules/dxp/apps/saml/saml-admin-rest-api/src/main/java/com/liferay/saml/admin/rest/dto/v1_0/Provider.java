@@ -183,6 +183,34 @@ public class Provider implements Serializable {
 	protected Role role;
 
 	@Schema
+	public Boolean getSignMetadata() {
+		return signMetadata;
+	}
+
+	public void setSignMetadata(Boolean signMetadata) {
+		this.signMetadata = signMetadata;
+	}
+
+	@JsonIgnore
+	public void setSignMetadata(
+		UnsafeSupplier<Boolean, Exception> signMetadataUnsafeSupplier) {
+
+		try {
+			signMetadata = signMetadataUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Boolean signMetadata;
+
+	@Schema
 	@Valid
 	public Sp getSp() {
 		return sp;
@@ -208,6 +236,34 @@ public class Provider implements Serializable {
 	@GraphQLField
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Sp sp;
+
+	@Schema
+	public Boolean getSslRequired() {
+		return sslRequired;
+	}
+
+	public void setSslRequired(Boolean sslRequired) {
+		this.sslRequired = sslRequired;
+	}
+
+	@JsonIgnore
+	public void setSslRequired(
+		UnsafeSupplier<Boolean, Exception> sslRequiredUnsafeSupplier) {
+
+		try {
+			sslRequired = sslRequiredUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Boolean sslRequired;
 
 	@Override
 	public boolean equals(Object object) {
@@ -284,6 +340,16 @@ public class Provider implements Serializable {
 			sb.append("\"");
 		}
 
+		if (signMetadata != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"signMetadata\": ");
+
+			sb.append(signMetadata);
+		}
+
 		if (sp != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -292,6 +358,16 @@ public class Provider implements Serializable {
 			sb.append("\"sp\": ");
 
 			sb.append(String.valueOf(sp));
+		}
+
+		if (sslRequired != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"sslRequired\": ");
+
+			sb.append(sslRequired);
 		}
 
 		sb.append("}");

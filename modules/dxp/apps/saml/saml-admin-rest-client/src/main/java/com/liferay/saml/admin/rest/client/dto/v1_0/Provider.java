@@ -122,6 +122,27 @@ public class Provider implements Cloneable, Serializable {
 
 	protected Role role;
 
+	public Boolean getSignMetadata() {
+		return signMetadata;
+	}
+
+	public void setSignMetadata(Boolean signMetadata) {
+		this.signMetadata = signMetadata;
+	}
+
+	public void setSignMetadata(
+		UnsafeSupplier<Boolean, Exception> signMetadataUnsafeSupplier) {
+
+		try {
+			signMetadata = signMetadataUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected Boolean signMetadata;
+
 	public Sp getSp() {
 		return sp;
 	}
@@ -140,6 +161,27 @@ public class Provider implements Cloneable, Serializable {
 	}
 
 	protected Sp sp;
+
+	public Boolean getSslRequired() {
+		return sslRequired;
+	}
+
+	public void setSslRequired(Boolean sslRequired) {
+		this.sslRequired = sslRequired;
+	}
+
+	public void setSslRequired(
+		UnsafeSupplier<Boolean, Exception> sslRequiredUnsafeSupplier) {
+
+		try {
+			sslRequired = sslRequiredUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected Boolean sslRequired;
 
 	@Override
 	public Provider clone() throws CloneNotSupportedException {

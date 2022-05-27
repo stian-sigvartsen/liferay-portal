@@ -53,6 +53,7 @@ import javax.annotation.Generated;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import javax.ws.rs.NotSupportedException;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
@@ -90,7 +91,7 @@ public abstract class BaseProviderResourceImpl
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -X 'PATCH' 'http://localhost:8080/o/saml-admin/v1.0/provider' -d $'{"enabled": ___, "entityId": ___, "idp": ___, "role": ___, "sp": ___}' --header 'Content-Type: application/json' -u 'test@liferay.com:test'
+	 * curl -X 'PATCH' 'http://localhost:8080/o/saml-admin/v1.0/provider' -d $'{"enabled": ___, "entityId": ___, "idp": ___, "role": ___, "signMetadata": ___, "sp": ___, "sslRequired": ___}' --header 'Content-Type: application/json' -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Operation(
 		description = "Patch the SAML Provider configuration."
@@ -110,7 +111,7 @@ public abstract class BaseProviderResourceImpl
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -X 'POST' 'http://localhost:8080/o/saml-admin/v1.0/provider' -d $'{"enabled": ___, "entityId": ___, "idp": ___, "role": ___, "sp": ___}' --header 'Content-Type: application/json' -u 'test@liferay.com:test'
+	 * curl -X 'POST' 'http://localhost:8080/o/saml-admin/v1.0/provider' -d $'{"enabled": ___, "entityId": ___, "idp": ___, "role": ___, "signMetadata": ___, "sp": ___, "sslRequired": ___}' --header 'Content-Type: application/json' -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Operation(
 		description = "Creates a full SAML Provider configuration with peer connections."
@@ -316,8 +317,20 @@ public abstract class BaseProviderResourceImpl
 			Map<String, Serializable> parameters)
 		throws Exception {
 
-		UnsafeConsumer<Provider, Exception> providerUnsafeConsumer =
-			provider -> postProvider(provider);
+		UnsafeConsumer<Provider, Exception> providerUnsafeConsumer = null;
+
+		String createStrategy = (String)parameters.getOrDefault(
+			"createStrategy", "INSERT");
+
+		if ("INSERT".equalsIgnoreCase(createStrategy)) {
+			providerUnsafeConsumer = provider -> postProvider(provider);
+		}
+
+		if (providerUnsafeConsumer == null) {
+			throw new NotSupportedException(
+				"Create strategy \"" + createStrategy +
+					"\" is not supported for Provider");
+		}
 
 		if (contextBatchUnsafeConsumer != null) {
 			contextBatchUnsafeConsumer.accept(
@@ -392,6 +405,31 @@ public abstract class BaseProviderResourceImpl
 			java.util.Collection<Provider> providers,
 			Map<String, Serializable> parameters)
 		throws Exception {
+
+		UnsafeConsumer<Provider, Exception> providerUnsafeConsumer = null;
+
+		String updateStrategy = (String)parameters.getOrDefault(
+			"updateStrategy", "UPDATE");
+
+		if ("PARTIAL_UPDATE".equalsIgnoreCase(updateStrategy)) {
+			providerUnsafeConsumer = provider -> patchProvider(provider);
+		}
+
+		if (providerUnsafeConsumer == null) {
+			throw new NotSupportedException(
+				"Update strategy \"" + updateStrategy +
+					"\" is not supported for Provider");
+		}
+
+		if (contextBatchUnsafeConsumer != null) {
+			contextBatchUnsafeConsumer.accept(
+				providers, providerUnsafeConsumer);
+		}
+		else {
+			for (Provider provider : providers) {
+				providerUnsafeConsumer.accept(provider);
+			}
+		}
 	}
 
 	public void setContextAcceptLanguage(AcceptLanguage contextAcceptLanguage) {

@@ -54,6 +54,7 @@ import javax.annotation.Generated;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import javax.ws.rs.NotSupportedException;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
@@ -481,7 +482,21 @@ public abstract class BaseIdpConnectionResourceImpl
 		throws Exception {
 
 		UnsafeConsumer<IdpConnection, Exception> idpConnectionUnsafeConsumer =
-			idpConnection -> postIdpConnection(idpConnection);
+			null;
+
+		String createStrategy = (String)parameters.getOrDefault(
+			"createStrategy", "INSERT");
+
+		if ("INSERT".equalsIgnoreCase(createStrategy)) {
+			idpConnectionUnsafeConsumer = idpConnection -> postIdpConnection(
+				idpConnection);
+		}
+
+		if (idpConnectionUnsafeConsumer == null) {
+			throw new NotSupportedException(
+				"Create strategy \"" + createStrategy +
+					"\" is not supported for IdpConnection");
+		}
 
 		if (contextBatchUnsafeConsumer != null) {
 			contextBatchUnsafeConsumer.accept(
@@ -561,11 +576,40 @@ public abstract class BaseIdpConnectionResourceImpl
 			Map<String, Serializable> parameters)
 		throws Exception {
 
-		for (IdpConnection idpConnection : idpConnections) {
-			putIdpConnection(
+		UnsafeConsumer<IdpConnection, Exception> idpConnectionUnsafeConsumer =
+			null;
+
+		String updateStrategy = (String)parameters.getOrDefault(
+			"updateStrategy", "UPDATE");
+
+		if ("PARTIAL_UPDATE".equalsIgnoreCase(updateStrategy)) {
+			idpConnectionUnsafeConsumer = idpConnection -> patchIdpConnection(
 				idpConnection.getId() != null ? idpConnection.getId() :
 					Long.parseLong((String)parameters.get("idpConnectionId")),
 				idpConnection);
+		}
+
+		if ("UPDATE".equalsIgnoreCase(updateStrategy)) {
+			idpConnectionUnsafeConsumer = idpConnection -> putIdpConnection(
+				idpConnection.getId() != null ? idpConnection.getId() :
+					Long.parseLong((String)parameters.get("idpConnectionId")),
+				idpConnection);
+		}
+
+		if (idpConnectionUnsafeConsumer == null) {
+			throw new NotSupportedException(
+				"Update strategy \"" + updateStrategy +
+					"\" is not supported for IdpConnection");
+		}
+
+		if (contextBatchUnsafeConsumer != null) {
+			contextBatchUnsafeConsumer.accept(
+				idpConnections, idpConnectionUnsafeConsumer);
+		}
+		else {
+			for (IdpConnection idpConnection : idpConnections) {
+				idpConnectionUnsafeConsumer.accept(idpConnection);
+			}
 		}
 	}
 

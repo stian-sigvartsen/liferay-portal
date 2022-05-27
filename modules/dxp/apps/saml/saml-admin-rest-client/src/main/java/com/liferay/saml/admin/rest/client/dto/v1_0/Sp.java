@@ -105,29 +105,6 @@ public class Sp implements Cloneable, Serializable {
 
 	protected Long clockSkew;
 
-	public Integer getDefaultAssertionLifetime() {
-		return defaultAssertionLifetime;
-	}
-
-	public void setDefaultAssertionLifetime(Integer defaultAssertionLifetime) {
-		this.defaultAssertionLifetime = defaultAssertionLifetime;
-	}
-
-	public void setDefaultAssertionLifetime(
-		UnsafeSupplier<Integer, Exception>
-			defaultAssertionLifetimeUnsafeSupplier) {
-
-		try {
-			defaultAssertionLifetime =
-				defaultAssertionLifetimeUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected Integer defaultAssertionLifetime;
-
 	public IdpConnection[] getIdpConnections() {
 		return idpConnections;
 	}
@@ -191,48 +168,6 @@ public class Sp implements Cloneable, Serializable {
 	}
 
 	protected Boolean signAuthnRequest;
-
-	public Boolean getSignMetadata() {
-		return signMetadata;
-	}
-
-	public void setSignMetadata(Boolean signMetadata) {
-		this.signMetadata = signMetadata;
-	}
-
-	public void setSignMetadata(
-		UnsafeSupplier<Boolean, Exception> signMetadataUnsafeSupplier) {
-
-		try {
-			signMetadata = signMetadataUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected Boolean signMetadata;
-
-	public Boolean getSslRequired() {
-		return sslRequired;
-	}
-
-	public void setSslRequired(Boolean sslRequired) {
-		this.sslRequired = sslRequired;
-	}
-
-	public void setSslRequired(
-		UnsafeSupplier<Boolean, Exception> sslRequiredUnsafeSupplier) {
-
-		try {
-			sslRequired = sslRequiredUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected Boolean sslRequired;
 
 	@Override
 	public Sp clone() throws CloneNotSupportedException {

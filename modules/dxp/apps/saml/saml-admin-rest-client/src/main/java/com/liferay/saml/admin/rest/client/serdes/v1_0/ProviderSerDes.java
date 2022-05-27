@@ -101,6 +101,16 @@ public class ProviderSerDes {
 			sb.append("\"");
 		}
 
+		if (provider.getSignMetadata() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"signMetadata\": ");
+
+			sb.append(provider.getSignMetadata());
+		}
+
 		if (provider.getSp() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -109,6 +119,16 @@ public class ProviderSerDes {
 			sb.append("\"sp\": ");
 
 			sb.append(String.valueOf(provider.getSp()));
+		}
+
+		if (provider.getSslRequired() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"sslRequired\": ");
+
+			sb.append(provider.getSslRequired());
 		}
 
 		sb.append("}");
@@ -157,11 +177,25 @@ public class ProviderSerDes {
 			map.put("role", String.valueOf(provider.getRole()));
 		}
 
+		if (provider.getSignMetadata() == null) {
+			map.put("signMetadata", null);
+		}
+		else {
+			map.put("signMetadata", String.valueOf(provider.getSignMetadata()));
+		}
+
 		if (provider.getSp() == null) {
 			map.put("sp", null);
 		}
 		else {
 			map.put("sp", String.valueOf(provider.getSp()));
+		}
+
+		if (provider.getSslRequired() == null) {
+			map.put("sslRequired", null);
+		}
+		else {
+			map.put("sslRequired", String.valueOf(provider.getSslRequired()));
 		}
 
 		return map;
@@ -206,10 +240,20 @@ public class ProviderSerDes {
 						Provider.Role.create((String)jsonParserFieldValue));
 				}
 			}
+			else if (Objects.equals(jsonParserFieldName, "signMetadata")) {
+				if (jsonParserFieldValue != null) {
+					provider.setSignMetadata((Boolean)jsonParserFieldValue);
+				}
+			}
 			else if (Objects.equals(jsonParserFieldName, "sp")) {
 				if (jsonParserFieldValue != null) {
 					provider.setSp(
 						SpSerDes.toDTO((String)jsonParserFieldValue));
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "sslRequired")) {
+				if (jsonParserFieldValue != null) {
+					provider.setSslRequired((Boolean)jsonParserFieldValue);
 				}
 			}
 		}

@@ -153,36 +153,6 @@ public class Sp implements Serializable {
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Long clockSkew;
 
-	@Schema
-	public Integer getDefaultAssertionLifetime() {
-		return defaultAssertionLifetime;
-	}
-
-	public void setDefaultAssertionLifetime(Integer defaultAssertionLifetime) {
-		this.defaultAssertionLifetime = defaultAssertionLifetime;
-	}
-
-	@JsonIgnore
-	public void setDefaultAssertionLifetime(
-		UnsafeSupplier<Integer, Exception>
-			defaultAssertionLifetimeUnsafeSupplier) {
-
-		try {
-			defaultAssertionLifetime =
-				defaultAssertionLifetimeUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Integer defaultAssertionLifetime;
-
 	@Schema(description = "Connected SAML IDPs")
 	@Valid
 	public IdpConnection[] getIdpConnections() {
@@ -269,62 +239,6 @@ public class Sp implements Serializable {
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Boolean signAuthnRequest;
 
-	@Schema
-	public Boolean getSignMetadata() {
-		return signMetadata;
-	}
-
-	public void setSignMetadata(Boolean signMetadata) {
-		this.signMetadata = signMetadata;
-	}
-
-	@JsonIgnore
-	public void setSignMetadata(
-		UnsafeSupplier<Boolean, Exception> signMetadataUnsafeSupplier) {
-
-		try {
-			signMetadata = signMetadataUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Boolean signMetadata;
-
-	@Schema
-	public Boolean getSslRequired() {
-		return sslRequired;
-	}
-
-	public void setSslRequired(Boolean sslRequired) {
-		this.sslRequired = sslRequired;
-	}
-
-	@JsonIgnore
-	public void setSslRequired(
-		UnsafeSupplier<Boolean, Exception> sslRequiredUnsafeSupplier) {
-
-		try {
-			sslRequired = sslRequiredUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Boolean sslRequired;
-
 	@Override
 	public boolean equals(Object object) {
 		if (this == object) {
@@ -382,16 +296,6 @@ public class Sp implements Serializable {
 			sb.append(clockSkew);
 		}
 
-		if (defaultAssertionLifetime != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"defaultAssertionLifetime\": ");
-
-			sb.append(defaultAssertionLifetime);
-		}
-
 		if (idpConnections != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -430,26 +334,6 @@ public class Sp implements Serializable {
 			sb.append("\"signAuthnRequest\": ");
 
 			sb.append(signAuthnRequest);
-		}
-
-		if (signMetadata != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"signMetadata\": ");
-
-			sb.append(signMetadata);
-		}
-
-		if (sslRequired != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"sslRequired\": ");
-
-			sb.append(sslRequired);
 		}
 
 		sb.append("}");

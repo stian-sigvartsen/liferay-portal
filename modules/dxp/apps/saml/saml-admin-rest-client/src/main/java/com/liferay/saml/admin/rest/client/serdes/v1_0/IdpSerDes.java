@@ -65,6 +65,16 @@ public class IdpSerDes {
 			sb.append(idp.getAuthnRequestSignatureRequired());
 		}
 
+		if (idp.getDefaultAssertionLifetime() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"defaultAssertionLifetime\": ");
+
+			sb.append(idp.getDefaultAssertionLifetime());
+		}
+
 		if (idp.getSessionMaximumAge() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -85,16 +95,6 @@ public class IdpSerDes {
 			sb.append(idp.getSessionTimeout());
 		}
 
-		if (idp.getSignMetadata() != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"signMetadata\": ");
-
-			sb.append(idp.getSignMetadata());
-		}
-
 		if (idp.getSpConnections() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -113,16 +113,6 @@ public class IdpSerDes {
 			}
 
 			sb.append("]");
-		}
-
-		if (idp.getSslRequired() != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"sslRequired\": ");
-
-			sb.append(idp.getSslRequired());
 		}
 
 		sb.append("}");
@@ -152,6 +142,15 @@ public class IdpSerDes {
 				String.valueOf(idp.getAuthnRequestSignatureRequired()));
 		}
 
+		if (idp.getDefaultAssertionLifetime() == null) {
+			map.put("defaultAssertionLifetime", null);
+		}
+		else {
+			map.put(
+				"defaultAssertionLifetime",
+				String.valueOf(idp.getDefaultAssertionLifetime()));
+		}
+
 		if (idp.getSessionMaximumAge() == null) {
 			map.put("sessionMaximumAge", null);
 		}
@@ -168,25 +167,11 @@ public class IdpSerDes {
 			map.put("sessionTimeout", String.valueOf(idp.getSessionTimeout()));
 		}
 
-		if (idp.getSignMetadata() == null) {
-			map.put("signMetadata", null);
-		}
-		else {
-			map.put("signMetadata", String.valueOf(idp.getSignMetadata()));
-		}
-
 		if (idp.getSpConnections() == null) {
 			map.put("spConnections", null);
 		}
 		else {
 			map.put("spConnections", String.valueOf(idp.getSpConnections()));
-		}
-
-		if (idp.getSslRequired() == null) {
-			map.put("sslRequired", null);
-		}
-		else {
-			map.put("sslRequired", String.valueOf(idp.getSslRequired()));
 		}
 
 		return map;
@@ -216,6 +201,14 @@ public class IdpSerDes {
 						(Boolean)jsonParserFieldValue);
 				}
 			}
+			else if (Objects.equals(
+						jsonParserFieldName, "defaultAssertionLifetime")) {
+
+				if (jsonParserFieldValue != null) {
+					idp.setDefaultAssertionLifetime(
+						Integer.valueOf((String)jsonParserFieldValue));
+				}
+			}
 			else if (Objects.equals(jsonParserFieldName, "sessionMaximumAge")) {
 				if (jsonParserFieldValue != null) {
 					idp.setSessionMaximumAge(
@@ -228,11 +221,6 @@ public class IdpSerDes {
 						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
-			else if (Objects.equals(jsonParserFieldName, "signMetadata")) {
-				if (jsonParserFieldValue != null) {
-					idp.setSignMetadata((Boolean)jsonParserFieldValue);
-				}
-			}
 			else if (Objects.equals(jsonParserFieldName, "spConnections")) {
 				if (jsonParserFieldValue != null) {
 					idp.setSpConnections(
@@ -243,11 +231,6 @@ public class IdpSerDes {
 						).toArray(
 							size -> new SpConnection[size]
 						));
-				}
-			}
-			else if (Objects.equals(jsonParserFieldName, "sslRequired")) {
-				if (jsonParserFieldValue != null) {
-					idp.setSslRequired((Boolean)jsonParserFieldValue);
 				}
 			}
 		}

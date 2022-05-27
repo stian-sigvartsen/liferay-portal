@@ -94,6 +94,36 @@ public class Idp implements Serializable {
 	protected Boolean authnRequestSignatureRequired;
 
 	@Schema
+	public Integer getDefaultAssertionLifetime() {
+		return defaultAssertionLifetime;
+	}
+
+	public void setDefaultAssertionLifetime(Integer defaultAssertionLifetime) {
+		this.defaultAssertionLifetime = defaultAssertionLifetime;
+	}
+
+	@JsonIgnore
+	public void setDefaultAssertionLifetime(
+		UnsafeSupplier<Integer, Exception>
+			defaultAssertionLifetimeUnsafeSupplier) {
+
+		try {
+			defaultAssertionLifetime =
+				defaultAssertionLifetimeUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Integer defaultAssertionLifetime;
+
+	@Schema
 	public Long getSessionMaximumAge() {
 		return sessionMaximumAge;
 	}
@@ -149,34 +179,6 @@ public class Idp implements Serializable {
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Long sessionTimeout;
 
-	@Schema
-	public Boolean getSignMetadata() {
-		return signMetadata;
-	}
-
-	public void setSignMetadata(Boolean signMetadata) {
-		this.signMetadata = signMetadata;
-	}
-
-	@JsonIgnore
-	public void setSignMetadata(
-		UnsafeSupplier<Boolean, Exception> signMetadataUnsafeSupplier) {
-
-		try {
-			signMetadata = signMetadataUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Boolean signMetadata;
-
 	@Schema(description = "Connected SAML SPs")
 	@Valid
 	public SpConnection[] getSpConnections() {
@@ -205,34 +207,6 @@ public class Idp implements Serializable {
 	@GraphQLField(description = "Connected SAML SPs")
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected SpConnection[] spConnections;
-
-	@Schema
-	public Boolean getSslRequired() {
-		return sslRequired;
-	}
-
-	public void setSslRequired(Boolean sslRequired) {
-		this.sslRequired = sslRequired;
-	}
-
-	@JsonIgnore
-	public void setSslRequired(
-		UnsafeSupplier<Boolean, Exception> sslRequiredUnsafeSupplier) {
-
-		try {
-			sslRequired = sslRequiredUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Boolean sslRequired;
 
 	@Override
 	public boolean equals(Object object) {
@@ -271,6 +245,16 @@ public class Idp implements Serializable {
 			sb.append(authnRequestSignatureRequired);
 		}
 
+		if (defaultAssertionLifetime != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"defaultAssertionLifetime\": ");
+
+			sb.append(defaultAssertionLifetime);
+		}
+
 		if (sessionMaximumAge != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -291,16 +275,6 @@ public class Idp implements Serializable {
 			sb.append(sessionTimeout);
 		}
 
-		if (signMetadata != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"signMetadata\": ");
-
-			sb.append(signMetadata);
-		}
-
 		if (spConnections != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -319,16 +293,6 @@ public class Idp implements Serializable {
 			}
 
 			sb.append("]");
-		}
-
-		if (sslRequired != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"sslRequired\": ");
-
-			sb.append(sslRequired);
 		}
 
 		sb.append("}");

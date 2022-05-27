@@ -85,16 +85,6 @@ public class SpSerDes {
 			sb.append(sp.getClockSkew());
 		}
 
-		if (sp.getDefaultAssertionLifetime() != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"defaultAssertionLifetime\": ");
-
-			sb.append(sp.getDefaultAssertionLifetime());
-		}
-
 		if (sp.getIdpConnections() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -133,26 +123,6 @@ public class SpSerDes {
 			sb.append("\"signAuthnRequest\": ");
 
 			sb.append(sp.getSignAuthnRequest());
-		}
-
-		if (sp.getSignMetadata() != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"signMetadata\": ");
-
-			sb.append(sp.getSignMetadata());
-		}
-
-		if (sp.getSslRequired() != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"sslRequired\": ");
-
-			sb.append(sp.getSslRequired());
 		}
 
 		sb.append("}");
@@ -198,15 +168,6 @@ public class SpSerDes {
 			map.put("clockSkew", String.valueOf(sp.getClockSkew()));
 		}
 
-		if (sp.getDefaultAssertionLifetime() == null) {
-			map.put("defaultAssertionLifetime", null);
-		}
-		else {
-			map.put(
-				"defaultAssertionLifetime",
-				String.valueOf(sp.getDefaultAssertionLifetime()));
-		}
-
 		if (sp.getIdpConnections() == null) {
 			map.put("idpConnections", null);
 		}
@@ -228,20 +189,6 @@ public class SpSerDes {
 		else {
 			map.put(
 				"signAuthnRequest", String.valueOf(sp.getSignAuthnRequest()));
-		}
-
-		if (sp.getSignMetadata() == null) {
-			map.put("signMetadata", null);
-		}
-		else {
-			map.put("signMetadata", String.valueOf(sp.getSignMetadata()));
-		}
-
-		if (sp.getSslRequired() == null) {
-			map.put("sslRequired", null);
-		}
-		else {
-			map.put("sslRequired", String.valueOf(sp.getSslRequired()));
 		}
 
 		return map;
@@ -284,14 +231,6 @@ public class SpSerDes {
 					sp.setClockSkew(Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
-			else if (Objects.equals(
-						jsonParserFieldName, "defaultAssertionLifetime")) {
-
-				if (jsonParserFieldValue != null) {
-					sp.setDefaultAssertionLifetime(
-						Integer.valueOf((String)jsonParserFieldValue));
-				}
-			}
 			else if (Objects.equals(jsonParserFieldName, "idpConnections")) {
 				if (jsonParserFieldValue != null) {
 					sp.setIdpConnections(
@@ -312,16 +251,6 @@ public class SpSerDes {
 			else if (Objects.equals(jsonParserFieldName, "signAuthnRequest")) {
 				if (jsonParserFieldValue != null) {
 					sp.setSignAuthnRequest((Boolean)jsonParserFieldValue);
-				}
-			}
-			else if (Objects.equals(jsonParserFieldName, "signMetadata")) {
-				if (jsonParserFieldValue != null) {
-					sp.setSignMetadata((Boolean)jsonParserFieldValue);
-				}
-			}
-			else if (Objects.equals(jsonParserFieldName, "sslRequired")) {
-				if (jsonParserFieldValue != null) {
-					sp.setSslRequired((Boolean)jsonParserFieldValue);
 				}
 			}
 		}
