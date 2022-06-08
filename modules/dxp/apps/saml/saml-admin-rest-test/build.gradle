@@ -1,6 +1,10 @@
 dependencies {
 	testIntegrationCompile project(":test:arquillian-extension-junit-bridge")
 
+	compileOnly group: "com.fasterxml.jackson.core", name: "jackson-annotations", version: "2.13.2"
+
+	compileOnly project(":apps:portal-odata:portal-odata-api")
+	compileOnly project(":apps:portal-vulcan:portal-vulcan-api")
 	compileOnly project(":dxp:apps:saml:saml-admin-rest-api")
 	compileOnly project(":dxp:apps:saml:saml-admin-rest-client")
 }
