@@ -16,8 +16,17 @@ package com.liferay.saml.admin.rest.resource.v1_0.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 
+import com.liferay.portal.kernel.json.JSONFactory;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.test.rule.Inject;
+import com.liferay.saml.admin.rest.client.http.HttpInvoker;
+import com.liferay.saml.admin.rest.client.resource.v1_0.SamlProviderResource;
+import com.liferay.saml.admin.rest.dto.v1_0.SamlProvider;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
+
+import javax.ws.rs.core.Response;
 
 /**
  * @author Stian Sigvartsen
@@ -25,4 +34,5 @@ import org.junit.runner.RunWith;
 @Ignore
 @RunWith(Arquillian.class)
 public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
+
 }
