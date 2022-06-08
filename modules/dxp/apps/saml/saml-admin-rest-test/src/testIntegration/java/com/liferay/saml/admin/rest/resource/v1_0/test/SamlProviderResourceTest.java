@@ -35,4 +35,28 @@ import javax.ws.rs.core.Response;
 @RunWith(Arquillian.class)
 public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 
+	private <T extends Exception> void _testPutSamlProviderProblem(
+		String role, SamlProvider samlProvider, Class<T> exceptionClass)
+		throws Exception {
+
+		HttpInvoker.HttpResponse httpResponse =
+			samlProviderResource.putRoleHttpResponse(role, samlProvider);
+
+		Assert.assertEquals(
+			Response.Status.BAD_REQUEST.getStatusCode(),
+			httpResponse.getStatusCode());
+
+		if (exceptionClass != null) {
+			JSONObject jsonObject = _jsonFactory.createJSONObject(
+				httpResponse.getContent());
+
+			Assert.assertEquals(
+				exceptionClass.getSimpleName(), jsonObject.get("type"));
+		}
+	}
+
+	protected SamlProviderResource samlProviderResource;
+
+	@Inject
+	private JSONFactory _jsonFactory;
 }
