@@ -85,7 +85,7 @@ public class SamlProviderResourceImpl extends BaseSamlProviderResourceImpl {
 	}
 
 	@Override
-	public Object getSamlProvider(String roleId) throws Exception {
+	public Object getRole(String roleId) throws Exception {
 		SamlProviderConfiguration samlProviderConfiguration =
 			_samlProviderConfigurationHelper.getSamlProviderConfiguration();
 
