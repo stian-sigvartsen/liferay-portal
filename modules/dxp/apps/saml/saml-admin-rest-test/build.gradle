@@ -1,7 +1,9 @@
 dependencies {
 	testIntegrationCompile project(":test:arquillian-extension-junit-bridge")
 
-	compileOnly group: "com.fasterxml.jackson.core", name: "jackson-annotations", version: "2.13.2"
+	testIntegrationCompile group: "com.fasterxml.jackson.core", name: "jackson-annotations", version: "2.13.2"
+	testIntegrationCompile group: "com.fasterxml.jackson.core", name: "jackson-core", version: "2.13.2"
+	testIntegrationCompile group: "com.fasterxml.jackson.core", name: "jackson-databind", version: "2.13.2.2"
 
 	compileOnly project(":apps:portal-odata:portal-odata-api")
 	compileOnly project(":apps:portal-vulcan:portal-vulcan-api")
