@@ -1,0 +1,6 @@
+dependencies {
+	testIntegrationCompile project(":test:arquillian-extension-junit-bridge")
+
+	compileOnly project(":dxp:apps:saml:saml-admin-rest-api")
+	compileOnly project(":dxp:apps:saml:saml-admin-rest-client")
+}
