@@ -7,6 +7,28 @@ components:
                 keyStoreCredentialPassword:
                     type: string
                     writeOnly: true
+        Idp:
+            # @review
+            description:
+                Configuration of the SAML provider's IDP capability
+            properties:
+                authnRequestSignatureRequired:
+                    type: boolean
+                defaultAssertionLifetime:
+                    type: integer
+                sessionMaximumAge:
+                    format: int64
+                    type: integer
+                sessionTimeout:
+                    format: int64
+                    type: integer
+                spConnections:
+                    description:
+                        Connected SAML SPs
+                    items:
+                        $ref: "#/components/schemas/SpConnection"
+                    type: array
+            type: object
         IdpConnection:
             # @review
             description:
@@ -45,28 +67,6 @@ components:
                 userAttributeMappings:
                     type: string
             type: object
-        Idp:
-            # @review
-            description:
-                Configuration of the SAML provider's IDP capability
-            properties:
-                authnRequestSignatureRequired:
-                    type: boolean
-                defaultAssertionLifetime:
-                    type: integer
-                sessionMaximumAge:
-                    format: int64
-                    type: integer
-                sessionTimeout:
-                    format: int64
-                    type: integer
-                spConnections:
-                    description:
-                        Connected SAML SPs
-                    items:
-                        $ref: "#/components/schemas/SpConnection"
-                    type: array
-            type: object
         Metadata:
             description:
                 Represents a SAML metadata XML
@@ -95,24 +95,16 @@ components:
                     type: boolean
                 entityId:
                     type: string
-                role:
-                    type: string
-                    enum: [idp, sp]
-                signMetadata:
-                    type: boolean
-                sslRequired:
-                    type: boolean
                 idp:
                     $ref: "#/components/schemas/Idp"
+                role:
+                    enum: [idp, sp]
+                    type: string
+                signMetadata:
+                    type: boolean
                 sp:
                     $ref: "#/components/schemas/Sp"
-            type: object
-        SpConnection:
-            # @review
-            description:
-                Connection details for a connected SAML SP
-            properties:
-                enabled:
+                sslRequired:
                     type: boolean
             type: object
         Sp:
@@ -136,6 +128,14 @@ components:
                 ldapImportEnabled:
                     type: boolean
                 signAuthnRequest:
+                    type: boolean
+            type: object
+        SpConnection:
+            # @review
+            description:
+                Connection details for a connected SAML SP
+            properties:
+                enabled:
                     type: boolean
             type: object
 info:
@@ -462,13 +462,13 @@ paths:
                         application/json:
                             schema:
                                 oneOf:
-                                  - $ref: "#/components/schemas/Idp"
-                                  - $ref: "#/components/schemas/Sp"
+                                    - $ref: "#/components/schemas/Idp"
+                                    - $ref: "#/components/schemas/Sp"
                         application/xml:
                             schema:
                                 oneOf:
-                                  - $ref: "#/components/schemas/Idp"
-                                  - $ref: "#/components/schemas/Sp"
+                                    - $ref: "#/components/schemas/Idp"
+                                    - $ref: "#/components/schemas/Sp"
             tags: ["Provider"]
         patch:
             description:
