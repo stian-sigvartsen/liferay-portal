@@ -22,7 +22,6 @@ import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
 import com.liferay.portal.vulcan.util.TransformUtil;
 import com.liferay.saml.admin.rest.dto.v1_0.IdpConnection;
-import com.liferay.saml.admin.rest.dto.v1_0.Metadata;
 import com.liferay.saml.admin.rest.resource.v1_0.IdpConnectionResource;
 import com.liferay.saml.persistence.model.SamlSpIdpConnection;
 import com.liferay.saml.persistence.service.SamlSpIdpConnectionLocalService;
@@ -67,7 +66,6 @@ public class IdpConnectionResourceImpl extends BaseIdpConnectionResourceImpl {
 
 		return _convert(samlSpIdpConnection);
 	}
-
 
 	@Override
 	public Page<IdpConnection> getIdpConnections(Pagination pagination)
@@ -174,17 +172,18 @@ public class IdpConnectionResourceImpl extends BaseIdpConnectionResourceImpl {
 	private IdpConnection _convert(SamlSpIdpConnection samlSpIdpConnection) {
 		return new IdpConnection() {
 			{
-				enabled = samlSpIdpConnection.isEnabled();
-				entityId = samlSpIdpConnection.getSamlIdpEntityId();
-				id = samlSpIdpConnection.getSamlSpIdpConnectionId();
-				metadataUrl = samlSpIdpConnection.getMetadataUrl();
-				name = samlSpIdpConnection.getName();
-				nameIdFormat = samlSpIdpConnection.getNameIdFormat();
 				assertionSignatureRequired =
 					samlSpIdpConnection.isAssertionSignatureRequired();
 				clockSkew = samlSpIdpConnection.getClockSkew();
+				enabled = samlSpIdpConnection.isEnabled();
+				entityId = samlSpIdpConnection.getSamlIdpEntityId();
 				forceAuthn = samlSpIdpConnection.isForceAuthn();
-				samlSpIdpConnection.getMetadataUpdatedDate();
+				id = samlSpIdpConnection.getSamlSpIdpConnectionId();
+				metadataUpdatedDate =
+					samlSpIdpConnection.getMetadataUpdatedDate();
+				metadataUrl = samlSpIdpConnection.getMetadataUrl();
+				name = samlSpIdpConnection.getName();
+				nameIdFormat = samlSpIdpConnection.getNameIdFormat();
 				signAuthnRequest = samlSpIdpConnection.isSignAuthnRequest();
 				unknownUsersAreStrangers =
 					samlSpIdpConnection.isUnknownUsersAreStrangers();
