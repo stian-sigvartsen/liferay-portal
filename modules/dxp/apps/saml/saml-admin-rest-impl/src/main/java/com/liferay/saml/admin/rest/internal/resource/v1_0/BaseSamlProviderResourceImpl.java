@@ -230,7 +230,7 @@ public abstract class BaseSamlProviderResourceImpl
 	@javax.ws.rs.Path("/provider/{roleId}")
 	@javax.ws.rs.Produces({"application/json", "application/xml"})
 	@Override
-	public Object getSamlProvider(
+	public Object getRole(
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
 			@javax.validation.constraints.NotNull
 			@javax.ws.rs.PathParam("roleId")

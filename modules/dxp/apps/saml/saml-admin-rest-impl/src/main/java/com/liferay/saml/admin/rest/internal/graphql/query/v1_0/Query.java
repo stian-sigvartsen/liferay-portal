@@ -145,17 +145,14 @@ public class Query {
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {samlProvider(roleId: ___){}}"}' -u 'test@liferay.com:test'
+	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {role(roleId: ___){}}"}' -u 'test@liferay.com:test'
 	 */
 	@GraphQLField(description = "Retrieves the SAML SP Provider configuration.")
-	public Object samlProvider(@GraphQLName("roleId") String roleId)
-		throws Exception {
-
+	public Object role(@GraphQLName("roleId") String roleId) throws Exception {
 		return _applyComponentServiceObjects(
 			_samlProviderResourceComponentServiceObjects,
 			this::_populateResourceContext,
-			samlProviderResource -> samlProviderResource.getSamlProvider(
-				roleId));
+			samlProviderResource -> samlProviderResource.getRole(roleId));
 	}
 
 	@GraphQLTypeExtension(IdpConnection.class)

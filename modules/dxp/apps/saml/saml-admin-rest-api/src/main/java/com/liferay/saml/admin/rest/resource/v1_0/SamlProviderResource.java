@@ -69,7 +69,7 @@ public interface SamlProviderResource {
 
 	public void deleteRole(String roleId) throws Exception;
 
-	public Object getSamlProvider(String roleId) throws Exception;
+	public Object getRole(String roleId) throws Exception;
 
 	public Response patchRole(String roleId, Object object) throws Exception;
 

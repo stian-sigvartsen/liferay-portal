@@ -69,9 +69,9 @@ public interface SamlProviderResource {
 	public HttpInvoker.HttpResponse deleteRoleHttpResponse(String roleId)
 		throws Exception;
 
-	public Object getSamlProvider(String roleId) throws Exception;
+	public Object getRole(String roleId) throws Exception;
 
-	public HttpInvoker.HttpResponse getSamlProviderHttpResponse(String roleId)
+	public HttpInvoker.HttpResponse getRoleHttpResponse(String roleId)
 		throws Exception;
 
 	public void patchRole(String roleId, Object object) throws Exception;
@@ -544,9 +544,8 @@ public interface SamlProviderResource {
 			return httpInvoker.invoke();
 		}
 
-		public Object getSamlProvider(String roleId) throws Exception {
-			HttpInvoker.HttpResponse httpResponse = getSamlProviderHttpResponse(
-				roleId);
+		public Object getRole(String roleId) throws Exception {
+			HttpInvoker.HttpResponse httpResponse = getRoleHttpResponse(roleId);
 
 			String content = httpResponse.getContent();
 
@@ -585,8 +584,7 @@ public interface SamlProviderResource {
 			}
 		}
 
-		public HttpInvoker.HttpResponse getSamlProviderHttpResponse(
-				String roleId)
+		public HttpInvoker.HttpResponse getRoleHttpResponse(String roleId)
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();

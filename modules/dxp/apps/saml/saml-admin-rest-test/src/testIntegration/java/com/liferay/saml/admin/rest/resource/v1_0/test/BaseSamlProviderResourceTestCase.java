@@ -234,7 +234,7 @@ public abstract class BaseSamlProviderResourceTestCase {
 	}
 
 	@Test
-	public void testGetSamlProvider() throws Exception {
+	public void testGetRole() throws Exception {
 		Assert.assertTrue(false);
 	}
 
