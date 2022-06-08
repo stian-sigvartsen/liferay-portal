@@ -14,7 +14,7 @@
 
 package com.liferay.saml.admin.rest.client.serdes.v1_0;
 
-import com.liferay.saml.admin.rest.client.dto.v1_0.Provider;
+import com.liferay.saml.admin.rest.client.dto.v1_0.SamlProvider;
 import com.liferay.saml.admin.rest.client.json.BaseJSONParser;
 
 import java.util.Iterator;
@@ -30,22 +30,24 @@ import javax.annotation.Generated;
  * @generated
  */
 @Generated("")
-public class ProviderSerDes {
+public class SamlProviderSerDes {
 
-	public static Provider toDTO(String json) {
-		ProviderJSONParser providerJSONParser = new ProviderJSONParser();
+	public static SamlProvider toDTO(String json) {
+		SamlProviderJSONParser samlProviderJSONParser =
+			new SamlProviderJSONParser();
 
-		return providerJSONParser.parseToDTO(json);
+		return samlProviderJSONParser.parseToDTO(json);
 	}
 
-	public static Provider[] toDTOs(String json) {
-		ProviderJSONParser providerJSONParser = new ProviderJSONParser();
+	public static SamlProvider[] toDTOs(String json) {
+		SamlProviderJSONParser samlProviderJSONParser =
+			new SamlProviderJSONParser();
 
-		return providerJSONParser.parseToDTOs(json);
+		return samlProviderJSONParser.parseToDTOs(json);
 	}
 
-	public static String toJSON(Provider provider) {
-		if (provider == null) {
+	public static String toJSON(SamlProvider samlProvider) {
+		if (samlProvider == null) {
 			return "null";
 		}
 
@@ -53,17 +55,17 @@ public class ProviderSerDes {
 
 		sb.append("{");
 
-		if (provider.getEnabled() != null) {
+		if (samlProvider.getEnabled() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
 
 			sb.append("\"enabled\": ");
 
-			sb.append(provider.getEnabled());
+			sb.append(samlProvider.getEnabled());
 		}
 
-		if (provider.getEntityId() != null) {
+		if (samlProvider.getEntityId() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
@@ -72,22 +74,22 @@ public class ProviderSerDes {
 
 			sb.append("\"");
 
-			sb.append(_escape(provider.getEntityId()));
+			sb.append(_escape(samlProvider.getEntityId()));
 
 			sb.append("\"");
 		}
 
-		if (provider.getIdp() != null) {
+		if (samlProvider.getIdp() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
 
 			sb.append("\"idp\": ");
 
-			sb.append(String.valueOf(provider.getIdp()));
+			sb.append(String.valueOf(samlProvider.getIdp()));
 		}
 
-		if (provider.getRole() != null) {
+		if (samlProvider.getRole() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
@@ -96,39 +98,39 @@ public class ProviderSerDes {
 
 			sb.append("\"");
 
-			sb.append(provider.getRole());
+			sb.append(samlProvider.getRole());
 
 			sb.append("\"");
 		}
 
-		if (provider.getSignMetadata() != null) {
+		if (samlProvider.getSignMetadata() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
 
 			sb.append("\"signMetadata\": ");
 
-			sb.append(provider.getSignMetadata());
+			sb.append(samlProvider.getSignMetadata());
 		}
 
-		if (provider.getSp() != null) {
+		if (samlProvider.getSp() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
 
 			sb.append("\"sp\": ");
 
-			sb.append(String.valueOf(provider.getSp()));
+			sb.append(String.valueOf(samlProvider.getSp()));
 		}
 
-		if (provider.getSslRequired() != null) {
+		if (samlProvider.getSslRequired() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
 
 			sb.append("\"sslRequired\": ");
 
-			sb.append(provider.getSslRequired());
+			sb.append(samlProvider.getSslRequired());
 		}
 
 		sb.append("}");
@@ -137,123 +139,127 @@ public class ProviderSerDes {
 	}
 
 	public static Map<String, Object> toMap(String json) {
-		ProviderJSONParser providerJSONParser = new ProviderJSONParser();
+		SamlProviderJSONParser samlProviderJSONParser =
+			new SamlProviderJSONParser();
 
-		return providerJSONParser.parseToMap(json);
+		return samlProviderJSONParser.parseToMap(json);
 	}
 
-	public static Map<String, String> toMap(Provider provider) {
-		if (provider == null) {
+	public static Map<String, String> toMap(SamlProvider samlProvider) {
+		if (samlProvider == null) {
 			return null;
 		}
 
 		Map<String, String> map = new TreeMap<>();
 
-		if (provider.getEnabled() == null) {
+		if (samlProvider.getEnabled() == null) {
 			map.put("enabled", null);
 		}
 		else {
-			map.put("enabled", String.valueOf(provider.getEnabled()));
+			map.put("enabled", String.valueOf(samlProvider.getEnabled()));
 		}
 
-		if (provider.getEntityId() == null) {
+		if (samlProvider.getEntityId() == null) {
 			map.put("entityId", null);
 		}
 		else {
-			map.put("entityId", String.valueOf(provider.getEntityId()));
+			map.put("entityId", String.valueOf(samlProvider.getEntityId()));
 		}
 
-		if (provider.getIdp() == null) {
+		if (samlProvider.getIdp() == null) {
 			map.put("idp", null);
 		}
 		else {
-			map.put("idp", String.valueOf(provider.getIdp()));
+			map.put("idp", String.valueOf(samlProvider.getIdp()));
 		}
 
-		if (provider.getRole() == null) {
+		if (samlProvider.getRole() == null) {
 			map.put("role", null);
 		}
 		else {
-			map.put("role", String.valueOf(provider.getRole()));
+			map.put("role", String.valueOf(samlProvider.getRole()));
 		}
 
-		if (provider.getSignMetadata() == null) {
+		if (samlProvider.getSignMetadata() == null) {
 			map.put("signMetadata", null);
 		}
 		else {
-			map.put("signMetadata", String.valueOf(provider.getSignMetadata()));
+			map.put(
+				"signMetadata", String.valueOf(samlProvider.getSignMetadata()));
 		}
 
-		if (provider.getSp() == null) {
+		if (samlProvider.getSp() == null) {
 			map.put("sp", null);
 		}
 		else {
-			map.put("sp", String.valueOf(provider.getSp()));
+			map.put("sp", String.valueOf(samlProvider.getSp()));
 		}
 
-		if (provider.getSslRequired() == null) {
+		if (samlProvider.getSslRequired() == null) {
 			map.put("sslRequired", null);
 		}
 		else {
-			map.put("sslRequired", String.valueOf(provider.getSslRequired()));
+			map.put(
+				"sslRequired", String.valueOf(samlProvider.getSslRequired()));
 		}
 
 		return map;
 	}
 
-	public static class ProviderJSONParser extends BaseJSONParser<Provider> {
+	public static class SamlProviderJSONParser
+		extends BaseJSONParser<SamlProvider> {
 
 		@Override
-		protected Provider createDTO() {
-			return new Provider();
+		protected SamlProvider createDTO() {
+			return new SamlProvider();
 		}
 
 		@Override
-		protected Provider[] createDTOArray(int size) {
-			return new Provider[size];
+		protected SamlProvider[] createDTOArray(int size) {
+			return new SamlProvider[size];
 		}
 
 		@Override
 		protected void setField(
-			Provider provider, String jsonParserFieldName,
+			SamlProvider samlProvider, String jsonParserFieldName,
 			Object jsonParserFieldValue) {
 
 			if (Objects.equals(jsonParserFieldName, "enabled")) {
 				if (jsonParserFieldValue != null) {
-					provider.setEnabled((Boolean)jsonParserFieldValue);
+					samlProvider.setEnabled((Boolean)jsonParserFieldValue);
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "entityId")) {
 				if (jsonParserFieldValue != null) {
-					provider.setEntityId((String)jsonParserFieldValue);
+					samlProvider.setEntityId((String)jsonParserFieldValue);
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "idp")) {
 				if (jsonParserFieldValue != null) {
-					provider.setIdp(
+					samlProvider.setIdp(
 						IdpSerDes.toDTO((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "role")) {
 				if (jsonParserFieldValue != null) {
-					provider.setRole(
-						Provider.Role.create((String)jsonParserFieldValue));
+					samlProvider.setRole(
+						SamlProvider.Role.create((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "signMetadata")) {
 				if (jsonParserFieldValue != null) {
-					provider.setSignMetadata((Boolean)jsonParserFieldValue);
+					samlProvider.setSignMetadata((Boolean)jsonParserFieldValue);
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "sp")) {
 				if (jsonParserFieldValue != null) {
-					provider.setSp(
+					samlProvider.setSp(
 						SpSerDes.toDTO((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "sslRequired")) {
 				if (jsonParserFieldValue != null) {
-					provider.setSslRequired((Boolean)jsonParserFieldValue);
+					samlProvider.setSslRequired((Boolean)jsonParserFieldValue);
 				}
 			}
 		}

@@ -87,7 +87,7 @@ components:
                     readOnly: true
                     type: string
             type: object
-        Provider:
+        SamlProvider:
             description:
                 Dummy schema which can be referenced from tags
             properties:
@@ -368,67 +368,67 @@ paths:
         get:
             description:
                 Retrieves the SAML Provider configuration.
-            operationId: getProvider
+            operationId: getSamlProvider
             responses:
                 200:
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/Provider"
+                                $ref: "#/components/schemas/SamlProvider"
                         application/xml:
                             schema:
-                                $ref: "#/components/schemas/Provider"
-            tags: ["Provider"]
+                                $ref: "#/components/schemas/SamlProvider"
+            tags: ["SamlProvider"]
         patch:
             description:
                 Patch the SAML Provider configuration.
-            operationId: patchProvider
+            operationId: patchSamlProvider
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: "#/components/schemas/Provider"
+                            $ref: "#/components/schemas/SamlProvider"
                     application/xml:
                         schema:
-                            $ref: "#/components/schemas/Provider"
+                            $ref: "#/components/schemas/SamlProvider"
             responses:
                 200:
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/Provider"
+                                $ref: "#/components/schemas/SamlProvider"
                         application/xml:
                             schema:
-                                $ref: "#/components/schemas/Provider"
+                                $ref: "#/components/schemas/SamlProvider"
                     # @review
                     description:
                         "SAML provider configuration was successfully created"
-            tags: ["Provider"]
+            tags: ["SamlProvider"]
         post:
             description:
                 Creates a full SAML Provider configuration with peer connections.
-            operationId: postProvider
+            operationId: postSamlProvider
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: "#/components/schemas/Provider"
+                            $ref: "#/components/schemas/SamlProvider"
                     application/xml:
                         schema:
-                            $ref: "#/components/schemas/Provider"
+                            $ref: "#/components/schemas/SamlProvider"
             responses:
                 200:
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/Provider"
+                                $ref: "#/components/schemas/SamlProvider"
                         application/xml:
                             schema:
-                                $ref: "#/components/schemas/Provider"
+                                $ref: "#/components/schemas/SamlProvider"
                     # @review
                     description:
                         "SAML provider configuration was successfully created"
-            tags: ["Provider"]
+            tags: ["SamlProvider"]
     "/provider/{roleId}":
         delete:
             description:
@@ -445,11 +445,11 @@ paths:
                     content:
                         application/json: {}
                         application/xml: {}
-            tags: ["Provider"]
+            tags: ["SamlProvider"]
         get:
             description:
                 Retrieves the SAML SP Provider configuration.
-            operationId: getProvider
+            operationId: getSamlProvider
             parameters:
                 - in: path
                   name: roleId
@@ -469,7 +469,7 @@ paths:
                                 oneOf:
                                     - $ref: "#/components/schemas/Idp"
                                     - $ref: "#/components/schemas/Sp"
-            tags: ["Provider"]
+            tags: ["SamlProvider"]
         patch:
             description:
                 Patch the SAML SP Provider configuration.
@@ -508,7 +508,7 @@ paths:
                     # @review
                     description:
                         "SAML provider configuration was successfully created"
-            tags: ["Provider"]
+            tags: ["SamlProvider"]
         put:
             description:
                 Replaces the SAML SP Provider configuration.
@@ -547,4 +547,4 @@ paths:
                     # @review
                     description:
                         "SAML provider configuration was successfully created"
-            tags: ["Provider"]
+            tags: ["SamlProvider"]

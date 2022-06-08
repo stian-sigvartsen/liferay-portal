@@ -49,18 +49,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Generated("")
 @GraphQLName(
 	description = "Dummy schema which can be referenced from tags",
-	value = "Provider"
+	value = "SamlProvider"
 )
 @JsonFilter("Liferay.Vulcan")
-@XmlRootElement(name = "Provider")
-public class Provider implements Serializable {
+@XmlRootElement(name = "SamlProvider")
+public class SamlProvider implements Serializable {
 
-	public static Provider toDTO(String json) {
-		return ObjectMapperUtil.readValue(Provider.class, json);
+	public static SamlProvider toDTO(String json) {
+		return ObjectMapperUtil.readValue(SamlProvider.class, json);
 	}
 
-	public static Provider unsafeToDTO(String json) {
-		return ObjectMapperUtil.unsafeReadValue(Provider.class, json);
+	public static SamlProvider unsafeToDTO(String json) {
+		return ObjectMapperUtil.unsafeReadValue(SamlProvider.class, json);
 	}
 
 	@Schema
@@ -271,13 +271,13 @@ public class Provider implements Serializable {
 			return true;
 		}
 
-		if (!(object instanceof Provider)) {
+		if (!(object instanceof SamlProvider)) {
 			return false;
 		}
 
-		Provider provider = (Provider)object;
+		SamlProvider samlProvider = (SamlProvider)object;
 
-		return Objects.equals(toString(), provider.toString());
+		return Objects.equals(toString(), samlProvider.toString());
 	}
 
 	@Override
@@ -377,7 +377,7 @@ public class Provider implements Serializable {
 
 	@Schema(
 		accessMode = Schema.AccessMode.READ_ONLY,
-		defaultValue = "com.liferay.saml.admin.rest.dto.v1_0.Provider",
+		defaultValue = "com.liferay.saml.admin.rest.dto.v1_0.SamlProvider",
 		name = "x-class-name"
 	)
 	public String xClassName;

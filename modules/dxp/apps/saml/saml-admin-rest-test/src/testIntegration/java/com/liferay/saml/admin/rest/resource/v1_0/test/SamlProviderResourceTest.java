@@ -24,5 +24,5 @@ import org.junit.runner.RunWith;
  */
 @Ignore
 @RunWith(Arquillian.class)
-public class ProviderResourceTest extends BaseProviderResourceTestCase {
+public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 }

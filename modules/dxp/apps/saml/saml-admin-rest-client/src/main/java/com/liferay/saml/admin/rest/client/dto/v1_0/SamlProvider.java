@@ -15,7 +15,7 @@
 package com.liferay.saml.admin.rest.client.dto.v1_0;
 
 import com.liferay.saml.admin.rest.client.function.UnsafeSupplier;
-import com.liferay.saml.admin.rest.client.serdes.v1_0.ProviderSerDes;
+import com.liferay.saml.admin.rest.client.serdes.v1_0.SamlProviderSerDes;
 
 import java.io.Serializable;
 
@@ -28,10 +28,10 @@ import javax.annotation.Generated;
  * @generated
  */
 @Generated("")
-public class Provider implements Cloneable, Serializable {
+public class SamlProvider implements Cloneable, Serializable {
 
-	public static Provider toDTO(String json) {
-		return ProviderSerDes.toDTO(json);
+	public static SamlProvider toDTO(String json) {
+		return SamlProviderSerDes.toDTO(json);
 	}
 
 	public Boolean getEnabled() {
@@ -184,8 +184,8 @@ public class Provider implements Cloneable, Serializable {
 	protected Boolean sslRequired;
 
 	@Override
-	public Provider clone() throws CloneNotSupportedException {
-		return (Provider)super.clone();
+	public SamlProvider clone() throws CloneNotSupportedException {
+		return (SamlProvider)super.clone();
 	}
 
 	@Override
@@ -194,13 +194,13 @@ public class Provider implements Cloneable, Serializable {
 			return true;
 		}
 
-		if (!(object instanceof Provider)) {
+		if (!(object instanceof SamlProvider)) {
 			return false;
 		}
 
-		Provider provider = (Provider)object;
+		SamlProvider samlProvider = (SamlProvider)object;
 
-		return Objects.equals(toString(), provider.toString());
+		return Objects.equals(toString(), samlProvider.toString());
 	}
 
 	@Override
@@ -211,7 +211,7 @@ public class Provider implements Cloneable, Serializable {
 	}
 
 	public String toString() {
-		return ProviderSerDes.toJSON(this);
+		return SamlProviderSerDes.toJSON(this);
 	}
 
 	public static enum Role {

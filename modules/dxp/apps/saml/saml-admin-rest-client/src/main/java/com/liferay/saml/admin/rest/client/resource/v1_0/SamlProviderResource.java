@@ -14,10 +14,10 @@
 
 package com.liferay.saml.admin.rest.client.resource.v1_0;
 
-import com.liferay.saml.admin.rest.client.dto.v1_0.Provider;
+import com.liferay.saml.admin.rest.client.dto.v1_0.SamlProvider;
 import com.liferay.saml.admin.rest.client.http.HttpInvoker;
 import com.liferay.saml.admin.rest.client.problem.Problem;
-import com.liferay.saml.admin.rest.client.serdes.v1_0.ProviderSerDes;
+import com.liferay.saml.admin.rest.client.serdes.v1_0.SamlProviderSerDes;
 
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -32,30 +32,35 @@ import javax.annotation.Generated;
  * @generated
  */
 @Generated("")
-public interface ProviderResource {
+public interface SamlProviderResource {
 
 	public static Builder builder() {
 		return new Builder();
 	}
 
-	public Provider getProvider() throws Exception;
+	public SamlProvider getSamlProvider() throws Exception;
 
-	public HttpInvoker.HttpResponse getProviderHttpResponse() throws Exception;
-
-	public Provider patchProvider(Provider provider) throws Exception;
-
-	public HttpInvoker.HttpResponse patchProviderHttpResponse(Provider provider)
+	public HttpInvoker.HttpResponse getSamlProviderHttpResponse()
 		throws Exception;
 
-	public Provider postProvider(Provider provider) throws Exception;
-
-	public HttpInvoker.HttpResponse postProviderHttpResponse(Provider provider)
+	public SamlProvider patchSamlProvider(SamlProvider samlProvider)
 		throws Exception;
 
-	public void postProviderBatch(String callbackURL, Object object)
+	public HttpInvoker.HttpResponse patchSamlProviderHttpResponse(
+			SamlProvider samlProvider)
 		throws Exception;
 
-	public HttpInvoker.HttpResponse postProviderBatchHttpResponse(
+	public SamlProvider postSamlProvider(SamlProvider samlProvider)
+		throws Exception;
+
+	public HttpInvoker.HttpResponse postSamlProviderHttpResponse(
+			SamlProvider samlProvider)
+		throws Exception;
+
+	public void postSamlProviderBatch(String callbackURL, Object object)
+		throws Exception;
+
+	public HttpInvoker.HttpResponse postSamlProviderBatchHttpResponse(
 			String callbackURL, Object object)
 		throws Exception;
 
@@ -64,9 +69,9 @@ public interface ProviderResource {
 	public HttpInvoker.HttpResponse deleteRoleHttpResponse(String roleId)
 		throws Exception;
 
-	public Object getProvider(String roleId) throws Exception;
+	public Object getSamlProvider(String roleId) throws Exception;
 
-	public HttpInvoker.HttpResponse getProviderHttpResponse(String roleId)
+	public HttpInvoker.HttpResponse getSamlProviderHttpResponse(String roleId)
 		throws Exception;
 
 	public void patchRole(String roleId, Object object) throws Exception;
@@ -90,8 +95,8 @@ public interface ProviderResource {
 			return this;
 		}
 
-		public ProviderResource build() {
-			return new ProviderResourceImpl(this);
+		public SamlProviderResource build() {
+			return new SamlProviderResourceImpl(this);
 		}
 
 		public Builder endpoint(String host, int port, String scheme) {
@@ -150,10 +155,12 @@ public interface ProviderResource {
 
 	}
 
-	public static class ProviderResourceImpl implements ProviderResource {
+	public static class SamlProviderResourceImpl
+		implements SamlProviderResource {
 
-		public Provider getProvider() throws Exception {
-			HttpInvoker.HttpResponse httpResponse = getProviderHttpResponse();
+		public SamlProvider getSamlProvider() throws Exception {
+			HttpInvoker.HttpResponse httpResponse =
+				getSamlProviderHttpResponse();
 
 			String content = httpResponse.getContent();
 
@@ -181,7 +188,7 @@ public interface ProviderResource {
 			}
 
 			try {
-				return ProviderSerDes.toDTO(content);
+				return SamlProviderSerDes.toDTO(content);
 			}
 			catch (Exception e) {
 				_logger.log(
@@ -192,7 +199,7 @@ public interface ProviderResource {
 			}
 		}
 
-		public HttpInvoker.HttpResponse getProviderHttpResponse()
+		public HttpInvoker.HttpResponse getSamlProviderHttpResponse()
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
@@ -226,9 +233,11 @@ public interface ProviderResource {
 			return httpInvoker.invoke();
 		}
 
-		public Provider patchProvider(Provider provider) throws Exception {
-			HttpInvoker.HttpResponse httpResponse = patchProviderHttpResponse(
-				provider);
+		public SamlProvider patchSamlProvider(SamlProvider samlProvider)
+			throws Exception {
+
+			HttpInvoker.HttpResponse httpResponse =
+				patchSamlProviderHttpResponse(samlProvider);
 
 			String content = httpResponse.getContent();
 
@@ -256,7 +265,7 @@ public interface ProviderResource {
 			}
 
 			try {
-				return ProviderSerDes.toDTO(content);
+				return SamlProviderSerDes.toDTO(content);
 			}
 			catch (Exception e) {
 				_logger.log(
@@ -267,13 +276,13 @@ public interface ProviderResource {
 			}
 		}
 
-		public HttpInvoker.HttpResponse patchProviderHttpResponse(
-				Provider provider)
+		public HttpInvoker.HttpResponse patchSamlProviderHttpResponse(
+				SamlProvider samlProvider)
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
 
-			httpInvoker.body(provider.toString(), "application/json");
+			httpInvoker.body(samlProvider.toString(), "application/json");
 
 			if (_builder._locale != null) {
 				httpInvoker.header(
@@ -304,9 +313,11 @@ public interface ProviderResource {
 			return httpInvoker.invoke();
 		}
 
-		public Provider postProvider(Provider provider) throws Exception {
-			HttpInvoker.HttpResponse httpResponse = postProviderHttpResponse(
-				provider);
+		public SamlProvider postSamlProvider(SamlProvider samlProvider)
+			throws Exception {
+
+			HttpInvoker.HttpResponse httpResponse =
+				postSamlProviderHttpResponse(samlProvider);
 
 			String content = httpResponse.getContent();
 
@@ -334,7 +345,7 @@ public interface ProviderResource {
 			}
 
 			try {
-				return ProviderSerDes.toDTO(content);
+				return SamlProviderSerDes.toDTO(content);
 			}
 			catch (Exception e) {
 				_logger.log(
@@ -345,13 +356,13 @@ public interface ProviderResource {
 			}
 		}
 
-		public HttpInvoker.HttpResponse postProviderHttpResponse(
-				Provider provider)
+		public HttpInvoker.HttpResponse postSamlProviderHttpResponse(
+				SamlProvider samlProvider)
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
 
-			httpInvoker.body(provider.toString(), "application/json");
+			httpInvoker.body(samlProvider.toString(), "application/json");
 
 			if (_builder._locale != null) {
 				httpInvoker.header(
@@ -382,11 +393,11 @@ public interface ProviderResource {
 			return httpInvoker.invoke();
 		}
 
-		public void postProviderBatch(String callbackURL, Object object)
+		public void postSamlProviderBatch(String callbackURL, Object object)
 			throws Exception {
 
 			HttpInvoker.HttpResponse httpResponse =
-				postProviderBatchHttpResponse(callbackURL, object);
+				postSamlProviderBatchHttpResponse(callbackURL, object);
 
 			String content = httpResponse.getContent();
 
@@ -414,7 +425,7 @@ public interface ProviderResource {
 			}
 		}
 
-		public HttpInvoker.HttpResponse postProviderBatchHttpResponse(
+		public HttpInvoker.HttpResponse postSamlProviderBatchHttpResponse(
 				String callbackURL, Object object)
 			throws Exception {
 
@@ -533,8 +544,8 @@ public interface ProviderResource {
 			return httpInvoker.invoke();
 		}
 
-		public Object getProvider(String roleId) throws Exception {
-			HttpInvoker.HttpResponse httpResponse = getProviderHttpResponse(
+		public Object getSamlProvider(String roleId) throws Exception {
+			HttpInvoker.HttpResponse httpResponse = getSamlProviderHttpResponse(
 				roleId);
 
 			String content = httpResponse.getContent();
@@ -574,7 +585,8 @@ public interface ProviderResource {
 			}
 		}
 
-		public HttpInvoker.HttpResponse getProviderHttpResponse(String roleId)
+		public HttpInvoker.HttpResponse getSamlProviderHttpResponse(
+				String roleId)
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
@@ -748,12 +760,12 @@ public interface ProviderResource {
 			return httpInvoker.invoke();
 		}
 
-		private ProviderResourceImpl(Builder builder) {
+		private SamlProviderResourceImpl(Builder builder) {
 			_builder = builder;
 		}
 
 		private static final Logger _logger = Logger.getLogger(
-			ProviderResource.class.getName());
+			SamlProviderResource.class.getName());
 
 		private Builder _builder;
 

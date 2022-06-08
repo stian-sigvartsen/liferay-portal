@@ -27,10 +27,10 @@ import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
 import com.liferay.saml.admin.rest.dto.v1_0.Idp;
 import com.liferay.saml.admin.rest.dto.v1_0.IdpConnection;
-import com.liferay.saml.admin.rest.dto.v1_0.Provider;
+import com.liferay.saml.admin.rest.dto.v1_0.SamlProvider;
 import com.liferay.saml.admin.rest.dto.v1_0.Sp;
 import com.liferay.saml.admin.rest.dto.v1_0.SpConnection;
-import com.liferay.saml.admin.rest.resource.v1_0.ProviderResource;
+import com.liferay.saml.admin.rest.resource.v1_0.SamlProviderResource;
 import com.liferay.saml.constants.SamlProviderConfigurationKeys;
 import com.liferay.saml.persistence.model.SamlIdpSpConnection;
 import com.liferay.saml.persistence.model.SamlSpIdpConnection;
@@ -61,38 +61,38 @@ import org.osgi.service.component.annotations.ServiceScope;
  */
 @Component(
 	configurationPid = "com.liferay.saml.runtime.configuration.SamlConfiguration",
-	properties = "OSGI-INF/liferay/rest/v1_0/provider.properties",
-	scope = ServiceScope.PROTOTYPE, service = ProviderResource.class
+	properties = "OSGI-INF/liferay/rest/v1_0/saml-provider.properties",
+	scope = ServiceScope.PROTOTYPE, service = SamlProviderResource.class
 )
-public class ProviderResourceImpl extends BaseProviderResourceImpl {
+public class SamlProviderResourceImpl extends BaseSamlProviderResourceImpl {
 
 	@Override
-	public Provider getProvider() throws Exception {
+	public SamlProvider getSamlProvider() throws Exception {
 		SamlProviderConfiguration samlProviderConfiguration =
 			_samlProviderConfigurationHelper.getSamlProviderConfiguration();
 
-		Provider provider = new Provider();
+		SamlProvider samlProvider = new SamlProvider();
 
-		provider.setEnabled(samlProviderConfiguration.enabled());
-		provider.setEntityId(samlProviderConfiguration.entityId());
-		provider.setRole(
-			Provider.Role.create(samlProviderConfiguration.role()));
+		samlProvider.setEnabled(samlProviderConfiguration.enabled());
+		samlProvider.setEntityId(samlProviderConfiguration.entityId());
+		samlProvider.setRole(
+			SamlProvider.Role.create(samlProviderConfiguration.role()));
 
-		provider.setIdp(_getIdp(samlProviderConfiguration));
-		provider.setSp(_getSp(samlProviderConfiguration));
+		samlProvider.setIdp(_getIdp(samlProviderConfiguration));
+		samlProvider.setSp(_getSp(samlProviderConfiguration));
 
-		return provider;
+		return samlProvider;
 	}
 
 	@Override
-	public Object getProvider(String roleId) throws Exception {
+	public Object getSamlProvider(String roleId) throws Exception {
 		SamlProviderConfiguration samlProviderConfiguration =
 			_samlProviderConfigurationHelper.getSamlProviderConfiguration();
 
-		if (Objects.equals(Provider.Role.SP.getValue(), roleId)) {
+		if (Objects.equals(SamlProvider.Role.SP.getValue(), roleId)) {
 			return _getSp(samlProviderConfiguration);
 		}
-		else if (Objects.equals(Provider.Role.IDP.getValue(), roleId)) {
+		else if (Objects.equals(SamlProvider.Role.IDP.getValue(), roleId)) {
 			return _getIdp(samlProviderConfiguration);
 		}
 
@@ -100,18 +100,13 @@ public class ProviderResourceImpl extends BaseProviderResourceImpl {
 	}
 
 	@Override
-	public Provider patchProvider(Provider provider) throws Exception {
-		return _updateProvider(provider, false);
-	}
-
-	@Override
 	public Response patchRole(String roleId, Object object) throws Exception {
-		if (Objects.equals(Provider.Role.IDP.getValue(), roleId) &&
+		if (Objects.equals(SamlProvider.Role.IDP.getValue(), roleId) &&
 			(object instanceof Idp)) {
 
 			_setIdpProperties((Idp)object, new UnicodeProperties(), false);
 		}
-		else if (Objects.equals(Provider.Role.SP.getValue(), roleId) &&
+		else if (Objects.equals(SamlProvider.Role.SP.getValue(), roleId) &&
 				 (object instanceof Sp)) {
 
 			_setSpProperties((Sp)object, new UnicodeProperties(), false);
@@ -124,18 +119,27 @@ public class ProviderResourceImpl extends BaseProviderResourceImpl {
 	}
 
 	@Override
-	public Provider postProvider(Provider provider) throws Exception {
-		return _updateProvider(provider, true);
+	public SamlProvider patchSamlProvider(SamlProvider samlProvider)
+		throws Exception {
+
+		return _updateSamlProvider(samlProvider, false);
+	}
+
+	@Override
+	public SamlProvider postSamlProvider(SamlProvider samlProvider)
+		throws Exception {
+
+		return _updateSamlProvider(samlProvider, true);
 	}
 
 	@Override
 	public Response putRole(String roleId, Object object) throws Exception {
-		if (Objects.equals(Provider.Role.IDP.getValue(), roleId) &&
+		if (Objects.equals(SamlProvider.Role.IDP.getValue(), roleId) &&
 			(object instanceof Idp)) {
 
 			_setIdpProperties((Idp)object, new UnicodeProperties(), true);
 		}
-		else if (Objects.equals(Provider.Role.SP.getValue(), roleId) &&
+		else if (Objects.equals(SamlProvider.Role.SP.getValue(), roleId) &&
 				 (object instanceof Sp)) {
 
 			_setSpProperties((Sp)object, new UnicodeProperties(), true);
@@ -148,12 +152,12 @@ public class ProviderResourceImpl extends BaseProviderResourceImpl {
 	}
 
 	@Override
-	public Page<Provider> read(
+	public Page<SamlProvider> read(
 			Filter filter, Pagination pagination, Sort[] sorts,
 			Map<String, Serializable> parameters, String search)
 		throws Exception {
 
-		return Page.of(Collections.singleton(getProvider()));
+		return Page.of(Collections.singleton(getSamlProvider()));
 	}
 
 	protected void activate(Map<String, Object> properties) {
@@ -273,25 +277,25 @@ public class ProviderResourceImpl extends BaseProviderResourceImpl {
 		unicodeProperties.put(key, value);
 	}
 
-	private void _setProviderProperties(
-		Provider provider, UnicodeProperties unicodeProperties,
+	private void _setSamlProviderProperties(
+		SamlProvider samlProvider, UnicodeProperties unicodeProperties,
 		boolean setNulls) {
 
 		_setProperty(
 			unicodeProperties, "saml.enabled",
-			_toNullableString(provider.getEnabled()), setNulls);
+			_toNullableString(samlProvider.getEnabled()), setNulls);
 
 		_setProperty(
-			unicodeProperties, "saml.entity.id", provider.getEntityId(),
+			unicodeProperties, "saml.entity.id", samlProvider.getEntityId(),
 			setNulls);
 
 		_setProperty(
 			unicodeProperties, "saml.sign.metadata",
-			_toNullableString(provider.getSignMetadata()), setNulls);
+			_toNullableString(samlProvider.getSignMetadata()), setNulls);
 
 		_setProperty(
 			unicodeProperties, "saml.ssl.required",
-			_toNullableString(provider.getSslRequired()), setNulls);
+			_toNullableString(samlProvider.getSslRequired()), setNulls);
 	}
 
 	private void _setSpProperties(
@@ -325,7 +329,8 @@ public class ProviderResourceImpl extends BaseProviderResourceImpl {
 		return String.valueOf(value);
 	}
 
-	private Provider _updateProvider(Provider provider, boolean setNulls)
+	private SamlProvider _updateSamlProvider(
+			SamlProvider samlProvider, boolean setNulls)
 		throws Exception {
 
 		// SamlProviderConfiguration samlProviderConfiguration =
@@ -350,44 +355,47 @@ public class ProviderResourceImpl extends BaseProviderResourceImpl {
 		//
 		//			keyStoreEncryptionCredentialPassword()));
 
-		_setProviderProperties(provider, unicodeProperties, setNulls);
+		_setSamlProviderProperties(samlProvider, unicodeProperties, setNulls);
 
-		String entityId = provider.getEntityId();
+		String entityId = samlProvider.getEntityId();
 
 		if (Validator.isNotNull(entityId) && (entityId.length() > 1024)) {
 			throw new Exception("EntityID too long (Max 1024 characters)");
 		}
 
-		if (provider.getEnabled() &&
+		if (samlProvider.getEnabled() &&
 			(_localEntityManager.getLocalEntityCertificate() == null)) {
 
 			throw new Exception("certificateInvalid");
 		}
 
-		if (provider.getIdp() != null) {
+		if (samlProvider.getIdp() != null) {
 			if (!_validateRoleSelection(
-					provider.getEnabled(), Provider.Role.IDP.getValue())) {
+					samlProvider.getEnabled(),
+					SamlProvider.Role.IDP.getValue())) {
 
 				throw new Exception(
 					"The Identity Provider role has been disabled. It can be " +
 						"re-enabled in system settings.");
 			}
 
-			if (provider.getSp() != null) {
+			if (samlProvider.getSp() != null) {
 				throw new Exception("Can only configure one of sp & idp roles");
 			}
 
-			_setIdpProperties(provider.getIdp(), unicodeProperties, setNulls);
+			_setIdpProperties(
+				samlProvider.getIdp(), unicodeProperties, setNulls);
 		}
 		else {
-			if (provider.getSp() != null) {
-				_setSpProperties(provider.getSp(), unicodeProperties, setNulls);
+			if (samlProvider.getSp() != null) {
+				_setSpProperties(
+					samlProvider.getSp(), unicodeProperties, setNulls);
 			}
 		}
 
 		_samlProviderConfigurationHelper.updateProperties(unicodeProperties);
 
-		return getProvider();
+		return getSamlProvider();
 	}
 
 	private boolean _validateRoleSelection(boolean enabled, String samlRole) {

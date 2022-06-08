@@ -19,7 +19,7 @@ import com.liferay.saml.admin.rest.internal.graphql.mutation.v1_0.Mutation;
 import com.liferay.saml.admin.rest.internal.graphql.query.v1_0.Query;
 import com.liferay.saml.admin.rest.resource.v1_0.IdpConnectionResource;
 import com.liferay.saml.admin.rest.resource.v1_0.MetadataResource;
-import com.liferay.saml.admin.rest.resource.v1_0.ProviderResource;
+import com.liferay.saml.admin.rest.resource.v1_0.SamlProviderResource;
 
 import javax.annotation.Generated;
 
@@ -44,15 +44,15 @@ public class ServletDataImpl implements ServletData {
 			_idpConnectionResourceComponentServiceObjects);
 		Mutation.setMetadataResourceComponentServiceObjects(
 			_metadataResourceComponentServiceObjects);
-		Mutation.setProviderResourceComponentServiceObjects(
-			_providerResourceComponentServiceObjects);
+		Mutation.setSamlProviderResourceComponentServiceObjects(
+			_samlProviderResourceComponentServiceObjects);
 
 		Query.setIdpConnectionResourceComponentServiceObjects(
 			_idpConnectionResourceComponentServiceObjects);
 		Query.setMetadataResourceComponentServiceObjects(
 			_metadataResourceComponentServiceObjects);
-		Query.setProviderResourceComponentServiceObjects(
-			_providerResourceComponentServiceObjects);
+		Query.setSamlProviderResourceComponentServiceObjects(
+			_samlProviderResourceComponentServiceObjects);
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public class ServletDataImpl implements ServletData {
 		_metadataResourceComponentServiceObjects;
 
 	@Reference(scope = ReferenceScope.PROTOTYPE_REQUIRED)
-	private ComponentServiceObjects<ProviderResource>
-		_providerResourceComponentServiceObjects;
+	private ComponentServiceObjects<SamlProviderResource>
+		_samlProviderResourceComponentServiceObjects;
 
 }

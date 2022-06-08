@@ -39,8 +39,8 @@ import com.liferay.portal.vulcan.pagination.Pagination;
 import com.liferay.portal.vulcan.resource.EntityModelResource;
 import com.liferay.portal.vulcan.util.ActionUtil;
 import com.liferay.portal.vulcan.util.TransformUtil;
-import com.liferay.saml.admin.rest.dto.v1_0.Provider;
-import com.liferay.saml.admin.rest.resource.v1_0.ProviderResource;
+import com.liferay.saml.admin.rest.dto.v1_0.SamlProvider;
+import com.liferay.saml.admin.rest.resource.v1_0.SamlProviderResource;
 
 import java.io.Serializable;
 
@@ -65,9 +65,9 @@ import javax.ws.rs.core.UriInfo;
  */
 @Generated("")
 @javax.ws.rs.Path("/v1.0")
-public abstract class BaseProviderResourceImpl
-	implements EntityModelResource, ProviderResource,
-			   VulcanBatchEngineTaskItemDelegate<Provider> {
+public abstract class BaseSamlProviderResourceImpl
+	implements EntityModelResource, SamlProviderResource,
+			   VulcanBatchEngineTaskItemDelegate<SamlProvider> {
 
 	/**
 	 * Invoke this method with the command line:
@@ -78,14 +78,14 @@ public abstract class BaseProviderResourceImpl
 		description = "Retrieves the SAML Provider configuration."
 	)
 	@io.swagger.v3.oas.annotations.tags.Tags(
-		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Provider")}
+		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "SamlProvider")}
 	)
 	@javax.ws.rs.GET
 	@javax.ws.rs.Path("/provider")
 	@javax.ws.rs.Produces({"application/json", "application/xml"})
 	@Override
-	public Provider getProvider() throws Exception {
-		return new Provider();
+	public SamlProvider getSamlProvider() throws Exception {
+		return new SamlProvider();
 	}
 
 	/**
@@ -97,15 +97,17 @@ public abstract class BaseProviderResourceImpl
 		description = "Patch the SAML Provider configuration."
 	)
 	@io.swagger.v3.oas.annotations.tags.Tags(
-		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Provider")}
+		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "SamlProvider")}
 	)
 	@javax.ws.rs.Consumes({"application/json", "application/xml"})
 	@javax.ws.rs.PATCH
 	@javax.ws.rs.Path("/provider")
 	@javax.ws.rs.Produces({"application/json", "application/xml"})
 	@Override
-	public Provider patchProvider(Provider provider) throws Exception {
-		return new Provider();
+	public SamlProvider patchSamlProvider(SamlProvider samlProvider)
+		throws Exception {
+
+		return new SamlProvider();
 	}
 
 	/**
@@ -117,15 +119,17 @@ public abstract class BaseProviderResourceImpl
 		description = "Creates a full SAML Provider configuration with peer connections."
 	)
 	@io.swagger.v3.oas.annotations.tags.Tags(
-		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Provider")}
+		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "SamlProvider")}
 	)
 	@javax.ws.rs.Consumes({"application/json", "application/xml"})
 	@javax.ws.rs.Path("/provider")
 	@javax.ws.rs.POST
 	@javax.ws.rs.Produces({"application/json", "application/xml"})
 	@Override
-	public Provider postProvider(Provider provider) throws Exception {
-		return new Provider();
+	public SamlProvider postSamlProvider(SamlProvider samlProvider)
+		throws Exception {
+
+		return new SamlProvider();
 	}
 
 	/**
@@ -142,14 +146,14 @@ public abstract class BaseProviderResourceImpl
 		}
 	)
 	@io.swagger.v3.oas.annotations.tags.Tags(
-		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Provider")}
+		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "SamlProvider")}
 	)
 	@javax.ws.rs.Consumes("application/json")
 	@javax.ws.rs.Path("/provider/batch")
 	@javax.ws.rs.POST
 	@javax.ws.rs.Produces("application/json")
 	@Override
-	public Response postProviderBatch(
+	public Response postSamlProviderBatch(
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
 			@javax.ws.rs.QueryParam("callbackURL")
 			String callbackURL,
@@ -168,7 +172,7 @@ public abstract class BaseProviderResourceImpl
 
 		return responseBuilder.entity(
 			vulcanBatchEngineImportTaskResource.postImportTask(
-				Provider.class.getName(), callbackURL, null, object)
+				SamlProvider.class.getName(), callbackURL, null, object)
 		).build();
 	}
 
@@ -189,7 +193,7 @@ public abstract class BaseProviderResourceImpl
 		}
 	)
 	@io.swagger.v3.oas.annotations.tags.Tags(
-		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Provider")}
+		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "SamlProvider")}
 	)
 	@javax.ws.rs.DELETE
 	@javax.ws.rs.Path("/provider/{roleId}")
@@ -220,13 +224,13 @@ public abstract class BaseProviderResourceImpl
 		}
 	)
 	@io.swagger.v3.oas.annotations.tags.Tags(
-		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Provider")}
+		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "SamlProvider")}
 	)
 	@javax.ws.rs.GET
 	@javax.ws.rs.Path("/provider/{roleId}")
 	@javax.ws.rs.Produces({"application/json", "application/xml"})
 	@Override
-	public Object getProvider(
+	public Object getSamlProvider(
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
 			@javax.validation.constraints.NotNull
 			@javax.ws.rs.PathParam("roleId")
@@ -253,7 +257,7 @@ public abstract class BaseProviderResourceImpl
 		}
 	)
 	@io.swagger.v3.oas.annotations.tags.Tags(
-		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Provider")}
+		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "SamlProvider")}
 	)
 	@javax.ws.rs.Consumes({"application/json", "application/xml"})
 	@javax.ws.rs.PATCH
@@ -290,7 +294,7 @@ public abstract class BaseProviderResourceImpl
 		}
 	)
 	@io.swagger.v3.oas.annotations.tags.Tags(
-		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Provider")}
+		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "SamlProvider")}
 	)
 	@javax.ws.rs.Consumes({"application/json", "application/xml"})
 	@javax.ws.rs.Path("/provider/{roleId}")
@@ -313,39 +317,41 @@ public abstract class BaseProviderResourceImpl
 	@Override
 	@SuppressWarnings("PMD.UnusedLocalVariable")
 	public void create(
-			java.util.Collection<Provider> providers,
+			java.util.Collection<SamlProvider> samlProviders,
 			Map<String, Serializable> parameters)
 		throws Exception {
 
-		UnsafeConsumer<Provider, Exception> providerUnsafeConsumer = null;
+		UnsafeConsumer<SamlProvider, Exception> samlProviderUnsafeConsumer =
+			null;
 
 		String createStrategy = (String)parameters.getOrDefault(
 			"createStrategy", "INSERT");
 
 		if ("INSERT".equalsIgnoreCase(createStrategy)) {
-			providerUnsafeConsumer = provider -> postProvider(provider);
+			samlProviderUnsafeConsumer = samlProvider -> postSamlProvider(
+				samlProvider);
 		}
 
-		if (providerUnsafeConsumer == null) {
+		if (samlProviderUnsafeConsumer == null) {
 			throw new NotSupportedException(
 				"Create strategy \"" + createStrategy +
-					"\" is not supported for Provider");
+					"\" is not supported for SamlProvider");
 		}
 
 		if (contextBatchUnsafeConsumer != null) {
 			contextBatchUnsafeConsumer.accept(
-				providers, providerUnsafeConsumer);
+				samlProviders, samlProviderUnsafeConsumer);
 		}
 		else {
-			for (Provider provider : providers) {
-				providerUnsafeConsumer.accept(provider);
+			for (SamlProvider samlProvider : samlProviders) {
+				samlProviderUnsafeConsumer.accept(samlProvider);
 			}
 		}
 	}
 
 	@Override
 	public void delete(
-			java.util.Collection<Provider> providers,
+			java.util.Collection<SamlProvider> samlProviders,
 			Map<String, Serializable> parameters)
 		throws Exception {
 	}
@@ -370,7 +376,7 @@ public abstract class BaseProviderResourceImpl
 	}
 
 	@Override
-	public Page<Provider> read(
+	public Page<SamlProvider> read(
 			Filter filter, Pagination pagination, Sort[] sorts,
 			Map<String, Serializable> parameters, String search)
 		throws Exception {
@@ -402,32 +408,34 @@ public abstract class BaseProviderResourceImpl
 
 	@Override
 	public void update(
-			java.util.Collection<Provider> providers,
+			java.util.Collection<SamlProvider> samlProviders,
 			Map<String, Serializable> parameters)
 		throws Exception {
 
-		UnsafeConsumer<Provider, Exception> providerUnsafeConsumer = null;
+		UnsafeConsumer<SamlProvider, Exception> samlProviderUnsafeConsumer =
+			null;
 
 		String updateStrategy = (String)parameters.getOrDefault(
 			"updateStrategy", "UPDATE");
 
 		if ("PARTIAL_UPDATE".equalsIgnoreCase(updateStrategy)) {
-			providerUnsafeConsumer = provider -> patchProvider(provider);
+			samlProviderUnsafeConsumer = samlProvider -> patchSamlProvider(
+				samlProvider);
 		}
 
-		if (providerUnsafeConsumer == null) {
+		if (samlProviderUnsafeConsumer == null) {
 			throw new NotSupportedException(
 				"Update strategy \"" + updateStrategy +
-					"\" is not supported for Provider");
+					"\" is not supported for SamlProvider");
 		}
 
 		if (contextBatchUnsafeConsumer != null) {
 			contextBatchUnsafeConsumer.accept(
-				providers, providerUnsafeConsumer);
+				samlProviders, samlProviderUnsafeConsumer);
 		}
 		else {
-			for (Provider provider : providers) {
-				providerUnsafeConsumer.accept(provider);
+			for (SamlProvider samlProvider : samlProviders) {
+				samlProviderUnsafeConsumer.accept(samlProvider);
 			}
 		}
 	}
@@ -438,8 +446,8 @@ public abstract class BaseProviderResourceImpl
 
 	public void setContextBatchUnsafeConsumer(
 		UnsafeBiConsumer
-			<java.util.Collection<Provider>,
-			 UnsafeConsumer<Provider, Exception>, Exception>
+			<java.util.Collection<SamlProvider>,
+			 UnsafeConsumer<SamlProvider, Exception>, Exception>
 				contextBatchUnsafeConsumer) {
 
 		this.contextBatchUnsafeConsumer = contextBatchUnsafeConsumer;
@@ -602,8 +610,9 @@ public abstract class BaseProviderResourceImpl
 
 	protected AcceptLanguage contextAcceptLanguage;
 	protected UnsafeBiConsumer
-		<java.util.Collection<Provider>, UnsafeConsumer<Provider, Exception>,
-		 Exception> contextBatchUnsafeConsumer;
+		<java.util.Collection<SamlProvider>,
+		 UnsafeConsumer<SamlProvider, Exception>, Exception>
+			contextBatchUnsafeConsumer;
 	protected com.liferay.portal.kernel.model.Company contextCompany;
 	protected HttpServletRequest contextHttpServletRequest;
 	protected HttpServletResponse contextHttpServletResponse;
@@ -620,6 +629,6 @@ public abstract class BaseProviderResourceImpl
 		vulcanBatchEngineImportTaskResource;
 
 	private static final com.liferay.portal.kernel.log.Log _log =
-		LogFactoryUtil.getLog(BaseProviderResourceImpl.class);
+		LogFactoryUtil.getLog(BaseSamlProviderResourceImpl.class);
 
 }

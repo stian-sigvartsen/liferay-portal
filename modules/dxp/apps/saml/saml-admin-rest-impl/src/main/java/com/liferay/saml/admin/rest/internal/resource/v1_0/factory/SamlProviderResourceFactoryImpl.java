@@ -33,7 +33,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.odata.filter.ExpressionConvert;
 import com.liferay.portal.odata.filter.FilterParserProvider;
 import com.liferay.portal.vulcan.accept.language.AcceptLanguage;
-import com.liferay.saml.admin.rest.resource.v1_0.ProviderResource;
+import com.liferay.saml.admin.rest.resource.v1_0.SamlProviderResource;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
@@ -61,21 +61,22 @@ import org.osgi.service.component.annotations.ReferenceScope;
  * @author Stian Sigvartsen
  * @generated
  */
-@Component(immediate = true, service = ProviderResource.Factory.class)
+@Component(immediate = true, service = SamlProviderResource.Factory.class)
 @Generated("")
-public class ProviderResourceFactoryImpl implements ProviderResource.Factory {
+public class SamlProviderResourceFactoryImpl
+	implements SamlProviderResource.Factory {
 
 	@Override
-	public ProviderResource.Builder create() {
-		return new ProviderResource.Builder() {
+	public SamlProviderResource.Builder create() {
+		return new SamlProviderResource.Builder() {
 
 			@Override
-			public ProviderResource build() {
+			public SamlProviderResource build() {
 				if (_user == null) {
 					throw new IllegalArgumentException("User is not set");
 				}
 
-				return _providerResourceProxyProviderFunction.apply(
+				return _samlProviderResourceProxyProviderFunction.apply(
 					(proxy, method, arguments) -> _invoke(
 						method, arguments, _checkPermissions,
 						_httpServletRequest, _httpServletResponse,
@@ -83,7 +84,7 @@ public class ProviderResourceFactoryImpl implements ProviderResource.Factory {
 			}
 
 			@Override
-			public ProviderResource.Builder checkPermissions(
+			public SamlProviderResource.Builder checkPermissions(
 				boolean checkPermissions) {
 
 				_checkPermissions = checkPermissions;
@@ -92,7 +93,7 @@ public class ProviderResourceFactoryImpl implements ProviderResource.Factory {
 			}
 
 			@Override
-			public ProviderResource.Builder httpServletRequest(
+			public SamlProviderResource.Builder httpServletRequest(
 				HttpServletRequest httpServletRequest) {
 
 				_httpServletRequest = httpServletRequest;
@@ -101,7 +102,7 @@ public class ProviderResourceFactoryImpl implements ProviderResource.Factory {
 			}
 
 			@Override
-			public ProviderResource.Builder httpServletResponse(
+			public SamlProviderResource.Builder httpServletResponse(
 				HttpServletResponse httpServletResponse) {
 
 				_httpServletResponse = httpServletResponse;
@@ -110,7 +111,7 @@ public class ProviderResourceFactoryImpl implements ProviderResource.Factory {
 			}
 
 			@Override
-			public ProviderResource.Builder preferredLocale(
+			public SamlProviderResource.Builder preferredLocale(
 				Locale preferredLocale) {
 
 				_preferredLocale = preferredLocale;
@@ -119,7 +120,7 @@ public class ProviderResourceFactoryImpl implements ProviderResource.Factory {
 			}
 
 			@Override
-			public ProviderResource.Builder user(User user) {
+			public SamlProviderResource.Builder user(User user) {
 				_user = user;
 
 				return this;
@@ -136,23 +137,24 @@ public class ProviderResourceFactoryImpl implements ProviderResource.Factory {
 
 	@Activate
 	protected void activate() {
-		ProviderResource.FactoryHolder.factory = this;
+		SamlProviderResource.FactoryHolder.factory = this;
 	}
 
 	@Deactivate
 	protected void deactivate() {
-		ProviderResource.FactoryHolder.factory = null;
+		SamlProviderResource.FactoryHolder.factory = null;
 	}
 
-	private static Function<InvocationHandler, ProviderResource>
+	private static Function<InvocationHandler, SamlProviderResource>
 		_getProxyProviderFunction() {
 
 		Class<?> proxyClass = ProxyUtil.getProxyClass(
-			ProviderResource.class.getClassLoader(), ProviderResource.class);
+			SamlProviderResource.class.getClassLoader(),
+			SamlProviderResource.class);
 
 		try {
-			Constructor<ProviderResource> constructor =
-				(Constructor<ProviderResource>)proxyClass.getConstructor(
+			Constructor<SamlProviderResource> constructor =
+				(Constructor<SamlProviderResource>)proxyClass.getConstructor(
 					InvocationHandler.class);
 
 			return invocationHandler -> {
@@ -194,36 +196,36 @@ public class ProviderResourceFactoryImpl implements ProviderResource.Factory {
 				_liberalPermissionCheckerFactory.create(user));
 		}
 
-		ProviderResource providerResource =
+		SamlProviderResource samlProviderResource =
 			_componentServiceObjects.getService();
 
-		providerResource.setContextAcceptLanguage(
+		samlProviderResource.setContextAcceptLanguage(
 			new AcceptLanguageImpl(httpServletRequest, preferredLocale, user));
 
 		Company company = _companyLocalService.getCompany(user.getCompanyId());
 
-		providerResource.setContextCompany(company);
+		samlProviderResource.setContextCompany(company);
 
-		providerResource.setContextHttpServletRequest(httpServletRequest);
-		providerResource.setContextHttpServletResponse(httpServletResponse);
-		providerResource.setContextUser(user);
-		providerResource.setExpressionConvert(_expressionConvert);
-		providerResource.setFilterParserProvider(_filterParserProvider);
-		providerResource.setGroupLocalService(_groupLocalService);
-		providerResource.setResourceActionLocalService(
+		samlProviderResource.setContextHttpServletRequest(httpServletRequest);
+		samlProviderResource.setContextHttpServletResponse(httpServletResponse);
+		samlProviderResource.setContextUser(user);
+		samlProviderResource.setExpressionConvert(_expressionConvert);
+		samlProviderResource.setFilterParserProvider(_filterParserProvider);
+		samlProviderResource.setGroupLocalService(_groupLocalService);
+		samlProviderResource.setResourceActionLocalService(
 			_resourceActionLocalService);
-		providerResource.setResourcePermissionLocalService(
+		samlProviderResource.setResourcePermissionLocalService(
 			_resourcePermissionLocalService);
-		providerResource.setRoleLocalService(_roleLocalService);
+		samlProviderResource.setRoleLocalService(_roleLocalService);
 
 		try {
-			return method.invoke(providerResource, arguments);
+			return method.invoke(samlProviderResource, arguments);
 		}
 		catch (InvocationTargetException invocationTargetException) {
 			throw invocationTargetException.getTargetException();
 		}
 		finally {
-			_componentServiceObjects.ungetService(providerResource);
+			_componentServiceObjects.ungetService(samlProviderResource);
 
 			PrincipalThreadLocal.setName(name);
 
@@ -231,14 +233,16 @@ public class ProviderResourceFactoryImpl implements ProviderResource.Factory {
 		}
 	}
 
-	private static final Function<InvocationHandler, ProviderResource>
-		_providerResourceProxyProviderFunction = _getProxyProviderFunction();
+	private static final Function<InvocationHandler, SamlProviderResource>
+		_samlProviderResourceProxyProviderFunction =
+			_getProxyProviderFunction();
 
 	@Reference
 	private CompanyLocalService _companyLocalService;
 
 	@Reference(scope = ReferenceScope.PROTOTYPE_REQUIRED)
-	private ComponentServiceObjects<ProviderResource> _componentServiceObjects;
+	private ComponentServiceObjects<SamlProviderResource>
+		_componentServiceObjects;
 
 	@Reference
 	private PermissionCheckerFactory _defaultPermissionCheckerFactory;

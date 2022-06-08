@@ -23,7 +23,7 @@ import com.liferay.portal.odata.filter.ExpressionConvert;
 import com.liferay.portal.odata.filter.FilterParserProvider;
 import com.liferay.portal.vulcan.accept.language.AcceptLanguage;
 import com.liferay.portal.vulcan.batch.engine.resource.VulcanBatchEngineImportTaskResource;
-import com.liferay.saml.admin.rest.dto.v1_0.Provider;
+import com.liferay.saml.admin.rest.dto.v1_0.SamlProvider;
 
 import java.util.Collections;
 import java.util.List;
@@ -50,24 +50,26 @@ import org.osgi.annotation.versioning.ProviderType;
  */
 @Generated("")
 @ProviderType
-public interface ProviderResource {
+public interface SamlProviderResource {
 
 	public static Builder builder() {
 		return FactoryHolder.factory.create();
 	}
 
-	public Provider getProvider() throws Exception;
+	public SamlProvider getSamlProvider() throws Exception;
 
-	public Provider patchProvider(Provider provider) throws Exception;
+	public SamlProvider patchSamlProvider(SamlProvider samlProvider)
+		throws Exception;
 
-	public Provider postProvider(Provider provider) throws Exception;
+	public SamlProvider postSamlProvider(SamlProvider samlProvider)
+		throws Exception;
 
-	public Response postProviderBatch(String callbackURL, Object object)
+	public Response postSamlProviderBatch(String callbackURL, Object object)
 		throws Exception;
 
 	public void deleteRole(String roleId) throws Exception;
 
-	public Object getProvider(String roleId) throws Exception;
+	public Object getSamlProvider(String roleId) throws Exception;
 
 	public Response patchRole(String roleId, Object object) throws Exception;
 
@@ -134,7 +136,7 @@ public interface ProviderResource {
 	@ProviderType
 	public interface Builder {
 
-		public ProviderResource build();
+		public SamlProviderResource build();
 
 		public Builder checkPermissions(boolean checkPermissions);
 
