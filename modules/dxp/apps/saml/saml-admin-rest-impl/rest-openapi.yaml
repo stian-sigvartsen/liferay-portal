@@ -449,7 +449,7 @@ paths:
         get:
             description:
                 Retrieves the SAML SP Provider configuration.
-            operationId: getSamlProvider
+            operationId: getRole
             parameters:
                 - in: path
                   name: roleId
