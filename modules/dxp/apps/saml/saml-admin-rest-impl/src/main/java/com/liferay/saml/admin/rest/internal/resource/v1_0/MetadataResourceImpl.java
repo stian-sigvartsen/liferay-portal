@@ -41,6 +41,17 @@ import org.osgi.service.component.annotations.ServiceScope;
 public class MetadataResourceImpl extends BaseMetadataResourceImpl {
 
 	@Override
+	public Metadata getIdpConnectionMetadata(Long idpConnectionId)
+		throws Exception {
+
+		SamlSpIdpConnection samlSpIdpConnection =
+			_samlSpIdpConnectionLocalService.getSamlSpIdpConnection(
+				idpConnectionId);
+
+		return _convert(samlSpIdpConnection);
+	}
+
+	@Override
 	public Metadata postIdpConnectionMetadata(
 			Long idpConnectionId, MultipartBody multipartBody)
 		throws Exception {
@@ -63,17 +74,6 @@ public class MetadataResourceImpl extends BaseMetadataResourceImpl {
 		return _convert(
 			_samlSpIdpConnectionLocalService.updateSamlSpIdpConnection(
 				samlSpIdpConnection));
-	}
-
-	@Override
-	public Metadata getIdpConnectionMetadata(Long idpConnectionId)
-		throws Exception {
-
-		SamlSpIdpConnection samlSpIdpConnection =
-			_samlSpIdpConnectionLocalService.getSamlSpIdpConnection(
-				idpConnectionId);
-
-		return _convert(samlSpIdpConnection);
 	}
 
 	private String _base64Encode(String str) {
