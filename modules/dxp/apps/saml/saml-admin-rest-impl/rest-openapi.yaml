@@ -67,26 +67,6 @@ components:
                 userAttributeMappings:
                     type: string
             type: object
-        Metadata:
-            description:
-                Represents a SAML metadata XML
-            properties:
-                contentUrl:
-                    description:
-                        The file's relative URL.
-                    readOnly: true
-                    type: string
-                contentValue:
-                    # @review
-                    description:
-                        optional field with the content of the metadata in Base64
-                    readOnly: true
-                    type: string
-                metadataUpdatedDate:
-                    format: date-time
-                    readOnly: true
-                    type: string
-            type: object
         SamlProvider:
             description:
                 Dummy schema which can be referenced from tags
@@ -309,62 +289,6 @@ paths:
                     description:
                         "SAML SP IDP connection successfully created"
             tags: ["IdpConnection"]
-    "/idpConnections/{idpConnectionId}/metadata":
-        get:
-            description:
-                Retrieves the associated SAML metadata
-            operationId: getIdpConnectionMetadata
-            parameters:
-                - in: path
-                  name: idpConnectionId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/Metadata"
-                        application/xml:
-                            schema:
-                                $ref: "#/components/schemas/Metadata"
-            tags: ["Metadata"]
-        post:
-            description:
-                Creates a new metadata for an existing IDP connection. The request body must be `multipart/form-data`
-                with two parts, a `file` part with the file's bytes, and an optional JSON string (`Metadata`) with the
-                metadata.
-            operationId: postIdpConnectionMetadata
-            parameters:
-                - in: path
-                  name: idpConnectionId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-            requestBody:
-                content:
-                    multipart/form-data:
-                        schema:
-                            properties:
-                                file:
-                                    format: binary
-                                    type: string
-                                knowledgeBaseAttachment:
-                                    $ref: "#/components/schemas/Metadata"
-                            type: object
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/Metadata"
-                        application/xml:
-                            schema:
-                                $ref: "#/components/schemas/Metadata"
-            tags: ["Metadata"]
     "/provider":
         get:
             description:
