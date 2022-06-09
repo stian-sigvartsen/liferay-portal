@@ -23,12 +23,9 @@ import com.liferay.portal.vulcan.accept.language.AcceptLanguage;
 import com.liferay.portal.vulcan.batch.engine.resource.VulcanBatchEngineImportTaskResource;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
-import com.liferay.portal.vulcan.multipart.MultipartBody;
 import com.liferay.saml.admin.rest.dto.v1_0.IdpConnection;
-import com.liferay.saml.admin.rest.dto.v1_0.Metadata;
 import com.liferay.saml.admin.rest.dto.v1_0.SamlProvider;
 import com.liferay.saml.admin.rest.resource.v1_0.IdpConnectionResource;
-import com.liferay.saml.admin.rest.resource.v1_0.MetadataResource;
 import com.liferay.saml.admin.rest.resource.v1_0.SamlProviderResource;
 
 import java.util.function.BiFunction;
@@ -56,14 +53,6 @@ public class Mutation {
 
 		_idpConnectionResourceComponentServiceObjects =
 			idpConnectionResourceComponentServiceObjects;
-	}
-
-	public static void setMetadataResourceComponentServiceObjects(
-		ComponentServiceObjects<MetadataResource>
-			metadataResourceComponentServiceObjects) {
-
-		_metadataResourceComponentServiceObjects =
-			metadataResourceComponentServiceObjects;
 	}
 
 	public static void setSamlProviderResourceComponentServiceObjects(
@@ -170,40 +159,6 @@ public class Mutation {
 			idpConnectionResource ->
 				idpConnectionResource.putIdpConnectionBatch(
 					callbackURL, object));
-	}
-
-	@GraphQLField(
-		description = "Creates a new metadata for an existing IDP connection. The request body must be `multipart/form-data` with two parts, a `file` part with the file's bytes, and an optional JSON string (`Metadata`) with the metadata."
-	)
-	@GraphQLName(
-		description = "Creates a new metadata for an existing IDP connection. The request body must be `multipart/form-data` with two parts, a `file` part with the file's bytes, and an optional JSON string (`Metadata`) with the metadata.",
-		value = "postIdpConnectionMetadataIdpConnectionIdMultipartBody"
-	)
-	public Metadata createIdpConnectionMetadata(
-			@GraphQLName("idpConnectionId") Long idpConnectionId,
-			@GraphQLName("multipartBody") MultipartBody multipartBody)
-		throws Exception {
-
-		return _applyComponentServiceObjects(
-			_metadataResourceComponentServiceObjects,
-			this::_populateResourceContext,
-			metadataResource -> metadataResource.postIdpConnectionMetadata(
-				idpConnectionId, multipartBody));
-	}
-
-	@GraphQLField
-	public Response createIdpConnectionMetadataBatch(
-			@GraphQLName("idpConnectionId") Long idpConnectionId,
-			@GraphQLName("multipartBody") MultipartBody multipartBody,
-			@GraphQLName("callbackURL") String callbackURL,
-			@GraphQLName("object") Object object)
-		throws Exception {
-
-		return _applyComponentServiceObjects(
-			_metadataResourceComponentServiceObjects,
-			this::_populateResourceContext,
-			metadataResource -> metadataResource.postIdpConnectionMetadataBatch(
-				idpConnectionId, multipartBody, callbackURL, object));
 	}
 
 	@GraphQLField(description = "Patch the SAML Provider configuration.")
@@ -339,22 +294,6 @@ public class Mutation {
 			_vulcanBatchEngineImportTaskResource);
 	}
 
-	private void _populateResourceContext(MetadataResource metadataResource)
-		throws Exception {
-
-		metadataResource.setContextAcceptLanguage(_acceptLanguage);
-		metadataResource.setContextCompany(_company);
-		metadataResource.setContextHttpServletRequest(_httpServletRequest);
-		metadataResource.setContextHttpServletResponse(_httpServletResponse);
-		metadataResource.setContextUriInfo(_uriInfo);
-		metadataResource.setContextUser(_user);
-		metadataResource.setGroupLocalService(_groupLocalService);
-		metadataResource.setRoleLocalService(_roleLocalService);
-
-		metadataResource.setVulcanBatchEngineImportTaskResource(
-			_vulcanBatchEngineImportTaskResource);
-	}
-
 	private void _populateResourceContext(
 			SamlProviderResource samlProviderResource)
 		throws Exception {
@@ -375,8 +314,6 @@ public class Mutation {
 
 	private static ComponentServiceObjects<IdpConnectionResource>
 		_idpConnectionResourceComponentServiceObjects;
-	private static ComponentServiceObjects<MetadataResource>
-		_metadataResourceComponentServiceObjects;
 	private static ComponentServiceObjects<SamlProviderResource>
 		_samlProviderResourceComponentServiceObjects;
 

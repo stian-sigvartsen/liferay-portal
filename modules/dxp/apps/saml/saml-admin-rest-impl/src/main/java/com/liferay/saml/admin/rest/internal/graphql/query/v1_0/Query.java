@@ -23,14 +23,11 @@ import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.vulcan.accept.language.AcceptLanguage;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
-import com.liferay.portal.vulcan.graphql.annotation.GraphQLTypeExtension;
 import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
 import com.liferay.saml.admin.rest.dto.v1_0.IdpConnection;
-import com.liferay.saml.admin.rest.dto.v1_0.Metadata;
 import com.liferay.saml.admin.rest.dto.v1_0.SamlProvider;
 import com.liferay.saml.admin.rest.resource.v1_0.IdpConnectionResource;
-import com.liferay.saml.admin.rest.resource.v1_0.MetadataResource;
 import com.liferay.saml.admin.rest.resource.v1_0.SamlProviderResource;
 
 import java.util.Map;
@@ -58,14 +55,6 @@ public class Query {
 
 		_idpConnectionResourceComponentServiceObjects =
 			idpConnectionResourceComponentServiceObjects;
-	}
-
-	public static void setMetadataResourceComponentServiceObjects(
-		ComponentServiceObjects<MetadataResource>
-			metadataResourceComponentServiceObjects) {
-
-		_metadataResourceComponentServiceObjects =
-			metadataResourceComponentServiceObjects;
 	}
 
 	public static void setSamlProviderResourceComponentServiceObjects(
@@ -115,23 +104,6 @@ public class Query {
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {idpConnectionMetadata(idpConnectionId: ___){contentUrl, contentValue, metadataUpdatedDate}}"}' -u 'test@liferay.com:test'
-	 */
-	@GraphQLField(description = "Retrieves the associated SAML metadata")
-	public Metadata idpConnectionMetadata(
-			@GraphQLName("idpConnectionId") Long idpConnectionId)
-		throws Exception {
-
-		return _applyComponentServiceObjects(
-			_metadataResourceComponentServiceObjects,
-			this::_populateResourceContext,
-			metadataResource -> metadataResource.getIdpConnectionMetadata(
-				idpConnectionId));
-	}
-
-	/**
-	 * Invoke this method with the command line:
-	 *
 	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {samlProvider{enabled, entityId, idp, role, signMetadata, sp, sslRequired}}"}' -u 'test@liferay.com:test'
 	 */
 	@GraphQLField(description = "Retrieves the SAML Provider configuration.")
@@ -155,28 +127,6 @@ public class Query {
 			samlProviderResource -> samlProviderResource.getRole(roleId));
 	}
 
-	@GraphQLTypeExtension(IdpConnection.class)
-	public class GetIdpConnectionMetadataTypeExtension {
-
-		public GetIdpConnectionMetadataTypeExtension(
-			IdpConnection idpConnection) {
-
-			_idpConnection = idpConnection;
-		}
-
-		@GraphQLField(description = "Retrieves the associated SAML metadata")
-		public Metadata metadata() throws Exception {
-			return _applyComponentServiceObjects(
-				_metadataResourceComponentServiceObjects,
-				Query.this::_populateResourceContext,
-				metadataResource -> metadataResource.getIdpConnectionMetadata(
-					_idpConnection.getId()));
-		}
-
-		private IdpConnection _idpConnection;
-
-	}
-
 	@GraphQLName("IdpConnectionPage")
 	public class IdpConnectionPage {
 
@@ -195,39 +145,6 @@ public class Query {
 
 		@GraphQLField
 		protected java.util.Collection<IdpConnection> items;
-
-		@GraphQLField
-		protected long lastPage;
-
-		@GraphQLField
-		protected long page;
-
-		@GraphQLField
-		protected long pageSize;
-
-		@GraphQLField
-		protected long totalCount;
-
-	}
-
-	@GraphQLName("MetadataPage")
-	public class MetadataPage {
-
-		public MetadataPage(Page metadataPage) {
-			actions = metadataPage.getActions();
-
-			items = metadataPage.getItems();
-			lastPage = metadataPage.getLastPage();
-			page = metadataPage.getPage();
-			pageSize = metadataPage.getPageSize();
-			totalCount = metadataPage.getTotalCount();
-		}
-
-		@GraphQLField
-		protected Map<String, Map> actions;
-
-		@GraphQLField
-		protected java.util.Collection<Metadata> items;
 
 		@GraphQLField
 		protected long lastPage;
@@ -310,19 +227,6 @@ public class Query {
 		idpConnectionResource.setRoleLocalService(_roleLocalService);
 	}
 
-	private void _populateResourceContext(MetadataResource metadataResource)
-		throws Exception {
-
-		metadataResource.setContextAcceptLanguage(_acceptLanguage);
-		metadataResource.setContextCompany(_company);
-		metadataResource.setContextHttpServletRequest(_httpServletRequest);
-		metadataResource.setContextHttpServletResponse(_httpServletResponse);
-		metadataResource.setContextUriInfo(_uriInfo);
-		metadataResource.setContextUser(_user);
-		metadataResource.setGroupLocalService(_groupLocalService);
-		metadataResource.setRoleLocalService(_roleLocalService);
-	}
-
 	private void _populateResourceContext(
 			SamlProviderResource samlProviderResource)
 		throws Exception {
@@ -340,8 +244,6 @@ public class Query {
 
 	private static ComponentServiceObjects<IdpConnectionResource>
 		_idpConnectionResourceComponentServiceObjects;
-	private static ComponentServiceObjects<MetadataResource>
-		_metadataResourceComponentServiceObjects;
 	private static ComponentServiceObjects<SamlProviderResource>
 		_samlProviderResourceComponentServiceObjects;
 
