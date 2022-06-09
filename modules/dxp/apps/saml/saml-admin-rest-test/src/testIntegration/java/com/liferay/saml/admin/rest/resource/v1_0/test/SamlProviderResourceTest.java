@@ -31,7 +31,6 @@ import javax.ws.rs.core.Response;
 /**
  * @author Stian Sigvartsen
  */
-@Ignore
 @RunWith(Arquillian.class)
 public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 
