@@ -17,6 +17,7 @@ package com.liferay.saml.admin.rest.internal.resource.v1_0;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.search.filter.Filter;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.UnicodePropertiesBuilder;
 import com.liferay.portal.kernel.util.Validator;
@@ -75,11 +76,16 @@ public class SamlProviderResourceImpl extends BaseSamlProviderResourceImpl {
 
 		samlProvider.setEnabled(samlProviderConfiguration.enabled());
 		samlProvider.setEntityId(samlProviderConfiguration.entityId());
-		samlProvider.setRole(
-			SamlProvider.Role.create(samlProviderConfiguration.role()));
+		String role = samlProviderConfiguration.role();
 
-		samlProvider.setIdp(_getIdp(samlProviderConfiguration));
-		samlProvider.setSp(_getSp(samlProviderConfiguration));
+		if (SamlProviderConfigurationKeys.SAML_ROLE_SP.equals(role)) {
+			samlProvider.setRole(SamlProvider.Role.SP);
+			samlProvider.setSp(_getSp(samlProviderConfiguration));
+		}
+		else if (SamlProviderConfigurationKeys.SAML_ROLE_IDP.equals(role)) {
+			samlProvider.setIdp(_getIdp(samlProviderConfiguration));
+			samlProvider.setRole(SamlProvider.Role.IDP);
+		}
 
 		return samlProvider;
 	}
@@ -363,11 +369,13 @@ public class SamlProviderResourceImpl extends BaseSamlProviderResourceImpl {
 			throw new Exception("EntityID too long (Max 1024 characters)");
 		}
 
-		if (samlProvider.getEnabled() &&
+		if (GetterUtil.getBoolean(samlProvider.getEnabled()) &&
 			(_localEntityManager.getLocalEntityCertificate() == null)) {
 
 			throw new Exception("certificateInvalid");
 		}
+
+		SamlProvider currentSamlProvider = getSamlProvider();
 
 		if (samlProvider.getIdp() != null) {
 			if (!_validateRoleSelection(
@@ -379,18 +387,26 @@ public class SamlProviderResourceImpl extends BaseSamlProviderResourceImpl {
 						"re-enabled in system settings.");
 			}
 
-			if (samlProvider.getSp() != null) {
+			if (samlProvider.getSp() != null
+					|| !setNulls && (currentSamlProvider.getSp() != null)) {
 				throw new Exception("Can only configure one of sp & idp roles");
 			}
 
 			_setIdpProperties(
 				samlProvider.getIdp(), unicodeProperties, setNulls);
 		}
-		else {
-			if (samlProvider.getSp() != null) {
-				_setSpProperties(
-					samlProvider.getSp(), unicodeProperties, setNulls);
+		else if (samlProvider.getSp() != null) {
+			if (!setNulls && (currentSamlProvider.getIdp() != null)) {
+				throw new Exception("Can only configure one of sp & idp roles");
 			}
+
+			_setSpProperties(
+				samlProvider.getSp(), unicodeProperties, setNulls);
+		}
+		else if (GetterUtil.getBoolean(samlProvider.getEnabled()) &&
+				 (currentSamlProvider.getRole() == null)) {
+
+			throw new Exception("Cannot enable the provider without configuring its role");
 		}
 
 		_samlProviderConfigurationHelper.updateProperties(unicodeProperties);
