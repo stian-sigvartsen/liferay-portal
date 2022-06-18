@@ -21,14 +21,10 @@ import com.liferay.portal.configuration.test.util.ConfigurationTemporarySwapper;
 import com.liferay.portal.configuration.test.util.ConfigurationTestUtil;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.CompanyConstants;
-import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
-import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
-import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.HashMapDictionaryBuilder;
@@ -38,7 +34,6 @@ import com.liferay.portal.security.service.access.policy.service.SAPEntryLocalSe
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.saml.admin.rest.client.dto.v1_0.SamlProvider;
 import com.liferay.saml.admin.rest.client.http.HttpInvoker;
-import com.liferay.saml.admin.rest.client.resource.v1_0.SamlProviderResource;
 import com.liferay.saml.runtime.configuration.SamlProviderConfiguration;
 import com.liferay.saml.util.PortletPropsKeys;
 import org.junit.After;
@@ -85,56 +80,32 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 
 //		deleteAllConfigurations();
 
+		_temporaryClearConfiguration(CompanyConstants.SYSTEM);
+		_temporaryClearConfiguration(TestPropsValues.getCompanyId());
+	}
+
+	private void _temporaryClearConfiguration(long companyId) throws Exception {
 		Configuration configuration =
-			getSamlProviderConfiguration(TestPropsValues.getCompanyId());
+			_getSamlProviderConfiguration(companyId);
 
 		if (configuration != null) {
 			final Dictionary<String, Object> dictionary =
 				configuration.getProperties();
 
-			long companyId = GetterUtil.getLong(dictionary.get("companyId"));
-
 			dictionary.put("companyId", -companyId);
 			ConfigurationTestUtil.saveConfiguration(configuration, dictionary);
 
 			autoCloseables.add(() -> {
-				Configuration postTestConfiguration =
-					getSamlProviderConfiguration(TestPropsValues.getCompanyId());
-
-				if (postTestConfiguration != null) {
-					ConfigurationTestUtil.deleteConfiguration(
-						postTestConfiguration);
-				}
-
+				_deleteSamlProviderConfiguration(companyId);
 				dictionary.put("companyId", companyId);
 				ConfigurationTestUtil.saveConfiguration(configuration, dictionary);
 			});
 		}
 		else {
-			autoCloseables.add(() -> {
-				Configuration postTestConfiguration =
-					getSamlProviderConfiguration(
-						TestPropsValues.getCompanyId());
-
-				if (postTestConfiguration != null) {
-					ConfigurationTestUtil.deleteConfiguration(
-						postTestConfiguration);
-				}
-			});
+			autoCloseables.add(
+				() -> _deleteSamlProviderConfiguration(companyId));
 		}
-
-//		SamlProviderResource.Builder builder = SamlProviderResource.builder();
-//
-//		samlProviderResource = builder.authentication(
-//			"test@liferay.com", "test"
-//		).header(
-//			"Host", "testCompany"
-//		).locale(
-//			LocaleUtil.getDefault()
-//		).build();
 	}
-
-//	private static Company _testCompany;
 
 	@After
 	public void tearDown() {
@@ -157,11 +128,17 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 		}
 	}
 
-//	private List<AutoCloseable> _autoCloseables;
+	private void _deleteSamlProviderConfiguration(long companyId) throws Exception {
+		Configuration configuration =
+			_getSamlProviderConfiguration(companyId);
 
-	//private Configuration _createSystemConfiguration() throws Exception {
+		if (configuration != null) {
+			ConfigurationTestUtil.deleteConfiguration(
+				configuration);
+		}
+	}
 
-	private Configuration getSamlProviderConfiguration(long companyId) throws Exception {
+	private Configuration _getSamlProviderConfiguration(long companyId) throws Exception {
 		Configuration[] configurations = _configurationAdmin.listConfigurations(
 			"(&(service.factoryPid=com.liferay.saml.runtime.configuration." +
 			"SamlProviderConfiguration)(companyId=" + companyId + "))");
