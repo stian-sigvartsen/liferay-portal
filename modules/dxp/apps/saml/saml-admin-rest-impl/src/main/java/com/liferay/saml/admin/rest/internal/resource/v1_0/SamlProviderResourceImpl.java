@@ -76,6 +76,9 @@ public class SamlProviderResourceImpl extends BaseSamlProviderResourceImpl {
 
 		samlProvider.setEnabled(samlProviderConfiguration.enabled());
 		samlProvider.setEntityId(samlProviderConfiguration.entityId());
+		samlProvider.setSignMetadata(samlProviderConfiguration.signMetadata());
+		samlProvider.setSslRequired(samlProviderConfiguration.sslRequired());
+
 		String role = samlProviderConfiguration.role();
 
 		if (SamlProviderConfigurationKeys.SAML_ROLE_SP.equals(role)) {
