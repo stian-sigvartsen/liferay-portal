@@ -53,16 +53,16 @@ public class ErrorSerDes {
 
 		sb.append("{");
 
-		if (error.getMessage() != null) {
+		if (error.getDetail() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
 
-			sb.append("\"message\": ");
+			sb.append("\"detail\": ");
 
 			sb.append("\"");
 
-			sb.append(_escape(error.getMessage()));
+			sb.append(_escape(error.getDetail()));
 
 			sb.append("\"");
 		}
@@ -74,7 +74,39 @@ public class ErrorSerDes {
 
 			sb.append("\"status\": ");
 
-			sb.append(error.getStatus());
+			sb.append("\"");
+
+			sb.append(_escape(error.getStatus()));
+
+			sb.append("\"");
+		}
+
+		if (error.getTitle() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"title\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(error.getTitle()));
+
+			sb.append("\"");
+		}
+
+		if (error.getType() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"type\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(error.getType()));
+
+			sb.append("\"");
 		}
 
 		sb.append("}");
@@ -95,11 +127,11 @@ public class ErrorSerDes {
 
 		Map<String, String> map = new TreeMap<>();
 
-		if (error.getMessage() == null) {
-			map.put("message", null);
+		if (error.getDetail() == null) {
+			map.put("detail", null);
 		}
 		else {
-			map.put("message", String.valueOf(error.getMessage()));
+			map.put("detail", String.valueOf(error.getDetail()));
 		}
 
 		if (error.getStatus() == null) {
@@ -107,6 +139,20 @@ public class ErrorSerDes {
 		}
 		else {
 			map.put("status", String.valueOf(error.getStatus()));
+		}
+
+		if (error.getTitle() == null) {
+			map.put("title", null);
+		}
+		else {
+			map.put("title", String.valueOf(error.getTitle()));
+		}
+
+		if (error.getType() == null) {
+			map.put("type", null);
+		}
+		else {
+			map.put("type", String.valueOf(error.getType()));
 		}
 
 		return map;
@@ -129,15 +175,24 @@ public class ErrorSerDes {
 			Error error, String jsonParserFieldName,
 			Object jsonParserFieldValue) {
 
-			if (Objects.equals(jsonParserFieldName, "message")) {
+			if (Objects.equals(jsonParserFieldName, "detail")) {
 				if (jsonParserFieldValue != null) {
-					error.setMessage((String)jsonParserFieldValue);
+					error.setDetail((String)jsonParserFieldValue);
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "status")) {
 				if (jsonParserFieldValue != null) {
-					error.setStatus(
-						Integer.valueOf((String)jsonParserFieldValue));
+					error.setStatus((String)jsonParserFieldValue);
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "title")) {
+				if (jsonParserFieldValue != null) {
+					error.setTitle((String)jsonParserFieldValue);
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "type")) {
+				if (jsonParserFieldValue != null) {
+					error.setType((String)jsonParserFieldValue);
 				}
 			}
 		}

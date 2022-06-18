@@ -34,37 +34,37 @@ public class Error implements Cloneable, Serializable {
 		return ErrorSerDes.toDTO(json);
 	}
 
-	public String getMessage() {
-		return message;
+	public String getDetail() {
+		return detail;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public void setDetail(String detail) {
+		this.detail = detail;
 	}
 
-	public void setMessage(
-		UnsafeSupplier<String, Exception> messageUnsafeSupplier) {
+	public void setDetail(
+		UnsafeSupplier<String, Exception> detailUnsafeSupplier) {
 
 		try {
-			message = messageUnsafeSupplier.get();
+			detail = detailUnsafeSupplier.get();
 		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	protected String message;
+	protected String detail;
 
-	public Integer getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(Integer status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
 	public void setStatus(
-		UnsafeSupplier<Integer, Exception> statusUnsafeSupplier) {
+		UnsafeSupplier<String, Exception> statusUnsafeSupplier) {
 
 		try {
 			status = statusUnsafeSupplier.get();
@@ -74,7 +74,47 @@ public class Error implements Cloneable, Serializable {
 		}
 	}
 
-	protected Integer status;
+	protected String status;
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public void setTitle(
+		UnsafeSupplier<String, Exception> titleUnsafeSupplier) {
+
+		try {
+			title = titleUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected String title;
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public void setType(UnsafeSupplier<String, Exception> typeUnsafeSupplier) {
+		try {
+			type = typeUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected String type;
 
 	@Override
 	public Error clone() throws CloneNotSupportedException {

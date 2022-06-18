@@ -37,7 +37,6 @@ import java.util.Set;
 import javax.annotation.Generated;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -60,23 +59,21 @@ public class Error implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(Error.class, json);
 	}
 
-	@Schema(
-		example = "No CommerceCurrency exists with the key {groupId=41811, code=US Dollar}"
-	)
-	public String getMessage() {
-		return message;
+	@Schema(description = "Details of the problem")
+	public String getDetail() {
+		return detail;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public void setDetail(String detail) {
+		this.detail = detail;
 	}
 
 	@JsonIgnore
-	public void setMessage(
-		UnsafeSupplier<String, Exception> messageUnsafeSupplier) {
+	public void setDetail(
+		UnsafeSupplier<String, Exception> detailUnsafeSupplier) {
 
 		try {
-			message = messageUnsafeSupplier.get();
+			detail = detailUnsafeSupplier.get();
 		}
 		catch (RuntimeException re) {
 			throw re;
@@ -86,23 +83,22 @@ public class Error implements Serializable {
 		}
 	}
 
-	@GraphQLField
+	@GraphQLField(description = "Details of the problem")
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
-	@NotEmpty
-	protected String message;
+	protected String detail;
 
 	@Schema(description = "HTTP Status code", example = "404")
-	public Integer getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(Integer status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
 	@JsonIgnore
 	public void setStatus(
-		UnsafeSupplier<Integer, Exception> statusUnsafeSupplier) {
+		UnsafeSupplier<String, Exception> statusUnsafeSupplier) {
 
 		try {
 			status = statusUnsafeSupplier.get();
@@ -117,8 +113,65 @@ public class Error implements Serializable {
 
 	@GraphQLField(description = "HTTP Status code")
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
-	@NotNull
-	protected Integer status;
+	@NotEmpty
+	protected String status;
+
+	@Schema(
+		description = "Title of the problem",
+		example = "No CommerceCurrency exists with the key {groupId=41811, code=US Dollar}"
+	)
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	@JsonIgnore
+	public void setTitle(
+		UnsafeSupplier<String, Exception> titleUnsafeSupplier) {
+
+		try {
+			title = titleUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField(description = "Title of the problem")
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	protected String title;
+
+	@Schema(description = "Type of problem")
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	@JsonIgnore
+	public void setType(UnsafeSupplier<String, Exception> typeUnsafeSupplier) {
+		try {
+			type = typeUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField(description = "Type of problem")
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	protected String type;
 
 	@Override
 	public boolean equals(Object object) {
@@ -147,16 +200,16 @@ public class Error implements Serializable {
 
 		sb.append("{");
 
-		if (message != null) {
+		if (detail != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
 
-			sb.append("\"message\": ");
+			sb.append("\"detail\": ");
 
 			sb.append("\"");
 
-			sb.append(_escape(message));
+			sb.append(_escape(detail));
 
 			sb.append("\"");
 		}
@@ -168,7 +221,39 @@ public class Error implements Serializable {
 
 			sb.append("\"status\": ");
 
-			sb.append(status);
+			sb.append("\"");
+
+			sb.append(_escape(status));
+
+			sb.append("\"");
+		}
+
+		if (title != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"title\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(title));
+
+			sb.append("\"");
+		}
+
+		if (type != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"type\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(type));
+
+			sb.append("\"");
 		}
 
 		sb.append("}");
