@@ -345,20 +345,6 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 
 	public void testPatchSamlProvider() throws Exception {
 
-//		deleteAllConfigurations();
-
-//		ConfigurationTestUtil.createFactoryConfiguration(
-//			"com.liferay.saml.runtime.configuration.SamlProviderConfiguration",
-//			HashMapDictionaryBuilder.put(
-//				"companyId", (Object)0l
-//			).build());
-
-		ConfigurationTestUtil.createFactoryConfiguration(
-			"com.liferay.saml.runtime.configuration.SamlProviderConfiguration",
-			HashMapDictionaryBuilder.put(
-				"companyId", (Object)testCompany.getCompanyId()
-			).build());
-
 		_sapEntry = _sapEntryLocalService.addSAPEntry(
 			TestPropsValues.getUserId(),
 			"com.liferay.saml.admin.rest.internal.resource.v1_0." +
@@ -369,75 +355,40 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 			).build(),
 			ServiceContextTestUtil.getServiceContext());
 
-//		_createRevertingConfiguration(
-//			0,
-//			HashMapDictionaryBuilder.<String, Object>put(
-//				PortletPropsKeys.SAML_ENABLED,
-//				!_defaultSamlProviderConfiguration.enabled()
-//			).build());
-//
-//		_createRevertingConfiguration(testCompany.getCompanyId(), null);
+		SamlProvider defaultSamlProvider = samlProviderResource.getSamlProvider();
 
-		//SamlProvider samlProvider = samlProviderResource.getSamlProvider();
-//		SamlProvider systemSamlProvider = samlProviderResource.getSamlProvider();
+		Assert.assertEquals(
+			_defaultSamlProviderConfiguration.enabled(), defaultSamlProvider.getEnabled());
 
-//		Assert.assertNotEquals(
-//			_defaultSamlProviderConfiguration.enabled(), systemSamlProvider.getEnabled());
+		ConfigurationTestUtil.createFactoryConfiguration(
+			"com.liferay.saml.runtime.configuration.SamlProviderConfiguration",
+			HashMapDictionaryBuilder.put(
+				"companyId", (Object)testCompany.getCompanyId()
+			).put(
+				PortletPropsKeys.SAML_ENABLED,
+				!_defaultSamlProviderConfiguration.enabled()
+			).build());
 
-		//Configuration systemConfiguration = _createSystemConfiguration();
-		//String systemConfigurationPid = _createSystemConfiguration();
+		SamlProvider systemSamlProvider = samlProviderResource.getSamlProvider();
 
-//		try (AutoCloseable autoCloseable = () ->
-//			ConfigurationTestUtil.deleteConfiguration(systemConfigurationPid)) {
+		Assert.assertNotEquals(
+			defaultSamlProvider.getEnabled(), systemSamlProvider.getEnabled());
 
-		//try (AutoCloseable autoCloseable = systemConfiguration::delete) {
+		SamlProvider patchSamlProvider = new SamlProvider() {
+			{
+				entityId = "test";
+			}
+		};
 
-			//SamlProvider systemSamlProvider = samlProviderResource.getSamlProvider();
+		SamlProvider samlProvider =
+			samlProviderResource.patchSamlProvider(patchSamlProvider);
 
-//			Assert.assertNotEquals(
-//				_defaultSamlProviderConfiguration.enabled(),
-//				systemSamlProvider.getEnabled());
+		Assert.assertEquals(
+			patchSamlProvider.getEntityId(), samlProvider.getEntityId());
 
-			SamlProvider defaultSamlProvider = samlProviderResource.getSamlProvider();
-
-			SamlProvider patchSamlProvider = new SamlProvider() {
-				{
-					entityId = "test";
-				}
-			};
-
-			SamlProvider samlProvider =
-				samlProviderResource.patchSamlProvider(patchSamlProvider);
-
-			Assert.assertEquals(
-				patchSamlProvider.getEntityId(), samlProvider.getEntityId());
-
-			Assert.assertEquals(
-				defaultSamlProvider.getEnabled(),
-				samlProvider.getEnabled());
-//		}
-
-		//_sapEntryLocalService.deleteSAPEntry(sapEntry);
-
-//			SamlProvider samlProvider = new SamlProvider() {
-//				{
-//					enabled = true;
-//					entityId = "";
-//					signMetadata = false;
-//					sslRequired = false;
-//				}
-//			};
-
-//		String role = SamlProvider.Role.SP.getValue();
-//
-//		SamlProvider samlProvider2 =
-//			samlProviderResource.postSamlProvider(samlProvider);
-//
-//		Assert.assertEquals(
-//			Response.Status.BAD_REQUEST.getStatusCode(),
-//			httpResponse.getStatusCode());
-//
-//		systemConfiguration.delete();
+		Assert.assertEquals(
+			systemSamlProvider.getEnabled(),
+			samlProvider.getEnabled());
 	}
 
 	public void testPostSamlProvider() throws Exception {
@@ -472,6 +423,26 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 //
 //		assertEquals(randomSamlProvider, postSamlProvider);
 //		assertValid(postSamlProvider);
+
+
+//		SamlProvider samlProvider = new SamlProvider() {
+//			{
+//				enabled = true;
+//				entityId = "";
+//				signMetadata = false;
+//				sslRequired = false;
+//			}
+//		};
+//
+//		String role = SamlProvider.Role.SP.getValue();
+//
+//		SamlProvider samlProvider2 =
+//			samlProviderResource.postSamlProvider(samlProvider);
+//
+//		Assert.assertEquals(
+//			Response.Status.BAD_REQUEST.getStatusCode(),
+//			httpResponse.getStatusCode());
+
 	}
 
 	@Override
