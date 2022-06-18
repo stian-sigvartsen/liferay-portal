@@ -9,8 +9,9 @@ components:
                     writeOnly: true
         Error:
             properties:
-                message:
-                    example: No CommerceCurrency exists with the key {groupId=41811, code=US Dollar}
+                detail:
+                    description:
+                        Details of the problem
                     readOnly: true
                     type: string
                 status:
@@ -18,7 +19,18 @@ components:
                         HTTP Status code
                     example: 404
                     readOnly: true
-                    type: integer
+                    type: string
+                title:
+                    description:
+                        Title of the problem
+                    example: No CommerceCurrency exists with the key {groupId=41811, code=US Dollar}
+                    readOnly: true
+                    type: string
+                type:
+                    description:
+                        Type of problem
+                    readOnly: true
+                    type: string
             required:
                 - message
                 - status
