@@ -99,6 +99,12 @@ public interface SamlProviderResource {
 			return new SamlProviderResourceImpl(this);
 		}
 
+		public Builder contextPath(String contextPath) {
+			_contextPath = contextPath;
+
+			return this;
+		}
+
 		public Builder endpoint(String host, int port, String scheme) {
 			_host = host;
 			_port = port;
@@ -144,6 +150,7 @@ public interface SamlProviderResource {
 		private Builder() {
 		}
 
+		private String _contextPath = "";
 		private Map<String, String> _headers = new LinkedHashMap<>();
 		private String _host = "localhost";
 		private Locale _locale;
@@ -225,7 +232,8 @@ public interface SamlProviderResource {
 
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +
-					_builder._port + "/o/saml-admin/v1.0/provider");
+					_builder._port + _builder._contextPath +
+						"/o/saml-admin/v1.0/provider");
 
 			httpInvoker.userNameAndPassword(
 				_builder._login + ":" + _builder._password);
@@ -305,7 +313,8 @@ public interface SamlProviderResource {
 
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +
-					_builder._port + "/o/saml-admin/v1.0/provider");
+					_builder._port + _builder._contextPath +
+						"/o/saml-admin/v1.0/provider");
 
 			httpInvoker.userNameAndPassword(
 				_builder._login + ":" + _builder._password);
@@ -385,7 +394,8 @@ public interface SamlProviderResource {
 
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +
-					_builder._port + "/o/saml-admin/v1.0/provider");
+					_builder._port + _builder._contextPath +
+						"/o/saml-admin/v1.0/provider");
 
 			httpInvoker.userNameAndPassword(
 				_builder._login + ":" + _builder._password);
@@ -459,7 +469,8 @@ public interface SamlProviderResource {
 
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +
-					_builder._port + "/o/saml-admin/v1.0/provider/batch");
+					_builder._port + _builder._contextPath +
+						"/o/saml-admin/v1.0/provider/batch");
 
 			httpInvoker.userNameAndPassword(
 				_builder._login + ":" + _builder._password);
@@ -534,7 +545,8 @@ public interface SamlProviderResource {
 
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +
-					_builder._port + "/o/saml-admin/v1.0/provider/{roleId}");
+					_builder._port + _builder._contextPath +
+						"/o/saml-admin/v1.0/provider/{roleId}");
 
 			httpInvoker.path("roleId", roleId);
 
@@ -610,7 +622,8 @@ public interface SamlProviderResource {
 
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +
-					_builder._port + "/o/saml-admin/v1.0/provider/{roleId}");
+					_builder._port + _builder._contextPath +
+						"/o/saml-admin/v1.0/provider/{roleId}");
 
 			httpInvoker.path("roleId", roleId);
 
@@ -679,7 +692,8 @@ public interface SamlProviderResource {
 
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +
-					_builder._port + "/o/saml-admin/v1.0/provider/{roleId}");
+					_builder._port + _builder._contextPath +
+						"/o/saml-admin/v1.0/provider/{roleId}");
 
 			httpInvoker.path("roleId", roleId);
 
@@ -748,7 +762,8 @@ public interface SamlProviderResource {
 
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +
-					_builder._port + "/o/saml-admin/v1.0/provider/{roleId}");
+					_builder._port + _builder._contextPath +
+						"/o/saml-admin/v1.0/provider/{roleId}");
 
 			httpInvoker.path("roleId", roleId);
 
