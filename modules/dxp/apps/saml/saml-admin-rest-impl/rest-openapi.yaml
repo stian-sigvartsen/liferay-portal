@@ -7,6 +7,22 @@ components:
                 keyStoreCredentialPassword:
                     type: string
                     writeOnly: true
+        Error:
+            properties:
+                message:
+                    example: No CommerceCurrency exists with the key {groupId=41811, code=US Dollar}
+                    readOnly: true
+                    type: string
+                status:
+                    description:
+                        HTTP Status code
+                    example: 404
+                    readOnly: true
+                    type: integer
+            required:
+                - message
+                - status
+            type: object
         Idp:
             # @review
             description:
@@ -328,6 +344,17 @@ paths:
                     # @review
                     description:
                         "SAML provider configuration was successfully created"
+                400:
+                    contents:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                    # @review
+                    description:
+                        "Invalid input"
             tags: ["SamlProvider"]
         post:
             description:
