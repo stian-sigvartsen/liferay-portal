@@ -386,7 +386,23 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 			samlProviderResource.patchSamlProvider(patchSamlProvider);
 
 		Assert.assertEquals(
+			samlProvider.getEntityId(), patchSamlProvider.getEntityId());
+
+		Assert.assertEquals(
 			systemSamlProvider.getSslRequired(), samlProvider.getSslRequired());
+
+		patchSamlProvider = new SamlProvider() {
+			{
+				enabled = true;
+			}
+		};
+
+		HttpInvoker.HttpResponse httpResponse =
+			samlProviderResource.patchSamlProviderHttpResponse(patchSamlProvider);
+
+		Assert.assertEquals(
+			Response.Status.BAD_REQUEST.getStatusCode(),
+			httpResponse.getStatusCode());
 	}
 
 	public void testPostSamlProvider() throws Exception {

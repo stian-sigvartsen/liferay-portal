@@ -15,6 +15,7 @@
 package com.liferay.saml.admin.rest.internal.resource.v1_0;
 
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -105,7 +106,7 @@ public class SamlProviderResourceImpl extends BaseSamlProviderResourceImpl {
 			return _getIdp(samlProviderConfiguration);
 		}
 
-		throw new Exception("Unsupported role: " + roleId);
+		throw new PortalException("Unsupported role: " + roleId);
 	}
 
 	@Override
@@ -121,7 +122,7 @@ public class SamlProviderResourceImpl extends BaseSamlProviderResourceImpl {
 			_setSpProperties((Sp)object, new UnicodeProperties(), false);
 		}
 		else {
-			throw new Exception("Unsupported role or invalid data");
+			throw new PortalException("Unsupported role or invalid data");
 		}
 
 		return super.patchRole(roleId, object);
@@ -154,7 +155,7 @@ public class SamlProviderResourceImpl extends BaseSamlProviderResourceImpl {
 			_setSpProperties((Sp)object, new UnicodeProperties(), true);
 		}
 		else {
-			throw new Exception("Unsupported role or invalid data");
+			throw new PortalException("Unsupported role or invalid data");
 		}
 
 		return super.putRole(roleId, object);
@@ -369,13 +370,13 @@ public class SamlProviderResourceImpl extends BaseSamlProviderResourceImpl {
 		String entityId = samlProvider.getEntityId();
 
 		if (Validator.isNotNull(entityId) && (entityId.length() > 1024)) {
-			throw new Exception("EntityID too long (Max 1024 characters)");
+			throw new PortalException("EntityID too long (Max 1024 characters)");
 		}
 
 		if (GetterUtil.getBoolean(samlProvider.getEnabled()) &&
 			(_localEntityManager.getLocalEntityCertificate() == null)) {
 
-			throw new Exception("certificateInvalid");
+			throw new PortalException("certificateInvalid");
 		}
 
 		SamlProvider currentSamlProvider = getSamlProvider();
@@ -385,14 +386,14 @@ public class SamlProviderResourceImpl extends BaseSamlProviderResourceImpl {
 					samlProvider.getEnabled(),
 					SamlProvider.Role.IDP.getValue())) {
 
-				throw new Exception(
+				throw new PortalException(
 					"The Identity Provider role has been disabled. It can be " +
 						"re-enabled in system settings.");
 			}
 
 			if (samlProvider.getSp() != null
 					|| !setNulls && (currentSamlProvider.getSp() != null)) {
-				throw new Exception("Can only configure one of sp & idp roles");
+				throw new PortalException("Can only configure one of sp & idp roles");
 			}
 
 			_setIdpProperties(
@@ -400,7 +401,7 @@ public class SamlProviderResourceImpl extends BaseSamlProviderResourceImpl {
 		}
 		else if (samlProvider.getSp() != null) {
 			if (!setNulls && (currentSamlProvider.getIdp() != null)) {
-				throw new Exception("Can only configure one of sp & idp roles");
+				throw new PortalException("Can only configure one of sp & idp roles");
 			}
 
 			_setSpProperties(
@@ -409,7 +410,7 @@ public class SamlProviderResourceImpl extends BaseSamlProviderResourceImpl {
 		else if (GetterUtil.getBoolean(samlProvider.getEnabled()) &&
 				 (currentSamlProvider.getRole() == null)) {
 
-			throw new Exception("Cannot enable the provider without configuring its role");
+			throw new PortalException("Cannot enable the provider without configuring its role");
 		}
 
 		_samlProviderConfigurationHelper.updateProperties(unicodeProperties);
