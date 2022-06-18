@@ -358,21 +358,23 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 		SamlProvider defaultSamlProvider = samlProviderResource.getSamlProvider();
 
 		Assert.assertEquals(
-			_defaultSamlProviderConfiguration.enabled(), defaultSamlProvider.getEnabled());
+			_defaultSamlProviderConfiguration.sslRequired(),
+			defaultSamlProvider.getSslRequired());
 
 		ConfigurationTestUtil.createFactoryConfiguration(
 			"com.liferay.saml.runtime.configuration.SamlProviderConfiguration",
 			HashMapDictionaryBuilder.put(
 				"companyId", (Object)testCompany.getCompanyId()
 			).put(
-				PortletPropsKeys.SAML_ENABLED,
-				!_defaultSamlProviderConfiguration.enabled()
+				PortletPropsKeys.SAML_SSL_REQUIRED,
+				!_defaultSamlProviderConfiguration.sslRequired()
 			).build());
 
 		SamlProvider systemSamlProvider = samlProviderResource.getSamlProvider();
 
 		Assert.assertNotEquals(
-			defaultSamlProvider.getEnabled(), systemSamlProvider.getEnabled());
+			defaultSamlProvider.getSslRequired(),
+			systemSamlProvider.getSslRequired());
 
 		SamlProvider patchSamlProvider = new SamlProvider() {
 			{
@@ -384,11 +386,7 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 			samlProviderResource.patchSamlProvider(patchSamlProvider);
 
 		Assert.assertEquals(
-			patchSamlProvider.getEntityId(), samlProvider.getEntityId());
-
-		Assert.assertEquals(
-			systemSamlProvider.getEnabled(),
-			samlProvider.getEnabled());
+			systemSamlProvider.getSslRequired(), samlProvider.getSslRequired());
 	}
 
 	public void testPostSamlProvider() throws Exception {
