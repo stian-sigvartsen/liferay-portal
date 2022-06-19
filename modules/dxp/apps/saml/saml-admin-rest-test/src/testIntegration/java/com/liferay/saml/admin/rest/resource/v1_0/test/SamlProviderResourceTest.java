@@ -75,17 +75,10 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 	public void testGetSamlProvider() throws Exception {
 	}
 
-	@BeforeClass
-	public static void setUpClass() throws Exception {
-
-	}
-
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
 		autoCloseables = new ArrayList<>();
-
-//		deleteAllConfigurations();
 
 		_temporaryClearConfiguration(CompanyConstants.SYSTEM);
 		_temporaryClearConfiguration(TestPropsValues.getCompanyId());
@@ -169,198 +162,10 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 		return null;
 	}
 
-	private void _createRevertingConfiguration(
-		long companyId, Dictionary<String, Object> dictionary) throws Exception {
-
-		//if (1 == 1) return;
-
-		if (dictionary != null) {
-			dictionary.put("companyId", companyId);
-		}
-
-		Configuration[] configurations = _configurationAdmin.listConfigurations(
-			"(&(service.factoryPid=com.liferay.saml.runtime.configuration." +
-			"SamlProviderConfiguration)(companyId=" + companyId + "))");
-
-		if (configurations == null || configurations.length == 0) {
-			if (dictionary != null) {
-				String pid = ConfigurationTestUtil.createFactoryConfiguration(
-					"com.liferay.saml.runtime.configuration.SamlProviderConfiguration",
-					dictionary);
-
-				autoCloseables.add(
-					() -> ConfigurationTestUtil.deleteConfiguration(pid));
-			}
-			else {
-				autoCloseables.add(
-					() -> {
-						Configuration[] configurations2 = _configurationAdmin.listConfigurations(
-							"(&(service.factoryPid=com.liferay.saml.runtime.configuration." +
-							"SamlProviderConfiguration)(companyId=" + companyId + "))");
-
-						if (configurations2 == null) return;
-
-						ConfigurationTestUtil.deleteConfiguration(configurations2[0].getPid());
-					});
-			}
-		}
-		else {
-			if (dictionary != null) {
-				autoCloseables.add(
-					new ConfigurationTemporarySwapper(
-						configurations[0].getPid(), dictionary));
-
-//				ConfigurationTestUtil.saveConfiguration(
-//					configurations[0].getPid(), dictionary);
-			}
-			else {
-				final Dictionary<String, Object> finalDictionary =
-					configurations[0].getProperties();
-
-				final String pid = configurations[0].getPid();
-
-				autoCloseables.add(
-					() ->
-						//configurations[0]
-						ConfigurationTestUtil.saveConfiguration(
-							pid, finalDictionary));
-//						ConfigurationTestUtil.createFactoryConfiguration(
-//							"com.liferay.saml.runtime.configuration.SamlProviderConfiguration",
-//							finalDictionary));
-
-						// Experimenting
-//						ConfigurationTestUtil.createFactoryConfiguration(
-//							"com.liferay.saml.runtime.configuration.SamlProviderConfiguration",
-//							finalDictionary);
-
-
-				ConfigurationTestUtil.deleteConfiguration(pid);
-			}
-		}
-	}
-
-	private AutoCloseable _createResettableConfiguration() throws Exception {
-		Configuration[] configurations = _configurationAdmin.listConfigurations(
-			"(service.factoryPid=com.liferay.saml.runtime.configuration." +
-			"SamlProviderConfiguration)");
-
-		Dictionary <String, Object> systemDictionary =
-			HashMapDictionaryBuilder.<String, Object>put(
-				PortletPropsKeys.SAML_ENABLED,
-				!_defaultSamlProviderConfiguration.enabled()
-			).put(
-				"companyId", CompanyConstants.SYSTEM
-			).build();
-
-		Dictionary<String, ?> systemConfigurationDictionary = null;
-		Configuration systemConfiguration = null;
-		Dictionary<String, ?> testCompanyConfigurationDictionary = null;
-		Configuration testCompanyConfiguration = null;
-
-		List<AutoCloseable> autoCloseables = new ArrayList<>();
-
-		AutoCloseable instanceAutoClosable = null;
-		AutoCloseable systemAutoClosable = null;
-
-		for (Configuration configuration : configurations) {
-			Dictionary<String, Object> properties =
-				configuration.getProperties();
-
-			Object companyId = properties.get("companyId");
-
-			if (companyId.equals(testCompany)) {
-				testCompanyConfigurationDictionary = properties;
-				testCompanyConfiguration = configuration;
-
-				instanceAutoClosable =
-					new ConfigurationTemporarySwapper(
-						configuration.getPid(), null);
-			}
-			else if (companyId.equals(CompanyConstants.SYSTEM)) {
-				systemConfigurationDictionary = properties;
-				systemConfiguration = configuration;
-
-				systemAutoClosable =
-					new ConfigurationTemporarySwapper(
-						configuration.getPid(), systemDictionary);
-			}
-		}
-
-		if (systemAutoClosable == null) {
-			String systemPid =
-				ConfigurationTestUtil.createFactoryConfiguration(
-					"com.liferay.saml.runtime.configuration.SamlProviderConfiguration",
-					systemDictionary);
-
-			systemAutoClosable =
-				() -> ConfigurationTestUtil.deleteConfiguration(systemPid);
-		}
-
-		if (instanceAutoClosable == null) {
-			instanceAutoClosable =
-				() -> { };
-		}
-
-
-
-
-
-		return null;
-	}
-
-	private String _createSystemConfiguration() throws Exception {
-
-		return ConfigurationTestUtil.createFactoryConfiguration(
-			"com.liferay.saml.runtime.configuration.SamlProviderConfiguration",
-			HashMapDictionaryBuilder.<String, Object>put(
-				PortletPropsKeys.SAML_ENABLED,
-				!_defaultSamlProviderConfiguration.enabled()
-			).put(
-				"companyId", CompanyConstants.SYSTEM
-			).build()
-		);
-
-//		Configuration defaultConfiguration = _configurationAdmin.getConfiguration(
-//			"com.liferay.saml.runtime.configuration.SamlProviderConfiguration",
-//			StringPool.QUESTION);
-//
-//		ConfigurationTestUtil.saveConfiguration(
-//			defaultConfiguration,
-//			HashMapDictionaryBuilder.<String, Object>put(
-//				PortletPropsKeys.SAML_ENABLED,
-//				!_defaultSamlProviderConfiguration.enabled()
-//			).put(
-//				"companyId", CompanyConstants.SYSTEM
-//			).build());
-//
-//		return defaultConfiguration;
-	}
-
-	protected ArrayList<AutoCloseable> autoCloseables; //= new ArrayList<>();
+	protected ArrayList<AutoCloseable> autoCloseables;
 
 	@DeleteAfterTestRun
 	SAPEntry _sapEntry;
-
-	private void deleteAllConfigurations() throws Exception {
-		Configuration[] configurations = _configurationAdmin.listConfigurations(
-			"(service.factoryPid=com.liferay.saml.runtime.configuration." +
-			"SamlProviderConfiguration)");
-
-		if (configurations == null) {
-			return;
-		}
-
-		for (Configuration configuration : configurations) {
-			Dictionary<String, Object> properties =
-				configuration.getProperties();
-
-			long companyId = GetterUtil.getLong(properties.get("companyId"));
-
-			if (companyId == 0 || companyId == 20097) {
-				ConfigurationTestUtil.deleteConfiguration(configuration);
-			}
-		}
-	}
 
 	public void testPatchSamlProvider() throws Exception {
 
