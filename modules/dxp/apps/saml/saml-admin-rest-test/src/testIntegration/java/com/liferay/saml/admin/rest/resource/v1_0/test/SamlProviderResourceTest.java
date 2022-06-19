@@ -20,6 +20,7 @@ import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.configuration.test.util.ConfigurationTemporarySwapper;
 import com.liferay.portal.configuration.test.util.ConfigurationTestUtil;
 import com.liferay.portal.kernel.json.JSONFactory;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.CompanyConstants;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
@@ -403,6 +404,12 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 		Assert.assertEquals(
 			Response.Status.BAD_REQUEST.getStatusCode(),
 			httpResponse.getStatusCode());
+
+		JSONObject jsonObject =
+			JSONFactoryUtil.createJSONObject(httpResponse.getContent());
+
+		Assert.assertEquals(
+			"Credential is required", jsonObject.get("title"));
 	}
 
 	public void testPostSamlProvider() throws Exception {

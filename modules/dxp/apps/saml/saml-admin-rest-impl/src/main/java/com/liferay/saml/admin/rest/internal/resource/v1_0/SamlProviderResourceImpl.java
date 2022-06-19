@@ -41,6 +41,8 @@ import com.liferay.saml.persistence.service.SamlSpIdpConnectionLocalService;
 import com.liferay.saml.runtime.configuration.SamlConfiguration;
 import com.liferay.saml.runtime.configuration.SamlProviderConfiguration;
 import com.liferay.saml.runtime.configuration.SamlProviderConfigurationHelper;
+import com.liferay.saml.runtime.exception.CredentialException;
+import com.liferay.saml.runtime.exception.EntityIdException;
 import com.liferay.saml.runtime.metadata.LocalEntityManager;
 
 import java.io.Serializable;
@@ -370,13 +372,13 @@ public class SamlProviderResourceImpl extends BaseSamlProviderResourceImpl {
 		String entityId = samlProvider.getEntityId();
 
 		if (Validator.isNotNull(entityId) && (entityId.length() > 1024)) {
-			throw new PortalException("EntityID too long (Max 1024 characters)");
+			throw new EntityIdException("EntityID too long (Max 1024 characters)");
 		}
 
 		if (GetterUtil.getBoolean(samlProvider.getEnabled()) &&
 			(_localEntityManager.getLocalEntityCertificate() == null)) {
 
-			throw new PortalException("certificateInvalid");
+			throw new CredentialException("Credential is required");
 		}
 
 		SamlProvider currentSamlProvider = getSamlProvider();

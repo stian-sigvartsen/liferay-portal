@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.vulcan.jaxrs.exception.mapper.BaseExceptionMapper;
 import com.liferay.portal.vulcan.jaxrs.exception.mapper.Problem;
 import com.liferay.saml.runtime.SamlException;
+import com.liferay.saml.runtime.exception.CredentialException;
 import com.liferay.saml.runtime.exception.EntityIdException;
 import org.osgi.service.component.annotations.Component;
 
@@ -84,5 +85,6 @@ public class SafePortalExceptionMapper
 	}
 
 	private Set<Class<? extends PortalException>> _safePortalExceptions =
-		SetUtil.fromArray(new Class[] {EntityIdException.class});
+		SetUtil.fromArray(new Class[] {
+			CredentialException.class, EntityIdException.class});
 }
