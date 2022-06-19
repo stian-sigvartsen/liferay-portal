@@ -15,6 +15,7 @@
 package com.liferay.saml.admin.rest.internal.jaxrs.mapper;
 
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.module.configuration.ConfigurationException;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.vulcan.jaxrs.exception.mapper.BaseExceptionMapper;
 import com.liferay.portal.vulcan.jaxrs.exception.mapper.Problem;
@@ -86,5 +87,6 @@ public class SafePortalExceptionMapper
 
 	private Set<Class<? extends PortalException>> _safePortalExceptions =
 		SetUtil.fromArray(new Class[] {
-			CredentialException.class, EntityIdException.class});
+			ConfigurationException.class, CredentialException.class,
+			EntityIdException.class});
 }
