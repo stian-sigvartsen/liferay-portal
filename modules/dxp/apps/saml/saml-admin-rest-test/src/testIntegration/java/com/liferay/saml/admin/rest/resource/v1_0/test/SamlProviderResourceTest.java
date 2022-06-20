@@ -231,6 +231,21 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 
 		_addSAPEntry();
 
+		SamlProvider defaultSamlProvider = samlProviderResource.getSamlProvider();
+
+		Assert.assertEquals(
+			_defaultSamlProviderConfiguration.sslRequired(),
+			defaultSamlProvider.getSslRequired());
+
+		ConfigurationTestUtil.createFactoryConfiguration(
+			"com.liferay.saml.runtime.configuration.SamlProviderConfiguration",
+			HashMapDictionaryBuilder.put(
+				"companyId", (Object)testCompany.getCompanyId()
+			).put(
+				PortletPropsKeys.SAML_SSL_REQUIRED,
+				!_defaultSamlProviderConfiguration.sslRequired()
+			).build());
+
 		SamlProvider postSamlProvider = new SamlProvider() {
 			{
 				enabled = false;
