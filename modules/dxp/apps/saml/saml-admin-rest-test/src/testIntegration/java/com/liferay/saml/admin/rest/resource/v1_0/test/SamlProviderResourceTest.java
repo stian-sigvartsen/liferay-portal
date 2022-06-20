@@ -17,7 +17,6 @@ package com.liferay.saml.admin.rest.resource.v1_0.test;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.configuration.test.util.ConfigurationTestUtil;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -50,6 +49,7 @@ import javax.ws.rs.core.Response;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.osgi.service.cm.Configuration;
@@ -77,20 +77,27 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 	}
 
 	@Override
+	@Test
 	public void testDeleteRole() throws Exception {
 	}
 
 	@Override
+	@Test
 	public void testGetRole() throws Exception {
 	}
 
+	@Override
+	@Test
 	public void testGetSamlProvider() throws Exception {
 	}
 
 	@Override
+	@Test
 	public void testPatchRole() throws Exception {
 	}
 
+	@Override
+	@Test
 	public void testPatchSamlProvider() throws Exception {
 		_addSAPEntry();
 
@@ -105,9 +112,9 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 			"com.liferay.saml.runtime.configuration.SamlProviderConfiguration",
 			HashMapDictionaryBuilder.put(
 				PortletPropsKeys.SAML_SSL_REQUIRED,
-				!_defaultSamlProviderConfiguration.sslRequired()
+				(Object)!_defaultSamlProviderConfiguration.sslRequired()
 			).put(
-				"companyId", (Object)testCompany.getCompanyId()
+				"companyId", testCompany.getCompanyId()
 			).build());
 
 		SamlProvider systemSamlProvider =
@@ -152,6 +159,8 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 		Assert.assertEquals("Credential is required", jsonObject.get("title"));
 	}
 
+	@Override
+	@Test
 	public void testPostSamlProvider() throws Exception {
 		_addSAPEntry();
 
@@ -166,9 +175,9 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 			"com.liferay.saml.runtime.configuration.SamlProviderConfiguration",
 			HashMapDictionaryBuilder.put(
 				PortletPropsKeys.SAML_SSL_REQUIRED,
-				!_defaultSamlProviderConfiguration.sslRequired()
+				(Object)!_defaultSamlProviderConfiguration.sslRequired()
 			).put(
-				"companyId", (Object)testCompany.getCompanyId()
+				"companyId", testCompany.getCompanyId()
 			).build());
 
 		SamlProvider postSamlProvider = new SamlProvider() {
@@ -180,14 +189,12 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 			}
 		};
 
-		String role = SamlProvider.Role.SP.getValue();
-
 		postSamlProvider.setSp(
 			new Sp() {
 				{
 					allowShowingTheLoginPortlet = false;
 					assertionSignatureRequired = false;
-					clockSkew = 1000l;
+					clockSkew = 1000L;
 					ldapImportEnabled = false;
 					signAuthnRequest = false;
 				}
@@ -205,8 +212,8 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 				{
 					authnRequestSignatureRequired = false;
 					defaultAssertionLifetime = 10000;
-					sessionMaximumAge = 60000l;
-					sessionTimeout = 60000l;
+					sessionMaximumAge = 60000L;
+					sessionTimeout = 60000L;
 				}
 			});
 
@@ -234,20 +241,8 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 	}
 
 	@Override
+	@Test
 	public void testPutRole() throws Exception {
-		SamlProvider samlProvider = new SamlProvider() {
-			{
-				enabled = true;
-				entityId = "";
-				signMetadata = false;
-				sslRequired = false;
-			}
-		};
-
-		String role = SamlProvider.Role.SP.getValue();
-
-		HttpInvoker.HttpResponse httpResponse =
-			samlProviderResource.putRoleHttpResponse(role, samlProvider);
 	}
 
 	@Override
@@ -257,9 +252,6 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 
 		return new SamlProvider();
 	}
-
-	@DeleteAfterTestRun
-	SAPEntry _sapEntry;
 
 	protected ArrayList<AutoCloseable> autoCloseables;
 
@@ -284,7 +276,7 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 		}
 	}
 
-	private void _addSAPEntry() throws PortalException {
+	private void _addSAPEntry() throws Exception {
 		_sapEntry = _sapEntryLocalService.addSAPEntry(
 			TestPropsValues.getUserId(),
 			"com.liferay.saml.admin.rest.internal.resource.v1_0." +
@@ -344,12 +336,14 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 				configuration.getProperties();
 
 			dictionary.put("companyId", -companyId);
+
 			ConfigurationTestUtil.saveConfiguration(configuration, dictionary);
 
 			autoCloseables.add(
 				() -> {
 					_deleteSamlProviderConfiguration(companyId);
 					dictionary.put("companyId", companyId);
+
 					ConfigurationTestUtil.saveConfiguration(
 						configuration, dictionary);
 				});
@@ -380,8 +374,6 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 		}
 	}
 
-	private static Configuration _defaultConfiguration;
-
 	@Inject
 	private ConfigurationAdmin _configurationAdmin;
 
@@ -391,6 +383,9 @@ public class SamlProviderResourceTest extends BaseSamlProviderResourceTestCase {
 
 	@Inject
 	private JSONFactory _jsonFactory;
+
+	@DeleteAfterTestRun
+	private SAPEntry _sapEntry;
 
 	@Inject
 	private SAPEntryLocalService _sapEntryLocalService;

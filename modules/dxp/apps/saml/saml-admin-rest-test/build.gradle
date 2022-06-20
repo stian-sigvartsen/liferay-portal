@@ -3,7 +3,6 @@ dependencies {
 	compileOnly project(":apps:portal-vulcan:portal-vulcan-api")
 	compileOnly project(":apps:static:portal-configuration:portal-configuration-metatype-api")
 	compileOnly project(":dxp:apps:saml:saml-admin-rest-api")
-	compileOnly project(":dxp:apps:saml:saml-admin-rest-client")
 	compileOnly project(":dxp:apps:saml:saml-api")
 
 	testIntegrationCompile group: "com.fasterxml.jackson.core", name: "jackson-annotations", version: "2.13.2"
@@ -11,5 +10,6 @@ dependencies {
 	testIntegrationCompile group: "com.fasterxml.jackson.core", name: "jackson-databind", version: "2.13.2.2"
 	testIntegrationCompile project(":apps:portal-configuration:portal-configuration-test-util")
 	testIntegrationCompile project(":apps:portal-security:portal-security-service-access-policy-api")
+	testIntegrationCompile project(":dxp:apps:saml:saml-admin-rest-client")
 	testIntegrationCompile project(":test:arquillian-extension-junit-bridge")
 }
