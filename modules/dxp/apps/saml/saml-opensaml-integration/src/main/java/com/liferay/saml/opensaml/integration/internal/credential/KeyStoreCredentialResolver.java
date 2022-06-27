@@ -28,6 +28,7 @@ import com.liferay.saml.runtime.credential.KeyStoreTool;
 import com.liferay.saml.runtime.exception.EntityIdException;
 import com.liferay.saml.runtime.metadata.LocalEntityManager;
 
+import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.PrivateKey;
@@ -242,10 +243,10 @@ public class KeyStoreCredentialResolver
 		_samlProviderConfigurationHelper = samlProviderConfigurationHelper;
 	}
 
-	public CredentialStatus lookupLocalEntityCredential(
+	public KeyStore.Entry authenticateLocalEntityCredential(
 		CertificateUsage certificateUsage, String certificateKeyPassword,
 		String entityId)
-		throws SamlException {
+		throws CredentialAuthException {
 
 		KeyStore.PasswordProtection keyStorePasswordProtection = null;
 
@@ -271,94 +272,15 @@ public class KeyStoreCredentialResolver
 				_getAlias(entityId, usageType), keyStorePasswordProtection);
 
 			if (entry != null) {
-				return new CredentialStatusImpl(
-					entry, CredentialStatus.Status.SUCCESS);
+				return entry;
 			}
 			else {
-				return new CredentialStatusImpl(
-					null, CredentialStatus.Status.NOT_FOUND);
+				throw new CredentialAuthException(
+					CredentialAuthException.Status.NOT_FOUND);
 			}
 		}
-		catch (Exception exception) {
-			Throwable throwable = _getCauseThrowable(
-				exception, KeyStoreException.class);
-			CredentialStatus.Status status;
-
-			if (throwable != null) {
-				Throwable unrecoverableKeyThrowable = _getCauseThrowable(
-					throwable, UnrecoverableKeyException.class);
-
-				if (unrecoverableKeyThrowable != null) {
-					if (_log.isDebugEnabled()) {
-						_log.debug(
-							"Unable to get local entity certificate because " +
-							"of incorrect keystore password",
-							throwable);
-					}
-
-					status =
-						CredentialStatus.Status.
-							SAML_KEYSTORE_PASSWORD_INCORRECT;
-				}
-				else {
-					if (_log.isDebugEnabled()) {
-						_log.debug(
-							"Unable to get local entity certificate because " +
-							"of keystore loading issue",
-							throwable);
-					}
-
-					status =
-						CredentialStatus.Status.SAML_KEYSTORE_EXCEPTION;
-				}
-			}
-			else {
-				throwable = _getCauseThrowable(
-					exception, UnrecoverableKeyException.class);
-
-				if (throwable != null) {
-					if (_log.isDebugEnabled()) {
-						_log.debug(
-							"Unable to get local entity certificate because " +
-							"of incorrect key credential password",
-							throwable);
-					}
-
-					status =
-						CredentialStatus.Status.
-							SAML_X509_CERTIFICATE_AUTH_NEEDED;
-				}
-				else {
-					throwable = _getCauseThrowable(
-						exception, EntityIdException.class);
-
-					if (throwable != null) {
-						if (_log.isDebugEnabled()) {
-							_log.debug(
-								"Unable to get local entity certificate",
-								throwable);
-						}
-
-						status = CredentialStatus.Status.NOT_FOUND;
-					}
-					else {
-						String message =
-							"Unable to get local entity certificate: " +
-							exception.getMessage();
-
-						if (_log.isDebugEnabled()) {
-							_log.debug(message, exception);
-						}
-						else if (_log.isWarnEnabled()) {
-							_log.warn(message);
-						}
-
-						status = CredentialStatus.Status.UNKNOWN_EXCEPTION;
-					}
-				}
-			}
-
-			return new CredentialStatusImpl(null, status);
+		catch (GeneralSecurityException exception) {
+			throw new CredentialAuthException(exception);
 		}
 	}
 
