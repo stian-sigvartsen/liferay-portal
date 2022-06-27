@@ -42,6 +42,8 @@ import com.liferay.saml.persistence.service.SamlSpIdpConnectionLocalService;
 import com.liferay.saml.runtime.configuration.SamlConfiguration;
 import com.liferay.saml.runtime.configuration.SamlProviderConfiguration;
 import com.liferay.saml.runtime.configuration.SamlProviderConfigurationHelper;
+import com.liferay.saml.runtime.credential.KeyStoreManager;
+import com.liferay.saml.runtime.credential.KeyStoreTool;
 import com.liferay.saml.runtime.exception.CredentialException;
 import com.liferay.saml.runtime.exception.EntityIdException;
 import com.liferay.saml.runtime.metadata.LocalEntityManager;
@@ -376,10 +378,20 @@ public class SamlProviderResourceImpl extends BaseSamlProviderResourceImpl {
 			throw new EntityIdException("EntityID too long (Max 1024 characters)");
 		}
 
-		if (GetterUtil.getBoolean(samlProvider.getEnabled()) &&
-			(_localEntityManager.getLocalEntityCertificate() == null)) {
+		SamlProviderConfiguration samlProviderConfiguration =
+			_samlProviderConfigurationHelper.getSamlProviderConfiguration();
 
-			throw new CredentialException("Credential is required");
+		if (GetterUtil.getBoolean(samlProvider.getEnabled())) {
+			try {
+				_keyStoreTool.getKeyStoreEntry(
+					entityId, _keyStoreManager.getKeyStore(),
+					samlProviderConfiguration.keyStoreCredentialPassword(),
+					LocalEntityManager.CertificateUsage.SIGNING);
+			}
+			catch (SecurityException securityException) {
+				throw new CredentialException(
+					"Credential is required", securityException);
+			}
 		}
 
 		SamlProvider currentSamlProvider = getSamlProvider();
@@ -421,6 +433,12 @@ public class SamlProviderResourceImpl extends BaseSamlProviderResourceImpl {
 		return getSamlProvider();
 	}
 
+	private void _verifyCredential(
+		String entityId, LocalEntityManager.CertificateUsage certificateUsage) {
+
+
+	}
+
 	private boolean _validateRoleSelection(boolean enabled, String samlRole) {
 		if (_samlConfiguration.idpRoleConfigurationEnabled()) {
 			return true;
@@ -441,11 +459,23 @@ public class SamlProviderResourceImpl extends BaseSamlProviderResourceImpl {
 		return true;
 	}
 
+	@Reference(
+		name = "KeyStoreManager", target = "(default=true)", unbind = "-"
+	)
+	public void setKeyStoreManager(KeyStoreManager keyStoreManager) {
+		_keyStoreManager = keyStoreManager;
+	}
+
 	@Reference
 	private DTOConverterRegistry _dtoConverterRegistry;
 
+	private KeyStoreManager _keyStoreManager;
+
 	@Reference
 	private LocalEntityManager _localEntityManager;
+
+	@Reference
+	private KeyStoreTool _keyStoreTool;
 
 	private SamlConfiguration _samlConfiguration;
 
