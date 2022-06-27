@@ -16,6 +16,7 @@ package com.liferay.saml.runtime.metadata;
 
 import com.liferay.saml.runtime.SamlException;
 
+import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
@@ -47,6 +48,25 @@ public interface LocalEntityManager {
 	public X509Certificate getLocalEntityCertificate(
 			CertificateUsage certificateUsage)
 		throws SamlException;
+
+	public CredentialStatus lookupLocalEntityCredential(
+			CertificateUsage certificateUsage, String certificateKeyPassword,
+			String entityId)
+		throws SamlException;
+
+	public interface CredentialStatus {
+
+		public Status getStatus();
+
+		public KeyStore.Entry getEntry();
+
+		public enum Status {
+
+			SUCCESS, NOT_FOUND, SAML_KEYSTORE_EXCEPTION,
+			SAML_KEYSTORE_PASSWORD_INCORRECT, SAML_X509_CERTIFICATE_AUTH_NEEDED,
+			UNKNOWN_EXCEPTION
+		}
+	}
 
 	public String getLocalEntityId();
 

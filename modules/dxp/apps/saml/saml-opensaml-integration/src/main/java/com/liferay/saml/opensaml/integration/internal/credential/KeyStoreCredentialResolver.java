@@ -14,6 +14,8 @@
 
 package com.liferay.saml.opensaml.integration.internal.credential;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.saml.persistence.model.SamlSpIdpConnection;
@@ -22,12 +24,14 @@ import com.liferay.saml.runtime.SamlException;
 import com.liferay.saml.runtime.configuration.SamlProviderConfiguration;
 import com.liferay.saml.runtime.configuration.SamlProviderConfigurationHelper;
 import com.liferay.saml.runtime.credential.KeyStoreManager;
+import com.liferay.saml.runtime.credential.KeyStoreTool;
 import com.liferay.saml.runtime.exception.EntityIdException;
 import com.liferay.saml.runtime.metadata.LocalEntityManager;
 
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.PrivateKey;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
@@ -60,10 +64,10 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	configurationPid = "com.liferay.saml.runtime.configuration.SamlKeyStoreManagerConfiguration",
 	immediate = true,
-	service = {CredentialResolver.class, LocalEntityManager.class}
+	service = {CredentialResolver.class, KeyStoreTool.class, LocalEntityManager.class}
 )
 public class KeyStoreCredentialResolver
-	extends AbstractCredentialResolver implements LocalEntityManager {
+	extends AbstractCredentialResolver implements KeyStoreTool, LocalEntityManager {
 
 	@Override
 	public void deleteLocalEntityCertificate(CertificateUsage certificateUsage)
@@ -238,6 +242,156 @@ public class KeyStoreCredentialResolver
 		_samlProviderConfigurationHelper = samlProviderConfigurationHelper;
 	}
 
+	public CredentialStatus lookupLocalEntityCredential(
+		CertificateUsage certificateUsage, String certificateKeyPassword,
+		String entityId)
+		throws SamlException {
+
+		KeyStore.PasswordProtection keyStorePasswordProtection = null;
+
+		if (certificateKeyPassword != null) {
+			keyStorePasswordProtection =
+				new KeyStore.PasswordProtection(
+					certificateKeyPassword.toCharArray());
+		}
+
+		UsageType usageType = UsageType.UNSPECIFIED;
+
+		if (certificateUsage == CertificateUsage.SIGNING) {
+			usageType = UsageType.SIGNING;
+		}
+		else if (certificateUsage == CertificateUsage.ENCRYPTION) {
+			usageType = UsageType.ENCRYPTION;
+		}
+
+		try {
+			KeyStore keyStore = _keyStoreManager.getKeyStore();
+
+			KeyStore.Entry entry = keyStore.getEntry(
+				_getAlias(entityId, usageType), keyStorePasswordProtection);
+
+			if (entry != null) {
+				return new CredentialStatusImpl(
+					entry, CredentialStatus.Status.SUCCESS);
+			}
+			else {
+				return new CredentialStatusImpl(
+					null, CredentialStatus.Status.NOT_FOUND);
+			}
+		}
+		catch (Exception exception) {
+			Throwable throwable = _getCauseThrowable(
+				exception, KeyStoreException.class);
+			CredentialStatus.Status status;
+
+			if (throwable != null) {
+				Throwable unrecoverableKeyThrowable = _getCauseThrowable(
+					throwable, UnrecoverableKeyException.class);
+
+				if (unrecoverableKeyThrowable != null) {
+					if (_log.isDebugEnabled()) {
+						_log.debug(
+							"Unable to get local entity certificate because " +
+							"of incorrect keystore password",
+							throwable);
+					}
+
+					status =
+						CredentialStatus.Status.
+							SAML_KEYSTORE_PASSWORD_INCORRECT;
+				}
+				else {
+					if (_log.isDebugEnabled()) {
+						_log.debug(
+							"Unable to get local entity certificate because " +
+							"of keystore loading issue",
+							throwable);
+					}
+
+					status =
+						CredentialStatus.Status.SAML_KEYSTORE_EXCEPTION;
+				}
+			}
+			else {
+				throwable = _getCauseThrowable(
+					exception, UnrecoverableKeyException.class);
+
+				if (throwable != null) {
+					if (_log.isDebugEnabled()) {
+						_log.debug(
+							"Unable to get local entity certificate because " +
+							"of incorrect key credential password",
+							throwable);
+					}
+
+					status =
+						CredentialStatus.Status.
+							SAML_X509_CERTIFICATE_AUTH_NEEDED;
+				}
+				else {
+					throwable = _getCauseThrowable(
+						exception, EntityIdException.class);
+
+					if (throwable != null) {
+						if (_log.isDebugEnabled()) {
+							_log.debug(
+								"Unable to get local entity certificate",
+								throwable);
+						}
+
+						status = CredentialStatus.Status.NOT_FOUND;
+					}
+					else {
+						String message =
+							"Unable to get local entity certificate: " +
+							exception.getMessage();
+
+						if (_log.isDebugEnabled()) {
+							_log.debug(message, exception);
+						}
+						else if (_log.isWarnEnabled()) {
+							_log.warn(message);
+						}
+
+						status = CredentialStatus.Status.UNKNOWN_EXCEPTION;
+					}
+				}
+			}
+
+			return new CredentialStatusImpl(null, status);
+		}
+	}
+
+	public KeyStore.Entry getKeyStoreEntry(
+		String entityId, KeyStore keyStore, String certificateKeyPassword,
+		CertificateUsage certificateUsage) throws SecurityException {
+
+		KeyStore.PasswordProtection keyStorePasswordProtection = null;
+
+		if (certificateKeyPassword != null) {
+			keyStorePasswordProtection =
+				new KeyStore.PasswordProtection(
+					certificateKeyPassword.toCharArray());
+		}
+
+		UsageType usageType = UsageType.UNSPECIFIED;
+
+		if (certificateUsage == CertificateUsage.SIGNING) {
+			usageType = UsageType.SIGNING;
+		}
+		else if (certificateUsage == CertificateUsage.ENCRYPTION) {
+			usageType = UsageType.ENCRYPTION;
+		}
+
+		try {
+			return keyStore.getEntry(
+				_getAlias(entityId, usageType), keyStorePasswordProtection);
+		}
+		catch (Exception exception) {
+			throw new SecurityException(exception);
+		}
+	}
+
 	@Override
 	public void storeLocalEntityCertificate(
 			PrivateKey privateKey, String certificateKeyPassword,
@@ -254,6 +408,28 @@ public class KeyStoreCredentialResolver
 				certificateKeyPassword.toCharArray()));
 
 		_keyStoreManager.saveKeyStore(keyStore);
+	}
+
+	public static class CredentialStatusImpl implements CredentialStatus {
+
+		public CredentialStatusImpl(
+			KeyStore.Entry entry, Status status) {
+
+			_entry = entry;
+			_status = status;
+		}
+
+		public Status getStatus() {
+			return _status;
+		}
+
+		public KeyStore.Entry getEntry() {
+			return _entry;
+		}
+
+		private final Status _status;
+		private final KeyStore.Entry _entry;
+
 	}
 
 	private Credential _buildCredential(
@@ -294,6 +470,26 @@ public class KeyStoreCredentialResolver
 		}
 
 		return entityId;
+	}
+
+	private Throwable _getCauseThrowable(
+		Throwable throwable, Class<?> exceptionType) {
+
+		if (throwable == null) {
+			return null;
+		}
+
+		Throwable causeThrowable = throwable.getCause();
+
+		while (causeThrowable != null) {
+			if (exceptionType.isInstance(causeThrowable)) {
+				return causeThrowable;
+			}
+
+			causeThrowable = causeThrowable.getCause();
+		}
+
+		return null;
 	}
 
 	private SamlProviderConfiguration _getSamlProviderConfiguration() {
@@ -367,5 +563,8 @@ public class KeyStoreCredentialResolver
 
 	@Reference
 	private SamlSpIdpConnectionLocalService _samlSpIdpConnectionLocalService;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		KeyStoreCredentialResolver.class);
 
 }
