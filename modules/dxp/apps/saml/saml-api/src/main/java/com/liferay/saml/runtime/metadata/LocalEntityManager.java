@@ -15,7 +15,9 @@
 package com.liferay.saml.runtime.metadata;
 
 import com.liferay.saml.runtime.SamlException;
+import com.liferay.saml.runtime.exception.CredentialAuthException;
 
+import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.PrivateKey;
@@ -49,10 +51,10 @@ public interface LocalEntityManager {
 			CertificateUsage certificateUsage)
 		throws SamlException;
 
-	public CredentialStatus lookupLocalEntityCredential(
+	public KeyStore.Entry authenticateLocalEntityCredential(
 			CertificateUsage certificateUsage, String certificateKeyPassword,
 			String entityId)
-		throws SamlException;
+		throws CredentialAuthException;
 
 	public interface CredentialStatus {
 

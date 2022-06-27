@@ -1,4 +1,4 @@
-package com.liferay.saml.opensaml.integration.internal.credential;
+package com.liferay.saml.runtime.exception;
 
 import com.liferay.saml.runtime.exception.EntityIdException;
 
