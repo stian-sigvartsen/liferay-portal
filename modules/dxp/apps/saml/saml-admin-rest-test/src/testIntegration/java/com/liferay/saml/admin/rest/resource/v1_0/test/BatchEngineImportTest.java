@@ -251,11 +251,21 @@ public class BatchEngineImportTest {
 				null, // batchEngineImportConfiguration.parameters,
 				null); //batchEngineImportConfiguration.taskItemDelegateName);
 
-		Future<?> submit = executorService.submit(
-			() -> _batchEngineImportTaskExecutor.execute(
-				batchEngineImportTask));
+		try (LogCapture logCapture = LoggerTestUtil.configureLog4JLogger(
+			_CLASS_NAME_BATCH_ENGINE_IMPORT_TASK_EXECUTOR_IMPL,
+			LoggerTestUtil.FATAL)) {
 
-		submit.get(10l, TimeUnit.SECONDS);
+			_batchEngineImportTaskExecutor.execute(batchEngineImportTask);
+		}
+
+		Assert.assertEquals(
+			BatchEngineTaskExecuteStatus.FAILED.name(),
+			batchEngineImportTask.getExecuteStatus());
+
+		Assert.assertEquals(
+			"com.liferay.saml.runtime.exception.CredentialAuthException: CREDENTIAL_PASSWORD_INCORRECT",
+			batchEngineImportTask.getErrorMessage());
+
 	}
 
 	protected AutoDeploymentContext buildAutoDeploymentContext(File file) {
