@@ -44,7 +44,6 @@ import com.liferay.saml.runtime.configuration.SamlProviderConfiguration;
 import com.liferay.saml.runtime.configuration.SamlProviderConfigurationHelper;
 import com.liferay.saml.runtime.credential.KeyStoreManager;
 import com.liferay.saml.runtime.credential.KeyStoreTool;
-import com.liferay.saml.runtime.exception.CredentialException;
 import com.liferay.saml.runtime.exception.EntityIdException;
 import com.liferay.saml.runtime.metadata.LocalEntityManager;
 
@@ -382,16 +381,10 @@ public class SamlProviderResourceImpl extends BaseSamlProviderResourceImpl {
 			_samlProviderConfigurationHelper.getSamlProviderConfiguration();
 
 		if (GetterUtil.getBoolean(samlProvider.getEnabled())) {
-			try {
-				_keyStoreTool.getKeyStoreEntry(
-					entityId, _keyStoreManager.getKeyStore(),
-					samlProviderConfiguration.keyStoreCredentialPassword(),
-					LocalEntityManager.CertificateUsage.SIGNING);
-			}
-			catch (SecurityException securityException) {
-				throw new CredentialException(
-					"Credential is required", securityException);
-			}
+			_localEntityManager.authenticateLocalEntityCredential(
+				LocalEntityManager.CertificateUsage.SIGNING,
+				samlProviderConfiguration.keyStoreCredentialPassword(),
+				entityId);
 		}
 
 		SamlProvider currentSamlProvider = getSamlProvider();
@@ -473,9 +466,6 @@ public class SamlProviderResourceImpl extends BaseSamlProviderResourceImpl {
 
 	@Reference
 	private LocalEntityManager _localEntityManager;
-
-	@Reference
-	private KeyStoreTool _keyStoreTool;
 
 	private SamlConfiguration _samlConfiguration;
 
