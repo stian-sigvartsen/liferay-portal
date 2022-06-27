@@ -13,7 +13,7 @@ public class CredentialAuthException extends GeneralSecurityException {
 		super(generalSecurityException);
 
 		Throwable throwable = _getCauseThrowable(
-			generalSecurityException, KeyStoreException.class);
+			this, KeyStoreException.class);
 
 		if (throwable != null) {
 			Throwable unrecoverableKeyThrowable =
@@ -29,14 +29,14 @@ public class CredentialAuthException extends GeneralSecurityException {
 		}
 		else {
 			throwable = _getCauseThrowable(
-				generalSecurityException, UnrecoverableKeyException.class);
+				this, UnrecoverableKeyException.class);
 
 			if (throwable != null) {
 				_status = Status.CREDENTIAL_PASSWORD_INCORRECT;
 			}
 			else {
 				throwable = _getCauseThrowable(
-					generalSecurityException, EntityIdException.class);
+					this, EntityIdException.class);
 
 				if (throwable != null) {
 					_status = Status.NOT_FOUND;
@@ -64,10 +64,6 @@ public class CredentialAuthException extends GeneralSecurityException {
 
 	private Throwable _getCauseThrowable(
 		Throwable throwable, Class<?> exceptionType) {
-
-		if (throwable == null) {
-			return null;
-		}
 
 		Throwable causeThrowable = throwable.getCause();
 
