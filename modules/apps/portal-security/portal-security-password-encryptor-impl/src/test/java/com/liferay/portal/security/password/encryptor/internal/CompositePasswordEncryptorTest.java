@@ -14,6 +14,7 @@
 
 package com.liferay.portal.security.password.encryptor.internal;
 
+import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -33,7 +34,10 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 
+import org.mockito.Mockito;
+
 import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Tomas Polesovsky
@@ -84,6 +88,12 @@ public class CompositePasswordEncryptorTest {
 		bundleContext.registerService(
 			PasswordEncryptor.class, new SSHAPasswordEncryptor(),
 			MapUtil.singletonDictionary("type", PasswordEncryptor.TYPE_SSHA));
+		bundleContext.registerService(
+			PasswordEncryptor.class, new TestBCPBKDF2PasswordEncryptor(),
+			MapUtil.singletonDictionary("type", "BCPBKDF2/16/128"));
+		bundleContext.registerService(
+			PasswordEncryptor.class, new TestBCPBKDF2PasswordEncryptor(),
+			MapUtil.singletonDictionary("type", "BCPBKDF2"));
 	}
 
 	@Test
@@ -115,6 +125,41 @@ public class CompositePasswordEncryptorTest {
 		runTests(
 			PasswordEncryptor.TYPE_UFC_CRYPT, "password", "SNbUMVY9kKQpY",
 			PasswordEncryptor.TYPE_UFC_CRYPT);
+	}
+
+	@Test
+	public void testEncryptCustomCryptWithParametersWhenMustBeAnExactMatch()
+		throws Exception {
+
+		String plainPassword = "password";
+
+		String algorithm = "BC" + PasswordEncryptor.TYPE_PBKDF2 + "/16/128";
+
+		String expectedPassword = PasswordEncryptorUtil.encrypt(
+			algorithm, plainPassword, (String)null);
+
+		// TODO check service
+
+		_serviceTrackerMap.getService(algorithm);
+
+		testEncrypt(plainPassword, expectedPassword);
+	}
+
+	@Test
+	public void testEncryptCustomCryptWithParametersWhenNotAnExactMatch()
+		throws Exception {
+
+		String plainPassword = "password";
+
+		String expectedPassword = PasswordEncryptorUtil.encrypt(
+			"BC" + PasswordEncryptor.TYPE_PBKDF2 + "/16/78", plainPassword,
+			(String)null);
+
+		// TODO check service
+
+		_serviceTrackerMap.getService(PasswordEncryptor.TYPE_PBKDF2);
+
+		testEncrypt(plainPassword, expectedPassword);
 	}
 
 	@Test
@@ -240,6 +285,20 @@ public class CompositePasswordEncryptorTest {
 			PasswordEncryptor.TYPE_UFC_CRYPT);
 	}
 
+	@Component(property = "type=BCPBKDF2", service = PasswordEncryptor.class)
+	public static class TestBCPBKDF2PasswordEncryptor
+		extends BasePasswordEncryptor implements PasswordEncryptor {
+
+		@Override
+		public String encrypt(
+			String algorithm, String plainTextPassword,
+			String encryptedPassword, boolean upgradeHashSecurity) {
+
+			return plainTextPassword;
+		}
+
+	}
+
 	protected void runTests(
 			String algorithm, String plainPassword, String encryptedPassword,
 			String prependedAlgorithm)
@@ -306,5 +365,8 @@ public class CompositePasswordEncryptorTest {
 				originalLegacyAlgorithm;
 		}
 	}
+
+	private final ServiceTrackerMap<String, TestBCPBKDF2PasswordEncryptor>
+		_serviceTrackerMap = Mockito.mock(ServiceTrackerMap.class);
 
 }
