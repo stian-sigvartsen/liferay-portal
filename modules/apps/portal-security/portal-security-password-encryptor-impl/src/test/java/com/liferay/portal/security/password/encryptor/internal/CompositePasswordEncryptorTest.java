@@ -27,17 +27,19 @@ import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.test.rule.LiferayUnitTestRule;
 import com.liferay.portal.util.DigesterImpl;
 import com.liferay.portal.util.PropsValues;
-
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
-
-import org.mockito.Mockito;
-
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Component;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Tomas Polesovsky
@@ -55,45 +57,122 @@ public class CompositePasswordEncryptorTest {
 
 		digesterUtil.setDigester(new DigesterImpl());
 
-		BundleContext bundleContext = SystemBundleUtil.getBundleContext();
-
-		CompositePasswordEncryptor compositePasswordEncryptor =
-			new CompositePasswordEncryptor();
+		ReflectionTestUtil.setFieldValue(
+			_compositePasswordEncryptor, "_serviceTrackerMap",
+			_mockServiceTrackerMap);
 
 		ReflectionTestUtil.invoke(
-			compositePasswordEncryptor, "activate",
-			new Class<?>[] {BundleContext.class}, bundleContext);
+			_compositePasswordEncryptor, "activate",
+			new Class<?>[] {BundleContext.class}, _bundleContext);
 
-		bundleContext.registerService(
-			PasswordEncryptor.class, compositePasswordEncryptor,
+		_bundleContext.registerService(
+			PasswordEncryptor.class, _compositePasswordEncryptor,
 			MapUtil.singletonDictionary("composite", "true"));
 
-		bundleContext.registerService(
+		_bundleContext.registerService(
 			PasswordEncryptor.class, new DefaultPasswordEncryptor(),
 			MapUtil.singletonDictionary(
 				"type", PasswordEncryptor.TYPE_DEFAULT));
-		bundleContext.registerService(
+		_bundleContext.registerService(
 			PasswordEncryptor.class, new BCryptPasswordEncryptor(),
 			MapUtil.singletonDictionary("type", PasswordEncryptor.TYPE_BCRYPT));
-		bundleContext.registerService(
+		_bundleContext.registerService(
 			PasswordEncryptor.class, new CryptPasswordEncryptor(),
 			MapUtil.singletonDictionary(
 				"type", PasswordEncryptor.TYPE_UFC_CRYPT));
-		bundleContext.registerService(
+		_bundleContext.registerService(
 			PasswordEncryptor.class, new NullPasswordEncryptor(),
 			MapUtil.singletonDictionary("type", PasswordEncryptor.TYPE_NONE));
-		bundleContext.registerService(
+		_bundleContext.registerService(
 			PasswordEncryptor.class, new PBKDF2PasswordEncryptor(),
 			MapUtil.singletonDictionary("type", PasswordEncryptor.TYPE_PBKDF2));
-		bundleContext.registerService(
+//		 Test PBKDF2 with arguments that match the test case which has the same algorithm.
+//		 Both are available during the test, I checked which one is found while debugging the select() method.
+//		_bundleContext.registerService(
+//			PasswordEncryptor.class, new PBKDF2PasswordEncryptor(),
+//			MapUtil.singletonDictionary("type",
+//				PasswordEncryptor.TYPE_PBKDF2 + "WithHmacSHA1/128/720000"));
+		_bundleContext.registerService(
 			PasswordEncryptor.class, new SSHAPasswordEncryptor(),
 			MapUtil.singletonDictionary("type", PasswordEncryptor.TYPE_SSHA));
-		bundleContext.registerService(
-			PasswordEncryptor.class, new TestBCPBKDF2PasswordEncryptor(),
-			MapUtil.singletonDictionary("type", "BCPBKDF2/16/128"));
-		bundleContext.registerService(
-			PasswordEncryptor.class, new TestBCPBKDF2PasswordEncryptor(),
-			MapUtil.singletonDictionary("type", "BCPBKDF2"));
+
+//		 These are moved to their own respective methods to ensure only one is
+//		 available during the test. Otherwise the test will pass during the 2nd
+//		 encryption when the arguments are removed from the prefix and would be an
+//		 exact match with the encryptor without the arguments.
+//				bundleContext.registerService(
+//					PasswordEncryptor.class, _testBCPBKDF2PasswordEncryptor,
+//					MapUtil.singletonDictionary("type", "BCPBKDF2/16/128"));
+//				bundleContext.registerService(
+//					PasswordEncryptor.class, _testBCPBKDF2PasswordEncryptor1,
+//					MapUtil.singletonDictionary("type", "BCPBKDF2"));
+	}
+
+	@After
+	public final void tearDown() throws Exception {
+		_compositePasswordEncryptor.deactivate();
+	}
+
+	@Test
+	public void testCustomEncryptorWithParametersWhenMustBeAnExactMatch()
+		throws Exception {
+
+		String passwordEncryptorType = "BCPBKDF2/16/128";
+
+		TestBCPBKDF2PasswordEncryptor testBCPBKDF2PasswordEncryptor =
+			new TestBCPBKDF2PasswordEncryptor(passwordEncryptorType);
+
+		_bundleContext.registerService(
+			PasswordEncryptor.class, testBCPBKDF2PasswordEncryptor,
+			MapUtil.singletonDictionary("type", passwordEncryptorType));
+
+		_mockServiceTrackerMap.register(
+			passwordEncryptorType, testBCPBKDF2PasswordEncryptor);
+
+		String plainPassword = "password";
+
+		String expectedPassword = PasswordEncryptorUtil.encrypt(
+			passwordEncryptorType, plainPassword, (String)null);
+
+		testEncrypt(plainPassword, expectedPassword);
+
+		TestBCPBKDF2PasswordEncryptor passwordEncryptor =
+			_mockServiceTrackerMap.getService(passwordEncryptorType);
+
+		Assert.assertNotNull(passwordEncryptor);
+		Assert.assertEquals(
+			passwordEncryptorType, passwordEncryptor._getType());
+	}
+
+	@Test
+	public void testCustomEncryptorWithParametersWhenNotAnExactMatch()
+		throws Exception {
+
+		String passwordEncryptorType = "BCPBKDF2";
+
+		TestBCPBKDF2PasswordEncryptor testBCPBKDF2PasswordEncryptor =
+			new TestBCPBKDF2PasswordEncryptor(passwordEncryptorType);
+
+		_bundleContext.registerService(
+			PasswordEncryptor.class, testBCPBKDF2PasswordEncryptor,
+			MapUtil.singletonDictionary("type", passwordEncryptorType));
+
+		_mockServiceTrackerMap.register(
+			passwordEncryptorType, testBCPBKDF2PasswordEncryptor);
+
+		String plainPassword = "password";
+
+		String expectedPassword = PasswordEncryptorUtil.encrypt(
+			passwordEncryptorType + "/16/78", plainPassword, (String)null);
+
+		testEncrypt(plainPassword, expectedPassword);
+
+		TestBCPBKDF2PasswordEncryptor passwordEncryptor =
+			_mockServiceTrackerMap.getService(passwordEncryptorType);
+
+		Assert.assertNotNull(passwordEncryptor);
+		Assert.assertEquals(
+			passwordEncryptorType, passwordEncryptor._getType());
 	}
 
 	@Test
@@ -125,41 +204,6 @@ public class CompositePasswordEncryptorTest {
 		runTests(
 			PasswordEncryptor.TYPE_UFC_CRYPT, "password", "SNbUMVY9kKQpY",
 			PasswordEncryptor.TYPE_UFC_CRYPT);
-	}
-
-	@Test
-	public void testEncryptCustomCryptWithParametersWhenMustBeAnExactMatch()
-		throws Exception {
-
-		String plainPassword = "password";
-
-		String algorithm = "BC" + PasswordEncryptor.TYPE_PBKDF2 + "/16/128";
-
-		String expectedPassword = PasswordEncryptorUtil.encrypt(
-			algorithm, plainPassword, (String)null);
-
-		// TODO check service
-
-		_serviceTrackerMap.getService(algorithm);
-
-		testEncrypt(plainPassword, expectedPassword);
-	}
-
-	@Test
-	public void testEncryptCustomCryptWithParametersWhenNotAnExactMatch()
-		throws Exception {
-
-		String plainPassword = "password";
-
-		String expectedPassword = PasswordEncryptorUtil.encrypt(
-			"BC" + PasswordEncryptor.TYPE_PBKDF2 + "/16/78", plainPassword,
-			(String)null);
-
-		// TODO check service
-
-		_serviceTrackerMap.getService(PasswordEncryptor.TYPE_PBKDF2);
-
-		testEncrypt(plainPassword, expectedPassword);
 	}
 
 	@Test
@@ -285,18 +329,8 @@ public class CompositePasswordEncryptorTest {
 			PasswordEncryptor.TYPE_UFC_CRYPT);
 	}
 
-	@Component(property = "type=BCPBKDF2", service = PasswordEncryptor.class)
-	public static class TestBCPBKDF2PasswordEncryptor
-		extends BasePasswordEncryptor implements PasswordEncryptor {
-
-		@Override
-		public String encrypt(
-			String algorithm, String plainTextPassword,
-			String encryptedPassword, boolean upgradeHashSecurity) {
-
-			return plainTextPassword;
-		}
-
+	protected void close(String key) {
+		_mockServiceTrackerMap.close();
 	}
 
 	protected void runTests(
@@ -366,7 +400,77 @@ public class CompositePasswordEncryptorTest {
 		}
 	}
 
-	private final ServiceTrackerMap<String, TestBCPBKDF2PasswordEncryptor>
-		_serviceTrackerMap = Mockito.mock(ServiceTrackerMap.class);
+	private final BundleContext _bundleContext =
+		SystemBundleUtil.getBundleContext();
+	private final CompositePasswordEncryptor _compositePasswordEncryptor =
+		new CompositePasswordEncryptor();
+	private final MockServiceTrackerMap _mockServiceTrackerMap =
+		new MockServiceTrackerMap();
+
+	@Component(
+		property = "type=BCKDF2",
+		service = PasswordEncryptor.class
+	)
+	private static class TestBCPBKDF2PasswordEncryptor
+		extends CompositePasswordEncryptor implements PasswordEncryptor {
+
+		@Override
+		public String encrypt(
+			String algorithm, String plainTextPassword,
+			String encryptedPassword, boolean upgradeHashSecurity) {
+
+			return plainTextPassword;
+		}
+
+		private TestBCPBKDF2PasswordEncryptor(String type) {
+			_type = type;
+		}
+
+		private String _getType() {
+			return _type;
+		}
+
+		private final String _type;
+
+	}
+
+	private final class MockServiceTrackerMap
+		implements ServiceTrackerMap<String, TestBCPBKDF2PasswordEncryptor> {
+
+		@Override
+		public void close() {
+			_passwordEncryptors.clear();
+		}
+
+		@Override
+		public boolean containsKey(String type) {
+			return _passwordEncryptors.containsKey("");
+		}
+
+		@Override
+		public TestBCPBKDF2PasswordEncryptor getService(String key) {
+			return _passwordEncryptors.get(key);
+		}
+
+		@Override
+		public Set<String> keySet() {
+			return _passwordEncryptors.keySet();
+		}
+
+		public void register(
+			String key, TestBCPBKDF2PasswordEncryptor passwordEncryptor) {
+
+			_passwordEncryptors.put(key, passwordEncryptor);
+		}
+
+		@Override
+		public Collection<TestBCPBKDF2PasswordEncryptor> values() {
+			return _passwordEncryptors.values();
+		}
+
+		private final Map<String, TestBCPBKDF2PasswordEncryptor>
+			_passwordEncryptors = new HashMap<>();
+
+	}
 
 }
