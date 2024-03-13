@@ -83,6 +83,11 @@
 		<put name="content" value="/portal/update_reminder_query.jsp" />
 	</definition>
 
+	<definition extends="portal" name="portal.sign_in">
+		<put name="title" value="sign-in" />
+		<put name="content" value="/portal/login_utility_page.jsp" />
+	</definition>
+
 	<definition extends="portal" name="portal.verify_email_address">
 		<put name="title" value="verify-email-address" />
 		<put name="content" value="/portal/verify_email_address.jsp" />

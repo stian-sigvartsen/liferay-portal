@@ -126,10 +126,14 @@ public class LoginAction implements Action {
 				getWindowState(httpServletRequest),
 				LiferayWindowState.EXCLUSIVE)) {
 
-			redirect = Portal.PATH_MAIN + "/portal/sign_in";
+			return actionMapping.getActionForward("portal.sign_in");
 
-			redirect = HttpComponentsUtil.setParameter(
-				redirect, "p_l_id", themeDisplay.getPlid());
+			//return new ActionForward("portal.sign.in", "portal.sign.in"); //"/portal/sign_in");
+
+//			redirect = Portal.PATH_MAIN + "/portal/sign_in";
+//
+//			redirect = HttpComponentsUtil.setParameter(
+//				redirect, "p_l_id", themeDisplay.getPlid());
 		}
 
 		if (Validator.isNull(redirect)) {
