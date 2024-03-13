@@ -7,6 +7,8 @@
 
 <%@ include file="/html/portal/init.jsp" %>
 
-<liferay-layout:render-layout-utility-page-entry
-	type="<%= LayoutUtilityPageEntryConstants.TYPE_LOGIN %>"
-/>
+<%
+	LayoutUtilityPageEntryViewRenderer layoutUtilityPageEntryViewRenderer = LayoutUtilityPageEntryViewRendererRegistryUtil.getLayoutUtilityPageEntryViewRenderer(LayoutUtilityPageEntryConstants.TYPE_LOGIN);
+
+	layoutUtilityPageEntryViewRenderer.renderHTML(request, response);
+%>
