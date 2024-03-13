@@ -33,6 +33,10 @@
 
 		String redirect = ParamUtil.getString(request, "redirect");
 
+		if (Validator.isBlank(redirect)) {
+			redirect = ParamUtil.getString(PortalUtil.getOriginalServletRequest(request), "redirect");
+		}
+
 		String login = (String)SessionErrors.get(renderRequest, "login");
 
 		if (Validator.isNull(login)) {
