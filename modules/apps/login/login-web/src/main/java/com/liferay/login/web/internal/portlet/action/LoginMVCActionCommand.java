@@ -256,7 +256,7 @@ public class LoginMVCActionCommand extends BaseMVCActionCommand {
 					LayoutUtilityPageEntryConstants.TYPE_LOGIN);
 
 		if (signInUtilityPage != null) {
-			redirect = Portal.PATH_MAIN + "/portal/sign_in";
+			redirect = Portal.PATH_MAIN + "/portal/login";
 
 			redirect = HttpComponentsUtil.setParameter(
 				redirect, "p_l_id", layout.getPlid());
