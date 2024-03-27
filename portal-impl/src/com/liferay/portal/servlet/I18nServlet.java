@@ -15,6 +15,7 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.security.access.control.AccessControlThreadLocal;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpComponentsUtil;
@@ -356,6 +357,8 @@ public class I18nServlet extends HttpServlet {
 					servletContext.getContextPath(), i18nData.getPath());
 			}
 		}
+
+		AccessControlThreadLocal.setRemoteAccess(true);
 
 		requestDispatcher.forward(httpServletRequest, httpServletResponse);
 	}

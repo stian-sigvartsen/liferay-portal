@@ -9,6 +9,7 @@ import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.security.access.control.AccessControlThreadLocal;
 import com.liferay.portal.kernel.security.access.control.AccessControlUtil;
 import com.liferay.portal.kernel.security.auth.AccessControlContext;
 import com.liferay.portal.kernel.security.auth.verifier.AuthVerifierConfiguration;
@@ -32,9 +33,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.servlet.DispatcherType;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
@@ -131,6 +134,19 @@ public class AuthVerifierFilter extends BasePortalFilter {
 			HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse, FilterChain filterChain)
 		throws Exception {
+
+		if (!Objects.equals(
+			httpServletRequest.getDispatcherType(),
+			DispatcherType.REQUEST) &&
+			(!Objects.equals(
+				httpServletRequest.getDispatcherType(),
+				DispatcherType.FORWARD) ||
+			!AccessControlThreadLocal.isRemoteAccess())) {
+
+			filterChain.doFilter(httpServletRequest, httpServletResponse);
+
+			return;
+		}
 
 		if (!_isAccessAllowed(httpServletRequest, httpServletResponse) ||
 			_isApplySSL(httpServletRequest, httpServletResponse)) {
