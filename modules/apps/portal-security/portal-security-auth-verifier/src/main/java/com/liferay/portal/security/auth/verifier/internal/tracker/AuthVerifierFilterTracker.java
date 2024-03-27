@@ -191,22 +191,32 @@ public class AuthVerifierFilterTracker {
 				FilterChain filterChain)
 			throws IOException, ServletException {
 
-			boolean remoteAccess = AccessControlThreadLocal.isRemoteAccess();
+			Filter auditFilter = _remoteAccessFilterSnapshot.get();
 
-			AccessControlThreadLocal.setRemoteAccess(true);
+			if (auditFilter instanceof TryFilter) {
+				TryFilter tryFilter = (TryFilter)auditFilter;
 
-			try {
-				filterChain.doFilter(servletRequest, servletResponse);
+				try {
+					tryFilter.doFilterTry(
+						(HttpServletRequest)servletRequest,
+						(HttpServletResponse)servletResponse);
+				}
+				catch (Exception exception) {
+					throw new ServletException(exception);
+				}
 			}
-			finally {
-				AccessControlThreadLocal.setRemoteAccess(remoteAccess);
-			}
+
+			filterChain.doFilter(servletRequest, servletResponse);
 		}
 
 		@Override
 		public void init(FilterConfig filterConfig) {
 		}
 
+		private static final Snapshot<Filter> _remoteAccessFilterSnapshot =
+			new Snapshot<>(
+				RemoteAccessFilter.class, Filter.class,
+				"(servlet-filter-name=Remote Access Filter)", true);
 	}
 
 	private static class ServiceRegistrations {
