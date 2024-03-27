@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.auth.AuthVerifierPipeline;
 import com.liferay.portal.servlet.AuthVerifierServletRequest;
 import com.liferay.portal.servlet.filters.BasePortalFilter;
@@ -141,7 +142,7 @@ public class AuthVerifierFilter extends BasePortalFilter {
 			(!Objects.equals(
 				httpServletRequest.getDispatcherType(),
 				DispatcherType.FORWARD) ||
-			!AccessControlThreadLocal.isRemoteAccess())) {
+			httpServletRequest.getAttribute(WebKeys.I18N_PATH) == null)) {
 
 			filterChain.doFilter(httpServletRequest, httpServletResponse);
 
